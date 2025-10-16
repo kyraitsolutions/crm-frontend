@@ -96,7 +96,8 @@ export function DataTable<T extends Record<string, any>>({
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const paginatedData = paginated
-    ? sortedData.slice(startIndex, endIndex)
+    // ? sortedData?.slice(startIndex, endIndex)
+    ? sortedData
     : sortedData;
 
   const handleSort = (key: string) => {
@@ -136,7 +137,7 @@ export function DataTable<T extends Record<string, any>>({
           </div>
         ) : (
           <table className={cn("w-full text-sm", tableClassName)}>
-            <thead
+            {/* <thead
               className={cn(
                 "border-b border-gray-200 bg-gray-50",
                 theadClassName
@@ -181,7 +182,7 @@ export function DataTable<T extends Record<string, any>>({
                   </td>
                 </tr>
               ) : (
-                paginatedData.map((row, idx) => (
+                paginatedData?.map((row, idx) => (
                   <tr
                     key={row.id || idx}
                     className={`${
@@ -204,7 +205,7 @@ export function DataTable<T extends Record<string, any>>({
                   </tr>
                 ))
               )}
-            </tbody>
+            </tbody> */}
           </table>
         )}
       </div>
