@@ -21,12 +21,16 @@ export const appRoutes = createBrowserRouter([
         index: true,
       },
       {
-        element: <OnBoardingPage />,
-        path: "/on-boarding",
-      },
-      {
         element: <AppLayout />,
-        children: [...dashboardRoutes, ...builderRoutes, ...chatBotRoutes],
+        children: [
+          ...dashboardRoutes,
+          ...builderRoutes,
+          ...chatBotRoutes,
+          {
+            path: "/on-boarding",
+            element: <OnBoardingPage />,
+          },
+        ],
       },
     ],
   },

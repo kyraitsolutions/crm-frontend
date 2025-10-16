@@ -6,4 +6,5 @@ export interface IUser {
   profilePicture: string;
   createdAt: string;
   updatedAt: string;
+  isOnboardingCompleted: boolean;
 }
