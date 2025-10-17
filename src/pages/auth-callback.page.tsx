@@ -13,7 +13,13 @@ export const AuthCallbackPage = () => {
         return;
       }
       LocalStorageUtils.setItem("token", token);
-      navigate("/dashboard");
+      const data = { "id": 213123, "onboarding": true }
+      if (data.onboarding) {
+        navigate("/dashboard");
+      }
+      else {
+        navigate("/on-boarding");
+      }
     };
     authCallbackHandler();
   }, [location.pathname, location.search, navigate]);
