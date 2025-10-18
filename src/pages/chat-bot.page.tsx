@@ -54,7 +54,8 @@ export function ChatBotPage() {
     try {
       setLoading(true);
       const res = await chatBotService.getChatBotsList();
-      chatBotManager.setChatBotsList(res.data);
+      chatBotManager.setChatBotsList(res.data.result?.data);
+      console.log(res.data.result?.docs)
     } catch (error) {
       toastMessageService.apiError(error as any);
     } finally {
@@ -76,7 +77,7 @@ export function ChatBotPage() {
         </p>
       </div>
 
-      <DataTable<ChatBotListItem>
+      <DataTable
         data={chatBotLists}
         columns={columns}
         pageSize={3}

@@ -92,12 +92,12 @@ export function DataTable<T extends Record<string, any>>({
   }, [data, sortConfig, sortable]);
 
   // Pagination logic
-  const totalPages = Math.ceil(sortedData.length / pageSize);
+  const totalPages = Math.ceil(sortedData?.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const paginatedData = paginated
-    // ? sortedData?.slice(startIndex, endIndex)
-    ? sortedData
+    ? sortedData?.slice(startIndex, endIndex)
+    // ? sortedData
     : sortedData;
 
   const handleSort = (key: string) => {
@@ -123,6 +123,10 @@ export function DataTable<T extends Record<string, any>>({
     return <ArrowDown className="ml-2 h-4 w-4" />;
   };
 
+
+
+
+  console.log(columns, row)
   return (
     <div className="space-y-4">
       <div
@@ -137,7 +141,7 @@ export function DataTable<T extends Record<string, any>>({
           </div>
         ) : (
           <table className={cn("w-full text-sm", tableClassName)}>
-            {/* <thead
+            <thead
               className={cn(
                 "border-b border-gray-200 bg-gray-50",
                 theadClassName
@@ -147,9 +151,8 @@ export function DataTable<T extends Record<string, any>>({
                 {columns.map((column) => (
                   <th
                     key={String(column.key)}
-                    className={`px-4 py-3 text-left font-medium text-gray-700 ${
-                      column.className || ""
-                    }`}
+                    className={`px-4 py-3 text-left font-medium text-gray-700 ${column.className || ""
+                      }`}
                     onClick={() =>
                       column.sortable !== false &&
                       handleSort(String(column.key))
@@ -172,10 +175,10 @@ export function DataTable<T extends Record<string, any>>({
               </tr>
             </thead>
             <tbody className={cn("divide-y divide-gray-200", tbodyClassName)}>
-              {paginatedData.length === 0 ? (
+              {paginatedData?.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={columns.length}
+                    colSpan={columns?.length}
                     className="px-4 py-8 text-center text-gray-500"
                   >
                     No data available
@@ -185,11 +188,10 @@ export function DataTable<T extends Record<string, any>>({
                 paginatedData?.map((row, idx) => (
                   <tr
                     key={row.id || idx}
-                    className={`${
-                      onRowClick
-                        ? "cursor-pointer hover:bg-gray-50 transition"
-                        : ""
-                    } ${rowClassName}`}
+                    className={`${onRowClick
+                      ? "cursor-pointer hover:bg-gray-50 transition"
+                      : ""
+                      } ${rowClassName}`}
                     onClick={() => onRowClick?.(row)}
                   >
                     {columns.map((column) => (
@@ -205,7 +207,7 @@ export function DataTable<T extends Record<string, any>>({
                   </tr>
                 ))
               )}
-            </tbody> */}
+            </tbody>
           </table>
         )}
       </div>
@@ -221,12 +223,12 @@ export function DataTable<T extends Record<string, any>>({
           <div className="text-sm text-gray-600">
             <span className="hidden sm:inline">
               Showing {startIndex + 1} to{" "}
-              {Math.min(endIndex, sortedData.length)} of {sortedData.length}{" "}
+              {Math.min(endIndex, sortedData?.length)} of {sortedData?.length}{" "}
               entries
             </span>
             <span className="sm:hidden text-center w-full">
-              {startIndex + 1}-{Math.min(endIndex, sortedData.length)} of{" "}
-              {sortedData.length}
+              {startIndex + 1}-{Math.min(endIndex, sortedData?.length)} of{" "}
+              {sortedData?.length}
             </span>
           </div>
 

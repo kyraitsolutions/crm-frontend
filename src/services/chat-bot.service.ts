@@ -8,7 +8,7 @@ export class ChatBotService extends ApiService {
   }
 
   async getChatBotsList(): Promise<ApiResponse<ChatBotListItem[]>> {
-    return await this.get("/chatbot");
+    return await this.get("/chatbot/byuser");
   }
 
   async getChatBotById(id: string): Promise<ApiResponse<ChatBotListItem>> {
