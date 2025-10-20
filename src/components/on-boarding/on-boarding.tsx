@@ -36,7 +36,7 @@ export const questions: OnBoardingQuestion[] = [
   {
     id: "q3",
     type: EOnBoardingQuestionType.TEXT,
-    title: "What is you first and last name?",
+    title: "What is you full name?",
     placeholder: "Write your answer here...",
     multiline: false,
   },
@@ -60,17 +60,15 @@ export function OnBoarding() {
   };
   const handleNextQuestion = async () => {
     if (currentQuestion === questions.length - 1) {
-
-      console.log(answers)
+      console.log(answers);
       const apiBody = {
         firstName: answers[2],
         lastName: answers[1],
         organizationName: answers[3],
-        accountType: answers[0]
-      }
+        accountType: answers[0],
+      };
       const response = await userprofileService.createUserProfile(apiBody);
-      const data = response?.data?.result?.docs
-      console.log(data)
+      const data = response?.data?.result?.docs;
       if (data) {
         navigate("/dashboard");
       } else {

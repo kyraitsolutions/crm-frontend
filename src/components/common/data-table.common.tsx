@@ -97,7 +97,6 @@ export function DataTable<T extends Record<string, any>>({
   const endIndex = startIndex + pageSize;
   const paginatedData = paginated
     ? sortedData?.slice(startIndex, endIndex)
-    // ? sortedData
     : sortedData;
 
   const handleSort = (key: string) => {
@@ -123,10 +122,6 @@ export function DataTable<T extends Record<string, any>>({
     return <ArrowDown className="ml-2 h-4 w-4" />;
   };
 
-
-
-
-  console.log(columns, row)
   return (
     <div className="space-y-4">
       <div
@@ -151,8 +146,9 @@ export function DataTable<T extends Record<string, any>>({
                 {columns.map((column) => (
                   <th
                     key={String(column.key)}
-                    className={`px-4 py-3 text-left font-medium text-gray-700 ${column.className || ""
-                      }`}
+                    className={`px-4 py-3 text-left font-medium text-gray-700 ${
+                      column.className || ""
+                    }`}
                     onClick={() =>
                       column.sortable !== false &&
                       handleSort(String(column.key))
@@ -188,10 +184,11 @@ export function DataTable<T extends Record<string, any>>({
                 paginatedData?.map((row, idx) => (
                   <tr
                     key={row.id || idx}
-                    className={`${onRowClick
-                      ? "cursor-pointer hover:bg-gray-50 transition"
-                      : ""
-                      } ${rowClassName}`}
+                    className={`${
+                      onRowClick
+                        ? "cursor-pointer hover:bg-gray-50 transition"
+                        : ""
+                    } ${rowClassName}`}
                     onClick={() => onRowClick?.(row)}
                   >
                     {columns.map((column) => (

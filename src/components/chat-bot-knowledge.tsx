@@ -49,7 +49,7 @@ export default function ChatBotKnowledge() {
 
   const knowledgeValue = useWatch({
     control,
-    name: "knowledge",
+    name: "knowledgeBase",
   });
   console.log(knowledgeValue);
 
@@ -57,11 +57,11 @@ export default function ChatBotKnowledge() {
     if (!event.target.files) return;
     const newFiles = Array.from(event.target.files).map((file) => file.name);
     const prev = knowledgeValue.files || [];
-    setValue("knowledge.files", [...new Set([...prev, ...newFiles])]);
+    setValue("knowledgeBase.files", [...new Set([...prev, ...newFiles])]);
   };
 
   const resetDocuments = () => {
-    setValue("knowledge.files", []);
+    setValue("knowledgeBase.files", []);
   };
   return (
     <section className="space-y-6">
@@ -80,7 +80,7 @@ export default function ChatBotKnowledge() {
               return (
                 <Controller
                   key={option.id}
-                  name="knowledge.type"
+                  name="knowledgeBase.type"
                   control={control}
                   render={({ field }) => (
                     <Card
@@ -150,7 +150,7 @@ export default function ChatBotKnowledge() {
                   id="knowledge-url"
                   value={knowledgeValue.url}
                   onChange={(event) =>
-                    setValue("knowledge.url", event.target.value)
+                    setValue("knowledgeBase.url", event.target.value)
                   }
                   placeholder="https://docs.youware.com"
                   className="h-11"
@@ -293,7 +293,7 @@ export default function ChatBotKnowledge() {
                   rows={12}
                   value={knowledgeValue.rawText}
                   onChange={(event) =>
-                    setValue("knowledge.rawText", event.target.value)
+                    setValue("knowledgeBase.rawText", event.target.value)
                   }
                   placeholder={"Please provide your knowledge here"}
                   className="resize-none font-mono text-sm"

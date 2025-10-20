@@ -11,7 +11,7 @@ import { ChatBotService, ToastMessageService } from "@/services";
 const defaultValues: ChatBotFormData = {
   name: "",
   description: "",
-  knowledge: { type: null },
+  knowledgeBase: { type: null },
   conversation: {},
   suggestions: [],
 };
@@ -77,7 +77,7 @@ export const ChatBotBuilder = () => {
   useEffect(() => {
     if (chatBotId) {
       chatBotService.getChatBotById(chatBotId).then((res) => {
-        form.reset(res.data);
+        form.reset(res.data.docs);
       });
     }
   }, [chatBotId]);

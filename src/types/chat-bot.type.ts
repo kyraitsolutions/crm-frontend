@@ -21,7 +21,7 @@ export const chatBotSuggestionSchema = z.array(z.string()).optional();
 export const chatBotSchema = z.object({
   name: z.string().min(3, "Name is required and must be at least 3 characters"),
   description: z.string().optional(),
-  knowledge: knowledgeSchema,
+  knowledgeBase: knowledgeSchema,
   suggestions: chatBotSuggestionSchema,
   conversation: chatBotConversationSchema,
   theme: z.record(z.string(), z.any()).optional(),
@@ -74,7 +74,7 @@ export interface ChatbotAppearanceSection {
 }
 
 export interface ChatBotListItem {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   createdAt: string;
