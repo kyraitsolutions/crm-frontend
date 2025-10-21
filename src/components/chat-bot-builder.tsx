@@ -77,7 +77,7 @@ export const ChatBotBuilder = () => {
   useEffect(() => {
     if (chatBotId) {
       chatBotService.getChatBotById(chatBotId).then((res) => {
-        form.reset(res.data.docs);
+        form.reset((res.data as any)?.docs);
       });
     }
   }, [chatBotId]);
