@@ -30,6 +30,10 @@ export const appRoutes = createBrowserRouter([
             path: "/on-boarding",
             element: <OnBoardingPage />,
           },
+          {
+            path: "/projects",
+            element: <h1>Projects</h1>,
+          },
         ],
       },
     ],

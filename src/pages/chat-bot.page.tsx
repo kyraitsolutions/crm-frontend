@@ -5,6 +5,7 @@ import type { ChatBotListItem } from "@/types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import Chatbot from "@/components/chatFlowEditior/ChatBot";
 
 export function ChatBotPage() {
   const navigate = useNavigate();
@@ -66,6 +67,9 @@ export function ChatBotPage() {
     getChatBotsList();
   }, []);
 
+  const nodes = JSON.parse(localStorage.getItem("nodes") || "[]");
+  const edges = JSON.parse(localStorage.getItem("edges") || "[]");
+
   return (
     <div className="space-y-6 lg:px-4 px-2 py-2">
       <div>
@@ -74,6 +78,10 @@ export function ChatBotPage() {
           Manage deployment status, monitor engagement, and open detailed user
           insights.
         </p>
+      </div>
+
+      <div>
+        <Chatbot nodes={nodes} edges={edges} />
       </div>
 
       <DataTable<ChatBotListItem>
