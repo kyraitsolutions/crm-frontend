@@ -14,14 +14,14 @@ export function AppLayout() {
 
   const getProfile = async () => {
     try {
-      const response = await authService.getProfile();
-      authManager.setUser(response.data);
-
-      if (!response.data?.isOnboardingCompleted) {
+      const response: any = await authService.getProfile();
+      authManager.setUser(response.data.docs);
+      if (!response.data.docs?.onboarding) {
         navigate("/on-boarding");
       }
 
       setIsLoading(false);
+      toastService.apiSuccess(response.message);
     } catch (error: any) {
       toastService.apiError(error);
     }

@@ -29,7 +29,6 @@ export const ChatNode = ({ data }: any) => {
     >
       <Handle type="target" position={Position.Top} />
       <div style={{ fontWeight: 600, marginBottom: 8 }}>Chat Step</div>
-
       <textarea
         placeholder="Enter message..."
         value={text}

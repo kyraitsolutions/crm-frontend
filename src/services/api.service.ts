@@ -64,9 +64,9 @@ class ApiService {
 
   private handleResponse(response: AxiosResponse) {
     return {
-      data: response.data,
-      status: response.status,
-      message: "Success!!!",
+      data: response?.data?.result,
+      status: response?.data?.responseStatusCode,
+      message: response?.data?.responseMessage,
     };
   }
 

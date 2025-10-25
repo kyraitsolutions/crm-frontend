@@ -16,20 +16,21 @@ export function ChatBotPage() {
   const [loading, setLoading] = useState(false);
 
   const columns: Column<ChatBotListItem>[] = [
-    {
-      key: "id",
-      header: "Id",
-      className: "min-w-[200px]",
-      render: (row) => (
-        <div>
-          <div className="font-medium text-gray-900">{row.id}</div>
-        </div>
-      ),
-    },
+    // {
+    //   key: "id",
+    //   header: "Id",
+    //   className: "min-w-[200px]",
+    //   render: (row) => (
+    //     <div>
+    //       <div className="font-medium text-gray-900">{row.id}</div>
+    //     </div>
+    //   ),
+    // },
     {
       key: "name",
       header: "Chatbot",
       className: "min-w-[200px]",
+
       render: (row) => (
         <div>
           <div className="font-medium text-gray-900">{row.name}</div>
@@ -54,8 +55,8 @@ export function ChatBotPage() {
   const getChatBotsList = async () => {
     try {
       setLoading(true);
-      const res = await chatBotService.getChatBotsList();
-      chatBotManager.setChatBotsList(res.data);
+      const res: any = await chatBotService.getChatBotsList();
+      chatBotManager.setChatBotsList(res.data?.docs ?? []);
     } catch (error) {
       toastMessageService.apiError(error as any);
     } finally {
@@ -84,16 +85,16 @@ export function ChatBotPage() {
         <Chatbot nodes={nodes} edges={edges} />
       </div>
 
-      <DataTable<ChatBotListItem>
+      {/* <DataTable<ChatBotListItem>
         data={chatBotLists}
         columns={columns}
-        pageSize={3}
-        onRowClick={(row) => navigate(`/chat-bot/${row.id}/users`)}
+        pageSize={20}
+        onRowClick={(row) => navigate(`/chat-bot/${row._id}/users`)}
         sortable={true}
         paginated={true}
         tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
         loading={loading}
-      />
+      /> */}
     </div>
   );
 }
