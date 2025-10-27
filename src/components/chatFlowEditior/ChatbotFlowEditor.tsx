@@ -171,6 +171,7 @@ export default function ChatbotFlowEditor() {
           onEdgesChange={onEdgesChange}
           onEdgeClick={onEdgeClick}
           onConnect={onConnect}
+          // connectable={true}
           fitView
         >
           <MiniMap />

@@ -1,4 +1,3 @@
-import React from "react";
 import { Handle, Position } from "reactflow";
 import { v4 as uuid } from "uuid";
 
@@ -97,7 +96,7 @@ export const ChatNode = ({ id, data }: any) => {
 
               {/* Choices */}
               {el?.choices?.map((choice, i) => (
-                <div key={i} className="flex items-center gap-1 mb-1">
+                <div key={i} className="flex items-center gap-1 mb-1 relative">
                   <input
                     className="flex-1 border rounded px-2 py-1 text-xs"
                     value={choice}
@@ -112,8 +111,47 @@ export const ChatNode = ({ id, data }: any) => {
                   >
                     -
                   </button>
+
+                  {/* 🎯 Add a handle for each choice */}
+                  <div className="ml-2">
+                    <Handle
+                      type="source"
+                      id={`${el.id}-choice-${i}`}
+                      position={Position.Right}
+                      // style={{
+                      //   right: -9,
+                      //   top: "50%",
+                      //   transform: "translateY(-50%)",
+                      //   background: "#2563eb",
+                      //   width: 8,
+                      //   height: 8,
+                      //   borderRadius: "50%",
+                      //   cursor: "pointer",
+                      // }}
+                    />
+                  </div>
                 </div>
               ))}
+
+              {/* {el?.choices?.map((choice, i) => (
+                <div key={i} className="flex items-center gap-1 mb-1">
+                  <input
+                    className="flex-1 border rounded px-2 py-1 text-xs"
+                    value={choice}
+                    onChange={(e) =>
+                      updateOptionChoice(el.id, i, e.target.value)
+                    }
+                    placeholder={`Option ${i + 1}`}
+                  />
+
+                  <button
+                    onClick={() => removeOptionChoice(el.id, i)}
+                    className="bg-red-400 text-white text-xs px-1 rounded"
+                  >
+                    -
+                  </button>
+                </div>
+              ))} */}
 
               {/* Add new choice */}
               <button
