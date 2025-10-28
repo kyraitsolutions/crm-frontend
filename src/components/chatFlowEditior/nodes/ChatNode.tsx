@@ -67,7 +67,12 @@ export const ChatNode = ({ id, data }: any) => {
       <div className="bg-white border p-2 rounded shadow w-64 relative">
 
         <Handle type="target" position={Position.Top} />
-
+        <button
+          onClick={() => data.deleteNode(id)}
+          className="text-xs bg-red-500 text-white px-1 rounded cursor-pointer"
+        >
+          ✕
+        </button>
         {/* <div className="flex justify-end pb-2">
           <button
             onClick={() => data.deleteNode(id)}
@@ -163,9 +168,8 @@ export const ChatNode = ({ id, data }: any) => {
               />
             )}
 
-            {el.type === "option" && (
+            {/* {el.type === "option" && (
               <div className="border rounded p-2 bg-gray-50">
-                {/* Title */}
                 <input
                   className="w-full border-b pb-1 mb-2 text-xs font-medium outline-none"
                   placeholder="Option title..."
@@ -173,7 +177,6 @@ export const ChatNode = ({ id, data }: any) => {
                   onChange={(e) => updateElement(el.id, "title", e.target.value)}
                 />
 
-                {/* Choices */}
                 {el?.choices?.map((choice, i) => (
                   <div key={i} className="flex items-center gap-1 mb-1">
                     <input
@@ -192,6 +195,85 @@ export const ChatNode = ({ id, data }: any) => {
                     </button>
                   </div>
                 ))}
+
+                <button
+                  onClick={() => addOptionChoice(el.id)}
+                  className="text-xs bg-blue-500 text-white px-2 py-1 rounded mt-1"
+                >
+                  + Add Choice
+                </button>
+              </div>
+            )} */}
+
+
+            {el.type === "option" && (
+              <div className="border rounded p-2 bg-gray-50">
+                {/* Title */}
+                <input
+                  className="w-full border-b pb-1 mb-2 text-xs font-medium outline-none"
+                  placeholder="Option title..."
+                  value={el.title}
+                  onChange={(e) => updateElement(el.id, "title", e.target.value)}
+                />
+
+                {/* Choices */}
+                {el?.choices?.map((choice, i) => (
+                  <div key={i} className="flex items-center gap-1 mb-1 relative">
+                    <input
+                      className="flex-1 border rounded px-2 py-1 text-xs"
+                      value={choice}
+                      onChange={(e) =>
+                        updateOptionChoice(el.id, i, e.target.value)
+                      }
+                      placeholder={`Option ${i + 1}`}
+                    />
+                    <button
+                      onClick={() => removeOptionChoice(el.id, i)}
+                      className="bg-red-400 text-white text-xs px-1 rounded"
+                    >
+                      -
+                    </button>
+
+                    {/* 🎯 Add a handle for each choice */}
+                    <div className="ml-2">
+                      <Handle
+                        type="source"
+                        id={`${el.id}-choice-${i}`}
+                        position={Position.Right}
+                      // style={{
+                      //   right: -9,
+                      //   top: "50%",
+                      //   transform: "translateY(-50%)",
+                      //   background: "#2563eb",
+                      //   width: 8,
+                      //   height: 8,
+                      //   borderRadius: "50%",
+                      //   cursor: "pointer",
+                      // }}
+                      />
+                    </div>
+                  </div>
+                ))}
+
+                {/* {el?.choices?.map((choice, i) => (
+                <div key={i} className="flex items-center gap-1 mb-1">
+                  <input
+                    className="flex-1 border rounded px-2 py-1 text-xs"
+                    value={choice}
+                    onChange={(e) =>
+                      updateOptionChoice(el.id, i, e.target.value)
+                    }
+                    placeholder={`Option ${i + 1}`}
+                  />
+
+                  <button
+                    onClick={() => removeOptionChoice(el.id, i)}
+                    className="bg-red-400 text-white text-xs px-1 rounded"
+                  >
+                    -
+                  </button>
+                </div>
+              ))} */}
 
                 {/* Add new choice */}
                 <button
