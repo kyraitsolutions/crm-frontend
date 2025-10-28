@@ -90,12 +90,12 @@ export default function ChatbotFlowEditor() {
   //   setNodeCount((prev) => prev + 1);
   // };
 
-  const addNewNode = (value,label) => {
+  const addNewNode = (value, label) => {
     const newNode = {
       id: crypto.randomUUID(),
       type: "chat",
       position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: { elements: [], deleteNode, updateNode,value,label }, // ✅ inject deleteNode here
+      data: { elements: [], deleteNode, updateNode, value, label }, // ✅ inject deleteNode here
     };
     setNodes((nds) => [...nds, newNode]);
   };
@@ -162,28 +162,28 @@ export default function ChatbotFlowEditor() {
   }, []);
 
   const chatbotFields = [
-  { label:"Name", value: "text", icon: <User className="w-4 h-4 text-primary" /> },
-  { label:"Email", value: "text", icon: <Mail className="w-4 h-4 text-primary" /> },
-  { label:"Phone", value: "text", icon: <Phone className="w-4 h-4 text-primary" /> },
-  { label:"Provided Option", value: "option", icon: <ListChecks className="w-4 h-4 text-primary" /> },
-  { label:"End Chat", value: "text", icon: <MessageSquare className="w-4 h-4 text-primary" /> },
-  { label:"Greeting Message", value: "text", icon: <Smile className="w-4 h-4 text-primary" /> },
+    { label: "Name", value: "text", icon: <User className="w-4 h-4 text-primary" /> },
+    { label: "Email", value: "text", icon: <Mail className="w-4 h-4 text-primary" /> },
+    { label: "Phone", value: "text", icon: <Phone className="w-4 h-4 text-primary" /> },
+    { label: "Provided Option", value: "option", icon: <ListChecks className="w-4 h-4 text-primary" /> },
+    { label: "End Chat", value: "text", icon: <MessageSquare className="w-4 h-4 text-primary" /> },
+    { label: "Greeting Message", value: "text", icon: <Smile className="w-4 h-4 text-primary" /> },
 
-  // 🔹 Common CRM Chatbot Builder Fields
-  // { name: "Bot Personality", icon: <Bot className="w-4 h-4 text-primary" /> },
-  // { name: "Integrations", icon: <Link className="w-4 h-4 text-primary" /> },
-  // { name: "Knowledge Base", icon: <Database className="w-4 h-4 text-primary" /> },
-  // { name: "Automation Flow", icon: <Zap className="w-4 h-4 text-primary" /> },
-  // { name: "Follow-up Reminder", icon: <Clock className="w-4 h-4 text-primary" /> },
-  // { name: "Custom Forms", icon: <FileText className="w-4 h-4 text-primary" /> },
-  // { name: "Lead Tagging", icon: <Tags className="w-4 h-4 text-primary" /> },
-  // { name: "Qualification Questions", icon: <ClipboardCheck className="w-4 h-4 text-primary" /> },
-  // { name: "Bot Settings", icon: <Settings className="w-4 h-4 text-primary" /> },
-  // { name: "Conditional Logic", icon: <Filter className="w-4 h-4 text-primary" /> },
-  // { name: "Analytics & Reports", icon: <BarChart3 className="w-4 h-4 text-primary" /> },
-  // { name: "Live Chat Handoff", icon: <MessageCircle className="w-4 h-4 text-primary" /> },
-  // { name: "Auto Reply Templates", icon: <Send className="w-4 h-4 text-primary" /> },
-];
+    // 🔹 Common CRM Chatbot Builder Fields
+    // { name: "Bot Personality", icon: <Bot className="w-4 h-4 text-primary" /> },
+    // { name: "Integrations", icon: <Link className="w-4 h-4 text-primary" /> },
+    // { name: "Knowledge Base", icon: <Database className="w-4 h-4 text-primary" /> },
+    // { name: "Automation Flow", icon: <Zap className="w-4 h-4 text-primary" /> },
+    // { name: "Follow-up Reminder", icon: <Clock className="w-4 h-4 text-primary" /> },
+    // { name: "Custom Forms", icon: <FileText className="w-4 h-4 text-primary" /> },
+    // { name: "Lead Tagging", icon: <Tags className="w-4 h-4 text-primary" /> },
+    // { name: "Qualification Questions", icon: <ClipboardCheck className="w-4 h-4 text-primary" /> },
+    // { name: "Bot Settings", icon: <Settings className="w-4 h-4 text-primary" /> },
+    // { name: "Conditional Logic", icon: <Filter className="w-4 h-4 text-primary" /> },
+    // { name: "Analytics & Reports", icon: <BarChart3 className="w-4 h-4 text-primary" /> },
+    // { name: "Live Chat Handoff", icon: <MessageCircle className="w-4 h-4 text-primary" /> },
+    // { name: "Auto Reply Templates", icon: <Send className="w-4 h-4 text-primary" /> },
+  ];
   return (
     <div className="w-full grid grid-cols-8  p-2 bg-gray-50 gap-2">
       <div className="col-span-6">
@@ -209,6 +209,20 @@ export default function ChatbotFlowEditor() {
         </div>
 
         <div className="h-[70vh] border border-gray-300 rounded">
+          {/* <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onEdgeClick={onEdgeClick}
+            onConnect={onConnect}
+            fitView
+          >
+            <MiniMap />
+            <Controls />
+            <Background />
+          </ReactFlow> */}
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -217,6 +231,7 @@ export default function ChatbotFlowEditor() {
             onEdgesChange={onEdgesChange}
             onEdgeClick={onEdgeClick}
             onConnect={onConnect}
+            // connectable={true}
             fitView
           >
             {/* <MiniMap /> */}
@@ -232,7 +247,7 @@ export default function ChatbotFlowEditor() {
         <p>Predefined Button</p>
         <div className="grid grid-cols-3 gap-5 mt-3 ">
           {chatbotFields.map((item, index) => (
-            <div onClick={()=>addNewNode(item.value,item.label)} key={index} className="">
+            <div onClick={() => addNewNode(item.value, item.label)} key={index} className="">
               <p className="text-xs whitespace-nowrap">{item.label}</p>
               <div className="border h-20 rounded-xl flex items-center mt-2 justify-center text-gray-400 cursor-pointer hover:bg-gray-100">
                 {item.icon}
@@ -242,6 +257,7 @@ export default function ChatbotFlowEditor() {
           ))}
 
         </div>
+
       </div>
     </div>
   );

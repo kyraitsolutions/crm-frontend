@@ -11,14 +11,21 @@ type FlowElement = {
 };
 type ChatNode = { id: string; type: "chat"; data: { elements: FlowElement[] } };
 
-type Message = { from: "bot" | "user"; text: string; options?: string[] };
+type Message = {
+  from: "bot" | "user";
+  text: string;
+  options?: string[];
+  optionHandles?: string[];
+};
 
 const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
-  const [messages, setMessages] = useState<Message[] | []>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [currentNodeId, setCurrentNodeId] = useState(nodes[0]?.id);
-
   const [userInput, setUserInput] = useState("");
 
+  const currentNode = nodes.find((n) => n.id === currentNodeId);
+
+  // Initialize first node messages
   useEffect(() => {
     if (!currentNodeId) return;
     const currentNode = nodes.find((n) => n.id === currentNodeId);
@@ -30,67 +37,64 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
       text: el.content,
     }));
 
-    console.log(firstNodeMessages);
-
-    setMessages(() => [...firstNodeMessages]);
-    // setMessages((prev) => [...prev, ...firstNodeMessages]);
+    setMessages(firstNodeMessages);
   }, []);
 
-  const getNextNode = (nodeId: string) => {
+  const handleUserReply = (text: string, sourceHandle?: string) => {
+    console.clear();
+    console.log(sourceHandle);
+    if (!currentNode) return;
+
+    console.log(nodes);
+    console.log(currentNode);
+    // Add user message
+    setMessages((prev) => [...prev, { from: "user", text }]);
+    // Find edge by sourceHandle if provided
+    const outgoingEdges = edges.filter((e) => e.source === currentNodeId);
+
     console.log(edges);
-    const edge = edges.find((e) => e.source === String(nodeId));
+    console.log(outgoingEdges);
+    const matchedEdge = sourceHandle
+      ? outgoingEdges.find((e) => e.sourceHandle === sourceHandle)
+      : outgoingEdges[0]; // fallback to first edge if no handle
 
-    console.log(edge);
+    const nextNodeId = matchedEdge?.target;
+    if (!nextNodeId) return;
 
-    if (!edge) return null;
+    const nextNode = nodes.find((n) => n.id === nextNodeId);
+    if (!nextNode) return;
 
-    return nodes.find((n) => n.id === edge.target);
-  };
-
-  const handleUserReply = (text: string) => {
-    if (currentNode) {
-      setMessages((prev) => [...prev, { from: "user", text }]);
-
-      const nextNode = getNextNode(currentNodeId);
-      if (nextNode) {
-        const botReplyData = nextNode?.data?.elements.map((el) => {
-          if (el.type === "option") {
-            return {
-              from: "bot",
-              text: el.title,
-              options: el.choices,
-            };
-          }
-          return {
-            from: "bot",
-            text: el.content,
-          };
-        });
-
-        console.log(botReplyData);
-
-        setMessages((prev) => [...prev, ...botReplyData]);
-
-        setCurrentNodeId(nextNode.id);
+    // Prepare bot replies
+    const botReplyData: Message[] = nextNode.data.elements.map((el) => {
+      console.log(el.type);
+      if (el.type === "option") {
+        return {
+          from: "bot",
+          text: el.title,
+          options: el.choices,
+          optionHandles: el.choices?.map((_, i) => `${el.id}-choice-${i}`),
+        };
       }
-    }
+      return { from: "bot", text: el.content };
+    });
+
+    setMessages((prev) => [...prev, ...botReplyData]);
+    setCurrentNodeId(nextNodeId);
   };
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!userInput) return;
     handleUserReply(userInput);
     setUserInput("");
   };
-
-  const currentNode = nodes.find((n) => n.id === currentNodeId);
 
   return (
     <div className="flex flex-col w-full max-w-md mx-auto border rounded-xl h-[80vh] bg-white shadow-lg">
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg, i) => (
-          <div>
+          <div key={i}>
             <div
-              key={i}
               className={`flex ${
                 msg.from === "user" ? "justify-end" : "justify-start"
               }`}
@@ -99,7 +103,7 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
                 className={`px-5 py-2 max-w-[75%] text-sm ${
                   msg.from === "user"
                     ? "bg-blue-500 text-white rounded-2xl"
-                    : "bg-gray-700 rounded-full  text-white"
+                    : "bg-gray-700 rounded-full text-white"
                 }`}
               >
                 {msg.text}
@@ -107,13 +111,15 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
             </div>
 
             {/* Options */}
-            {msg?.options && msg?.options?.length > 0 && (
+            {msg.options && msg.options.length > 0 && msg.optionHandles && (
               <div className="flex flex-wrap gap-2 mt-4">
-                {msg?.options?.map((opt) => (
+                {msg.options.map((opt, idx) => (
                   <button
                     key={opt}
                     className="bg-gray-50 hover:bg-gray-300 border border-slate-200 shadow-md text-gray-800 px-3 py-2 rounded-full text-sm transition cursor-pointer"
-                    onClick={() => handleUserReply(opt)}
+                    onClick={() =>
+                      handleUserReply(opt, msg.optionHandles?.[idx])
+                    }
                   >
                     {opt}
                   </button>
@@ -131,13 +137,6 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
           className="flex-1 border rounded-lg px-3 py-2 outline-none"
           placeholder="Type your message..."
           onChange={(e) => setUserInput(e.target.value)}
-          // onKeyDown={(e) => {
-          //   if (e.key === "Enter")
-          //     handleUserReply((e.target as HTMLInputElement).value);
-          // }}
-          // onChange={(e) => {
-          //   if (e.target.value === "") handleUserReply(e.target.value);
-          // }}
         />
       </form>
     </div>
