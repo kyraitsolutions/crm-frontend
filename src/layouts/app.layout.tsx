@@ -15,8 +15,9 @@ export function AppLayout() {
   const getProfile = async () => {
     try {
       const response: any = await authService.getProfile();
-      authManager.setUser(response.data.docs);
-      if (!response.data.docs?.onboarding) {
+      authManager.setUser(response.data?.docs);
+      console.log(response);
+      if (!response.data?.docs?.onboarding) {
         navigate("/on-boarding");
       }
 

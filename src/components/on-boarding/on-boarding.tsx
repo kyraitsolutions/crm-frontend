@@ -68,7 +68,7 @@ export function OnBoarding() {
         accountType: answers[0],
       };
       const response = await userprofileService.createUserProfile(apiBody);
-      const data = response?.data?.result?.docs;
+      const data = response?.data?.result;
       if (data) {
         navigate("/dashboard");
       } else {

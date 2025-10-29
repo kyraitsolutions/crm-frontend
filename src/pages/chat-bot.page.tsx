@@ -56,7 +56,7 @@ export function ChatBotPage() {
     try {
       setLoading(true);
       const res: any = await chatBotService.getChatBotsList();
-      chatBotManager.setChatBotsList(res.data?.docs ?? []);
+      chatBotManager.setChatBotsList(res.data ?? []);
     } catch (error) {
       toastMessageService.apiError(error as any);
     } finally {
