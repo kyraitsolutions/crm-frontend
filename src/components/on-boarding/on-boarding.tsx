@@ -20,23 +20,29 @@ export const questions: OnBoardingQuestion[] = [
       { id: "individual", label: "Individual" },
     ],
   },
-
+  // {
+  //   id: "q2",
+  //   type: EOnBoardingQuestionType.MULTI_SELECT,
+  //   title: "What is your team size?",
+  //   options: [
+  //     { id: "0 - 10", label: "0 - 10" },
+  //     { id: "10 - 50", label: "10 - 50" },
+  //     { id: "50 - 500", label: "50 - 500" },
+  //     { id: "500 - 1k", label: "500 - 1k" },
+  //     { id: "1k - 100k", label: "1k - 100k" },
+  //   ],
+  // },
   {
     id: "q2",
-    type: EOnBoardingQuestionType.MULTI_SELECT,
-    title: "What is you team size?",
-    options: [
-      { id: "0 - 10", label: "0 - 10" },
-      { id: "10 - 50", label: "10 - 50" },
-      { id: "50 - 500", label: "50 - 500" },
-      { id: "500 - 1k", label: "500 - 1k" },
-      { id: "1k - 100k", label: "1k - 100k" },
-    ],
+    type: EOnBoardingQuestionType.TEXT,
+    title: "What is you first name?",
+    placeholder: "Write your answer here...",
+    multiline: false,
   },
   {
     id: "q3",
     type: EOnBoardingQuestionType.TEXT,
-    title: "What is you full name?",
+    title: "What is you last name?",
     placeholder: "Write your answer here...",
     multiline: false,
   },
@@ -60,15 +66,19 @@ export function OnBoarding() {
   };
   const handleNextQuestion = async () => {
     if (currentQuestion === questions.length - 1) {
-      console.log(answers);
+      const account = answers.q1;
+
+      console.log(account[0])
       const apiBody = {
-        firstName: answers[2],
-        lastName: answers[1],
-        organizationName: answers[3],
-        accountType: answers[0],
+        firstName: answers.q2,
+        lastName: answers.q3,
+        organizationName: answers.q4,
+        accountType: account[0],
       };
+
+      console.log(apiBody)
       const response = await userprofileService.createUserProfile(apiBody);
-      const data = response?.data?.result;
+      const data = response?.data?.docs;
       if (data) {
         navigate("/dashboard");
       } else {
@@ -77,7 +87,7 @@ export function OnBoarding() {
     }
     setCurrentQuestion((prev) => prev + 1);
   };
-
+  console.log(answers)
   const QUESTION_COMPONENTS = {
     [EOnBoardingQuestionType.MULTI_SELECT]: MultiSelectQuestion,
     [EOnBoardingQuestionType.TEXT]: OpenEndedQuestion,

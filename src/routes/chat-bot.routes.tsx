@@ -1,3 +1,5 @@
+import { ChatBotBuilder } from "@/components/chat-bot-builder";
+import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
 import {
   ChatBotDetailLayout,
   ChatBotLayout,
@@ -23,7 +25,11 @@ export const chatBotRoutes: RouteObject[] = [
       },
       {
         element: <ChatBotNew />,
-        path: "new",
+        path: "create",
+      },
+      {
+        element: <ChatbotFlowEditor />,
+        path: "builder/:chatBotId",
       },
       {
         element: <ChatBotDetailLayout />,

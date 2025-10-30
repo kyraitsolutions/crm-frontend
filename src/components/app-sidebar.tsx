@@ -43,6 +43,7 @@ const data = {
       url: "/dashboard",
       icon: IconDashboard,
     },
+
     {
       title: "Builder",
       url: "/builder",
@@ -50,17 +51,22 @@ const data = {
     },
     {
       title: "Chat bot",
-      url: "/chat-bot",
+      url: "/chat-bot/create",
       icon: IconMessageCircle,
     },
+    // {
+    //   title: "Projects",
+    //   url: "#",
+    //   icon: IconFolder,
+    // },
     {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
+      title: "Accounts",
+      url: "/accounts",
+      icon: IconUsers,
     },
     {
       title: "Team",
-      url: "#",
+      url: "/teams",
       icon: IconUsers,
     },
   ],
@@ -161,7 +167,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="#">
                 <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Chat Base.</span>
+                <span className="text-base font-semibold">Kyra CRM</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
