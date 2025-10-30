@@ -8,6 +8,8 @@ import moment from "moment";
 import Chatbot from "@/components/chatFlowEditior/ChatBot";
 
 export function ChatBotPage() {
+  // const [nodes, setNodes] = useState([]);
+  // const [edges, setEdges] = useState([]);
   const navigate = useNavigate();
   const chatBotService = new ChatBotService();
   const chatBotManager = new ChatBotManager();
@@ -65,11 +67,30 @@ export function ChatBotPage() {
   };
 
   useEffect(() => {
-    getChatBotsList();
+    // getChatBotsList();
   }, []);
 
   const nodes = JSON.parse(localStorage.getItem("nodes") || "[]");
   const edges = JSON.parse(localStorage.getItem("edges") || "[]");
+
+  // useEffect(() => {
+  //   const webSocket = new WebSocket("ws://localhost:3000");
+
+  //   webSocket.onopen = function () {
+  //     // console.log("WebSocket connection opened");
+  //     // const payload = JSON.stringify({ event: "chat:messages" });
+  //     // webSocket.send(payload);
+  //   };
+
+  //   webSocket.onmessage = function (event) {
+  //     const wsResponse = JSON.parse(event.data);
+
+  //     console.log(wsResponse);
+
+  //     // setNodes(wsResponse?.data?.nodes);
+  //     // setEdges(wsResponse?.data?.edges);
+  //   };
+  // }, []);
 
   return (
     <div className="space-y-6 lg:px-4 px-2 py-2">
@@ -82,8 +103,10 @@ export function ChatBotPage() {
       </div>
 
       <div>
-        <Chatbot nodes={nodes} edges={edges} />
+        <Chatbot nodes={nodes && nodes} edges={edges && edges} />
       </div>
+
+      <div>test</div>
 
       {/* <DataTable<ChatBotListItem>
         data={chatBotLists}
