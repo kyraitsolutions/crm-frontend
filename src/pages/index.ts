@@ -9,3 +9,4 @@ export * from "./on-boarding.page";
 export * from "./chat-bot-users.page";
 export * from "./chat-bot-user-responses.page";
 export * from "./auth-callback.page";
+export * from "./accounts.page";

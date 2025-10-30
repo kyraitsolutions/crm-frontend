@@ -3,7 +3,7 @@ import { ChatBotService, ToastMessageService } from "@/services";
 import { ChatBotManager, useChatBotStore } from "@/stores";
 import type { ChatBotListItem } from "@/types";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import Chatbot from "@/components/chatFlowEditior/ChatBot";
 
@@ -81,11 +81,9 @@ export function ChatBotPage() {
         </p>
       </div>
 
-      <div>
-        <Chatbot nodes={nodes} edges={edges} />
-      </div>
 
-      {/* <DataTable<ChatBotListItem>
+
+      <DataTable<ChatBotListItem>
         data={chatBotLists}
         columns={columns}
         pageSize={20}
@@ -94,7 +92,17 @@ export function ChatBotPage() {
         paginated={true}
         tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
         loading={loading}
-      /> */}
+      />
+      <div>
+        {/* create button and redicrect on the /builder/:id */}
+        <Link to="/chat-bot/builder/2"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Create New Chatbot
+        </Link>
+      </div>
+      {/* <div>
+        <Chatbot nodes={nodes} edges={edges} />
+      </div> */}
     </div>
   );
 }

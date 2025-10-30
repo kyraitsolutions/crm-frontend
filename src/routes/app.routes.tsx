@@ -1,5 +1,6 @@
 import { AppLayout, RootLayout } from "@/layouts";
 import {
+  Accounts,
   AuthCallbackPage,
   HomePage,
   LoginPage,
@@ -33,6 +34,14 @@ export const appRoutes = createBrowserRouter([
           {
             path: "/projects",
             element: <h1>Projects</h1>,
+          },
+          {
+            path: "/accounts",
+            element: <Accounts />,
+          },
+          {
+            path: "/teams",
+            element: <h1>Teams</h1>,
           },
         ],
       },

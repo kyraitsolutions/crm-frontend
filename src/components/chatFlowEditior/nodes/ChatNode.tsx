@@ -194,16 +194,16 @@ export const ChatNode = ({ id, data }: any) => {
                             type="source"
                             id={`${el.id}-choice-${i}`}
                             position={Position.Right}
-                            // style={{
-                            //   right: -9,
-                            //   top: "50%",
-                            //   transform: "translateY(-50%)",
-                            //   background: "#2563eb",
-                            //   width: 8,
-                            //   height: 8,
-                            //   borderRadius: "50%",
-                            //   cursor: "pointer",
-                            // }}
+                          // style={{
+                          //   right: -9,
+                          //   top: "50%",
+                          //   transform: "translateY(-50%)",
+                          //   background: "#2563eb",
+                          //   width: 8,
+                          //   height: 8,
+                          //   borderRadius: "50%",
+                          //   cursor: "pointer",
+                          // }}
                           />
                         </div>
                       </div>
@@ -293,7 +293,12 @@ export const ChatNode = ({ id, data }: any) => {
             </div>
           </div>
 
-          <Handle type="source" position={Position.Bottom} />
+          <Handle type="source" position={Position.Bottom} style={{
+            width: 14, // default is 8
+            height: 14,
+            background: "#56c340", // Tailwind's sky-500 for example
+            border: "2px solid #c9f3d2",
+          }} />
         </div>
       </div>
 
