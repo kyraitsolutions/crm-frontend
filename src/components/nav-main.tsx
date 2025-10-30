@@ -1,6 +1,4 @@
-import { IconCirclePlusFilled, IconMail, type Icon } from "@tabler/icons-react";
 
-import { Button } from "@/components/ui/button";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -9,7 +7,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
-import AddAccountPopup from "./add-account-popup";
 
 export function NavMain({
   items,
@@ -27,7 +24,6 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
-        <AddAccountPopup/>
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
