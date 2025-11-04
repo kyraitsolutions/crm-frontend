@@ -112,11 +112,10 @@ export const DashboardPage = () => {
   };
   if (loading) {
     return (
-      <div className="p-6 space-y-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Accounts</h1>
-        <Card className="p-6">
+      <div className="p-5 space-y-4 w-[300px]">
+        <Card className="p-2">
           <div className="space-y-2">
-            {[...Array(5)].map((_, i) => (
+            {[...Array(4)].map((_, i) => (
               <Skeleton key={i} className="h-6 w-full" />
             ))}
           </div>
@@ -126,11 +125,11 @@ export const DashboardPage = () => {
   }
 
   return (
-    <div className="grid grid-cols-5 p-5 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5  p-5 gap-5">
       {accounts.map((account) => (
         <Card key={account.id}>
           <CardHeader>
-            <CardTitle>{account.accountName}</CardTitle>
+            <CardTitle className="capitalize">{account.accountName}</CardTitle>
             <CardDescription>{account.email}</CardDescription>
             <CardAction>
               <Badge onClick={() => handleDeleteAccount(account.id)} variant="outline" className="text-red-600 border-red-500 cursor-pointer">
@@ -139,7 +138,7 @@ export const DashboardPage = () => {
             </CardAction>
           </CardHeader>
           <CardFooter>
-            {account.createdAt}
+            <p className="text-xs">{account.createdAt}</p>
           </CardFooter>
         </Card>
       ))}
