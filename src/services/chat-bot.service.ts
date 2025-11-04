@@ -15,6 +15,13 @@ export class ChatBotService extends ApiService {
     return await this.get(`/chatbot/${id}`);
   }
 
+  async createChatBotFlow(
+    data: any,
+    accountId: string
+  ): Promise<ApiResponse<ChatBotListItem>> {
+    return await this.post(`/chatbot/create-flow/${accountId}`, data);
+  }
+
   async createChatBot(
     data: ChatBotFormData
   ): Promise<ApiResponse<ChatBotListItem>> {

@@ -1,5 +1,7 @@
+import { DASHBOARD_PATH } from "@/constants";
 import { DashboardLayout } from "@/layouts";
 import { DashboardPage } from "@/pages";
+import DashboardAccount from "@/pages/dashboard-account.page";
 import { type RouteObject } from "react-router-dom";
 
 export const dashboardRoutes: RouteObject[] = [
@@ -10,6 +12,10 @@ export const dashboardRoutes: RouteObject[] = [
       {
         element: <DashboardPage />,
         index: true,
+      },
+      {
+        path: DASHBOARD_PATH.ACCOUNT,
+        element: <DashboardAccount />,
       },
     ],
   },

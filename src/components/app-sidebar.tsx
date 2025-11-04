@@ -7,7 +7,6 @@ import {
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
   IconInnerShadowTop,
   IconMessageCircle,
@@ -30,6 +29,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/stores";
+import { DASHBOARD_PATH } from "@/constants";
+import { CircleUser, House } from "lucide-react";
 
 const data = {
   user: {
@@ -39,8 +40,14 @@ const data = {
   },
   navMain: [
     {
+      title: "Home",
+      url: DASHBOARD_PATH.ROOT,
+      icon: House,
+    },
+
+    {
       title: "Dashboard",
-      url: "/dashboard",
+      url: DASHBOARD_PATH.ROOT,
       icon: IconDashboard,
     },
 
@@ -62,7 +69,7 @@ const data = {
     {
       title: "Accounts",
       url: "/accounts",
-      icon: IconUsers,
+      icon: CircleUser,
     },
     {
       title: "Team",
@@ -156,6 +163,13 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const authUser = useAuthStore((state) => state.user);
+
+  console.log(authUser);
+
+  const isOrganisationAdmin = authUser?.account?.isAccountSelected || false;
+
+  console.log(isOrganisationAdmin);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -174,7 +188,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={data.navMain} show={isOrganisationAdmin} />
         {/* <NavDocuments items={data.documents} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>

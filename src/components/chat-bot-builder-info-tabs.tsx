@@ -5,17 +5,23 @@ import ChatBotKnowledge from "./chat-bot-knowledge";
 import ChatBotBuilderCustomization from "./chat-bot-builder-customization";
 import ChatBotBuilderAppearance from "./chat-bot-builder-appearance";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { useNavigate } from "react-router-dom";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: Settings },
   { id: "knowledge", label: "Knowledge", icon: BookOpen },
   { id: "customization", label: "Customization", icon: Sliders },
   { id: "appearance", label: "Appearance", icon: Palette },
+  {
+    id: "chatbot flow",
+    label: "Chatbot Flow",
+    icon: BookOpen,
+  },
 ];
 
 export default function ChatBotBuilderInfoTabs() {
   const [activeTab, setActiveTab] = useState("overview");
-
+  const navigate = useNavigate();
   const tabsMaps: Record<string, React.ReactNode> = {
     overview: <ChatBotBuilderOverview />,
     knowledge: <ChatBotKnowledge />,
@@ -28,7 +34,15 @@ export default function ChatBotBuilderInfoTabs() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           {tabs.map((tab) => (
-            <TabsTrigger key={tab.id} value={tab.id}>
+            <TabsTrigger
+              key={tab.id}
+              value={tab.id}
+              onClick={() => {
+                if (tab.label === "Chatbot Flow") {
+                  navigate("/chat-bot/builder/5");
+                }
+              }}
+            >
               <tab.icon className="h-4 w-4" />
               {tab.label}
             </TabsTrigger>
