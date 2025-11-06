@@ -21,13 +21,22 @@ type Message = {
 const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentNodeId, setCurrentNodeId] = useState(nodes[0]?.id);
+  const [isSet, setIsSet] = useState(false);
   const [userInput, setUserInput] = useState("");
 
   const currentNode = nodes.find((n) => n.id === currentNodeId);
 
   // Initialize first node messages
   useEffect(() => {
+    if (nodes) {
+      setIsSet(!isSet);
+      setCurrentNodeId(nodes[0]?.id);
+    }
+  }, [nodes]);
+
+  useEffect(() => {
     if (!currentNodeId) return;
+
     const currentNode = nodes.find((n) => n.id === currentNodeId);
     const texts =
       currentNode?.data.elements.filter((el) => el.type === "text") || [];
@@ -38,22 +47,46 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
     }));
 
     setMessages(firstNodeMessages);
+  }, [isSet]);
+
+  useEffect(() => {
+    const webSocket = new WebSocket("ws://localhost:3000");
+
+    webSocket.onopen = function () {
+      // console.log("WebSocket connection opened");
+      // const payload = JSON.stringify({ event: "chat:messages" });
+      // webSocket.send(payload);
+    };
+
+    webSocket.onmessage = function (event) {
+      const wsResponse = JSON.parse(event.data);
+
+      setMessages((prev) => [...prev, ...wsResponse?.data]);
+
+      // setNodes(wsResponse?.data?.nodes);
+      // setEdges(wsResponse?.data?.edges);
+    };
   }, []);
 
   const handleUserReply = (text: string, sourceHandle?: string) => {
-    console.clear();
-    console.log(sourceHandle);
+    const websocket = new WebSocket("ws://localhost:3000");
     if (!currentNode) return;
 
-    console.log(nodes);
-    console.log(currentNode);
+    websocket.onopen = function () {
+      const payload = JSON.stringify({
+        event: "chat:messages",
+        data: {
+          message: text,
+          from: "user",
+        },
+      });
+      websocket.send(payload);
+    };
     // Add user message
-    setMessages((prev) => [...prev, { from: "user", text }]);
+    // setMessages((prev) => [...prev, { from: "user", text }]);
     // Find edge by sourceHandle if provided
-    const outgoingEdges = edges.filter((e) => e.source === currentNodeId);
+    const outgoingEdges = edges?.filter((e) => e.source === currentNodeId);
 
-    console.log(edges);
-    console.log(outgoingEdges);
     const matchedEdge = sourceHandle
       ? outgoingEdges.find((e) => e.sourceHandle === sourceHandle)
       : outgoingEdges[0]; // fallback to first edge if no handle
@@ -66,7 +99,6 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
 
     // Prepare bot replies
     const botReplyData: Message[] = nextNode.data.elements.map((el) => {
-      console.log(el.type);
       if (el.type === "option") {
         return {
           from: "bot",
@@ -84,6 +116,7 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(userInput);
     if (!userInput) return;
     handleUserReply(userInput);
     setUserInput("");

@@ -19,6 +19,9 @@ import {
 import type { Connection, Edge } from "reactflow";
 import { nodeTypes } from "./nodes";
 import { uuid } from "zod";
+import axios from "axios";
+import { ChatBotService } from "@/services";
+import { useAuthStore } from "@/stores";
 
 const mandatoryNodes = [
   {
@@ -163,6 +166,10 @@ const mandatoryEdges = [
 ];
 
 export default function ChatbotFlowEditor() {
+  const chatbot = new ChatBotService();
+
+  const authUser = useAuthStore((state) => state.user);
+  console.log(authUser);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [nodeCount, setNodeCount] = useState(1);
@@ -194,21 +201,20 @@ export default function ChatbotFlowEditor() {
       nds.map((node) =>
         node.id === id
           ? {
-            ...node,
-            data: {
-              ...node.data,
-              elements: newElements,
-              deleteNode,
-              updateNode,
-            },
-          }
+              ...node,
+              data: {
+                ...node.data,
+                elements: newElements,
+                deleteNode,
+                updateNode,
+              },
+            }
           : node
       )
     );
   }, []);
 
-  const publishChanges = () => {
-    console.log(nodes);
+  const publishChanges = async () => {
     setPublishLoading(true);
     const serializableNodes = nodes.map(({ data, ...rest }) => ({
       ...rest,
@@ -221,6 +227,21 @@ export default function ChatbotFlowEditor() {
     setTimeout(() => {
       setPublishLoading(false);
     }, 2000);
+
+    try {
+      if (authUser && authUser?.account?.id) {
+        const res = await chatbot.createChatBotFlow(
+          {
+            nodes: serializableNodes,
+            edges,
+          },
+          authUser?.account?.id
+        );
+        console.log(res);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onEdgeClick = useCallback((event: any, edge: any) => {

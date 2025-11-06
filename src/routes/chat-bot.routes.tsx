@@ -25,7 +25,7 @@ export const chatBotRoutes: RouteObject[] = [
       },
       {
         element: <ChatBotNew />,
-        path: "new",
+        path: "create",
       },
       {
         element: <ChatbotFlowEditor />,

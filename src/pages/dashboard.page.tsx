@@ -1,22 +1,45 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LocalStorageUtils } from "@/utils";
 import { useEffect, useState } from "react";
 
-import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AuthStoreManager, useAuthStore } from "@/stores";
+import { IconCirclePlusFilled } from "@tabler/icons-react";
+import { Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { DASHBOARD_PATH } from "@/constants";
+import { formatDate } from "@/utils/date-utils";
 export const DashboardPage = () => {
-
+  const navigate = useNavigate();
+  const authUser = useAuthStore((state) => state.user);
+  const authManager = new AuthStoreManager();
   const [accounts, setAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [open, setOpen] = useState<boolean>(false);
   const [accountName, setAccountName] = useState("");
   const [email, setEmail] = useState("");
+  const [currentSelectedAccountIndex, setCurrentSelectedAccountIndex] =
+    useState<number | null>(null);
   // const [loading, setLoading] = useState(false);
 
   // ✅ Function to create account
@@ -29,7 +52,7 @@ export const DashboardPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${LocalStorageUtils.getItem('token')}`, // 👈 replace dynamically if needed
+          Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`, // 👈 replace dynamically if needed
         },
         body: JSON.stringify({
           accountName,
@@ -58,47 +81,41 @@ export const DashboardPage = () => {
     }
   };
 
+  const handleProfileClick = (index: number) => {
+    setCurrentSelectedAccountIndex(index);
 
-  useEffect(() => {
-    const fetchAccounts = async () => {
-      try {
-
-        const res = await fetch("http://localhost:3000/api/account", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${LocalStorageUtils.getItem('token')}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch accounts");
-        }
-
-        const data = await res.json();
-        console.log(data.result)
-        setAccounts(data.result.docs);
-      } catch (error) {
-        console.error("Error fetching accounts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAccounts();
-  }, []);
-
-
-  const handleDeleteAccount = async (accountId: string) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/account/${accountId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${LocalStorageUtils.getItem('token')}`,
+    if (authUser)
+      authManager?.setUser({
+        ...authUser,
+        account: {
+          ...accounts[index],
+          selectedAccount: accounts[index]?.accountName,
+          isAccountSelected: true,
         },
       });
 
-      console.log(await response.json())
+    navigate(
+      DASHBOARD_PATH.getAccountPath(
+        accounts[index]?.id,
+        accounts[index]?.accountName
+      )
+    );
+  };
+
+  const handleDeleteAccount = async (accountId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/account/${accountId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log(await response.json());
       if (!response.ok) {
         throw new Error("Failed to delete account");
       }
@@ -110,6 +127,34 @@ export const DashboardPage = () => {
       console.error("Error deleting account:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/account", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch accounts");
+        }
+
+        const data = await res.json();
+        console.log(data.result);
+        setAccounts(data.result.docs);
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAccounts();
+  }, []);
+
   if (loading) {
     return (
       <div className="p-5 space-y-4 w-[300px]">
@@ -124,25 +169,81 @@ export const DashboardPage = () => {
     );
   }
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5  p-5 gap-5">
-      {accounts.map((account) => (
-        <Card key={account.id}>
-          <CardHeader>
-            <CardTitle className="capitalize">{account.accountName}</CardTitle>
-            <CardDescription>{account.email}</CardDescription>
-            <CardAction>
-              <Badge onClick={() => handleDeleteAccount(account.id)} variant="outline" className="text-red-600 border-red-500 cursor-pointer">
-                Delete
-              </Badge>
-            </CardAction>
-          </CardHeader>
-          <CardFooter>
-            <p className="text-xs">{account.createdAt}</p>
-          </CardFooter>
-        </Card>
-      ))}
+  const bgGradients = [
+    "bg-gradient-to-tr from-red-50 to-red-50",
+    "bg-gradient-to-tr from-blue-50 to-blue-100",
+    "bg-gradient-to-tr from-green-50 to-green-100",
+    "bg-gradient-to-tr from-purple-50 to-purple-100",
+    "bg-gradient-to-tr from-pink-50 to-pink-100",
+    "bg-gradient-to-tr from-yellow-50 to-yellow-100",
+  ];
 
+  return (
+    <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-5 p-5">
+      {accounts.map((account, idx) => {
+        const initials = account.accountName
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase();
+
+        return (
+          <div
+            key={account.id}
+            onClick={() => handleProfileClick(idx)}
+            className={`space-y-8 border border-accent cursor-pointer transform transition-all duration-300 hover:scale-105 rounded-xl py-6 px-4 bg-white shadow-sm ${
+              currentSelectedAccountIndex === idx
+                ? "ring-2 ring-blue-400 shadow-lg"
+                : ""
+            }`}
+          >
+            {/* Header */}
+            <div className="flex items-start justify-between gap-3">
+              {/* Left: Avatar + Info */}
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="size-8 rounded-full bg-blue-300 flex items-center justify-center text-white font-medium text-xs flex-shrink-0">
+                  {initials}
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-lg font-semibold text-gray-800 truncate">
+                    {account.accountName}
+                  </h3>
+                  <p className="text-sm text-gray-500 truncate">
+                    {account.email}
+                  </p>
+                </div>
+              </div>
+
+              {/* Delete Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteAccount(account.id);
+                }}
+                className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
+
+            {/* Footer */}
+            <div className="flex justify-between items-center text-gray-500 text-xs font-medium">
+              <span>Created: {formatDate(account.createdAt)}</span>
+              <span
+                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                  account.status === "active"
+                    ? "bg-green-100 text-green-600"
+                    : account.status === "inactive"
+                    ? "bg-gray-100 text-gray-800"
+                    : "bg-red-100 text-red-800"
+                }`}
+              >
+                {account.status}
+              </span>
+            </div>
+          </div>
+        );
+      })}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
@@ -152,7 +253,6 @@ export const DashboardPage = () => {
               className=" text-primary font-medium hover:bg-transparent"
             >
               <IconCirclePlusFilled className="size-10" />
-
               Add New Account
             </Button>
           </div>
@@ -206,10 +306,6 @@ export const DashboardPage = () => {
           </form>
         </DialogContent>
       </Dialog>
-
     </div>
-
-
-
   );
 };

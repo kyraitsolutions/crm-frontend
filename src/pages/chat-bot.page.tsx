@@ -8,6 +8,8 @@ import moment from "moment";
 import Chatbot from "@/components/chatFlowEditior/ChatBot";
 
 export function ChatBotPage() {
+  // const [nodes, setNodes] = useState([]);
+  // const [edges, setEdges] = useState([]);
   const navigate = useNavigate();
   const chatBotService = new ChatBotService();
   const chatBotManager = new ChatBotManager();
@@ -66,11 +68,30 @@ export function ChatBotPage() {
   };
 
   useEffect(() => {
-    getChatBotsList();
+    // getChatBotsList();
   }, []);
 
   const nodes = JSON.parse(localStorage.getItem("nodes") || "[]");
   const edges = JSON.parse(localStorage.getItem("edges") || "[]");
+
+  // useEffect(() => {
+  //   const webSocket = new WebSocket("ws://localhost:3000");
+
+  //   webSocket.onopen = function () {
+  //     // console.log("WebSocket connection opened");
+  //     // const payload = JSON.stringify({ event: "chat:messages" });
+  //     // webSocket.send(payload);
+  //   };
+
+  //   webSocket.onmessage = function (event) {
+  //     const wsResponse = JSON.parse(event.data);
+
+  //     console.log(wsResponse);
+
+  //     // setNodes(wsResponse?.data?.nodes);
+  //     // setEdges(wsResponse?.data?.edges);
+  //   };
+  // }, []);
 
   return (
     <div className="space-y-6 lg:px-4 px-2 py-2">
@@ -82,9 +103,11 @@ export function ChatBotPage() {
         </p>
       </div>
 
+      <div>
+        <Chatbot nodes={nodes && nodes} edges={edges && edges} />
+      </div>
 
-
-      <DataTable<ChatBotListItem>
+      {/* <DataTable<ChatBotListItem>
         data={chatBotLists}
         columns={columns}
         pageSize={20}
@@ -96,14 +119,12 @@ export function ChatBotPage() {
       />
       <div>
         {/* create button and redicrect on the /builder/:id */}
-        <Link to="/chat-bot/builder/2"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-          Create New Chatbot
-        </Link>
-      </div>
-      {/* <div>
-        <Chatbot nodes={nodes} edges={edges} />
-      </div> */}
+      <Link
+        to="/chat-bot/builder/2"
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Create New Chatbot
+      </Link>
     </div>
   );
 }
