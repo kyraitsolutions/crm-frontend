@@ -94,12 +94,7 @@ export const DashboardPage = () => {
         },
       });
 
-    navigate(
-      DASHBOARD_PATH.getAccountPath(
-        accounts[index]?.id,
-        accounts[index]?.accountName
-      )
-    );
+    navigate(DASHBOARD_PATH.getAccountPath(accounts[index]?.id));
   };
 
   const handleDeleteAccount = async (accountId: string) => {

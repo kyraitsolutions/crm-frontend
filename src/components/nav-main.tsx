@@ -38,8 +38,7 @@ export function NavMain({
             // Determine if the item is active
             const isActive =
               pathname === item.url ||
-              (item.title === "Dashboard" &&
-                pathname.startsWith("/dashboard/account")); // ✅ highlight for nested paths
+              (item.title === "Dashboard" && !pathname.includes("/chatbot")); // ✅ highlight for nested paths
 
             // Prevent Dashboard link from navigating away when already in nested route
             const handleClick = (e: React.MouseEvent) => {

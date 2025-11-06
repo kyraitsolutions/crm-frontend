@@ -61,9 +61,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: "Chat bot",
-        url: `${DASHBOARD_PATH.getAccountPath(
-          String(authUser?.id)
-        )}/chatbot/create`,
+        url: `${DASHBOARD_PATH.getAccountPath(String(authUser?.id))}/chatbot`,
         icon: IconMessageCircle,
       },
       // {
