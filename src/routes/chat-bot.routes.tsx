@@ -1,5 +1,6 @@
 import { ChatBotBuilder } from "@/components/chat-bot-builder";
 import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
+import { DASHBOARD_PATH } from "@/constants";
 import {
   ChatBotDetailLayout,
   ChatBotLayout,
@@ -16,7 +17,7 @@ import { Navigate, type RouteObject } from "react-router-dom";
 
 export const chatBotRoutes: RouteObject[] = [
   {
-    path: "/chat-bot",
+    path: `${DASHBOARD_PATH.ROOT}/account/:accountId/chatbot`,
     element: <ChatBotLayout />,
     children: [
       {

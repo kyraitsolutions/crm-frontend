@@ -169,15 +169,6 @@ export const DashboardPage = () => {
     );
   }
 
-  const bgGradients = [
-    "bg-gradient-to-tr from-red-50 to-red-50",
-    "bg-gradient-to-tr from-blue-50 to-blue-100",
-    "bg-gradient-to-tr from-green-50 to-green-100",
-    "bg-gradient-to-tr from-purple-50 to-purple-100",
-    "bg-gradient-to-tr from-pink-50 to-pink-100",
-    "bg-gradient-to-tr from-yellow-50 to-yellow-100",
-  ];
-
   return (
     <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-5 p-5">
       {accounts.map((account, idx) => {

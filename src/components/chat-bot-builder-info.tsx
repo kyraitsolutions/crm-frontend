@@ -11,7 +11,7 @@ const BuilderBadgesMap = {
 
 export default function ChatBotBuilderInfo() {
   return (
-    <div className="flex flex-col gap-4 border-b bg-muted/40 p-6">
+    <div className="flex flex-col gap-4 border-b bg-muted/40 ">
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">

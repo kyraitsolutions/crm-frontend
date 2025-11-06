@@ -32,143 +32,144 @@ import { useAuthStore } from "@/stores";
 import { DASHBOARD_PATH } from "@/constants";
 import { CircleUser, House } from "lucide-react";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Home",
-      url: DASHBOARD_PATH.ROOT,
-      icon: House,
-    },
-
-    {
-      title: "Dashboard",
-      url: DASHBOARD_PATH.ROOT,
-      icon: IconDashboard,
-    },
-
-    {
-      title: "Builder",
-      url: "/builder",
-      icon: IconCode,
-    },
-    {
-      title: "Chat bot",
-      url: "/chat-bot/create",
-      icon: IconMessageCircle,
-    },
-    // {
-    //   title: "Projects",
-    //   url: "#",
-    //   icon: IconFolder,
-    // },
-    {
-      title: "Accounts",
-      url: "/accounts",
-      icon: CircleUser,
-    },
-    {
-      title: "Team",
-      url: "/teams",
-      icon: IconUsers,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: IconHelp,
-    },
-    // {
-    //   title: "Search",
-    //   url: "#",
-    //   icon: IconSearch,
-    // },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
-  ],
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const authUser = useAuthStore((state) => state.user);
+  console.log(authUser)
+
+  const data = {
+    user: {
+      name: "shadcn",
+      email: "m@example.com",
+      avatar: "/avatars/shadcn.jpg",
+    },
+    navMain: [
+      {
+        title: "Home",
+        url: DASHBOARD_PATH.ROOT,
+        icon: House,
+      },
+
+      {
+        title: "Dashboard",
+        url: DASHBOARD_PATH.ROOT,
+        icon: IconDashboard,
+      },
+
+      {
+        title: "Builder",
+        url: "/builder",
+        icon: IconCode,
+      },
+      {
+        title: "Chat bot",
+        url: `${DASHBOARD_PATH.getAccountPath(
+          String(authUser?.account?.id)
+        )}/chatbot/create`,
+        icon: IconMessageCircle,
+      },
+      // {
+      //   title: "Projects",
+      //   url: "#",
+      //   icon: IconFolder,
+      // },
+      {
+        title: "Accounts",
+        url: "/accounts",
+        icon: CircleUser,
+      },
+      {
+        title: "Team",
+        url: "/teams",
+        icon: IconUsers,
+      },
+    ],
+    navClouds: [
+      {
+        title: "Capture",
+        icon: IconCamera,
+        isActive: true,
+        url: "#",
+        items: [
+          {
+            title: "Active Proposals",
+            url: "#",
+          },
+          {
+            title: "Archived",
+            url: "#",
+          },
+        ],
+      },
+      {
+        title: "Proposal",
+        icon: IconFileDescription,
+        url: "#",
+        items: [
+          {
+            title: "Active Proposals",
+            url: "#",
+          },
+          {
+            title: "Archived",
+            url: "#",
+          },
+        ],
+      },
+      {
+        title: "Prompts",
+        icon: IconFileAi,
+        url: "#",
+        items: [
+          {
+            title: "Active Proposals",
+            url: "#",
+          },
+          {
+            title: "Archived",
+            url: "#",
+          },
+        ],
+      },
+    ],
+    navSecondary: [
+      {
+        title: "Settings",
+        url: "#",
+        icon: IconSettings,
+      },
+      {
+        title: "Feedback",
+        url: "#",
+        icon: IconHelp,
+      },
+      // {
+      //   title: "Search",
+      //   url: "#",
+      //   icon: IconSearch,
+      // },
+    ],
+    documents: [
+      {
+        name: "Data Library",
+        url: "#",
+        icon: IconDatabase,
+      },
+      {
+        name: "Reports",
+        url: "#",
+        icon: IconReport,
+      },
+      {
+        name: "Word Assistant",
+        url: "#",
+        icon: IconFileWord,
+      },
+    ],
+  };
 
   console.log(authUser);
 
   const isOrganisationAdmin = authUser?.account?.isAccountSelected || false;
-
-  console.log(isOrganisationAdmin);
 
   return (
     <Sidebar collapsible="icon" {...props}>

@@ -3,11 +3,13 @@ import { ChatBotService, ToastMessageService } from "@/services";
 import { ChatBotManager, useChatBotStore } from "@/stores";
 import type { ChatBotListItem } from "@/types";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import Chatbot from "@/components/chatFlowEditior/ChatBot";
 
 export function ChatBotPage() {
+  const { accountId } = useParams()
+
   // const [nodes, setNodes] = useState([]);
   // const [edges, setEdges] = useState([]);
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ export function ChatBotPage() {
   const getChatBotsList = async () => {
     try {
       setLoading(true);
-      const res: any = await chatBotService.getChatBotsList("6903c46c3e53c8cb03c8ff84");
+      const res: any = await chatBotService.getChatBotsList(accountId);
       console.log(res.data.docs)
       chatBotManager.setChatBotsList(res.data.docs ?? []);
     } catch (error) {
@@ -68,7 +70,7 @@ export function ChatBotPage() {
   };
 
   useEffect(() => {
-    // getChatBotsList();
+    getChatBotsList();
   }, []);
 
   const nodes = JSON.parse(localStorage.getItem("nodes") || "[]");
@@ -103,28 +105,31 @@ export function ChatBotPage() {
         </p>
       </div>
 
-      <div>
+      <div className="grid grid-cols-[2fr_1fr]">
+
+        <DataTable<ChatBotListItem>
+          data={chatBotLists}
+          columns={columns}
+          pageSize={20}
+          onRowClick={(row) => navigate(`/dashboard/account/690c79520e764af69f4302ed/chatbot/create`)}
+          sortable={true}
+          paginated={true}
+          tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
+          loading={loading}
+        />
         <Chatbot nodes={nodes && nodes} edges={edges && edges} />
       </div>
 
-      {/* <DataTable<ChatBotListItem>
-        data={chatBotLists}
-        columns={columns}
-        pageSize={20}
-        onRowClick={(row) => navigate(`/chat-bot/${row._id}/users`)}
-        sortable={true}
-        paginated={true}
-        tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
-        loading={loading}
-      />
+
       <div>
         {/* create button and redicrect on the /builder/:id */}
-      <Link
-        to="/chat-bot/builder/2"
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Create New Chatbot
-      </Link>
+        <Link
+          to="/dashboard/account/690c79520e764af69f4302ed/chatbot/create"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Create New Chatbot
+        </Link>
+      </div>
     </div>
   );
 }

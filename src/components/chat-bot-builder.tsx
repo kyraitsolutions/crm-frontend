@@ -1,91 +1,87 @@
+import { ChatBotService } from "@/services";
+import { type ChatBotFormData } from "@/types";
+import { useCallback } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import ChatBotBuilderInfo from "./chat-bot-builder-info";
 import ChatBotBuilderInfoTabs from "./chat-bot-builder-info-tabs";
-import { FormProvider, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { chatBotSchema, type ChatBotFormData } from "@/types";
-import { ChatBotEvents, emitter } from "@/events";
-import { useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
-import { ChatBotService, ToastMessageService } from "@/services";
 
-const defaultValues: ChatBotFormData = {
+const defaultValues = {
   name: "",
   description: "",
-  knowledgeBase: { type: null },
-  conversation: {},
-  suggestions: [],
+  theme: {
+    brandColor: "#3b5d50",
+    contrastColor: "#fefefe",
+    backgroundColor: "#ffffff",
+    messageColor: "#f1f5f9",
+    userMessageColor: "#3b5d50",
+    typeface: "Inter",
+    fontSize: 14,
+    fontWeight: "normal",
+    avatarStyle: "bubble",
+    avatarUrl: "",
+    showAvatar: true,
+    roundedCorners: true,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    widgetPosition: "bottom-right",
+    showLauncher: true,
+    launcherLabel: "Need product guidance?",
+    launcherSize: 56,
+    messageAlignment: "left",
+    showTimestamps: true,
+    animationStyle: "slide",
+    shadowIntensity: 20,
+    opacity: 100,
+    customCSS: "",
+  },
+  config: {
+    showTypingIndicator: false,
+    autoOpenAfterSeconds: 5,
+    enableBrandLabel: false,
+    brandLabelText: "Powered by Kyra Solutions",
+    showPoweredBy: false,
+    active: false,
+  },
 };
 
 export const ChatBotBuilder = () => {
-  const { chatBotId } = useParams();
+  const { accountId } = useParams();
+
   const chatBotService = new ChatBotService();
+
   const form = useForm<ChatBotFormData>({
-    resolver: zodResolver(chatBotSchema),
+    // resolver: zodResolver(chatBotSchema),
     defaultValues,
   });
 
-  const toastMessageService = new ToastMessageService();
+  const { handleSubmit } = form;
 
-  const createChatBotHandler = async (data: ChatBotFormData) => {
-    try {
-      await chatBotService.createChatBot(data);
-    } catch (error) {
-      toastMessageService.apiError(error as any);
-    }
-  };
+  const handleFormSubmit = useCallback(
+    async (data: any) => {
+      try {
+        const response = await chatBotService.createChatBot(
+          String(accountId),
+          data
+        );
 
-  const updateChatBotHandler = async (
-    chatBotId: string,
-    data: ChatBotFormData
-  ) => {
-    try {
-      await chatBotService.updateChatBot(chatBotId, data);
-    } catch (error) {
-      toastMessageService.apiError(error as any);
-    }
-  };
-
-  const onSubmit = useCallback(
-    (data: ChatBotFormData) => {
-      if (chatBotId) {
-        updateChatBotHandler(chatBotId, data);
-      } else {
-        createChatBotHandler(data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
       }
     },
-    [chatBotId]
+    [form.getValues()]
   );
 
-  const onCreate = useCallback(() => {
-    form.handleSubmit(onSubmit)();
-  }, [form, onSubmit]);
-
-  const onUpdate = useCallback(() => {
-    form.handleSubmit(onSubmit)();
-  }, [form, onSubmit]);
-
-  useEffect(() => {
-    emitter.on(ChatBotEvents.CHATBOT_CREATE, onCreate);
-    emitter.on(ChatBotEvents.CHATBOT_UPDATE, onUpdate);
-
-    return () => {
-      emitter.off(ChatBotEvents.CHATBOT_CREATE, onCreate);
-      emitter.off(ChatBotEvents.CHATBOT_UPDATE, onUpdate);
-    };
-  }, [onCreate, onUpdate]);
-
-  useEffect(() => {
-    if (chatBotId) {
-      chatBotService.getChatBotById(chatBotId).then((res) => {
-        form.reset((res.data as any)?.docs);
-      });
-    }
-  }, [chatBotId]);
+  // const toastMessageService = new ToastMessageService();
 
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(handleFormSubmit)();
+        }}
         className="flex h-full w-full flex-col"
       >
         <ChatBotBuilderInfo />

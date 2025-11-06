@@ -15,9 +15,10 @@ const ChatBotLayout = () => {
       }
     >
       <AppSidebar variant="sidebar" />
+
       <SidebarInset className="flex flex-col h-screen">
         <ChatBotHeader />
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto p-6">
           <Outlet />
         </main>
       </SidebarInset>
