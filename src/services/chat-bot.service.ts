@@ -23,9 +23,10 @@ export class ChatBotService extends ApiService {
   }
 
   async createChatBot(
+    accountId: string,
     data: ChatBotFormData
   ): Promise<ApiResponse<ChatBotListItem>> {
-    return await this.post("/chatbot", data);
+    return await this.post(`/chatbot/${accountId}`, data);
   }
 
   async updateChatBot(

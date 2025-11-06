@@ -1,53 +1,60 @@
-import { BookOpen, Palette, Settings, Sliders } from "lucide-react";
+import type { ChatBotFormData } from "@/types";
+import { Cog, Palette, Settings, Sliders } from "lucide-react";
 import { useState } from "react";
-import ChatBotBuilderOverview from "./chat-bot-builder-overview";
-import ChatBotKnowledge from "./chat-bot-knowledge";
-import ChatBotBuilderCustomization from "./chat-bot-builder-customization";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import ChatBotBuilderAppearance from "./chat-bot-builder-appearance";
+import ChatBotBuilderCustomization from "./chat-bot-builder-customization";
+import ChatBotBuilderOverview from "./chat-bot-builder-overview";
+import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { useNavigate } from "react-router-dom";
+import ChatBotBuilderConfiguration from "./chat-bot-builder-config";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: Settings },
-  { id: "knowledge", label: "Knowledge", icon: BookOpen },
   { id: "customization", label: "Customization", icon: Sliders },
   { id: "appearance", label: "Appearance", icon: Palette },
-  {
-    id: "chatbot flow",
-    label: "Chatbot Flow",
-    icon: BookOpen,
-  },
+  { id: "configration", label: "Configuration", icon: Cog },
 ];
 
 export default function ChatBotBuilderInfoTabs() {
   const [activeTab, setActiveTab] = useState("overview");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+
+  const {
+    formState: { isDirty },
+  } = useFormContext<ChatBotFormData>();
+
+  // tabs maps for each tab
   const tabsMaps: Record<string, React.ReactNode> = {
     overview: <ChatBotBuilderOverview />,
-    knowledge: <ChatBotKnowledge />,
     customization: <ChatBotBuilderCustomization />,
     appearance: <ChatBotBuilderAppearance />,
+    configration: <ChatBotBuilderConfiguration />,
   };
 
   return (
-    <div className="p-3 h-full">
+    <div className="mt-4">
+      {isDirty && ( // 👈 Only show when something is typed
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 rounded-full text-white px-6"
+          >
+            Publish
+          </Button>
+        </div>
+      )}
+
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           {tabs.map((tab) => (
-            <TabsTrigger
-              key={tab.id}
-              value={tab.id}
-              onClick={() => {
-                if (tab.label === "Chatbot Flow") {
-                  navigate("/chat-bot/builder/5");
-                }
-              }}
-            >
+            <TabsTrigger key={tab.id} value={tab.id} className="cursor-pointer">
               <tab.icon className="h-4 w-4" />
               {tab.label}
             </TabsTrigger>
           ))}
         </TabsList>
+
         <TabsContent value={activeTab}>{tabsMaps[activeTab]}</TabsContent>
       </Tabs>
     </div>
