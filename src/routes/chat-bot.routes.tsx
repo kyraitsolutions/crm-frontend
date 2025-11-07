@@ -1,4 +1,3 @@
-import { ChatBotBuilder } from "@/components/chat-bot-builder";
 import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
 import { DASHBOARD_PATH } from "@/constants";
 import {
@@ -8,10 +7,10 @@ import {
   ChatBotUsersLayout,
 } from "@/layouts";
 import {
-  ChatBotPage,
   ChatBotNew,
-  ChatBotUsersPage,
+  ChatBotPage,
   ChatBotUserResponsesPage,
+  ChatBotUsersPage,
 } from "@/pages";
 import { Navigate, type RouteObject } from "react-router-dom";
 
@@ -27,6 +26,10 @@ export const chatBotRoutes: RouteObject[] = [
       {
         element: <ChatBotNew />,
         path: "create",
+      },
+      {
+        element: <ChatBotNew />,
+        path: ":chatBotId/builder",
       },
       {
         element: <ChatbotFlowEditor />,

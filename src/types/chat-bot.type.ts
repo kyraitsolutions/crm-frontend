@@ -83,6 +83,7 @@ export const chatBotConfigSchema = z.object({
 });
 
 export const chatBotSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(3, "Name is required and must be at least 3 characters"),
   description: z.string().optional(),
   theme: appearanceSchema,
@@ -136,7 +137,7 @@ export interface ChatbotAppearanceSection {
 }
 
 export interface ChatBotListItem {
-  _id: string;
+  id: string;
   name: string;
   description: string;
   createdAt: string;

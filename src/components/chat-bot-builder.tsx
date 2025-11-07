@@ -1,12 +1,12 @@
-import { ChatBotService } from "@/services";
+import { ChatBotService, ToastMessageService } from "@/services";
 import { type ChatBotFormData } from "@/types";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import ChatBotBuilderInfo from "./chat-bot-builder-info";
 import ChatBotBuilderInfoTabs from "./chat-bot-builder-info-tabs";
 
-const defaultValues = {
+const defaultValues: ChatBotFormData = {
   name: "",
   description: "",
   theme: {
@@ -46,7 +46,12 @@ const defaultValues = {
 };
 
 export const ChatBotBuilder = () => {
-  const { accountId } = useParams();
+  const { accountId, chatBotId } = useParams();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const toastMessageService = new ToastMessageService();
+  // const [defaultValues, setDefaultValues] = useState(defaultValuesState);
+
+  // console.log(chatBotId);
 
   const chatBotService = new ChatBotService();
 
@@ -55,25 +60,49 @@ export const ChatBotBuilder = () => {
     defaultValues,
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, reset } = form;
 
   const handleFormSubmit = useCallback(
     async (data: any) => {
       try {
+        setIsSubmitting(true);
         const response = await chatBotService.createChatBot(
           String(accountId),
           data
         );
 
-        console.log(response);
+        toastMessageService.apiSuccess(response.message);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsSubmitting(false);
       }
     },
     [form.getValues()]
   );
 
-  // const toastMessageService = new ToastMessageService();
+  const getChatBotsList = async () => {
+    try {
+      // setLoading(true);
+      const res: any = await chatBotService.getChatBotsList(String(accountId));
+      console.log(res.data.docs);
+      const chatBot = res.data.docs.find((item: any) => item.id === chatBotId);
+      // setDefaultValues(chatBot);
+      reset(chatBot);
+      // chatBotManager.setChatBotsList(res.data.docs ?? []);
+    } catch (error) {
+      console.log(error);
+      // toastMessageService.apiError(error as any);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (chatBotId) {
+      getChatBotsList();
+    }
+  }, [chatBotId]);
 
   return (
     <FormProvider {...form}>
@@ -85,7 +114,7 @@ export const ChatBotBuilder = () => {
         className="flex h-full w-full flex-col"
       >
         <ChatBotBuilderInfo />
-        <ChatBotBuilderInfoTabs />
+        <ChatBotBuilderInfoTabs isFormSubmitting={isSubmitting} />
       </form>
     </FormProvider>
   );

@@ -46,13 +46,14 @@ export function NavMain({
                 item.title === "Dashboard" &&
                 pathname.startsWith("/dashboard/account")
               ) {
-                e.preventDefault(); // ✅ prevent redirect
+                // e.preventDefault(); // ✅ prevent redirect
               }
 
               if (item.title === "Home" && authUser) {
                 authManager?.setUser({
                   ...authUser,
                   account: {
+                    ...authUser.account,
                     selectedAccount: null,
                     isAccountSelected: false,
                   },

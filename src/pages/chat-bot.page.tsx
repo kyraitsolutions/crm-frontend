@@ -3,11 +3,15 @@ import { ChatBotService, ToastMessageService } from "@/services";
 import { ChatBotManager, useChatBotStore } from "@/stores";
 import type { ChatBotListItem } from "@/types";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import Chatbot from "@/components/chatFlowEditior/ChatBot";
+import { DASHBOARD_PATH } from "@/constants";
+import { Plus } from "lucide-react";
 
 export function ChatBotPage() {
+  const { accountId } = useParams();
+
   // const [nodes, setNodes] = useState([]);
   // const [edges, setEdges] = useState([]);
   const navigate = useNavigate();
@@ -57,8 +61,9 @@ export function ChatBotPage() {
   const getChatBotsList = async () => {
     try {
       setLoading(true);
-      const res: any = await chatBotService.getChatBotsList();
-      chatBotManager.setChatBotsList(res.data ?? []);
+      const res: any = await chatBotService.getChatBotsList(String(accountId));
+      console.log(res.data.docs);
+      chatBotManager.setChatBotsList(res.data.docs ?? []);
     } catch (error) {
       toastMessageService.apiError(error as any);
     } finally {
@@ -67,7 +72,7 @@ export function ChatBotPage() {
   };
 
   useEffect(() => {
-    // getChatBotsList();
+    getChatBotsList();
   }, []);
 
   const nodes = JSON.parse(localStorage.getItem("nodes") || "[]");
@@ -102,28 +107,43 @@ export function ChatBotPage() {
         </p>
       </div>
 
-      <div>
-        <Chatbot nodes={nodes && nodes} edges={edges && edges} />
+      <div className="flex justify-end">
+        {/* create button and redicrect on the /builder/:id */}
+        <Link
+          to={`${DASHBOARD_PATH?.getAccountPath(
+            String(accountId)
+          )}/chatbot/create`}
+          className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300"
+        >
+          <Plus size={18} />
+          Create Chatbot
+        </Link>
       </div>
 
-      {/* <DataTable<ChatBotListItem>
-        data={chatBotLists}
-        columns={columns}
-        pageSize={20}
-        onRowClick={(row) => navigate(`/chat-bot/${row._id}/users`)}
-        sortable={true}
-        paginated={true}
-        tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
-        loading={loading}
-      />
-      <div>
-        {/* create button and redicrect on the /builder/:id */}
-      <Link
-        to="/chat-bot/builder/2"
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Create New Chatbot
-      </Link>
+      <div className="grid grid-cols-[2fr_1fr]">
+        <DataTable<ChatBotListItem>
+          data={chatBotLists}
+          columns={columns}
+          pageSize={20}
+          onRowClick={(row) => {
+            console.log(row);
+            navigate(
+              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${
+                row.id
+              }/builder`
+            );
+          }}
+          // navigate(
+          //   `/dashboard/account/690c79520e764af69f4302ed/chatbot/create`
+          // )
+
+          sortable={true}
+          paginated={true}
+          tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
+          loading={loading}
+        />
+        <Chatbot nodes={nodes && nodes} edges={edges && edges} />
+      </div>
     </div>
   );
 }

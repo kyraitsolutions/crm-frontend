@@ -34,6 +34,7 @@ import { CircleUser, House } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const authUser = useAuthStore((state) => state.user);
+  console.log(authUser);
 
   const data = {
     user: {
@@ -61,7 +62,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: "Chat bot",
-        url: `${DASHBOARD_PATH.getAccountPath(String(authUser?.id))}/chatbot`,
+        url: `${DASHBOARD_PATH.getAccountPath(
+          String(authUser?.account?.id)
+        )}/chatbot`,
         icon: IconMessageCircle,
       },
       // {
@@ -163,8 +166,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
     ],
   };
-
-  console.log(authUser);
 
   const isOrganisationAdmin = authUser?.account?.isAccountSelected || false;
 

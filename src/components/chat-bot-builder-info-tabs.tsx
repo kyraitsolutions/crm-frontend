@@ -1,13 +1,14 @@
 import type { ChatBotFormData } from "@/types";
-import { Cog, Palette, Settings, Sliders } from "lucide-react";
+import { ArrowDownRight, Cog, Palette, Settings, Sliders } from "lucide-react";
 import { useState } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import ChatBotBuilderAppearance from "./chat-bot-builder-appearance";
+import ChatBotBuilderConfiguration from "./chat-bot-builder-config";
 import ChatBotBuilderCustomization from "./chat-bot-builder-customization";
 import ChatBotBuilderOverview from "./chat-bot-builder-overview";
+import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import ChatBotBuilderConfiguration from "./chat-bot-builder-config";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: Settings },
@@ -16,7 +17,11 @@ const tabs = [
   { id: "configration", label: "Configuration", icon: Cog },
 ];
 
-export default function ChatBotBuilderInfoTabs() {
+export default function ChatBotBuilderInfoTabs({
+  isFormSubmitting,
+}: {
+  isFormSubmitting: boolean;
+}) {
   const [activeTab, setActiveTab] = useState("overview");
   // const navigate = useNavigate();
 
@@ -34,13 +39,24 @@ export default function ChatBotBuilderInfoTabs() {
 
   return (
     <div className="mt-4">
-      {isDirty && ( // 👈 Only show when something is typed
+      {isDirty && (
         <div className="flex justify-end">
           <Button
             type="submit"
-            className="bg-green-600 hover:bg-green-700 rounded-full text-white px-6"
+            disabled={isFormSubmitting}
+            className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-green-600 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300 "
           >
-            Publish
+            {isFormSubmitting ? (
+              <div className="flex items-center gap-1.5">
+                <span>Publishing...</span>
+                <Loader size={18} color="#331a54" />
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5">
+                <span>Publish</span>
+                <ArrowDownRight />
+              </div>
+            )}
           </Button>
         </div>
       )}
