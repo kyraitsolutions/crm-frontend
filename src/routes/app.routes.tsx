@@ -1,6 +1,5 @@
 import { AppLayout, RootLayout } from "@/layouts";
 import {
-  Accounts,
   AuthCallbackPage,
   HomePage,
   LoginPage,
@@ -8,9 +7,9 @@ import {
   RegisterPage,
 } from "@/pages";
 import { createBrowserRouter } from "react-router-dom";
-import { dashboardRoutes } from "./dashboard.routes";
 import { builderRoutes } from "./builder.routes";
 import { chatBotRoutes } from "./chat-bot.routes";
+import { dashboardRoutes } from "./dashboard.routes";
 import { formRoutes } from "./form.routes";
 
 export const appRoutes = createBrowserRouter([

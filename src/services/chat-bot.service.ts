@@ -7,7 +7,9 @@ export class ChatBotService extends ApiService {
     super();
   }
 
-  async getChatBotsList(accountId:string): Promise<ApiResponse<ChatBotListItem[]>> {
+  async getChatBotsList(
+    accountId: string
+  ): Promise<ApiResponse<ChatBotListItem[]>> {
     return await this.get(`/account/${accountId}/chatbots`);
   }
 
@@ -31,8 +33,12 @@ export class ChatBotService extends ApiService {
 
   async updateChatBot(
     id: string,
-    data: ChatBotFormData
+    data: { status: boolean }
   ): Promise<ApiResponse<ChatBotListItem>> {
     return await this.put(`/chatbot/${id}`, data);
+  }
+
+  async deleteChatBot(id: string): Promise<ApiResponse<ChatBotListItem>> {
+    return await this.delete(`/chatbot/${id}`);
   }
 }

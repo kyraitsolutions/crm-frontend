@@ -1,8 +1,8 @@
 import { ChatBotService, ToastMessageService } from "@/services";
-import { type ChatBotFormData } from "@/types";
+import { type ApiError, type ChatBotFormData } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ChatBotBuilderInfo from "./chat-bot-builder-info";
 import ChatBotBuilderInfoTabs from "./chat-bot-builder-info-tabs";
 
@@ -48,6 +48,7 @@ const defaultValues: ChatBotFormData = {
 
 export const ChatBotBuilder = () => {
   const { accountId, chatBotId } = useParams();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toastMessageService = new ToastMessageService();
   // const [defaultValues, setDefaultValues] = useState(defaultValuesState);
@@ -72,9 +73,13 @@ export const ChatBotBuilder = () => {
           data
         );
 
-        toastMessageService.apiSuccess(response.message);
+        if (response.status === 200 || response.status === 201) {
+          toastMessageService.apiSuccess(response.message);
+          // navigate("/dashboard/account/6911bffab35d190351b5ae54/chatbot");
+        }
       } catch (error) {
-        console.log(error);
+        const err = error as ApiError;
+        if (err) toastMessageService.apiError(err.message);
       } finally {
         setIsSubmitting(false);
       }

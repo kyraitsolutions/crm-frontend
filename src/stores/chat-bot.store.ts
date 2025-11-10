@@ -22,4 +22,14 @@ export class ChatBotManager {
   setChatBotsList(chatBotsList: ChatBotListItem[]) {
     this.store.setState({ chatBotsList });
   }
+  updateChatBotStatus(chatbotId: string, newStatus: boolean) {
+    this.store.setState((state) => {
+      state.chatBotsList = state.chatBotsList.map((chatbot) => {
+        if (chatbot.id === chatbotId) {
+          return { ...chatbot, status: newStatus };
+        }
+        return chatbot;
+      });
+    });
+  }
 }

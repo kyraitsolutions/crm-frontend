@@ -178,7 +178,6 @@ class ApiService {
   ): Promise<ApiResponse<T>> {
     return this.request<T>("DELETE", url, data, config);
   }
-
   // File upload method
   async upload<T = any>(
     url: string,

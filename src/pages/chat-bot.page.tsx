@@ -22,17 +22,38 @@ export function ChatBotPage() {
   const chatBotLists = useChatBotStore((state) => state.chatBotsList);
   const [loading, setLoading] = useState(false);
 
+  const handleUpdateStatus = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    chatbotId: string
+  ) => {
+    e.stopPropagation();
+
+    const chatbot = chatBotLists.find((chatbot) => chatbot.id === chatbotId);
+    if (!chatbot) return;
+
+    const previousStatus = chatbot.status;
+    const newStatus = !previousStatus;
+
+    chatBotManager.updateChatBotStatus(chatbotId, newStatus);
+
+    try {
+      const updatedData = {
+        status: newStatus,
+      };
+      const response = await chatBotService.updateChatBot(
+        chatbotId,
+        updatedData
+      );
+      console.log(response);
+    } catch (error) {
+      if (error && error instanceof Error) {
+        chatBotManager.updateChatBotStatus(chatbotId, previousStatus);
+        toastMessageService.apiError(error.message);
+      }
+    }
+  };
+
   const columns: Column<ChatBotListItem>[] = [
-    // {
-    //   key: "id",
-    //   header: "Id",
-    //   className: "min-w-[200px]",
-    //   render: (row) => (
-    //     <div>
-    //       <div className="font-medium text-gray-900">{row.id}</div>
-    //     </div>
-    //   ),
-    // },
     {
       key: "name",
       header: "Chatbot",
@@ -54,6 +75,8 @@ export function ChatBotPage() {
         <div>
           <Switch
             checked={row.status}
+            className="cursor-pointer"
+            onClick={(e) => handleUpdateStatus(e, row.id)}
           />
         </div>
       ),
@@ -70,13 +93,23 @@ export function ChatBotPage() {
         </div>
       ),
     },
+    // {
+    //   key: "action",
+    //   header: "Action",
+    //   className: "min-w-[200px]",
+
+    //   // render: (row) => (
+    //   //   <div>
+    //   //     <div>Delete</div>
+    //   //   </div>
+    //   // ),
+    // },
   ];
 
   const getChatBotsList = async () => {
     try {
       setLoading(true);
       const res: any = await chatBotService.getChatBotsList(String(accountId));
-      console.log(res.data.docs);
       chatBotManager.setChatBotsList(res.data.docs ?? []);
     } catch (error) {
       toastMessageService.apiError(error as any);
@@ -140,16 +173,12 @@ export function ChatBotPage() {
           columns={columns}
           pageSize={20}
           onRowClick={(row) => {
-            console.log(row);
             navigate(
-              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${row.id
+              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${
+                row.id
               }/builder`
             );
           }}
-          // navigate(
-          //   `/dashboard/account/690c79520e764af69f4302ed/chatbot/create`
-          // )
-
           sortable={true}
           paginated={true}
           tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
