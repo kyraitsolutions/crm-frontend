@@ -233,7 +233,7 @@ export const DashboardPage = () => {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <div className="group h-[150px] border-2 border-dashed flex flex-1 justify-center rounded-md bg-white items-center rounded-md transition-colors hover:bg-primary/10 cursor-pointer">
+          <div className="group h-[150px] border-2 border-dashed flex flex-1 justify-center bg-white items-center rounded-md transition-colors hover:bg-primary/10 cursor-pointer">
             <Button
               variant="ghost"
               className=" text-primary font-medium hover:bg-transparent"

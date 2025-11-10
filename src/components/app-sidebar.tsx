@@ -60,6 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "/builder",
         icon: IconCode,
       },
+
       {
         title: "Chat bot",
         url: `${DASHBOARD_PATH.getAccountPath(
@@ -67,19 +68,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         )}/chatbot`,
         icon: IconMessageCircle,
       },
-      // {
-      //   title: "Projects",
-      //   url: "#",
-      //   icon: IconFolder,
-      // },
       {
-        title: "Accounts",
-        url: "/accounts",
-        icon: CircleUser,
+        title: "Lead Forms",
+        url: `${DASHBOARD_PATH.getAccountPath(
+          String(authUser?.account?.id)
+        )}/lead-forms`,
+        icon: IconMessageCircle,
       },
       {
         title: "Team",
-        url: "/teams",
+        url: "/dashboard/teams",
         icon: IconUsers,
       },
     ],

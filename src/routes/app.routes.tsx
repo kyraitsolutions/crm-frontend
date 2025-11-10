@@ -11,6 +11,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { dashboardRoutes } from "./dashboard.routes";
 import { builderRoutes } from "./builder.routes";
 import { chatBotRoutes } from "./chat-bot.routes";
+import { formRoutes } from "./form.routes";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -27,21 +28,10 @@ export const appRoutes = createBrowserRouter([
           ...dashboardRoutes,
           ...builderRoutes,
           ...chatBotRoutes,
+          ...formRoutes,
           {
             path: "/on-boarding",
             element: <OnBoardingPage />,
-          },
-          {
-            path: "/projects",
-            element: <h1>Projects</h1>,
-          },
-          {
-            path: "/accounts",
-            element: <Accounts />,
-          },
-          {
-            path: "/teams",
-            element: <h1>Teams</h1>,
           },
         ],
       },

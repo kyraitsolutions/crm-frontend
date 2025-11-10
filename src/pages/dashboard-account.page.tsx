@@ -54,13 +54,12 @@ const DashboardAccount = () => {
         <div className="flex justify-between items-center text-gray-500 text-sm font-medium mt-2">
           <span>Created: {formatDate(authUser?.account?.createdAt || "")}</span>
           <span
-            className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-              authUser?.account?.status === "active"
+            className={`px-2 py-0.5 rounded-full text-xs font-semibold ${authUser?.account?.status === "active"
                 ? "bg-green-100 text-green-800"
                 : authUser?.account?.status === "inactive"
-                ? "bg-gray-100 text-gray-800"
-                : "bg-red-100 text-red-800"
-            }`}
+                  ? "bg-gray-100 text-gray-800"
+                  : "bg-red-100 text-red-800"
+              }`}
           >
             {authUser?.account?.status}
           </span>

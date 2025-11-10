@@ -26,7 +26,7 @@ export function NavMain({
 
   const visibleItems = items.filter((item) => {
     return show
-      ? ["Home", "Dashboard", "Builder", "Chat bot"].includes(item.title)
+      ? ["Home", "Dashboard", "Builder", "Chat bot","Lead Forms"].includes(item.title)
       : ["Dashboard", "Accounts", "Team"].includes(item.title);
   });
 

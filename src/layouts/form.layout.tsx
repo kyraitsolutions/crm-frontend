@@ -1,10 +1,9 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarInset } from "@/components/ui/sidebar";
-import { ChatBotHeader } from "@/components/chat-bot-header";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 
-const ChatBotLayout = () => {
+const FormLayout = () => {
   return (
     <SidebarProvider
       style={
@@ -15,9 +14,8 @@ const ChatBotLayout = () => {
       }
     >
       <AppSidebar variant="sidebar" />
-
       <SidebarInset className="flex flex-col h-screen">
-        <ChatBotHeader />
+        <SiteHeader />
         <main className="flex-1 overflow-auto">
           <Outlet />
         </main>
@@ -26,4 +24,4 @@ const ChatBotLayout = () => {
   );
 };
 
-export { ChatBotLayout };
+export { FormLayout };

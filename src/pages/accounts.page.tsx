@@ -6,6 +6,7 @@ import {
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -133,52 +134,6 @@ export const Accounts = () => {
           </TableRow>
         ))}
       </TableBody>
-      {/* <TableFooter>
-                <TableRow>
-                    <TableCell colSpan={3}>Total</TableCell>
-                    <TableCell className="text-right">$2,500.00</TableCell>
-                </TableRow>
-            </TableFooter> */}
     </Table>
-    // <div className="p-6 space-y-4">
-    //     <h1 className="text-2xl font-semibold tracking-tight">Accounts</h1>
-
-    //     <Card className="p-4">
-    //         <Table>
-    //             <TableCaption>A list of all accounts in the system.</TableCaption>
-    //             <TableHeader>
-    //                 <TableRow>
-    //                     <TableHead className="w-[50px]">#</TableHead>
-    //                     <TableHead>Account Name</TableHead>
-    //                     <TableHead>Email</TableHead>
-    //                     <TableHead>Status</TableHead>
-    //                 </TableRow>
-    //             </TableHeader>
-
-    //             <TableBody>
-    //                 {accounts.length === 0 ? (
-    //                     <TableRow>
-    //                         <TableCell colSpan={4} className="text-center text-muted-foreground">
-    //                             No accounts found.
-    //                         </TableCell>
-    //                     </TableRow>
-    //                 ) : (
-    //                     accounts.map((account, index) => (
-    //                         <TableRow key={account._id}>
-    //                             <TableCell>{index + 1}</TableCell>
-    //                             <TableCell className="font-medium">{account.accountName}</TableCell>
-    //                             <TableCell>{account.email}</TableCell>
-    //                             <TableCell>
-    //                                 <Badge variant="outline" className="text-green-600 border-green-500">
-    //                                     Active
-    //                                 </Badge>
-    //                             </TableCell>
-    //                         </TableRow>
-    //                     ))
-    //                 )}
-    //             </TableBody>
-    //         </Table>
-    //     </Card>
-    // </div>
   );
 };
