@@ -7,8 +7,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import Chatbot from "@/components/chatFlowEditior/ChatBot";
 import { DASHBOARD_PATH } from "@/constants";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { LocalStorageUtils } from "@/utils";
 
 export function ChatBotPage() {
   const { accountId } = useParams();
@@ -70,6 +71,24 @@ export function ChatBotPage() {
         </div>
       ),
     },
+    {
+      key: "action",
+      header: "Action",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteChatbot(row.id);
+            }}
+            className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   const getChatBotsList = async () => {
@@ -84,6 +103,33 @@ export function ChatBotPage() {
       setLoading(false);
     }
   };
+
+  const handleDeleteChatbot = async (chatbotId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/account/${String(accountId)}/chatbot/${chatbotId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log(await response.json());
+      if (!response.ok) {
+        throw new Error("Failed to delete account");
+      }
+      // Remove deleted chatbot and optimistic update
+      // setAccounts((prevAccounts) =>
+      //   prevAccounts.filter((account) => account.id !== accountId)
+      // );
+    } catch (error) {
+      console.error("Error deleting account:", error);
+    }
+  };
+
 
   useEffect(() => {
     getChatBotsList();
