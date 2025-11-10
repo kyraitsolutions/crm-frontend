@@ -32,4 +32,12 @@ export class ChatBotManager {
       });
     });
   }
+
+  deleteChatBot(chatbotId: string) {
+    this.store.setState((state) => {
+      state.chatBotsList = state.chatBotsList.filter(
+        (chatbot) => chatbot.id !== chatbotId
+      );
+    });
+  }
 }
