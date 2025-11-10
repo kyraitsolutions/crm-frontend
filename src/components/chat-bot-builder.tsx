@@ -9,6 +9,7 @@ import ChatBotBuilderInfoTabs from "./chat-bot-builder-info-tabs";
 const defaultValues: ChatBotFormData = {
   name: "",
   description: "",
+  status: true,
   theme: {
     brandColor: "#3b5d50",
     contrastColor: "#fefefe",

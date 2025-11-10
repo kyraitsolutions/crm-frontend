@@ -8,6 +8,7 @@ import moment from "moment";
 import Chatbot from "@/components/chatFlowEditior/ChatBot";
 import { DASHBOARD_PATH } from "@/constants";
 import { Plus } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 export function ChatBotPage() {
   const { accountId } = useParams();
@@ -41,6 +42,19 @@ export function ChatBotPage() {
         <div>
           <div className="font-medium text-gray-900">{row.name}</div>
           <div className="text-sm text-gray-500">{row.description}</div>
+        </div>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      className: "min-w-[200px]",
+
+      render: (row) => (
+        <div>
+          <Switch
+            checked={row.status}
+          />
         </div>
       ),
     },
@@ -128,8 +142,7 @@ export function ChatBotPage() {
           onRowClick={(row) => {
             console.log(row);
             navigate(
-              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${
-                row.id
+              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${row.id
               }/builder`
             );
           }}
