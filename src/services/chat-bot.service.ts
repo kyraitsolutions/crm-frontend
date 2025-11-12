@@ -1,4 +1,9 @@
-import type { ApiResponse, ChatBotFormData } from "@/types";
+import type {
+  ApiResponse,
+  ApiResponseChatBotFlowDto,
+  ChatBotFormData,
+  TCreateChatBotFlow,
+} from "@/types";
 import { ApiService } from "./api.service";
 import type { ChatBotListItem } from "@/types";
 
@@ -13,15 +18,11 @@ export class ChatBotService extends ApiService {
     return await this.get(`/account/${accountId}/chatbots`);
   }
 
-  async getChatBotById(id: string): Promise<ApiResponse<ChatBotListItem>> {
-    return await this.get(`/chatbot/${id}`);
-  }
-
-  async createChatBotFlow(
-    data: any,
-    accountId: string
-  ): Promise<ApiResponse<ChatBotListItem>> {
-    return await this.post(`/chatbot/create-flow/${accountId}`, data);
+  async getChatBotById(
+    accountId: string,
+    chabotId: string
+  ): Promise<ApiResponse<{ docs: ChatBotFormData }>> {
+    return await this.get(`/account/${accountId}/chatbot/${chabotId}`);
   }
 
   async createChatBot(
@@ -31,14 +32,38 @@ export class ChatBotService extends ApiService {
     return await this.post(`/account/${accountId}/chatbot`, data);
   }
 
-  async updateChatBot(
-    id: string,
-    data: { status: boolean }
-  ): Promise<ApiResponse<ChatBotListItem>> {
-    return await this.put(`/chatbot/${id}`, data);
+  async getChatBotFlow(
+    accountId: string,
+    chabotId: string
+  ): Promise<ApiResponse<ApiResponseChatBotFlowDto>> {
+    return await this.get(`/account/${accountId}/chatbot/flow/${chabotId}`);
   }
 
-  async deleteChatBot(id: string): Promise<ApiResponse<ChatBotListItem>> {
-    return await this.delete(`/chatbot/${id}`);
+  async createChatBotFlow(
+    accountId: string,
+    chabotId: string,
+    data: any
+  ): Promise<ApiResponse<ChatBotListItem>> {
+    return await this.post(
+      `/account/${accountId}/chatbot/create-flow/${chabotId}`,
+      data
+    );
+  }
+
+  async updateChatBot(
+    accountId: string,
+    chatbotId: string,
+    data: { status: boolean }
+  ): Promise<ApiResponse<ChatBotListItem>> {
+    return await this.put(`/account/${accountId}/chatbot/${chatbotId}`, data);
+  }
+
+  async deleteChatBot(
+    accountId: string,
+    chatbotId: string
+  ): Promise<ApiResponse<ChatBotListItem>> {
+    return await this.delete(
+      `account/${String(accountId)}/chatbot/${chatbotId}`
+    );
   }
 }

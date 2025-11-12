@@ -1,14 +1,14 @@
+import Chatbot from "@/components/chatFlowEditior/ChatBot";
 import { DataTable, type Column } from "@/components/common";
+import { Switch } from "@/components/ui/switch";
+import { DASHBOARD_PATH } from "@/constants";
 import { ChatBotService, ToastMessageService } from "@/services";
 import { ChatBotManager, useChatBotStore } from "@/stores";
-import type { ChatBotListItem } from "@/types";
+import type { ApiError, ChatBotListItem } from "@/types";
+import { Plus, Trash2 } from "lucide-react";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import moment from "moment";
-import Chatbot from "@/components/chatFlowEditior/ChatBot";
-import { DASHBOARD_PATH } from "@/constants";
-import { Plus } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
 
 export function ChatBotPage() {
   const { accountId } = useParams();
@@ -21,37 +21,6 @@ export function ChatBotPage() {
   const toastMessageService = new ToastMessageService();
   const chatBotLists = useChatBotStore((state) => state.chatBotsList);
   const [loading, setLoading] = useState(false);
-
-  const handleUpdateStatus = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    chatbotId: string
-  ) => {
-    e.stopPropagation();
-
-    const chatbot = chatBotLists.find((chatbot) => chatbot.id === chatbotId);
-    if (!chatbot) return;
-
-    const previousStatus = chatbot.status;
-    const newStatus = !previousStatus;
-
-    chatBotManager.updateChatBotStatus(chatbotId, newStatus);
-
-    try {
-      const updatedData = {
-        status: newStatus,
-      };
-      const response = await chatBotService.updateChatBot(
-        chatbotId,
-        updatedData
-      );
-      console.log(response);
-    } catch (error) {
-      if (error && error instanceof Error) {
-        chatBotManager.updateChatBotStatus(chatbotId, previousStatus);
-        toastMessageService.apiError(error.message);
-      }
-    }
-  };
 
   const columns: Column<ChatBotListItem>[] = [
     {
@@ -93,17 +62,24 @@ export function ChatBotPage() {
         </div>
       ),
     },
-    // {
-    //   key: "action",
-    //   header: "Action",
-    //   className: "min-w-[200px]",
-
-    //   // render: (row) => (
-    //   //   <div>
-    //   //     <div>Delete</div>
-    //   //   </div>
-    //   // ),
-    // },
+    {
+      key: "action",
+      header: "Action",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteChatbot(row.id);
+            }}
+            className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   const getChatBotsList = async () => {
@@ -115,6 +91,68 @@ export function ChatBotPage() {
       toastMessageService.apiError(error as any);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    chatbotId: string
+  ) => {
+    e.stopPropagation();
+
+    const chatbot = chatBotLists.find((chatbot) => chatbot.id === chatbotId);
+    if (!chatbot) return;
+
+    const previousStatus = chatbot.status;
+    const newStatus = !previousStatus;
+
+    chatBotManager.updateChatBotStatus(chatbotId, newStatus);
+
+    try {
+      const updatedData = {
+        status: newStatus,
+      };
+      const response = await chatBotService.updateChatBot(
+        String(accountId),
+        chatbotId,
+        updatedData
+      );
+
+      if (response.status === 200) {
+        toastMessageService.apiSuccess(response.message);
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        chatBotManager.updateChatBotStatus(chatbotId, previousStatus);
+        toastMessageService.apiError(err.message);
+      }
+    }
+  };
+
+  const handleDeleteChatbot = async (chatbotId: string) => {
+    // otpimistic delete
+
+    const chatbot = chatBotLists.find((chatbot) => chatbot.id === chatbotId);
+    if (!chatbot) return;
+
+    chatBotManager.deleteChatBot(chatbotId);
+
+    try {
+      const response = await chatBotService.deleteChatBot(
+        String(accountId),
+        chatbotId
+      );
+
+      if (response.status === 200) {
+        toastMessageService.apiSuccess(response.message);
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        chatBotManager.setChatBotsList(chatBotLists);
+        toastMessageService.apiError(err.message);
+      }
     }
   };
 

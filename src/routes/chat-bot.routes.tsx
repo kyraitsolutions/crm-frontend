@@ -33,7 +33,7 @@ export const chatBotRoutes: RouteObject[] = [
       },
       {
         element: <ChatbotFlowEditor />,
-        path: "builder/:chatBotId",
+        path: ":chatBotId/builder/flow-editor",
       },
       {
         element: <ChatBotDetailLayout />,

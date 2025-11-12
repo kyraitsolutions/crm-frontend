@@ -5,6 +5,11 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import ChatBotBuilderInfo from "./chat-bot-builder-info";
 import ChatBotBuilderInfoTabs from "./chat-bot-builder-info-tabs";
+import { DASHBOARD_PATH } from "@/constants";
+import {
+  mandatoryEdges,
+  mandatoryNodes,
+} from "./chatFlowEditior/ChatbotFlowEditor";
 
 const defaultValues: ChatBotFormData = {
   name: "",
@@ -47,7 +52,9 @@ const defaultValues: ChatBotFormData = {
 };
 
 export const ChatBotBuilder = () => {
+  const chatbot = new ChatBotService();
   const { accountId, chatBotId } = useParams();
+
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toastMessageService = new ToastMessageService();
@@ -68,14 +75,25 @@ export const ChatBotBuilder = () => {
     async (data: any) => {
       try {
         setIsSubmitting(true);
-        const response = await chatBotService.createChatBot(
-          String(accountId),
-          data
-        );
+
+        const response = !chatBotId
+          ? await chatBotService?.createChatBot(String(accountId), data)
+          : await chatBotService.updateChatBot(
+              String(accountId),
+              String(chatBotId),
+              data
+            );
+
+        if (!chatBotId) {
+          const chatbotId = response?.data?.docs?.id;
+          createChatbotWithMandatoryNodes(chatbotId);
+        }
 
         if (response.status === 200 || response.status === 201) {
           toastMessageService.apiSuccess(response.message);
-          // navigate("/dashboard/account/6911bffab35d190351b5ae54/chatbot");
+          navigate(
+            `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`
+          );
         }
       } catch (error) {
         const err = error as ApiError;
@@ -87,26 +105,40 @@ export const ChatBotBuilder = () => {
     [form.getValues()]
   );
 
-  const getChatBotsList = async () => {
+  const createChatbotWithMandatoryNodes = async (chatbotId: string) => {
+    const payloadData = {
+      nodes: mandatoryNodes,
+      edges: mandatoryEdges,
+    };
     try {
-      // setLoading(true);
-      const res: any = await chatBotService.getChatBotsList(String(accountId));
-      console.log(res.data.docs);
-      const chatBot = res.data.docs.find((item: any) => item.id === chatBotId);
-      // setDefaultValues(chatBot);
-      reset(chatBot);
-      // chatBotManager.setChatBotsList(res.data.docs ?? []);
+      await chatbot.createChatBotFlow(
+        String(accountId),
+        String(chatbotId),
+        payloadData
+      );
     } catch (error) {
       console.log(error);
-      // toastMessageService.apiError(error as any);
-    } finally {
-      // setLoading(false);
+    }
+  };
+
+  const getChatBotData = async () => {
+    try {
+      const response = await chatBotService.getChatBotById(
+        String(accountId),
+        String(chatBotId)
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        reset(response.data?.docs);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
     if (chatBotId) {
-      getChatBotsList();
+      getChatBotData();
     }
   }, [chatBotId]);
 

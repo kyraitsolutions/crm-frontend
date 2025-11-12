@@ -9,12 +9,15 @@ import ChatBotBuilderOverview from "./chat-bot-builder-overview";
 import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { useNavigate, useParams } from "react-router-dom";
+import { DASHBOARD_PATH } from "@/constants";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: Settings },
   { id: "customization", label: "Customization", icon: Sliders },
   { id: "appearance", label: "Appearance", icon: Palette },
   { id: "configration", label: "Configuration", icon: Cog },
+  { id: "chatbotFlow", label: "Chatbot Flow", icon: Cog },
 ];
 
 export default function ChatBotBuilderInfoTabs({
@@ -22,8 +25,9 @@ export default function ChatBotBuilderInfoTabs({
 }: {
   isFormSubmitting: boolean;
 }) {
+  const { accountId, chatBotId } = useParams();
   const [activeTab, setActiveTab] = useState("overview");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const {
     formState: { isDirty },
@@ -35,6 +39,7 @@ export default function ChatBotBuilderInfoTabs({
     customization: <ChatBotBuilderCustomization />,
     appearance: <ChatBotBuilderAppearance />,
     configration: <ChatBotBuilderConfiguration />,
+    // chatbotFlow: <ChatbotFlowEditor />,
   };
 
   return (
@@ -63,12 +68,30 @@ export default function ChatBotBuilderInfoTabs({
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          {tabs.map((tab) => (
-            <TabsTrigger key={tab.id} value={tab.id} className="cursor-pointer">
-              <tab.icon className="h-4 w-4" />
-              {tab.label}
-            </TabsTrigger>
-          ))}
+          {tabs.map((tab) => {
+            if (tab.label.toLowerCase() === "chatbot flow" && !chatBotId)
+              return null;
+            return (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className="cursor-pointer"
+                onClick={() => {
+                  if (tab?.id === "chatbotFlow") {
+                    navigate(
+                      `${DASHBOARD_PATH?.getAccountPathChatbot(
+                        String(accountId),
+                        chatBotId
+                      )}${DASHBOARD_PATH?.CHATBOT_BUILDER_FLOW}`
+                    );
+                  }
+                }}
+              >
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
+              </TabsTrigger>
+            );
+          })}
         </TabsList>
 
         <TabsContent value={activeTab}>{tabsMaps[activeTab]}</TabsContent>

@@ -85,7 +85,7 @@ export const chatBotConfigSchema = z.object({
 export const chatBotSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(3, "Name is required and must be at least 3 characters"),
-  status:z.boolean().default(true),
+  status: z.boolean().default(true),
   description: z.string().optional(),
   theme: appearanceSchema,
   config: chatBotConfigSchema,
@@ -141,7 +141,49 @@ export interface ChatBotListItem {
   id: string;
   name: string;
   description: string;
-  status:boolean;
+  status: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ChatbotElement {
+  id: string;
+  type: "text" | "image" | "video" | "audio";
+  content: string;
+  date?: string;
+}
+
+export interface ChatbotNodeData {
+  label: string;
+  value: string;
+  elements: ChatbotElement[];
+}
+
+export interface ChatbotNode {
+  id: string;
+  type: "chat" | "form";
+  position: { x: number; y: number };
+  width?: number;
+  height?: number;
+  selected?: boolean;
+  dragging?: boolean;
+  data: ChatbotNodeData;
+}
+
+export interface ChatbotEdge {
+  id: string;
+  source: string;
+  target: string;
+  animated?: boolean;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
+}
+
+export interface TCreateChatBotFlow {
+  nodes?: ChatbotNode[];
+  edges?: ChatbotEdge[];
+}
+
+export interface ApiResponseChatBotFlowDto {
+  docs: TCreateChatBotFlow;
 }

@@ -8,7 +8,10 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 
+import { ChatBotService, ToastMessageService } from "@/services";
+import { useAuthStore } from "@/stores";
 import {
+  ArrowLeft,
   ListChecks,
   Mail,
   MessageSquare,
@@ -16,14 +19,12 @@ import {
   Smile,
   User,
 } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 import type { Connection, Edge } from "reactflow";
 import { nodeTypes } from "./nodes";
-import { uuid } from "zod";
-import axios from "axios";
-import { ChatBotService } from "@/services";
-import { useAuthStore } from "@/stores";
+import type { ApiError } from "@/types";
 
-const mandatoryNodes = [
+export const mandatoryNodes = [
   {
     id: crypto.randomUUID(),
     type: "chat",
@@ -144,7 +145,7 @@ const mandatoryNodes = [
   },
 ];
 
-const mandatoryEdges = [
+export const mandatoryEdges = [
   {
     id: crypto.randomUUID(),
     source: mandatoryNodes[0].id,
@@ -166,10 +167,12 @@ const mandatoryEdges = [
 ];
 
 export default function ChatbotFlowEditor() {
+  const navigate = useNavigate();
   const chatbot = new ChatBotService();
+  const { accountId, chatBotId } = useParams();
+  const toastMessageService = new ToastMessageService();
 
   const authUser = useAuthStore((state) => state.user);
-  console.log(authUser);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [nodeCount, setNodeCount] = useState(1);
@@ -214,6 +217,30 @@ export default function ChatbotFlowEditor() {
     );
   }, []);
 
+  const onEdgeClick = useCallback((event: any, edge: any) => {
+    event.stopPropagation();
+    setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+  }, []);
+
+  const getChatbotFlow = async () => {
+    try {
+      const response = await chatbot.getChatBotFlow(
+        String(accountId),
+        String(chatBotId)
+      );
+
+      if (response?.status === 200 || response?.status === 201) {
+        const data = response?.data?.docs;
+        const nodes = data?.nodes || [];
+        const edges = data?.edges || [];
+
+        handleRestore(nodes, edges);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const publishChanges = async () => {
     setPublishLoading(true);
     const serializableNodes = nodes.map(({ data, ...rest }) => ({
@@ -221,44 +248,40 @@ export default function ChatbotFlowEditor() {
       data: { ...data, elements: data.elements },
     }));
 
-    localStorage.setItem("nodes", JSON.stringify(serializableNodes));
-    localStorage.setItem("edges", JSON.stringify(edges));
-
-    setTimeout(() => {
-      setPublishLoading(false);
-    }, 2000);
-
     try {
+      const payloadData = {
+        nodes: serializableNodes,
+        edges,
+      };
+
       if (authUser && authUser?.account?.id) {
-        const res = await chatbot.createChatBotFlow(
-          {
-            nodes: serializableNodes,
-            edges,
-          },
-          authUser?.account?.id
+        const response = await chatbot.createChatBotFlow(
+          String(accountId),
+          String(chatBotId),
+          payloadData
         );
-        console.log(res);
+
+        if (response?.status === 200 || response?.status === 201) {
+          toastMessageService.success(
+            response?.message || "Your request was processed successfully"
+          );
+        }
       }
     } catch (error) {
-      console.log(error);
+      const err = error as ApiError;
+
+      if (err) {
+        toastMessageService.apiError(err.message);
+      }
+    } finally {
+      setPublishLoading(false);
     }
   };
 
-  const onEdgeClick = useCallback((event: any, edge: any) => {
-    event.stopPropagation();
-    setEdges((eds) => eds.filter((e) => e.id !== edge.id));
-  }, []);
-
-  useEffect(() => {
-    const savedNodes = localStorage.getItem("nodes");
-    const savedEdges = localStorage.getItem("edges");
-
-    if (savedNodes && savedEdges) {
-      const parsedNodes = JSON.parse(savedNodes);
-      const parsedEdges = JSON.parse(savedEdges);
-
+  const handleRestore = (nodes: any, edges: any) => {
+    if (nodes && edges) {
       // ✅ Reattach functions to every node
-      const hydratedNodes = parsedNodes.map((node: any) => ({
+      const hydratedNodes = nodes.map((node: any) => ({
         ...node,
         data: {
           ...node.data,
@@ -268,20 +291,36 @@ export default function ChatbotFlowEditor() {
       }));
 
       setNodes(hydratedNodes);
-      setEdges(parsedEdges);
+      setEdges(edges);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    // Only add if nodes are empty (first load or localStorage cleared)
-    const savedNodes = localStorage.getItem("nodes");
-    // const nodes = JSON.parse(savedNodes);
-
-    if (!savedNodes && nodes.length === 0) {
-      setNodes(() => [...mandatoryNodes]);
-      setEdges(() => [...mandatoryEdges]);
-    }
+    getChatbotFlow();
   }, []);
+
+  // useEffect(() => {
+  //   const savedNodes = localStorage.getItem("nodes");
+  //   const savedEdges = localStorage.getItem("edges");
+
+  //   if (savedNodes && savedEdges) {
+  //     const parsedNodes = JSON.parse(savedNodes);
+  //     const parsedEdges = JSON.parse(savedEdges);
+
+  //     // ✅ Reattach functions to every node
+  //     const hydratedNodes = parsedNodes.map((node: any) => ({
+  //       ...node,
+  //       data: {
+  //         ...node.data,
+  //         deleteNode,
+  //         updateNode,
+  //       },
+  //     }));
+
+  //     setNodes(hydratedNodes);
+  //     setEdges(parsedEdges);
+  //   }
+  // }, []);
 
   const chatbotFields = [
     {
@@ -332,19 +371,19 @@ export default function ChatbotFlowEditor() {
   ];
 
   return (
-    <div className="w-full grid grid-cols-8  p-2 bg-gray-50 gap-2">
+    <div className="w-full grid grid-cols-8 bg-gray-50 gap-6">
       <div className="col-span-6">
-        <div className="flex justify-end">
-          {/* <button
-            onClick={addNewNode}
-            className="bg-green-600 text-white px-4 py-1 rounded mb-2 cursor-pointer"
+        <div className="flex justify-between items-center">
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-slate-700 text-white flex justify-center items-center h-7 w-10 rounded cursor-pointer "
           >
-            + Add Node
-          </button> */}
+            <ArrowLeft size={16} />
+          </button>
 
           <button
             onClick={publishChanges}
-            className="bg-slate-800 text-white px-4 py-1 rounded mb-2 cursor-pointer ml-2 flex items-center gap-2"
+            className="bg-slate-800 text-white px-4 py-1 rounded  cursor-pointer flex items-center gap-2"
           >
             Publish{" "}
             {publishLoading && (
@@ -353,7 +392,7 @@ export default function ChatbotFlowEditor() {
           </button>
         </div>
 
-        <div className="h-[70vh] border border-gray-300 rounded">
+        <div className="h-[70vh] border border-gray-300 rounded mt-2">
           {/* <ReactFlow
             nodes={nodes}
             edges={edges}

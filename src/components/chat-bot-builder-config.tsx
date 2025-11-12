@@ -35,7 +35,7 @@ export default function ChatBotBuilderConfiguration() {
                 id="showTypingIndicator"
                 checked={config.showTypingIndicator}
                 onCheckedChange={(val) =>
-                  setValue("config.showTypingIndicator", val, {
+                  setValue(`config.showTypingIndicator`, val, {
                     shouldDirty: true,
                   })
                 }
