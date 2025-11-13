@@ -63,6 +63,18 @@ export function ChatBotPage() {
       ),
     },
     {
+      key: "lastActivity",
+      header: "Last Activity",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <div className="font-medium capitalize text-gray-900">
+            {moment(row.updatedAt).fromNow()}
+          </div>
+        </div>
+      ),
+    },
+    {
       key: "action",
       header: "Action",
       cellClassName: "whitespace-nowrap text-gray-700",
@@ -205,7 +217,8 @@ export function ChatBotPage() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-[2fr_1fr]">
+      {/* <div className="grid grid-cols-[2fr_1fr]"> */}
+      <div className="">
         <DataTable<ChatBotListItem>
           data={chatBotLists}
           columns={columns}

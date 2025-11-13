@@ -11,6 +11,7 @@ import { builderRoutes } from "./builder.routes";
 import { chatBotRoutes } from "./chat-bot.routes";
 import { dashboardRoutes } from "./dashboard.routes";
 import { formRoutes } from "./form.routes";
+import { leadRoutes } from "./lead.route";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ export const appRoutes = createBrowserRouter([
           ...builderRoutes,
           ...chatBotRoutes,
           ...formRoutes,
+          ...leadRoutes,
           {
             path: "/on-boarding",
             element: <OnBoardingPage />,
