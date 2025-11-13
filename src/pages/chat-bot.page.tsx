@@ -4,6 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { DASHBOARD_PATH } from "@/constants";
 import { ChatBotService, ToastMessageService } from "@/services";
 import { ChatBotManager, useChatBotStore } from "@/stores";
+import { alertManager } from "@/stores/alert.store";
 import type { ApiError, ChatBotListItem } from "@/types";
 import { Plus, Trash2 } from "lucide-react";
 import moment from "moment";
@@ -142,9 +143,9 @@ export function ChatBotPage() {
     }
   };
 
-  const handleDeleteChatbot = async (chatbotId: string) => {
-    // otpimistic delete
 
+
+  const deleteChatBot = async (chatbotId: string) => {
     const chatbot = chatBotLists.find((chatbot) => chatbot.id === chatbotId);
     if (!chatbot) return;
 
@@ -166,6 +167,18 @@ export function ChatBotPage() {
         toastMessageService.apiError(err.message);
       }
     }
+  }
+
+  const handleDeleteChatbot = async (chatbotId: string) => {
+    alertManager.show({
+      type: "warning",
+      title: "Delete Account",
+      message: "Are you sure you want to delete this account?",
+      onConfirm: () => {
+        deleteChatBot(chatbotId);
+      },
+    });
+    // otpimistic delete 
   };
 
   useEffect(() => {
@@ -225,8 +238,7 @@ export function ChatBotPage() {
           pageSize={20}
           onRowClick={(row) => {
             navigate(
-              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${
-                row.id
+              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${row.id
               }/builder`
             );
           }}
