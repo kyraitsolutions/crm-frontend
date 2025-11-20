@@ -36,7 +36,7 @@ export class ChatBotService extends ApiService {
     accountId: string,
     chabotId: string
   ): Promise<ApiResponse<ApiResponseChatBotFlowDto>> {
-    return await this.get(`/account/${accountId}/chatbot/flow/${chabotId}`);
+    return await this.get(`/account/${accountId}/chatbot/${chabotId}/flow`);
   }
 
   async createChatBotFlow(
@@ -44,10 +44,7 @@ export class ChatBotService extends ApiService {
     chabotId: string,
     data: any
   ): Promise<ApiResponse<ChatBotListItem>> {
-    return await this.post(
-      `/account/${accountId}/chatbot/create-flow/${chabotId}`,
-      data
-    );
+    return await this.post(`/account/${accountId}/chatbot/${chabotId}`, data);
   }
 
   async updateChatBot(
