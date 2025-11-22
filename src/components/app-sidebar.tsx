@@ -6,6 +6,7 @@ import {
   IconDatabase,
   IconFileAi,
   IconFileDescription,
+  IconFileText,
   IconFileWord,
   IconHelp,
   IconInnerShadowTop,
@@ -55,11 +56,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: IconDashboard,
       },
 
-      {
-        title: "Builder",
-        url: "/builder",
-        icon: IconCode,
-      },
+      // {
+      //   title: "Builder",
+      //   url: "/builder",
+      //   icon: IconCode,
+      // },
 
       {
         title: "Chat bot",
@@ -73,7 +74,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: `${DASHBOARD_PATH.getAccountPath(
           String(authUser?.account?.id)
         )}/lead-forms`,
-        icon: IconMessageCircle,
+        icon: IconFileText,
+      },
+      {
+        title: "Leads Centre",
+        url: `${DASHBOARD_PATH.getAccountPath(
+          String(authUser?.account?.id)
+        )}/leads`,
+        icon: IconUsers,
       },
       {
         title: "Team",

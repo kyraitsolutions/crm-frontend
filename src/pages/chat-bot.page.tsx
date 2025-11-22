@@ -4,6 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { DASHBOARD_PATH } from "@/constants";
 import { ChatBotService, ToastMessageService } from "@/services";
 import { ChatBotManager, useChatBotStore } from "@/stores";
+import { alertManager } from "@/stores/alert.store";
 import type { ApiError, ChatBotListItem } from "@/types";
 import { Plus, Trash2 } from "lucide-react";
 import moment from "moment";
@@ -58,6 +59,18 @@ export function ChatBotPage() {
         <div>
           <div className="font-medium text-gray-900">
             {moment(row.createdAt).format("DD-MM-YYYY")}
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "lastActivity",
+      header: "Last Activity",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <div className="font-medium capitalize text-gray-900">
+            {moment(row.updatedAt).fromNow()}
           </div>
         </div>
       ),
@@ -130,9 +143,9 @@ export function ChatBotPage() {
     }
   };
 
-  const handleDeleteChatbot = async (chatbotId: string) => {
-    // otpimistic delete
 
+
+  const deleteChatBot = async (chatbotId: string) => {
     const chatbot = chatBotLists.find((chatbot) => chatbot.id === chatbotId);
     if (!chatbot) return;
 
@@ -154,6 +167,18 @@ export function ChatBotPage() {
         toastMessageService.apiError(err.message);
       }
     }
+  }
+
+  const handleDeleteChatbot = async (chatbotId: string) => {
+    alertManager.show({
+      type: "warning",
+      title: "Delete Account",
+      message: "Are you sure you want to delete this account?",
+      onConfirm: () => {
+        deleteChatBot(chatbotId);
+      },
+    });
+    // otpimistic delete 
   };
 
   useEffect(() => {
@@ -205,15 +230,15 @@ export function ChatBotPage() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-[2fr_1fr]">
+      {/* <div className="grid grid-cols-[2fr_1fr]"> */}
+      <div className="">
         <DataTable<ChatBotListItem>
           data={chatBotLists}
           columns={columns}
           pageSize={20}
           onRowClick={(row) => {
             navigate(
-              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${
-                row.id
+              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${row.id
               }/builder`
             );
           }}

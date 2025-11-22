@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LocalStorageUtils } from "@/utils";
 import { useEffect, useState } from "react";
@@ -22,16 +16,20 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DASHBOARD_PATH } from "@/constants";
 import { AuthStoreManager, useAuthStore } from "@/stores";
+import { alertManager } from "@/stores/alert.store";
+import { formatDate } from "@/utils/date-utils";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { DASHBOARD_PATH } from "@/constants";
-import { formatDate } from "@/utils/date-utils";
+import { ToastMessageService } from "@/services";
+
 export const DashboardPage = () => {
   const navigate = useNavigate();
   const authUser = useAuthStore((state) => state.user);
   const authManager = new AuthStoreManager();
+  const toastService = new ToastMessageService();
   const [accounts, setAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -118,9 +116,21 @@ export const DashboardPage = () => {
       setAccounts((prevAccounts) =>
         prevAccounts.filter((account) => account.id !== accountId)
       );
+      toastService.success("Account deleted successfully");
     } catch (error) {
       console.error("Error deleting account:", error);
     }
+  };
+
+  const handleDeleAccountClick = (accountId: string) => {
+    alertManager.show({
+      type: "warning",
+      title: "Delete Account",
+      message: "Are you sure you want to delete this account?",
+      onConfirm: () => {
+        handleDeleteAccount(accountId);
+      },
+    });
   };
 
   useEffect(() => {
@@ -204,7 +214,7 @@ export const DashboardPage = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDeleteAccount(account.id);
+                  handleDeleAccountClick(account.id);
                 }}
                 className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
               >

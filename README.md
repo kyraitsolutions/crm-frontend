@@ -73,3 +73,38 @@ export default defineConfig([
   },
 ])
 ```
+
+```ts
+import { alertManager } from "@/stores/alert.store";
+
+alertManager.show({
+  type: "warning",
+  title: "Delete Confirmation",
+  message: "Are you sure you want to delete this item?",
+  confirmText: "Delete",
+  cancelText: "Cancel",
+  onConfirm: () => console.log("✅ Deleted!"),
+});
+
+alertManager.show({
+  type: "success",
+  title: "Upload Complete",
+  message: "Your file has been uploaded successfully.",
+  confirmText: "Okay",
+  autoClose: true,
+});
+
+alertManager.show({
+  type: "error",
+  title: "Something went wrong!",
+  message: "We couldn’t process your request. Please try again.",
+  confirmText: "Retry",
+});
+
+alertManager.show({
+  type: "info",
+  title: "Heads Up",
+  message: "Your session will expire in 5 minutes.",
+  confirmText: "Got it",
+});
+```

@@ -24,6 +24,7 @@ import {
 import { PlusCircle, Trash2 } from "lucide-react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { LocalStorageUtils } from "@/utils";
 
 export default function LeadFormNew() {
   const { accountId } = useParams();
@@ -88,7 +89,13 @@ export default function LeadFormNew() {
 
       const res = await axios.post(
         `http://localhost:3000/api/account/${accountId}/form/`,
-        payload
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${LocalStorageUtils.getItem('token')}`,
+          },
+        }
+        ,
       );
       console.log("Form created:", res.data);
       alert("Form created successfully!");
