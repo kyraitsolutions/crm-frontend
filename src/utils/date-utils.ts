@@ -12,3 +12,13 @@ export const formatDate = (dateString: string): string => {
 
   return date.toLocaleDateString("en-GB", options).replace(/,/g, "");
 };
+
+
+export const formatToDayMonth=(dateString: string):string=> {
+        const date = new Date(dateString);
+
+        const day = date.getDate();
+        const month = date.toLocaleString("en-US", { month: "short" });
+
+        return `${day} ${month}`;
+    }

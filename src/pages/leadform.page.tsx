@@ -1,93 +1,57 @@
 import { DataTable, type Column } from "@/components/common";
-import WebSocketClient from "@/config/websocketClient";
-import { DASHBOARD_PATH, WEBSOCKET_EVENTS, WEBSOCKET_URL } from "@/constants";
+import { DASHBOARD_PATH } from "@/constants";
 import { ToastMessageService } from "@/services";
 import { LeadFormService } from "@/services/leadform.service";
-import type { TLead } from "@/types/leadform.type";
+import type { LeadFormListItem } from "@/types/leadform.type";
 import { Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 export function LeadFormPage() {
-  const wsRef = useRef<WebSocketClient | null>(null);
   const { accountId } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const leadFormService = new LeadFormService();
   const toastMessageService = new ToastMessageService();
   const [loading, setLoading] = useState(false);
   const [forms, setLeadForms] = useState<[]>([]);
-  const [leads, setLeads] = useState<TLead[] | []>([]);
 
-  // const columns: Column<LeadFormListItem>[] = [
-  //   // {
-  //   //   key: "id",
-  //   //   header: "Id",
-  //   //   className: "min-w-[200px]",
-  //   //   render: (row) => (
-  //   //     <div>
-  //   //       <div className="font-medium text-gray-900">{row.id}</div>
-  //   //     </div>
-  //   //   ),
-  //   // },
-  //   {
-  //     key: "name",
-  //     header: "Form Title",
-  //     className: "min-w-[200px]",
-
-  //     render: (row) => (
-  //       <div>
-  //         <div className="font-medium text-gray-900">{row.formTitle}</div>
-  //         <div className="text-sm text-gray-500">{row.formDescription}</div>
-  //       </div>
-  //     ),
-  //   },
-  //   {
-  //     key: "createdDisplay",
-  //     header: "Created",
-  //     cellClassName: "whitespace-nowrap text-gray-700",
-  //     render: (row) => (
-  //       <div>
-  //         <div className="font-medium text-gray-900">
-  //           {moment(row.createdAt).format("DD-MM-YYYY")}
-  //         </div>
-  //       </div>
-  //     ),
-  //   },
-  // ];
-
-  const columns: Column<TLead>[] = [
+  const columns: Column<LeadFormListItem>[] = [
+    //   // {
+    //   //   key: "id",
+    //   //   header: "Id",
+    //   //   className: "min-w-[200px]",
+    //   //   render: (row) => (
+    //   //     <div>
+    //   //       <div className="font-medium text-gray-900">{row.id}</div>
+    //   //     </div>
+    //   //   ),
+    //   // },
     {
       key: "name",
-      header: "Name",
+      header: "Form Title",
       className: "min-w-[200px]",
+
       render: (row) => (
         <div>
-          <div className="font-medium text-gray-900">{row.name}</div>
+          <div className="font-medium text-gray-900">{row.formTitle}</div>
+          <div className="text-sm text-gray-500">{row.formDescription}</div>
         </div>
       ),
     },
     {
-      key: "email",
-      header: "Email",
-      className: "min-w-[200px]",
+      key: "createdDisplay",
+      header: "Created",
+      cellClassName: "whitespace-nowrap text-gray-700",
       render: (row) => (
         <div>
-          <div className="font-medium text-gray-900">{row.email}</div>
-        </div>
-      ),
-    },
-    {
-      key: "phone",
-      header: "Phone",
-      className: "min-w-[200px]",
-      render: (row) => (
-        <div>
-          <div className="font-medium text-gray-900">{row.phone}</div>
+          <div className="font-medium text-gray-900">
+            {moment(row.createdAt).format("DD-MM-YYYY")}
+          </div>
         </div>
       ),
     },
   ];
-
   const getLeadFormList = async () => {
     try {
       setLoading(true);
@@ -103,58 +67,10 @@ export function LeadFormPage() {
     }
   };
 
-  const setLeadsList = async (lead: TLead) => {
-    console.log(leads);
-    try {
-      const isLeadExist = leads.find((l: TLead) => l._id === lead._id);
-
-      if (!isLeadExist) {
-        setLeads((prevLeads) => [...prevLeads, lead]);
-      } else {
-        setLeads((prevLeads) =>
-          prevLeads.map((l: TLead) => {
-            if (l._id === lead._id) {
-              return lead;
-            }
-            return l;
-          })
-        );
-      }
-    } catch (error) {
-      toastMessageService.apiError(error as any);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     getLeadFormList();
   }, []);
 
-  // Connect to websocket
-  useEffect(() => {
-    wsRef.current = new WebSocketClient(
-      `${WEBSOCKET_URL}?accountId=${accountId}`
-    );
-
-    wsRef.current.connect((serverResponse) => {
-      if (serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Created"]) {
-        if (serverResponse.data?.lead?.accountId !== accountId) return;
-        setLeads((prevLeads) => [...prevLeads, serverResponse.data?.lead]);
-      } else if (
-        serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Updated"]
-      ) {
-        if (serverResponse.data?.lead?.accountId !== accountId) return;
-        setLeadsList(serverResponse.data?.lead);
-      }
-    });
-
-    return () => {
-      wsRef.current?.close();
-    };
-  }, [leads]);
-
-  console.log(leads);
 
   return (
     <div className="space-y-6 lg:px-4 px-2 py-2">
@@ -182,7 +98,7 @@ export function LeadFormPage() {
       </div>
 
       <div className="grid grid-cols-[2fr_1fr]">
-        {/* <DataTable<LeadFormListItem>
+        <DataTable<LeadFormListItem>
           data={forms}
           columns={columns}
           pageSize={20}
@@ -202,9 +118,8 @@ export function LeadFormPage() {
           paginated={true}
           tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
           loading={loading}
-        /> */}
+        />
 
-        <DataTable data={leads} columns={columns} />
       </div>
     </div>
   );

@@ -204,14 +204,14 @@ export default function ChatbotFlowEditor() {
       nds.map((node) =>
         node.id === id
           ? {
-              ...node,
-              data: {
-                ...node.data,
-                elements: newElements,
-                deleteNode,
-                updateNode,
-              },
-            }
+            ...node,
+            data: {
+              ...node.data,
+              elements: newElements,
+              deleteNode,
+              updateNode,
+            },
+          }
           : node
       )
     );
@@ -242,6 +242,7 @@ export default function ChatbotFlowEditor() {
   };
 
   const publishChanges = async () => {
+    alert("sdhfs")
     setPublishLoading(true);
     const serializableNodes = nodes.map(({ data, ...rest }) => ({
       ...rest,

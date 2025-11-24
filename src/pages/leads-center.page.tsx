@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -43,6 +43,13 @@ import {
     X,
 } from 'lucide-react';
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupButton } from '@/components/ui/input-group';
+import { useParams } from 'react-router-dom';
+import { LeadService } from '@/services/lead.service';
+import WebSocketClient from '@/config/websocketClient';
+import { WEBSOCKET_EVENTS, WEBSOCKET_URL } from '@/constants';
+import type { TLead } from '@/types/leadform.type';
+import { ToastMessageService } from '@/services';
+import { formatDate } from '@/utils/date-utils';
 
 interface Lead {
     id: string;
@@ -50,7 +57,10 @@ interface Lead {
     name: string;
     initials: string;
     stage: string;
-    source: string;
+    source: {
+        name: string;
+        url: string;
+    };
     assignedTo: string;
     channel: string;
     status: string;
@@ -59,6 +69,8 @@ interface Lead {
     phone: string;
     company: string;
     notes: string;
+    customFields?: Record<string, any>;
+    createdAt: string;
 }
 
 // Generate more leads for testing pagination
@@ -76,7 +88,7 @@ const generateLeads = (): Lead[] => {
     const stages = ['Intake', 'Qualified', 'Converted'];
     const sources = ['Paid', 'Organic', 'Referral', 'Social Media'];
     const assignedTo = ['Unassigned', 'John Doe', 'Jane Smith', 'Mike Johnson', 'Sarah Williams'];
-    const channels = ['Email address', 'Phone', 'Website', 'LinkedIn'];
+    const channels = ['Email address', 'Phone', 'Website', 'LinkedIn', 'Landing Page'];
     const statuses = ['Active', 'Inactive', 'Pending'];
     const formStatuses = ['Complete form', 'Incomplete form', 'Pending'];
     const companies = [
@@ -114,6 +126,14 @@ const generateLeads = (): Lead[] => {
 const allLeads: Lead[] = generateLeads();
 
 export default function LeadsCentre() {
+    const { accountId } = useParams();
+    const leadService = new LeadService();
+    const toastMessageService = new ToastMessageService();
+    const wsRef = useRef<WebSocketClient | null>(null);
+
+    const [leads, setLeads] = useState<Lead[] | undefined>(undefined);
+    const [loading, setLoading] = useState(false);
+
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -223,6 +243,107 @@ export default function LeadsCentre() {
         setSelectedReadFilter('All');
         setCurrentPage(1);
     };
+
+
+    const getLeads = async () => {
+        try {
+            const skip = (currentPage - 1) * pageSize;
+            const limit = pageSize;
+
+            const params: Record<string, any> = { skip, limit };
+
+            // Add filters
+            if (searchQuery.trim()) params.q = searchQuery.trim();
+            if (selectedStageFilter && selectedStageFilter !== "All")
+                params.stage = selectedStageFilter;
+            if (selectedStatus && selectedStatus !== "All Status")
+                params.status = selectedStatus;
+            if (selectedSource && selectedSource !== "All Sources")
+                params.source = selectedSource;
+            if (selectedAssignedTo && selectedAssignedTo !== "All Users")
+                params.assignedTo = selectedAssignedTo;
+            if (selectedCampaign && selectedCampaign !== "All Campaigns")
+                params.campaign = selectedCampaign;
+            if (selectedForm && selectedForm !== "All Forms") params.form = selectedForm;
+            if (selectedDate && selectedDate !== "Select dates")
+                params.dateRange = selectedDate;
+            if (selectedLabel && selectedLabel !== "All Labels")
+                params.label = selectedLabel;
+
+            // ONLY for logging
+            const queryString = new URLSearchParams(
+                Object.entries(params).reduce((acc, [key, val]) => {
+                    if (val !== undefined && val !== null) {
+                        acc[key] = String(val);
+                    }
+                    return acc;
+                }, {} as Record<string, string>)
+            ).toString();
+
+            console.log("Fetching leads:", params, "query:", queryString);
+
+            // Correct call — passing params object
+            const response = await leadService.getLeads(String(accountId), params);
+
+            console.log(response.data.docs);
+
+            setLeads(response.data?.docs);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    // Auto refresh on filter change
+    useEffect(() => {
+        getLeads();
+    }, [selectedLead]);
+
+
+    const setLeadsList = async (lead: TLead) => {
+        console.log(leads);
+        try {
+            const isLeadExist = leads?.find((l: TLead) => l._id === lead._id);
+
+            if (!isLeadExist) {
+                setLeads((prevLeads) => [...prevLeads, lead]);
+            } else {
+                setLeads((prevLeads) =>
+                    prevLeads.map((l: TLead) => {
+                        if (l._id === lead._id) {
+                            return lead;
+                        }
+                        return l;
+                    })
+                );
+            }
+        } catch (error) {
+            toastMessageService.apiError(error as any);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        wsRef.current = new WebSocketClient(
+            `${WEBSOCKET_URL}?accountId=${accountId}`
+        );
+
+        wsRef.current.connect((serverResponse) => {
+            if (serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Created"]) {
+                if (serverResponse.data?.lead?.accountId !== accountId) return;
+                setLeads((prevLeads) => [...prevLeads, serverResponse.data?.lead]);
+            } else if (
+                serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Updated"]
+            ) {
+                if (serverResponse.data?.lead?.accountId !== accountId) return;
+                setLeadsList(serverResponse.data?.lead);
+            }
+        });
+
+        return () => {
+            wsRef.current?.close();
+        };
+    }, [leads]);
+    console.log(leads)
 
     return (
         <div className=" bg-background">
@@ -591,6 +712,18 @@ export default function LeadsCentre() {
                                 </TableHead>
                                 <TableHead>
                                     <Button variant="ghost" size="sm" className="h-auto p-0 font-medium text-foreground hover:text-primary">
+                                        Phone
+                                        <ArrowUpDown className="ml-2 h-3 w-3" />
+                                    </Button>
+                                </TableHead>
+                                <TableHead>
+                                    <Button variant="ghost" size="sm" className="h-auto p-0 font-medium text-foreground hover:text-primary">
+                                        Email
+                                        <ArrowUpDown className="ml-2 h-3 w-3" />
+                                    </Button>
+                                </TableHead>
+                                <TableHead>
+                                    <Button variant="ghost" size="sm" className="h-auto p-0 font-medium text-foreground hover:text-primary">
                                         Stage
                                         <ArrowUpDown className="ml-2 h-3 w-3" />
                                     </Button>
@@ -601,18 +734,18 @@ export default function LeadsCentre() {
                                         <ArrowUpDown className="ml-2 h-3 w-3" />
                                     </Button>
                                 </TableHead>
-                                <TableHead>
+                                {/* <TableHead>
                                     <Button variant="ghost" size="sm" className="h-auto p-0 font-medium text-foreground hover:text-primary">
                                         Assigned to
                                         <ArrowUpDown className="ml-2 h-3 w-3" />
                                     </Button>
-                                </TableHead>
-                                <TableHead>
+                                </TableHead> */}
+                                {/* <TableHead>
                                     <Button variant="ghost" size="sm" className="h-auto p-0 font-medium text-foreground hover:text-primary">
                                         Channel
                                         <ArrowUpDown className="ml-2 h-3 w-3" />
                                     </Button>
-                                </TableHead>
+                                </TableHead> */}
                                 <TableHead>
                                     <Button variant="ghost" size="sm" className="h-auto p-0 font-medium text-foreground hover:text-primary">
                                         Status
@@ -623,8 +756,8 @@ export default function LeadsCentre() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {paginatedLeads.length > 0 ? (
-                                paginatedLeads.map((lead) => (
+                            {leads && leads?.length > 0 ? (
+                                leads?.map((lead: any) => (
                                     <TableRow
                                         key={lead.id}
                                         className="cursor-pointer hover:bg-accent/50 transition-colors"
@@ -633,14 +766,20 @@ export default function LeadsCentre() {
                                         <TableCell onClick={(e) => e.stopPropagation()}>
                                             <Checkbox />
                                         </TableCell>
-                                        <TableCell className="text-sm text-muted-foreground">{lead.dateAdded}</TableCell>
+                                        <TableCell className="text-sm text-muted-foreground">{formatDate(lead.createdAt)}</TableCell>
                                         <TableCell>
                                             <div className="flex items-center gap-3">
                                                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
-                                                    {lead.initials}
+                                                    {lead.name.charAt(0).toUpperCase()}
                                                 </div>
-                                                <span className="font-medium text-foreground">{lead.name}</span>
+                                                <span className="font-medium text-foreground capitalize">{lead.name}</span>
                                             </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="font-medium text-foreground capitalize">{lead.phone}</span>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="font-medium text-foreground capitalize">{lead.email}</span>
                                         </TableCell>
                                         <TableCell>
                                             <Button variant="ghost" size="sm" className="h-auto p-0 text-foreground hover:text-primary">
@@ -649,17 +788,17 @@ export default function LeadsCentre() {
                                             </Button>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge variant="secondary" className="font-normal">
-                                                {lead.source}
+                                            <Badge variant="secondary" className="font-normal capitalize">
+                                                {lead.source.name}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell>
+                                        {/* <TableCell>
                                             <Button variant="ghost" size="sm" className="h-auto p-0 text-foreground hover:text-primary">
                                                 {lead.assignedTo}
                                                 <ChevronDown className="ml-1 h-3 w-3" />
                                             </Button>
-                                        </TableCell>
-                                        <TableCell className="text-sm text-muted-foreground">{lead.channel}</TableCell>
+                                        </TableCell> */}
+                                        {/* <TableCell className="text-sm text-muted-foreground">{lead.channel}</TableCell> */}
                                         <TableCell>
                                             <div className="space-y-1.5">
                                                 <Badge variant="secondary" className="font-normal">
@@ -758,10 +897,10 @@ export default function LeadsCentre() {
                     <SheetHeader>
                         <SheetTitle className="flex items-center gap-3">
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-lg font-semibold text-primary">
-                                {selectedLead?.initials}
+                                {selectedLead?.name.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                                <div className="text-xl font-semibold text-foreground">{selectedLead?.name}</div>
+                                <div className="text-xl font-semibold text-foreground capitalize">{selectedLead?.name}</div>
                                 <div className="text-sm font-normal text-muted-foreground">{selectedLead?.company}</div>
                             </div>
                         </SheetTitle>
@@ -779,10 +918,10 @@ export default function LeadsCentre() {
                                     <div className="text-xs font-medium text-muted-foreground mb-1">Phone</div>
                                     <div className="text-sm text-foreground">{selectedLead?.phone}</div>
                                 </div>
-                                <div>
+                                {/* <div>
                                     <div className="text-xs font-medium text-muted-foreground mb-1">Company</div>
                                     <div className="text-sm text-foreground">{selectedLead?.company}</div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
@@ -795,33 +934,55 @@ export default function LeadsCentre() {
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="text-xs font-medium text-muted-foreground">Source</div>
-                                    <Badge variant="secondary">{selectedLead?.source}</Badge>
+                                    <Badge variant="secondary">{selectedLead?.source?.name}</Badge>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <div className="text-xs font-medium text-muted-foreground">Source URL</div>
+                                    <Badge variant="secondary">
+                                        {selectedLead?.source?.url ? selectedLead.source.url.slice(0, 50) : '-'}
+                                    </Badge>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="text-xs font-medium text-muted-foreground">Status</div>
                                     <Badge variant="secondary">{selectedLead?.status}</Badge>
                                 </div>
-                                <div className="flex items-center justify-between">
+                                {/* <div className="flex items-center justify-between">
                                     <div className="text-xs font-medium text-muted-foreground">Form Status</div>
                                     <Badge className="bg-green-50 text-green-700 hover:bg-green-100 border-green-200">
                                         {selectedLead?.formStatus}
                                     </Badge>
-                                </div>
-                                <div className="flex items-center justify-between">
+                                </div> */}
+                                {/* <div className="flex items-center justify-between">
                                     <div className="text-xs font-medium text-muted-foreground">Assigned to</div>
                                     <span className="text-sm text-foreground">{selectedLead?.assignedTo}</span>
-                                </div>
-                                <div className="flex items-center justify-between">
+                                </div> */}
+                                {/* <div className="flex items-center justify-between">
                                     <div className="text-xs font-medium text-muted-foreground">Channel</div>
                                     <span className="text-sm text-foreground">{selectedLead?.channel}</span>
-                                </div>
+                                </div> */}
                                 <div className="flex items-center justify-between">
                                     <div className="text-xs font-medium text-muted-foreground">Date Added</div>
-                                    <span className="text-sm text-foreground">{selectedLead?.dateAdded}</span>
+                                    <span className="text-sm text-foreground">{formatDate(selectedLead?.createdAt)}</span>
                                 </div>
                             </div>
                         </div>
 
+                        <div>
+                            <h3 className="mb-3 text-sm font-semibold text-foreground">Other Details</h3>
+                            <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
+                                {selectedLead?.customFields && Object.keys(selectedLead.customFields).length > 0 ? (
+                                    Object.entries(selectedLead.customFields).map(([key, value]) => (
+                                        <div key={key} className="">
+                                            <div className="text-sm font-medium text-muted-foreground">{key}</div>
+                                            <div className="text-sm text-foreground">{value}</div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-sm text-muted-foreground">No additional details available.</div>
+                                )}
+                            </div>
+
+                        </div>
                         <div>
                             <h3 className="mb-3 text-sm font-semibold text-foreground">Notes</h3>
                             <div className="rounded-lg border bg-muted/30">

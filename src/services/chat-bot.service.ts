@@ -2,7 +2,6 @@ import type {
   ApiResponse,
   ApiResponseChatBotFlowDto,
   ChatBotFormData,
-  TCreateChatBotFlow,
 } from "@/types";
 import { ApiService } from "./api.service";
 import type { ChatBotListItem } from "@/types";
