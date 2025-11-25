@@ -82,136 +82,8 @@ interface Lead {
   createdAt: string;
 }
 
-// Generate more leads for testing pagination
-const generateLeads = (): Lead[] => {
-  const names = [
-    "Sanjeev Vohra",
-    "Suman Kumar",
-    "Subodh Malasi",
-    "Varsha Mehta",
-    "Nidhi Taneja",
-    "Sanjay Makhija",
-    "Rajesh Patel",
-    "Priya Sharma",
-    "Amit Singh",
-    "Kavita Reddy",
-    "Rohit Gupta",
-    "Anjali Desai",
-    "Vikram Joshi",
-    "Meera Nair",
-    "Arjun Kapoor",
-    "Divya Iyer",
-    "Karan Malhotra",
-    "Shreya Agarwal",
-    "Rahul Mehta",
-    "Pooja Shah",
-    "Aditya Kumar",
-    "Neha Verma",
-    "Siddharth Rao",
-    "Tanvi Chawla",
-    "Vivek Agarwal",
-    "Isha Menon",
-    "Kunal Shah",
-    "Riya Bhatt",
-    "Harsh Patel",
-    "Ananya Singh",
-    "Manish Kumar",
-    "Sneha Reddy",
-    "Abhishek Sharma",
-    "Deepika Nair",
-    "Varun Iyer",
-    "Shruti Joshi",
-    "Nikhil Gupta",
-    "Aishwarya Rao",
-    "Rohan Desai",
-    "Kritika Kapoor",
-    "Yash Malhotra",
-    "Sakshi Agarwal",
-    "Mohit Verma",
-    "Ritika Chawla",
-    "Gaurav Mehta",
-    "Pallavi Shah",
-    "Akash Kumar",
-    "Swati Reddy",
-  ];
-  const stages = ["Intake", "Qualified", "Converted"];
-  const sources = ["Paid", "Organic", "Referral", "Social Media"];
-  const assignedTo = [
-    "Unassigned",
-    "John Doe",
-    "Jane Smith",
-    "Mike Johnson",
-    "Sarah Williams",
-  ];
-  const channels = [
-    "Email address",
-    "Phone",
-    "Website",
-    "LinkedIn",
-    "Landing Page",
-  ];
-  const statuses = ["Active", "Inactive", "Pending"];
-  const formStatuses = ["Complete form", "Incomplete form", "Pending"];
-  const companies = [
-    "Tech Solutions Ltd",
-    "Digital Marketing Inc",
-    "Innovation Hub",
-    "Growth Ventures",
-    "Startup Labs",
-    "Business Solutions",
-    "Cloud Services",
-    "Data Analytics Co",
-    "Software Development",
-    "IT Consulting",
-    "E-commerce Platform",
-    "FinTech Solutions",
-    "HealthTech Inc",
-    "EdTech Ventures",
-    "Real Estate Pro",
-    "Marketing Agency",
-    "Design Studio",
-    "Consulting Firm",
-    "Manufacturing Co",
-    "Retail Solutions",
-  ];
-  const dates = [
-    "23 Oct",
-    "22 Oct",
-    "21 Oct",
-    "20 Oct",
-    "19 Oct",
-    "18 Oct",
-    "17 Oct",
-    "16 Oct",
-    "15 Oct",
-    "14 Oct",
-  ];
 
-  return names.map((name, index) => {
-    const initials = name
-      .split(" ")
-      .map((n) => n[0])
-      .join("");
-    return {
-      id: `lead-${index + 1}`,
-      dateAdded: dates[index % dates.length],
-      name,
-      initials,
-      stage: stages[index % stages.length],
-      source: sources[index % sources.length],
-      assignedTo: assignedTo[index % assignedTo.length],
-      channel: channels[index % channels.length],
-      status: statuses[index % statuses.length],
-      formStatus: formStatuses[index % formStatuses.length],
-      email: `${name.replace(/\s/g, ".").toLowerCase()}@example.com`,
-      phone: `+91-98${(100000000 + index * 12345).toString().padStart(8, "0")}`,
-      company: companies[index % companies.length],
-      notes: `Lead note for ${name}`,
-    };
-  });
-};
-
-const allLeads: Lead[] = generateLeads();
+const allLeads: Lead[] = [];
 
 export default function LeadsCentre() {
   const { accountId } = useParams();
@@ -245,19 +117,19 @@ export default function LeadsCentre() {
 
   // Get unique values for filters
   const uniqueStages = useMemo(
-    () => Array.from(new Set(allLeads.map((l) => l.stage))),
+    () => Array.from(new Set(leads.map((l) => l.stage))),
     []
   );
   const uniqueSources = useMemo(
-    () => Array.from(new Set(allLeads.map((l) => l.source))),
+    () => Array.from(new Set(leads.map((l) => l.source))),
     []
   );
   const uniqueStatuses = useMemo(
-    () => Array.from(new Set(allLeads.map((l) => l.status))),
+    () => Array.from(new Set(leads.map((l) => l.status))),
     []
   );
   const uniqueAssignedTo = useMemo(
-    () => Array.from(new Set(allLeads.map((l) => l.assignedTo))),
+    () => Array.from(new Set(leads.map((l) => l.assignedTo))),
     []
   );
 
@@ -266,7 +138,7 @@ export default function LeadsCentre() {
 
   // Filter and search logic
   const filteredLeads = useMemo(() => {
-    let filtered = [...allLeads];
+    let filtered = [...leads];
 
     // Search filter
     if (searchQuery.trim()) {
@@ -353,8 +225,10 @@ export default function LeadsCentre() {
   }, [filteredLeads.length, convertedLeads]);
 
   const handleRowClick = (lead: Lead) => {
-    setSelectedLead(lead);
-    setIsSheetOpen(true);
+    console.log("Lead:", lead)
+    alert("hdk")
+    // setSelectedLead(lead);
+    // setIsSheetOpen(true);
   };
 
   //   const handlePageChange = (page: number) => {
@@ -463,12 +337,14 @@ export default function LeadsCentre() {
       if (serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Created"]) {
         if (serverResponse.data?.lead?.accountId !== accountId) return;
         setLeads((prevLeads) => [serverResponse.data?.lead, ...prevLeads]);
+
         // getLeads();
       } else if (
         serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Updated"]
       ) {
         if (serverResponse.data?.lead?.accountId !== accountId) return;
         setLeadsList(serverResponse.data?.lead);
+        // getLeads()
       }
     });
 
@@ -771,16 +647,16 @@ export default function LeadsCentre() {
                 selectedSource !== "All Sources" ||
                 selectedAssignedTo !== "All Users" ||
                 selectedStageFilter !== "All") && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4 mr-1" />
-                  Clear
-                </Button>
-              )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Clear
+                  </Button>
+                )}
             </div>
           )}
         </div>
@@ -1217,7 +1093,7 @@ export default function LeadsCentre() {
               </h3>
               <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
                 {selectedLead?.customFields &&
-                Object.keys(selectedLead.customFields).length > 0 ? (
+                  Object.keys(selectedLead.customFields).length > 0 ? (
                   Object.entries(selectedLead.customFields).map(
                     ([key, value]) => (
                       <div key={key} className="">
