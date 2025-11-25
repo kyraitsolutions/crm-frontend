@@ -1,7 +1,5 @@
-import * as React from "react";
 import {
   IconCamera,
-  IconCode,
   IconDashboard,
   IconDatabase,
   IconFileAi,
@@ -15,6 +13,7 @@ import {
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
+import * as React from "react";
 
 // import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
@@ -29,9 +28,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useAuthStore } from "@/stores";
 import { DASHBOARD_PATH } from "@/constants";
-import { CircleUser, House } from "lucide-react";
+import { useAuthStore } from "@/stores";
+import { House } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const authUser = useAuthStore((state) => state.user);

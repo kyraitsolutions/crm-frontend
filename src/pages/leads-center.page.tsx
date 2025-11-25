@@ -1,19 +1,27 @@
-import { useState, useMemo, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { FilterDropdown, type Option } from "@/components/filter-dropdown";
+import { Pagination } from "@/components/pagination";
+import { TableSkeleton } from "@/components/skeltons/TableSkeltons";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   Table,
   TableBody,
@@ -22,43 +30,40 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import WebSocketClient from "@/config/websocketClient";
 import {
-  Users,
-  Download,
-  Bell,
-  Settings,
-  Plus,
-  ChevronDown,
-  MoreVertical,
+  dateOptions,
+  formOptions,
+  labelOptions,
+  sourceOptions,
+  statusOptions,
+  WEBSOCKET_EVENTS,
+  WEBSOCKET_URL,
+} from "@/constants";
+import useDebounce from "@/hooks/useDebounce";
+import { usePagination } from "@/hooks/usePagination";
+import { LeadService } from "@/services/lead.service";
+import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
+import buildParams from "@/utils/build-params.utils";
+import { formatDate } from "@/utils/date-utils";
+import {
   ArrowUpDown,
-  LayoutList,
-  Table2,
+  Bell,
+  ChevronDown,
+  Download,
   Filter,
   Info,
+  LayoutList,
+  MoreVertical,
+  Plus,
   Search,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
+  Settings,
+  Table2,
+  Users,
   X,
 } from "lucide-react";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  InputGroupButton,
-} from "@/components/ui/input-group";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { LeadService } from "@/services/lead.service";
-import WebSocketClient from "@/config/websocketClient";
-import { WEBSOCKET_EVENTS, WEBSOCKET_URL } from "@/constants";
-import type { TLead } from "@/types/leadform.type";
-import { ToastMessageService } from "@/services";
-import { formatDate } from "@/utils/date-utils";
-import { Skeleton } from "@/components/ui/skeleton";
-import { TableSkeleton } from "@/components/skeltons/TableSkeltons";
-import { usePagination } from "@/hooks/usePagination";
-import { Pagination } from "@/components/pagination";
 
 interface Lead {
   id: string;
@@ -82,239 +87,49 @@ interface Lead {
   createdAt: string;
 }
 
-// Generate more leads for testing pagination
-const generateLeads = (): Lead[] => {
-  const names = [
-    "Sanjeev Vohra",
-    "Suman Kumar",
-    "Subodh Malasi",
-    "Varsha Mehta",
-    "Nidhi Taneja",
-    "Sanjay Makhija",
-    "Rajesh Patel",
-    "Priya Sharma",
-    "Amit Singh",
-    "Kavita Reddy",
-    "Rohit Gupta",
-    "Anjali Desai",
-    "Vikram Joshi",
-    "Meera Nair",
-    "Arjun Kapoor",
-    "Divya Iyer",
-    "Karan Malhotra",
-    "Shreya Agarwal",
-    "Rahul Mehta",
-    "Pooja Shah",
-    "Aditya Kumar",
-    "Neha Verma",
-    "Siddharth Rao",
-    "Tanvi Chawla",
-    "Vivek Agarwal",
-    "Isha Menon",
-    "Kunal Shah",
-    "Riya Bhatt",
-    "Harsh Patel",
-    "Ananya Singh",
-    "Manish Kumar",
-    "Sneha Reddy",
-    "Abhishek Sharma",
-    "Deepika Nair",
-    "Varun Iyer",
-    "Shruti Joshi",
-    "Nikhil Gupta",
-    "Aishwarya Rao",
-    "Rohan Desai",
-    "Kritika Kapoor",
-    "Yash Malhotra",
-    "Sakshi Agarwal",
-    "Mohit Verma",
-    "Ritika Chawla",
-    "Gaurav Mehta",
-    "Pallavi Shah",
-    "Akash Kumar",
-    "Swati Reddy",
-  ];
-  const stages = ["Intake", "Qualified", "Converted"];
-  const sources = ["Paid", "Organic", "Referral", "Social Media"];
-  const assignedTo = [
-    "Unassigned",
-    "John Doe",
-    "Jane Smith",
-    "Mike Johnson",
-    "Sarah Williams",
-  ];
-  const channels = [
-    "Email address",
-    "Phone",
-    "Website",
-    "LinkedIn",
-    "Landing Page",
-  ];
-  const statuses = ["Active", "Inactive", "Pending"];
-  const formStatuses = ["Complete form", "Incomplete form", "Pending"];
-  const companies = [
-    "Tech Solutions Ltd",
-    "Digital Marketing Inc",
-    "Innovation Hub",
-    "Growth Ventures",
-    "Startup Labs",
-    "Business Solutions",
-    "Cloud Services",
-    "Data Analytics Co",
-    "Software Development",
-    "IT Consulting",
-    "E-commerce Platform",
-    "FinTech Solutions",
-    "HealthTech Inc",
-    "EdTech Ventures",
-    "Real Estate Pro",
-    "Marketing Agency",
-    "Design Studio",
-    "Consulting Firm",
-    "Manufacturing Co",
-    "Retail Solutions",
-  ];
-  const dates = [
-    "23 Oct",
-    "22 Oct",
-    "21 Oct",
-    "20 Oct",
-    "19 Oct",
-    "18 Oct",
-    "17 Oct",
-    "16 Oct",
-    "15 Oct",
-    "14 Oct",
-  ];
-
-  return names.map((name, index) => {
-    const initials = name
-      .split(" ")
-      .map((n) => n[0])
-      .join("");
-    return {
-      id: `lead-${index + 1}`,
-      dateAdded: dates[index % dates.length],
-      name,
-      initials,
-      stage: stages[index % stages.length],
-      source: sources[index % sources.length],
-      assignedTo: assignedTo[index % assignedTo.length],
-      channel: channels[index % channels.length],
-      status: statuses[index % statuses.length],
-      formStatus: formStatuses[index % formStatuses.length],
-      email: `${name.replace(/\s/g, ".").toLowerCase()}@example.com`,
-      phone: `+91-98${(100000000 + index * 12345).toString().padStart(8, "0")}`,
-      company: companies[index % companies.length],
-      notes: `Lead note for ${name}`,
-    };
-  });
-};
-
-const allLeads: Lead[] = generateLeads();
-
 export default function LeadsCentre() {
+  // Params
   const { accountId } = useParams();
-  const leadService = new LeadService();
-  const toastMessageService = new ToastMessageService();
+
+  // Websocket ref
   const wsRef = useRef<WebSocketClient | null>(null);
 
-  const [leads, setLeads] = useState<TLead[] | []>([]);
-  const [isLoadingLeads, setIsLoadingLeads] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // Stores for leads
+  const leadStoreManager = new LeadsStoreManager();
+  const { leads: allLeads } = useLeadsStore((state) => state);
 
+  // Leads related states and services stores etc
+  const leadService = new LeadService();
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isLoadingLeads, setIsLoadingLeads] = useState(false);
+
+  const isSkeletonShow = useRef(true);
+
+  // Filters and search query state
+  const [filters, setFilters] = useState<Record<string, Option>>({
+    lead: { label: "All Leads", value: null },
+    campaign: { label: "All Campaigns", value: null },
+    form: { label: "All Forms", value: null },
+    date: { label: "All Dates", value: null },
+    status: { label: "All Status", value: null },
+    source: { label: "All Sources", value: null },
+    assignedTo: { label: "All Users", value: null },
+    label: { label: "All Labels", value: null },
+    stage: { label: "All Stages", value: null },
+    read: { label: "All", value: null },
+  });
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(10);
 
-  // Filter states
-  const [selectedCampaign, setSelectedCampaign] =
-    useState<string>("All Campaigns");
-  const [selectedForm, setSelectedForm] = useState<string>("All Forms");
-  const [selectedDate, setSelectedDate] = useState<string>("Select dates");
-  const [selectedStatus, setSelectedStatus] = useState<string>("All Status");
-  const [selectedSource, setSelectedSource] = useState<string>("All Sources");
-  const [selectedAssignedTo, setSelectedAssignedTo] =
-    useState<string>("All Users");
-  const [selectedLabel, setSelectedLabel] = useState<string>("All Labels");
-  const [selectedStageFilter, setSelectedStageFilter] = useState<string>("All");
-  const [selectedReadFilter, setSelectedReadFilter] = useState<string>("All");
-
-  // Get unique values for filters
-  const uniqueStages = useMemo(
-    () => Array.from(new Set(allLeads.map((l) => l.stage))),
-    []
-  );
-  const uniqueSources = useMemo(
-    () => Array.from(new Set(allLeads.map((l) => l.source))),
-    []
-  );
-  const uniqueStatuses = useMemo(
-    () => Array.from(new Set(allLeads.map((l) => l.status))),
-    []
-  );
-  const uniqueAssignedTo = useMemo(
-    () => Array.from(new Set(allLeads.map((l) => l.assignedTo))),
-    []
-  );
-
-  // Note
-  const [note, setNote] = useState(selectedLead?.notes);
-
-  // Filter and search logic
-  const filteredLeads = useMemo(() => {
-    let filtered = [...allLeads];
-
-    // Search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (lead) =>
-          lead.name.toLowerCase().includes(query) ||
-          lead.email.toLowerCase().includes(query) ||
-          lead.company.toLowerCase().includes(query) ||
-          lead.phone.includes(query) ||
-          lead.notes.toLowerCase().includes(query)
-      );
-    }
-
-    // Stage filter
-    if (selectedStageFilter !== "All") {
-      filtered = filtered.filter((lead) => lead.stage === selectedStageFilter);
-    }
-
-    // Status filter
-    if (selectedStatus !== "All Status") {
-      filtered = filtered.filter((lead) => lead.status === selectedStatus);
-    }
-
-    // Source filter
-    if (selectedSource !== "All Sources") {
-      filtered = filtered.filter((lead) => lead.source === selectedSource);
-    }
-
-    // Assigned to filter
-    if (selectedAssignedTo !== "All Users") {
-      filtered = filtered.filter(
-        (lead) => lead.assignedTo === selectedAssignedTo
-      );
-    }
-
-    return filtered;
-  }, [
-    searchQuery,
-    selectedStageFilter,
-    selectedStatus,
-    selectedSource,
-    selectedAssignedTo,
-  ]);
-
+  // Pagination state
+  const [pageSize] = useState(20);
   const [totalItems, setTotalItems] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Pagination logic
+  // Pagination hook
   const {
     currentPage: currentPageNumber,
     goToPage,
@@ -324,100 +139,59 @@ export default function LeadsCentre() {
     itemsPerPage: pageSize,
     initialPage: currentPage,
   });
-  console.log(totalPages);
 
-  //   const totalPages = Math.ceil(filteredLeads.length / pageSize);
-  //   const startIndex = (currentPage - 1) * pageSize;
-  //   const endIndex = startIndex + pageSize;
-  //   const paginatedLeads = filteredLeads.slice(startIndex, endIndex);
-
-  // Update page when filters change
-  //   useEffect(() => {
-  //     if (currentPage > totalPages && totalPages > 0) {
-  //       setCurrentPage(1);
-  //     }
-  //   }, [totalPages, currentPage]);
-
-  // Calculate stats
-  const intakeLeads = useMemo(
-    () => filteredLeads.filter((l) => l.stage === "Intake").length,
-    [filteredLeads]
-  );
-  const convertedLeads = useMemo(
-    () => filteredLeads.filter((l) => l.stage === "Converted").length,
-    [filteredLeads]
-  );
-  const conversionRate = useMemo(() => {
-    if (filteredLeads.length === 0) return 0;
-    return ((convertedLeads / filteredLeads.length) * 100).toFixed(1);
-  }, [filteredLeads.length, convertedLeads]);
+  // Note
+  const [note, setNote] = useState(selectedLead?.notes);
 
   const handleRowClick = (lead: Lead) => {
     setSelectedLead(lead);
     setIsSheetOpen(true);
   };
 
-  //   const handlePageChange = (page: number) => {
-  //     setCurrentPage(Math.max(1, Math.min(page, totalPages)));
-  //   };
-
-  const clearFilters = () => {
-    setSearchQuery("");
-    setSelectedCampaign("All Campaigns");
-    setSelectedForm("All Forms");
-    setSelectedDate("Select dates");
-    setSelectedStatus("All Status");
-    setSelectedSource("All Sources");
-    setSelectedAssignedTo("All Users");
-    setSelectedLabel("All Labels");
-    setSelectedStageFilter("All");
-    setSelectedReadFilter("All");
-    setCurrentPage(1);
-  };
+  // const clearFilters = () => {
+  //   setSearchQuery("");
+  //   // setSelectedCampaign("All Campaigns");
+  //   // setSelectedForm("All Forms");
+  //   // setSelectedDate("Select dates");
+  //   // setSelectedStatus("All Status");
+  //   // setSelectedSource("All Sources");
+  //   // setSelectedAssignedTo("All Users");
+  //   // setSelectedLabel("All Labels");
+  //   // setSelectedStageFilter("All");
+  //   // setSelectedReadFilter("All");
+  //   // setCurrentPage(1);
+  // };
 
   const getLeads = async () => {
-    setIsLoadingLeads(true);
+    if (isSkeletonShow.current) {
+      setIsLoadingLeads(true);
+      isSkeletonShow.current = false;
+    }
     try {
       const skip = (currentPageNumber - 1) * pageSize;
       const limit = pageSize;
 
-      const params: Record<string, any> = { skip, limit };
+      const allFilters = {
+        q: searchQuery.trim() || undefined,
+        stage: filters.stage.value,
+        status: filters.status.value,
+        source: filters.source.value,
+        assignedTo: filters.assignedTo.value,
+        campaign: filters.campaign.value,
+        form: filters.form.value,
+        dateRange: filters.date.value,
+        label: filters.label.value,
+        lead: filters.lead.value,
+        read: filters.read.value,
+      };
 
-      // Add filters
-      if (searchQuery.trim()) params.q = searchQuery.trim();
-      if (selectedStageFilter && selectedStageFilter !== "All")
-        params.stage = selectedStageFilter;
-      if (selectedStatus && selectedStatus !== "All Status")
-        params.status = selectedStatus;
-      if (selectedSource && selectedSource !== "All Sources")
-        params.source = selectedSource;
-      if (selectedAssignedTo && selectedAssignedTo !== "All Users")
-        params.assignedTo = selectedAssignedTo;
-      if (selectedCampaign && selectedCampaign !== "All Campaigns")
-        params.campaign = selectedCampaign;
-      if (selectedForm && selectedForm !== "All Forms")
-        params.form = selectedForm;
-      if (selectedDate && selectedDate !== "Select dates")
-        params.dateRange = selectedDate;
-      if (selectedLabel && selectedLabel !== "All Labels")
-        params.label = selectedLabel;
-
-      // ONLY for logging
-      const queryString = new URLSearchParams(
-        Object.entries(params).reduce((acc, [key, val]) => {
-          if (val !== undefined && val !== null) {
-            acc[key] = String(val);
-          }
-          return acc;
-        }, {} as Record<string, string>)
-      ).toString();
-
-      console.log("Fetching leads:", params, "query:", queryString);
-
-      // Correct call — passing params object
+      const params = buildParams(allFilters, skip, limit);
       const response = await leadService.getLeads(String(accountId), params);
-      setLeads(response.data?.docs);
-      setTotalItems(response.data?.pagination?.totalDocs);
+
+      if (response.status === 200 || response.status === 201) {
+        leadStoreManager.setLeads(response.data?.docs || []);
+        setTotalItems(response.data?.pagination?.totalDocs);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -428,30 +202,7 @@ export default function LeadsCentre() {
   // Auto refresh on filter change
   useEffect(() => {
     getLeads();
-  }, [selectedLead, currentPageNumber]);
-
-  const setLeadsList = async (lead: TLead) => {
-    try {
-      const isLeadExist = leads?.find((l: TLead) => l._id === lead._id);
-
-      if (!isLeadExist) {
-        setLeads((prevLeads) => [...prevLeads, lead]);
-      } else {
-        setLeads((prevLeads) =>
-          prevLeads.map((l: TLead) => {
-            if (l._id === lead._id) {
-              return lead;
-            }
-            return l;
-          })
-        );
-      }
-    } catch (error) {
-      toastMessageService.apiError(error as any);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [selectedLead, currentPageNumber, filters, debouncedSearchQuery]);
 
   // Websocket connection
   useEffect(() => {
@@ -462,20 +213,29 @@ export default function LeadsCentre() {
     wsRef.current.connect((serverResponse) => {
       if (serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Created"]) {
         if (serverResponse.data?.lead?.accountId !== accountId) return;
-        setLeads((prevLeads) => [serverResponse.data?.lead, ...prevLeads]);
-        // getLeads();
+        leadStoreManager.setLeadsTop(serverResponse.data?.lead);
+
+        if (Notification.permission === "granted") {
+          new Notification("New Lead", {
+            body: "A new lead has been created",
+          });
+        }
       } else if (
         serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Updated"]
       ) {
         if (serverResponse.data?.lead?.accountId !== accountId) return;
-        setLeadsList(serverResponse.data?.lead);
+
+        if (selectedLead && selectedLead.id === serverResponse.data?.lead?.id) {
+          setSelectedLead(serverResponse.data?.lead);
+        }
+        leadStoreManager.updateLead(serverResponse.data?.lead);
       }
     });
 
     return () => {
       wsRef.current?.close();
     };
-  }, [leads]);
+  }, [allLeads]);
 
   return (
     <div className=" bg-background">
@@ -560,221 +320,112 @@ export default function LeadsCentre() {
           </Button>
         </div>
 
+        <div className="flex-1 max-w-md mb-6">
+          <InputGroup>
+            <InputGroupInput
+              placeholder="Search leads..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+            <InputGroupAddon align="inline-end">
+              {searchQuery ? (
+                <InputGroupButton
+                  variant="ghost"
+                  size="icon-xs"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCurrentPage(1);
+                  }}
+                >
+                  <X className="h-3 w-3" />
+                </InputGroupButton>
+              ) : (
+                <Search className="h-4 w-4" />
+              )}
+            </InputGroupAddon>
+          </InputGroup>
+        </div>
+
         <div className="mb-6 flex items-center gap-2">
           <Button variant="outline" size="sm">
             Add new stage
           </Button>
+
           <Button variant="outline" size="sm">
             Bulk edit
           </Button>
-          <div className="flex-1 max-w-md">
-            <InputGroup>
-              <InputGroupInput
-                placeholder="Search leads..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-              />
-              <InputGroupAddon align="inline-end">
-                {searchQuery ? (
-                  <InputGroupButton
-                    variant="ghost"
-                    size="icon-xs"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setCurrentPage(1);
-                    }}
-                  >
-                    <X className="h-3 w-3" />
-                  </InputGroupButton>
-                ) : (
-                  <Search className="h-4 w-4" />
-                )}
-              </InputGroupAddon>
-            </InputGroup>
-          </div>
+
           {showFilters && (
-            <div className="ml-auto flex items-center gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    {selectedCampaign}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedCampaign("All Campaigns")}
-                  >
-                    All Campaigns
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedCampaign("Campaign A")}
-                  >
-                    Campaign A
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedCampaign("Campaign B")}
-                  >
-                    Campaign B
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    {selectedForm}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedForm("All Forms")}
-                  >
-                    All Forms
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedForm("Contact Form")}
-                  >
-                    Contact Form
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedForm("Lead Form")}
-                  >
-                    Lead Form
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    {selectedDate}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedDate("Select dates")}
-                  >
-                    All Dates
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedDate("Last 7 days")}
-                  >
-                    Last 7 days
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedDate("Last 30 days")}
-                  >
-                    Last 30 days
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    {selectedStatus}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedStatus("All Status")}
-                  >
-                    All Status
-                  </DropdownMenuItem>
-                  {uniqueStatuses.map((status) => (
-                    <DropdownMenuItem
-                      key={status}
-                      onClick={() => setSelectedStatus(status)}
-                    >
-                      {status}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    {selectedSource}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedSource("All Sources")}
-                  >
-                    All Sources
-                  </DropdownMenuItem>
-                  {uniqueSources.map((source) => (
-                    <DropdownMenuItem
-                      key={source}
-                      onClick={() => setSelectedSource(source)}
-                    >
-                      {source}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    {selectedAssignedTo}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedAssignedTo("All Users")}
-                  >
-                    All Users
-                  </DropdownMenuItem>
-                  {uniqueAssignedTo.map((user) => (
-                    <DropdownMenuItem
-                      key={user}
-                      onClick={() => setSelectedAssignedTo(user)}
-                    >
-                      {user}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    {selectedLabel}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedLabel("All Labels")}
-                  >
-                    All Labels
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedLabel("Hot Lead")}
-                  >
-                    Hot Lead
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setSelectedLabel("Cold Lead")}
-                  >
-                    Cold Lead
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              {(searchQuery ||
-                selectedStatus !== "All Status" ||
-                selectedSource !== "All Sources" ||
-                selectedAssignedTo !== "All Users" ||
-                selectedStageFilter !== "All") && (
+            <div className="flex items-center gap-2">
+              <FilterDropdown
+                label={filters.form.label}
+                options={formOptions}
+                allLabel="All Forms"
+                onSelect={(value) =>
+                  setFilters((prev) => ({ ...prev, form: value }))
+                }
+              />
+
+              <FilterDropdown
+                label={filters.date.label}
+                options={dateOptions}
+                allLabel="All Dates"
+                onSelect={(value) =>
+                  setFilters((prev) => ({ ...prev, date: value }))
+                }
+              />
+
+              <FilterDropdown
+                label={filters.status.label}
+                options={statusOptions}
+                allLabel="All Status"
+                onSelect={(value) =>
+                  setFilters((prev) => ({ ...prev, status: value }))
+                }
+              />
+
+              <FilterDropdown
+                label={filters.source.label}
+                options={sourceOptions}
+                allLabel="All Sources"
+                onSelect={(value) =>
+                  setFilters((prev) => ({ ...prev, source: value }))
+                }
+              />
+
+              <FilterDropdown
+                label={filters.label.label}
+                options={labelOptions}
+                allLabel="All Labels"
+                onSelect={(value) =>
+                  setFilters((prev) => ({ ...prev, label: value }))
+                }
+              />
+
+              {(filters.status.value ||
+                filters.source.value ||
+                filters.assignedTo.value ||
+                filters.stage.value) && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={clearFilters}
+                  onClick={() =>
+                    setFilters({
+                      lead: { label: "All Leads", value: null },
+                      campaign: { label: "All Campaigns", value: null },
+                      form: { label: "All Forms", value: null },
+                      date: { label: "All Dates", value: null },
+                      status: { label: "All Status", value: null },
+                      source: { label: "All Sources", value: null },
+                      assignedTo: { label: "All Users", value: null },
+                      label: { label: "All Labels", value: null },
+                      stage: { label: "All Stages", value: null },
+                      read: { label: "All", value: null },
+                    })
+                  }
                   className="text-muted-foreground hover:text-foreground"
                 >
                   <X className="h-4 w-4 mr-1" />
@@ -788,21 +439,21 @@ export default function LeadsCentre() {
         <div className="mb-6 flex items-center gap-8">
           <div className="flex items-center gap-2">
             <span className="font-medium text-primary">Intake leads:</span>
-            <span className="text-muted-foreground">{intakeLeads}</span>
+            {/* <span className="text-muted-foreground">{intakeLeads}</span> */}
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium text-primary">Converted leads:</span>
-            <span className="text-muted-foreground">{convertedLeads}</span>
+            {/* <span className="text-muted-foreground">{convertedLeads}</span> */}
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium text-primary">Conversion rate:</span>
-            <span className="text-muted-foreground">{conversionRate}%</span>
+            {/* <span className="text-muted-foreground">{conversionRate}%</span> */}
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
@@ -814,7 +465,7 @@ export default function LeadsCentre() {
           </div>
         </div>
 
-        {filteredLeads.length > 0 && (
+        {/* {filteredLeads.length > 0 && (
           <div className="mb-4 flex items-center gap-2">
             <Badge
               variant="secondary"
@@ -830,9 +481,9 @@ export default function LeadsCentre() {
               </Badge>
             )}
           </div>
-        )}
+        )} */}
 
-        {filteredLeads.length === 0 && (
+        {/* {filteredLeads.length === 0 && (
           <div className="mb-4 flex items-center gap-2">
             <Badge
               variant="secondary"
@@ -841,39 +492,43 @@ export default function LeadsCentre() {
               No leads found matching your criteria
             </Badge>
           </div>
-        )}
+        )} */}
 
         <div className="rounded-lg border bg-card shadow-sm">
           <div className="flex items-center gap-4 border-b bg-muted/30 px-4 py-3">
             <Button
               variant="ghost"
               size="sm"
-              className={
-                selectedStageFilter === "All"
-                  ? "bg-accent text-accent-foreground"
-                  : ""
-              }
-              onClick={() => setSelectedStageFilter("All")}
+              // className={
+              //   selectedStageFilter.label === "All"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedStageFilter({ label: "All", value: "" })
+              // }
             >
               All
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className={
-                selectedReadFilter === "Unread"
-                  ? "bg-accent text-accent-foreground"
-                  : ""
-              }
-              onClick={() =>
-                setSelectedReadFilter(
-                  selectedReadFilter === "Unread" ? "All" : "Unread"
-                )
-              }
+              // className={
+              //   selectedReadFilter.label === "Unread"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedReadFilter(
+              //     selectedReadFilter.label === "Unread"
+              //       ? { label: "All", value: "all" }
+              //       : { label: "Unread", value: "unread" }
+              //   )
+              // }
             >
               Unread
             </Button>
-            {uniqueStages.map((stage) => {
+            {/* {uniqueStages.map((stage) => {
               const count = filteredLeads.filter(
                 (l) => l.stage === stage
               ).length;
@@ -903,7 +558,7 @@ export default function LeadsCentre() {
                   )}
                 </div>
               );
-            })}
+            })} */}
             <div className="ml-auto">
               <Button variant="ghost" size="icon">
                 <MoreVertical className="h-4 w-4" />
@@ -1008,8 +663,8 @@ export default function LeadsCentre() {
             <TableBody>
               {isLoadingLeads ? (
                 <TableSkeleton rows={9} />
-              ) : leads && leads?.length > 0 ? (
-                leads?.map((lead: any) => (
+              ) : allLeads && allLeads?.length > 0 ? (
+                allLeads?.map((lead: any) => (
                   <TableRow
                     key={lead.id}
                     className="cursor-pointer hover:bg-accent/50 transition-colors"
@@ -1037,7 +692,7 @@ export default function LeadsCentre() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span className="font-medium text-foreground capitalize">
+                      <span className="font-medium text-foreground">
                         {lead.email}
                       </span>
                     </TableCell>
@@ -1059,13 +714,7 @@ export default function LeadsCentre() {
                         {lead.source.name}
                       </Badge>
                     </TableCell>
-                    {/* <TableCell>
-                                            <Button variant="ghost" size="sm" className="h-auto p-0 text-foreground hover:text-primary">
-                                                {lead.assignedTo}
-                                                <ChevronDown className="ml-1 h-3 w-3" />
-                                            </Button>
-                                        </TableCell> */}
-                    {/* <TableCell className="text-sm text-muted-foreground">{lead.channel}</TableCell> */}
+
                     <TableCell>
                       <div className="space-y-1.5">
                         <Badge variant="secondary" className="font-normal">
@@ -1144,10 +793,6 @@ export default function LeadsCentre() {
                     {selectedLead?.phone}
                   </div>
                 </div>
-                {/* <div>
-                                    <div className="text-xs font-medium text-muted-foreground mb-1">Company</div>
-                                    <div className="text-sm text-foreground">{selectedLead?.company}</div>
-                                </div> */}
               </div>
             </div>
 
@@ -1205,7 +850,7 @@ export default function LeadsCentre() {
                     Date Added
                   </div>
                   <span className="text-sm text-foreground">
-                    {formatDate(selectedLead?.createdAt)}
+                    {formatDate(selectedLead?.createdAt || "")}
                   </span>
                 </div>
               </div>
