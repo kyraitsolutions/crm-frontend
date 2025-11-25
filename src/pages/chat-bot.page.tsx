@@ -247,7 +247,7 @@ export function ChatBotPage() {
           tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
           loading={loading}
         />
-        <Chatbot nodes={nodes && nodes} edges={edges && edges} />
+        {/* <Chatbot nodes={nodes && nodes} edges={edges && edges} /> */}
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import { DataTable, type Column } from "@/components/common";
+import { Switch } from "@/components/ui/switch";
 import { DASHBOARD_PATH } from "@/constants";
 import { ToastMessageService } from "@/services";
 import { LeadFormService } from "@/services/leadform.service";
 import type { LeadFormListItem } from "@/types/leadform.type";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -40,6 +41,20 @@ export function LeadFormPage() {
       ),
     },
     {
+      key: "status",
+      header: "Status",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <Switch
+            checked={true}
+            className="cursor-pointer"
+          // onClick={(e) => handleUpdateStatus(e, row.id)}
+          />
+        </div>
+      ),
+    },
+    {
       key: "createdDisplay",
       header: "Created",
       cellClassName: "whitespace-nowrap text-gray-700",
@@ -50,7 +65,37 @@ export function LeadFormPage() {
           </div>
         </div>
       ),
+    }, {
+      key: "lastActivity",
+      header: "Last Activity",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <div className="font-medium capitalize text-gray-900">
+            {moment(row.updatedAt).fromNow()}
+          </div>
+        </div>
+      ),
     },
+    {
+      key: "action",
+      header: "Action",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              // handleDeleteChatbot(row.id);
+            }}
+            className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      ),
+    },
+
   ];
   const getLeadFormList = async () => {
     try {
@@ -97,7 +142,7 @@ export function LeadFormPage() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-[2fr_1fr]">
+      <div className="">
         <DataTable<LeadFormListItem>
           data={forms}
           columns={columns}

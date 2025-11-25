@@ -61,7 +61,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       //   url: "/builder",
       //   icon: IconCode,
       // },
-
+      {
+        title: "Leads Centre",
+        url: `${DASHBOARD_PATH.getAccountPath(
+          String(authUser?.account?.id)
+        )}/leads`,
+        icon: IconUsers,
+      },
       {
         title: "Chat bot",
         url: `${DASHBOARD_PATH.getAccountPath(
@@ -76,13 +82,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         )}/lead-forms`,
         icon: IconFileText,
       },
-      {
-        title: "Leads Centre",
-        url: `${DASHBOARD_PATH.getAccountPath(
-          String(authUser?.account?.id)
-        )}/leads`,
-        icon: IconUsers,
-      },
+     
       {
         title: "Team",
         url: "/dashboard/teams",
