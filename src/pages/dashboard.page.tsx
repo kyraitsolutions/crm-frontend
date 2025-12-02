@@ -24,6 +24,7 @@ import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ToastMessageService } from "@/services";
+import type { ApiError } from "@/types";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -73,7 +74,11 @@ export const DashboardPage = () => {
       setAccountName("");
       setEmail("");
     } catch (error) {
-      console.error("❌ Error creating account:", error);
+      const err = error as ApiError;
+
+      if (err) {
+        toastService.error(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -82,7 +87,7 @@ export const DashboardPage = () => {
   const handleProfileClick = (index: number) => {
     setCurrentSelectedAccountIndex(index);
 
-    if (authUser)
+    if (authUser) {
       authManager?.setUser({
         ...authUser,
         account: {
@@ -92,6 +97,8 @@ export const DashboardPage = () => {
         },
       });
 
+      authManager.setAccountSelected(true);
+    }
     navigate(DASHBOARD_PATH.getAccountPath(accounts[index]?.id));
   };
 
@@ -133,30 +140,31 @@ export const DashboardPage = () => {
     });
   };
 
-  useEffect(() => {
-    const fetchAccounts = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/account", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        });
+  const fetchAccounts = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/account", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch accounts");
-        }
-
-        const data = await res.json();
-        console.log(data.result);
-        setAccounts(data.result.docs);
-      } catch (error) {
-        console.error("Error fetching accounts:", error);
-      } finally {
-        setLoading(false);
+      if (!res.ok) {
+        throw new Error("Failed to fetch accounts");
       }
-    };
+
+      const data = await res.json();
+      console.log(data.result);
+      setAccounts(data.result.docs);
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchAccounts();
   }, []);
 

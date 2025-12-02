@@ -33,8 +33,7 @@ import { useAuthStore } from "@/stores";
 import { House } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const authUser = useAuthStore((state) => state.user);
-  console.log(authUser);
+  const { user: authUser, accountSelected } = useAuthStore((state) => state);
 
   const data = {
     user: {
@@ -81,7 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         )}/lead-forms`,
         icon: IconFileText,
       },
-     
+
       {
         title: "Team",
         url: "/dashboard/teams",
@@ -172,8 +171,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
   };
 
-  const isOrganisationAdmin = authUser?.account?.isAccountSelected || false;
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -192,7 +189,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} show={isOrganisationAdmin} />
+        <NavMain items={data.navMain} show={accountSelected} />
         {/* <NavDocuments items={data.documents} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>

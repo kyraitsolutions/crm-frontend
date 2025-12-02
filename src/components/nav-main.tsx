@@ -5,7 +5,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { COOKIES_STORAGE } from "@/constants";
 import { AuthStoreManager, useAuthStore } from "@/stores";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
 import type { Icon } from "@tabler/icons-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -20,13 +22,20 @@ export function NavMain({
   }[];
   show: boolean;
 }) {
+  console.log(show);
   const { pathname } = useLocation();
-  const authUser = useAuthStore((state) => state.user);
+  const { user: authUser } = useAuthStore((state) => state);
   const authManager = new AuthStoreManager();
 
   const visibleItems = items.filter((item) => {
     return show
-      ? ["Home", "Dashboard", "Chat bot","Lead Forms","Leads Centre"].includes(item.title)
+      ? [
+          "Home",
+          "Dashboard",
+          "Chat bot",
+          "Lead Forms",
+          "Leads Centre",
+        ].includes(item.title)
       : ["Dashboard", "Accounts", "Team"].includes(item.title);
   });
 
@@ -58,6 +67,8 @@ export function NavMain({
                     isAccountSelected: false,
                   },
                 });
+
+                authManager.setAccountSelected(false);
               }
             };
 
