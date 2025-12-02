@@ -10,6 +10,10 @@ export class TeamService extends ApiService {
     return await this.post("/team", teamMember);
   }
 
+  async deleteTeamMember(teamMemberId:string):Promise<ApiResponse<any>>{
+    return await this.delete(`/team/${teamMemberId}`)
+  }
+
 
   async assignAccountToTeamMember(data: {
     id: string;

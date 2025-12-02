@@ -23,44 +23,17 @@ import { useEffect, useState } from "react";
 export const Teams = () => {
     const teamService = new TeamService();
 
-    const [teams, setTeams] = useState<any[]>([
-        {
-            "id": 1,
-            "name": "Abhijeet",
-            "email": "abhijeet@kyraitsolutions.com",
-            "status": "accepted",
-            "createdAt": "11-02-2024"
-        },
-        {
-            "id": 2,
-            "name": "Abhijeet",
-            "email": "abhijeet@kyraitsolutions.com",
-            "status": "accepted",
-            "createdAt": "11-02-2024"
-        },
-        {
-            "id": 3,
-            "name": "Abhijeet",
-            "email": "abhijeet@kyraitsolutions.com",
-            "status": "pending",
-            "createdAt": "11-02-2024"
-        },
-        {
-            "id": 4,
-            "name": "Abhijeet",
-            "email": "abhijeet@kyraitsolutions.com",
-            "status": "accepted",
-            "createdAt": "11-02-2024"
-        },
-        {
-            "id": 5,
-            "name": "Abhijeet",
-            "email": "abhijeet@kyraitsolutions.com",
-            "status": "pending",
-            "createdAt": "11-02-2024"
-        },
-    ]);
+    const [teams, setTeams] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [newTeam, setNewTeam] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+    });
+    const [accounts, setAccounts] = useState<any[]>([]);
+    const [openAssign, setOpenAssign] = useState(false);
+    const [selectedTeamId, setSelectedTeamId] = useState(null);
+    const [selectedAccounts, setSelectedAccounts] = useState([]);
 
 
     const getTeams = async () => {
@@ -84,27 +57,15 @@ export const Teams = () => {
     }, [])
 
 
-    const [newTeam, setNewTeam] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-    });
-
     const handleAddTeamMember = () => {
         try {
             const response = teamService.createTeamMember(newTeam);
             // setTeams([...teams, response?.data.docs]);
+
         } catch (error) {
             console.log("Error", error)
         }
     };
-
-    const [accounts, setAccounts] = useState<any[]>([]);
-    const [openAssign, setOpenAssign] = useState(false);
-    const [selectedTeamId, setSelectedTeamId] = useState(null);
-    const [selectedAccounts, setSelectedAccounts] = useState([]);
-
-    // const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -143,6 +104,18 @@ export const Teams = () => {
             });
         } catch (error) {
             console.log("Error", error)
+        }
+    }
+
+    const handleDeleteTeamMember = async (memberId: string) => {
+
+        console.log(memberId)
+        try {
+            const response = await teamService.deleteTeamMember(memberId);
+            console.log(response)
+            getTeams()
+        } catch (error) {
+            console.log("Error deleting account:", error)
         }
     }
     if (loading) {
@@ -230,7 +203,7 @@ export const Teams = () => {
                         <TableCell className="">
                             {/* add a delete icon to deletet hsi account using shadcn*/}
                             <Badge
-                                // onClick={() => handleDeleteAccount(team.id)}
+                                onClick={() => handleDeleteTeamMember(team.userId)}
                                 variant="outline"
                                 className="text-red-600 border-red-500 cursor-pointer"
                             >

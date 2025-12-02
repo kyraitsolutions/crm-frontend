@@ -45,4 +45,19 @@ export class LeadsStoreManager {
       }
     });
   }
+
+  updateLeadOptimistic(updatedLead: ILead) {
+    // Save previous state in case rollback is needed
+    const prevLeads = this.store.getState().leads;
+
+    // Update lead immediately
+    this.updateLead(updatedLead);
+
+    // Return rollback function
+    return () => {
+      this.store.setState(() => ({
+        leads: prevLeads,
+      }));
+    };
+  }
 }

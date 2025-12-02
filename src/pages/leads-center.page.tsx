@@ -1,4 +1,5 @@
 import { FilterDropdown, type Option } from "@/components/filter-dropdown";
+import Loader from "@/components/Loader";
 import { Pagination } from "@/components/pagination";
 import { TableSkeleton } from "@/components/skeltons/TableSkeltons";
 import { Badge } from "@/components/ui/badge";
@@ -10,12 +11,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Sheet,
   SheetContent,
@@ -42,10 +51,13 @@ import {
 } from "@/constants";
 import useDebounce from "@/hooks/useDebounce";
 import { usePagination } from "@/hooks/usePagination";
+import { ToastMessageService } from "@/services";
 import { LeadService } from "@/services/lead.service";
 import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
+import type { ApiError } from "@/types";
 import buildParams from "@/utils/build-params.utils";
 import { formatDate } from "@/utils/date-utils";
+import { AxiosError } from "axios";
 import {
   ArrowUpDown,
   Bell,
@@ -85,6 +97,7 @@ interface Lead {
   notes: string;
   customFields?: Record<string, any>;
   createdAt: string;
+  updatedAt: string;
 }
 
 export default function LeadsCentre() {
@@ -94,14 +107,19 @@ export default function LeadsCentre() {
   // Websocket ref
   const wsRef = useRef<WebSocketClient | null>(null);
 
+  const toastMessageService = new ToastMessageService();
+
   // Stores for leads
   const leadStoreManager = new LeadsStoreManager();
   const { leads: allLeads } = useLeadsStore((state) => state);
 
   // Leads related states and services stores etc
   const leadService = new LeadService();
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isLoadingLeads, setIsLoadingLeads] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [editableLead, setEditableLead] = useState<Lead | null>(null);
+  const [isEditingLoading, setIsEditingLoading] = useState(false);
 
   const isSkeletonShow = useRef(true);
 
@@ -141,13 +159,53 @@ export default function LeadsCentre() {
   });
 
   // Note
-  const [note, setNote] = useState(selectedLead?.notes);
+  const [note, setNote] = useState("");
 
   const handleRowClick = (lead: Lead) => {
-    // console.log("Lead:", lead)
-    // alert("hdk")
+    setIsEditing(false);
     setSelectedLead(lead);
+    setEditableLead(lead);
     setIsSheetOpen(true);
+  };
+
+  const handleEdit = () => setIsEditing(true);
+  const handleCancel = () => {
+    setEditableLead(selectedLead);
+    setIsEditing(false);
+  };
+  const handleSave = async () => {
+    if (!editableLead) return;
+
+    setIsEditingLoading(true);
+
+    const rollback = leadStoreManager.updateLeadOptimistic(editableLead);
+
+    // TODO: Your API call — updateLead(editableLead)
+    try {
+      const payLoad = {
+        ...editableLead,
+        ...(note && { notes: [{ message: note, createdAt: new Date() }] }),
+      };
+      leadStoreManager.updateLead(payLoad);
+      const response = await leadService.updateLead(accountId!, payLoad!);
+
+      if (response.status === 200) {
+        setIsEditing(false);
+
+        toastMessageService.success(
+          response.message || "Your request was processed successfully"
+        );
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        rollback();
+        toastMessageService.error(err.message);
+      }
+    } finally {
+      setIsEditingLoading(false);
+      setIsSheetOpen(false);
+    }
   };
 
   // const clearFilters = () => {
@@ -204,7 +262,7 @@ export default function LeadsCentre() {
   // Auto refresh on filter change
   useEffect(() => {
     getLeads();
-  }, [selectedLead, currentPageNumber, filters, debouncedSearchQuery]);
+  }, [currentPageNumber, filters, debouncedSearchQuery]);
 
   // Websocket connection
   useEffect(() => {
@@ -238,6 +296,11 @@ export default function LeadsCentre() {
       wsRef.current?.close();
     };
   }, [allLeads]);
+
+  const inputClean = `
+  outline-none ring-0 focus:ring-0 focus-visible:ring-0 
+  focus:outline-none focus-visible:outline-none 
+  shadow-none focus:border focus-visible:border-gray-300`;
 
   return (
     <div className=" bg-background">
@@ -296,8 +359,8 @@ export default function LeadsCentre() {
       </div>
 
       <div className="px-6 py-6">
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="mb-6 flex items-center justify-between gap-2">
+          {/*<div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" className="gap-2">
               <LayoutList className="h-4 w-4" />
               Pipeline view
@@ -311,18 +374,14 @@ export default function LeadsCentre() {
               Table view
             </Button>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter className="h-4 w-4" />
-            {showFilters ? "Hide filters" : "Show filters"}
+          */}
+          <Button variant="outline" size="sm">
+            Add new stage
           </Button>
-        </div>
 
-        <div className="flex-1 max-w-md mb-6">
+          <Button variant="outline" size="sm">
+            Bulk edit
+          </Button>
           <InputGroup>
             <InputGroupInput
               placeholder="Search leads..."
@@ -349,18 +408,26 @@ export default function LeadsCentre() {
               )}
             </InputGroupAddon>
           </InputGroup>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <Filter className="h-4 w-4" />
+            {showFilters ? "Hide filters" : "Show filters"}
+          </Button>
         </div>
 
-        <div className="mb-6 flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            Add new stage
-          </Button>
+        {/* <div className="flex-1 max-w-md mb-6">
 
-          <Button variant="outline" size="sm">
-            Bulk edit
-          </Button>
+        </div> */}
 
-          {showFilters && (
+
+
+        {showFilters && (
+          <div className="mb-6 flex items-center gap-2">
+
             <div className="flex items-center gap-2">
               <FilterDropdown
                 label={filters.form.label}
@@ -435,8 +502,9 @@ export default function LeadsCentre() {
                   </Button>
                 )}
             </div>
-          )}
-        </div>
+          </div>
+
+        )}
 
         <div className="mb-6 flex items-center gap-8">
           <div className="flex items-center gap-2">
@@ -756,152 +824,287 @@ export default function LeadsCentre() {
       </div>
 
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="w-[500px] !max-w-[450px] px-4 sm:w-[450px] overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-lg font-semibold text-primary">
-                {selectedLead?.name.charAt(0).toUpperCase()}
+        <SheetContent className="px-6 md:max-w-xl w-full overflow-y-auto bg-gray-100">
+          <SheetHeader className="pb-4 border-b">
+            <SheetTitle className="flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-xl font-semibold text-primary">
+                {editableLead?.name?.charAt(0).toUpperCase()}
               </div>
+
               <div>
-                <div className="text-xl font-semibold text-foreground capitalize">
-                  {selectedLead?.name}
-                </div>
-                <div className="text-sm font-normal text-muted-foreground">
-                  {selectedLead?.company}
-                </div>
+                <h1 className="text-xl font-semibold text-foreground capitalize">
+                  {editableLead?.name}
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  {editableLead?.company || "No company added"}
+                </p>
               </div>
             </SheetTitle>
           </SheetHeader>
 
-          <div className="mt-6 space-y-6">
-            <div>
-              <h3 className="mb-3 text-sm font-semibold text-foreground">
+          <div className="mt-6 space-y-8">
+            {/* CONTACT INFO */}
+            <section>
+              <h3 className="text-sm font-semibold text-foreground mb-3">
                 Contact Information
               </h3>
-              <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
-                <div>
-                  <div className="text-xs font-medium text-muted-foreground mb-1">
+
+              <div className="grid grid-cols-1 gap-4 rounded-lg border bg-muted/30 p-4">
+                {/* Email */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-muted-foreground font-medium">
                     Email
-                  </div>
-                  <div className="text-sm text-foreground">
-                    {selectedLead?.email}
-                  </div>
+                  </label>
+
+                  {isEditing ? (
+                    <Input
+                      value={editableLead?.email}
+                      className={inputClean}
+                      onChange={(e) =>
+                        setEditableLead((prev) =>
+                          prev ? { ...prev, email: e.target.value } : prev
+                        )
+                      }
+                    />
+                  ) : (
+                    <p className="text-sm text-foreground">
+                      {editableLead?.email}
+                    </p>
+                  )}
                 </div>
-                <div>
-                  <div className="text-xs font-medium text-muted-foreground mb-1">
+
+                {/* Phone */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-muted-foreground font-medium">
                     Phone
-                  </div>
-                  <div className="text-sm text-foreground">
-                    {selectedLead?.phone}
-                  </div>
+                  </label>
+
+                  {isEditing ? (
+                    <Input
+                      value={editableLead?.phone}
+                      className={inputClean}
+                      onChange={(e) =>
+                        setEditableLead((prev) =>
+                          prev ? { ...prev, phone: e.target.value } : prev
+                        )
+                      }
+                    />
+                  ) : (
+                    <p className="text-sm text-foreground">
+                      {editableLead?.phone}
+                    </p>
+                  )}
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div>
-              <h3 className="mb-3 text-sm font-semibold text-foreground">
+            {/* LEAD DETAILS */}
+            <section>
+              <h3 className="text-sm font-semibold text-foreground mb-3">
                 Lead Details
               </h3>
-              <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
-                <div className="flex items-center justify-between">
-                  <div className="text-xs font-medium text-muted-foreground">
+
+              <div className="grid grid-cols-2 gap-4 rounded-lg border bg-muted/30 p-4">
+                {/* Stage */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-muted-foreground font-medium">
                     Stage
-                  </div>
-                  <Badge variant="outline">{selectedLead?.stage}</Badge>
+                  </label>
+
+                  {isEditing ? (
+                    <Select
+                      value={editableLead?.stage}
+                      onValueChange={(v) =>
+                        setEditableLead((prev) =>
+                          prev ? { ...prev, stage: v } : prev
+                        )
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Intake">Intake</SelectItem>
+                        <SelectItem value="In Progress">In Progress</SelectItem>
+                        <SelectItem value="Converted">Converted</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Badge variant="outline">{editableLead?.stage}</Badge>
+                  )}
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="text-xs font-medium text-muted-foreground">
-                    Source
-                  </div>
-                  <Badge variant="secondary">
-                    {selectedLead?.source?.name}
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="text-xs font-medium text-muted-foreground">
-                    Source URL
-                  </div>
-                  <Badge variant="secondary">
-                    {selectedLead?.source?.url
-                      ? selectedLead.source.url.slice(0, 50)
-                      : "-"}
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="text-xs font-medium text-muted-foreground">
+
+                {/* Status */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-muted-foreground font-medium">
                     Status
-                  </div>
-                  <Badge variant="secondary">{selectedLead?.status}</Badge>
+                  </label>
+
+                  {isEditing ? (
+                    <Select
+                      value={editableLead?.status}
+                      onValueChange={(v) =>
+                        setEditableLead((prev) =>
+                          prev ? { ...prev, status: v } : prev
+                        )
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Active">Active</SelectItem>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Closed">Closed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Badge variant="secondary">{editableLead?.status}</Badge>
+                  )}
                 </div>
-                {/* <div className="flex items-center justify-between">
-                                    <div className="text-xs font-medium text-muted-foreground">Form Status</div>
-                                    <Badge className="bg-green-50 text-green-700 hover:bg-green-100 border-green-200">
-                                        {selectedLead?.formStatus}
-                                    </Badge>
-                                </div> */}
-                {/* <div className="flex items-center justify-between">
-                                    <div className="text-xs font-medium text-muted-foreground">Assigned to</div>
-                                    <span className="text-sm text-foreground">{selectedLead?.assignedTo}</span>
-                                </div> */}
-                {/* <div className="flex items-center justify-between">
-                                    <div className="text-xs font-medium text-muted-foreground">Channel</div>
-                                    <span className="text-sm text-foreground">{selectedLead?.channel}</span>
-                                </div> */}
-                <div className="flex items-center justify-between">
-                  <div className="text-xs font-medium text-muted-foreground">
+
+                {/* Source */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-muted-foreground font-medium">
+                    Source
+                  </label>
+                  <Badge variant="secondary">
+                    {editableLead?.source?.name}
+                  </Badge>
+                </div>
+
+                {/* Source URL */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-muted-foreground font-medium">
+                    Source URL
+                  </label>
+                  <Badge variant="secondary">
+                    {editableLead?.source?.url || "-"}
+                  </Badge>
+                </div>
+
+                {/* Date Added */}
+                <div className="flex flex-col gap-1 col-span-2">
+                  <label className="text-xs text-muted-foreground font-medium">
                     Date Added
-                  </div>
-                  <span className="text-sm text-foreground">
-                    {formatDate(selectedLead?.createdAt || "")}
-                  </span>
+                  </label>
+                  <p className="text-sm">
+                    {formatDate(editableLead?.createdAt || "")}
+                  </p>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div>
-              <h3 className="mb-3 text-sm font-semibold text-foreground">
+            {/* OTHER DETAILS */}
+            <section>
+              <h3 className="text-sm font-semibold text-foreground mb-3">
                 Other Details
               </h3>
-              <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
-                {selectedLead?.customFields &&
-                  Object.keys(selectedLead.customFields).length > 0 ? (
-                  Object.entries(selectedLead.customFields).map(
+
+              <div className="space-y-4 rounded-lg border bg-muted/30 p-4 overflow-y-scroll max-h-72 grid grid-cols-2 gap-2">
+                {editableLead?.customFields &&
+                  Object.keys(editableLead.customFields).length > 0 ? (
+                  Object.entries(editableLead.customFields).map(
                     ([key, value]) => (
-                      <div key={key} className="">
-                        <div className="text-sm font-medium text-muted-foreground">
+                      <div key={key} className="flex flex-col gap-1">
+                        <label className="text-xs text-muted-foreground font-medium">
                           {key}
-                        </div>
-                        <div className="text-sm text-foreground">{value}</div>
+                        </label>
+
+                        {isEditing ? (
+                          <Input
+                            value={value as string}
+                            className={inputClean}
+                            onChange={(e) =>
+                              setEditableLead((prev) =>
+                                prev
+                                  ? {
+                                    ...prev,
+                                    customFields: {
+                                      ...(prev.customFields ?? {}),
+                                      [key]: e.target.value,
+                                    },
+                                  }
+                                  : prev
+                              )
+                            }
+                          />
+                        ) : (
+                          <p className="text-sm">{value}</p>
+                        )}
                       </div>
                     )
                   )
                 ) : (
-                  <div className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     No additional details available.
-                  </div>
+                  </p>
                 )}
               </div>
-            </div>
-            <div>
-              <h3 className="mb-3 text-sm font-semibold text-foreground">
+            </section>
+
+            {/* NOTES */}
+            <section>
+              <h3 className="text-sm font-semibold mb-3 text-foreground">
                 Notes
               </h3>
               <div className="rounded-lg border bg-muted/30">
-                <textarea
-                  className="text-sm text-foreground p-3 w-full bg-transparent border-0 resize-none outline-none"
-                  value={note || "Add a note here"}
-                  onChange={(e) => setNote(e.target.value)}
-                  // readOnly
-                  rows={4}
-                />
+                {isEditing ? (
+                  <textarea
+                    className="text-sm text-foreground p-3 w-full bg-transparent border-0 resize-none outline-none"
+                    rows={4}
+                    value={editableLead?.notes[0] || ""}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
+                ) : (
+                  <textarea
+                    rows={4}
+                    readOnly
+                    className="text-sm text-foreground p-3 w-full bg-transparent border-0 resize-none outline-none"
+                  >
+                    {note}
+                  </textarea>
+                )}
               </div>
-            </div>
 
-            <div className="flex gap-2 pt-2">
-              <Button className="flex-1">Assign Lead</Button>
-              <Button variant="outline" className="flex-1">
-                Edit Details
-              </Button>
+              {/* {note && (
+                <Button onClick={handleSave} className="mt-2">
+                  Save
+                </Button>
+              )} */}
+            </section>
+
+            {/* ACTION BUTTONS */}
+            <div className="flex items-center gap-3 pt-2 sticky bottom-0 bg-white pb-4">
+              {!isEditing ? (
+                <>
+                  <Button className="flex-1">Assign Lead</Button>
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={handleEdit}
+                  >
+                    Edit Details
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    disabled={isEditingLoading}
+                    className="flex-1"
+                    onClick={handleSave}
+                  >
+                    Save {isEditingLoading && <Loader />}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </SheetContent>

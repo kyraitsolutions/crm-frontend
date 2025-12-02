@@ -29,6 +29,8 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.3211 0 0);
   --primary: oklch(0.6231 0.188 259.8145);
+  --success: #21733F;
+  --success-foreground: 0 0% 100%;
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.967 0.0029 264.5419);
   --secondary-foreground: oklch(0.4461 0.0263 256.8018);
