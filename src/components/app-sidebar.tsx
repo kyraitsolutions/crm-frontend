@@ -28,9 +28,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { DASHBOARD_PATH } from "@/constants";
+import { COOKIES_STORAGE, DASHBOARD_PATH } from "@/constants";
 import { useAuthStore } from "@/stores";
 import { House } from "lucide-react";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user: authUser, accountSelected } = useAuthStore((state) => state);
@@ -50,7 +51,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {
         title: "Dashboard",
-        url: DASHBOARD_PATH.getAccountPath(String(authUser?.account?.id)),
+        url: DASHBOARD_PATH.getAccountPath(
+          String(CookieUtils.getItem(COOKIES_STORAGE.accountId))
+        ),
         icon: IconDashboard,
       },
 
@@ -62,21 +65,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: "Leads Centre",
         url: `${DASHBOARD_PATH.getAccountPath(
-          String(authUser?.account?.id)
+          String(CookieUtils.getItem(COOKIES_STORAGE.accountId))
         )}/leads`,
         icon: IconUsers,
       },
       {
         title: "Chat bot",
         url: `${DASHBOARD_PATH.getAccountPath(
-          String(authUser?.account?.id)
+          String(CookieUtils.getItem(COOKIES_STORAGE.accountId))
         )}/chatbot`,
         icon: IconMessageCircle,
       },
       {
         title: "Lead Forms",
         url: `${DASHBOARD_PATH.getAccountPath(
-          String(authUser?.account?.id)
+          String(CookieUtils.getItem(COOKIES_STORAGE.accountId))
         )}/lead-forms`,
         icon: IconFileText,
       },

@@ -15,16 +15,23 @@ export function AppLayout() {
   const getProfile = async () => {
     try {
       const response: any = await authService.getProfile();
-      authManager.setUser(response.data?.docs);
-      console.log(response);
-      if (!response.data?.docs?.onboarding) {
-        navigate("/on-boarding");
-      }
+      const user = response.data?.docs;
+      authManager.setUser(user);
 
-      setIsLoading(false);
+      const isOnBoardingPage = window.location.pathname === "/on-boarding";
+
+      if (!user.onboarding) {
+        // User not completed onboarding → allow only onboarding page
+        if (!isOnBoardingPage) navigate("/on-boarding");
+      } else {
+        // User completed onboarding → block onboarding page
+        if (isOnBoardingPage) navigate("/dashboard");
+      }
       toastService.apiSuccess(response.message);
     } catch (error: any) {
       toastService.apiError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LocalStorageUtils } from "@/utils";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DASHBOARD_PATH } from "@/constants";
+import { COOKIES_STORAGE, DASHBOARD_PATH } from "@/constants";
 import { AuthStoreManager, useAuthStore } from "@/stores";
 import { alertManager } from "@/stores/alert.store";
 import { formatDate } from "@/utils/date-utils";
@@ -25,12 +25,14 @@ import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ToastMessageService } from "@/services";
 import type { ApiError } from "@/types";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
   const authUser = useAuthStore((state) => state.user);
   const authManager = new AuthStoreManager();
   const toastService = new ToastMessageService();
+  const { user } = useAuthStore((state) => state);
   const [accounts, setAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -58,7 +60,6 @@ export const DashboardPage = () => {
           email,
         }),
       });
-
 
       if (!response.ok) {
         throw new Error("Account already exist with this Email Id");
@@ -100,6 +101,8 @@ export const DashboardPage = () => {
 
       authManager.setAccountSelected(true);
     }
+
+    CookieUtils.setItem(COOKIES_STORAGE.accountId, accounts[index]?.id);
     navigate(DASHBOARD_PATH.getAccountPath(accounts[index]?.id));
   };
 
@@ -156,8 +159,15 @@ export const DashboardPage = () => {
       }
 
       const data = await res.json();
-      console.log(data.result);
       setAccounts(data.result.docs);
+      console.log(data);
+
+      if (
+        user?.userprofile?.accountType?.toLowerCase() === "individual" &&
+        data?.result?.docs?.length === 1
+      ) {
+        navigate(DASHBOARD_PATH.getAccountPath(data?.result?.docs[0]?.id));
+      }
     } catch (error) {
       console.error("Error fetching accounts:", error);
     } finally {
@@ -196,10 +206,11 @@ export const DashboardPage = () => {
           <div
             key={account.id}
             onClick={() => handleProfileClick(idx)}
-            className={`space-y-8 border border-accent cursor-pointer transform transition-all duration-300 hover:scale-105 rounded-xl py-6 px-4 bg-white shadow-sm ${currentSelectedAccountIndex === idx
-              ? "ring-2 ring-blue-400 shadow-lg"
-              : ""
-              }`}
+            className={`space-y-8 border border-accent cursor-pointer transform transition-all duration-300 hover:scale-105 rounded-xl py-6 px-4 bg-white shadow-sm ${
+              currentSelectedAccountIndex === idx
+                ? "ring-2 ring-blue-400 shadow-lg"
+                : ""
+            }`}
           >
             {/* Header */}
             <div className="flex items-start justify-between gap-3">
@@ -234,12 +245,13 @@ export const DashboardPage = () => {
             <div className="flex justify-between items-center text-gray-500 text-xs font-medium">
               <span>Created: {formatDate(account.createdAt)}</span>
               <span
-                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${account.status === "active"
-                  ? "bg-green-100 text-green-600"
-                  : account.status === "inactive"
+                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                  account.status === "active"
+                    ? "bg-green-100 text-green-600"
+                    : account.status === "inactive"
                     ? "bg-gray-100 text-gray-800"
                     : "bg-red-100 text-red-800"
-                  }`}
+                }`}
               >
                 {account.status}
               </span>
@@ -248,67 +260,71 @@ export const DashboardPage = () => {
         );
       })}
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <div className="group h-[150px] border-2 border-dashed flex flex-1 justify-center bg-white items-center rounded-md transition-colors hover:bg-primary/10 cursor-pointer">
-            <Button
-              variant="ghost"
-              className=" text-primary font-medium hover:bg-transparent"
-            >
-              <IconCirclePlusFilled className="size-10" />
-              Add New Account
-            </Button>
-          </div>
-        </DialogTrigger>
-
-        {/* Dialog Content */}
-        <DialogContent className="sm:max-w-[425px]">
-          <form className="flex flex-col gap-4" onSubmit={handleCreateAccount}>
-            <DialogHeader>
-              <DialogTitle>Create New Account</DialogTitle>
-              <DialogDescription>
-                Make changes to your profile here. Click save when you&apos;re
-                done.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <Label htmlFor="name-1">Account Name</Label>
-                <Input
-                  id="name-1"
-                  name="name"
-                  placeholder="Enter account name"
-                  value={accountName}
-                  onChange={(e) => setAccountName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              <Button type="submit" disabled={loading}>
-                {loading ? "Creating..." : "Create"}
+      {user?.userprofile?.accountType === "organization" && (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <div className="group h-[150px] border-2 border-dashed flex flex-1 justify-center bg-white items-center rounded-md transition-colors hover:bg-primary/10 cursor-pointer">
+              <Button
+                variant="ghost"
+                className=" text-primary font-medium hover:bg-transparent"
+              >
+                <IconCirclePlusFilled className="size-10" />
+                Add New Account
               </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+            </div>
+          </DialogTrigger>
+
+          <DialogContent className="sm:max-w-[425px]">
+            <form
+              className="flex flex-col gap-4"
+              onSubmit={handleCreateAccount}
+            >
+              <DialogHeader>
+                <DialogTitle>Create New Account</DialogTitle>
+                <DialogDescription>
+                  Make changes to your profile here. Click save when you&apos;re
+                  done.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="grid gap-4">
+                <div className="grid gap-3">
+                  <Label htmlFor="name-1">Account Name</Label>
+                  <Input
+                    id="name-1"
+                    name="name"
+                    placeholder="Enter account name"
+                    value={accountName}
+                    onChange={(e) => setAccountName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Creating..." : "Create"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };
