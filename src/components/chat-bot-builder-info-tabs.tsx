@@ -11,6 +11,7 @@ import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { useNavigate, useParams } from "react-router-dom";
 import { DASHBOARD_PATH } from "@/constants";
+import ChatbotIntegration from "./chat-bot-integration";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: Settings },
@@ -18,6 +19,7 @@ const tabs = [
   { id: "appearance", label: "Appearance", icon: Palette },
   { id: "configration", label: "Configuration", icon: Cog },
   { id: "chatbotFlow", label: "Chatbot Flow", icon: Cog },
+  { id: "integration", label: "Integration", icon: Cog }
 ];
 
 export default function ChatBotBuilderInfoTabs({
@@ -39,6 +41,7 @@ export default function ChatBotBuilderInfoTabs({
     customization: <ChatBotBuilderCustomization />,
     appearance: <ChatBotBuilderAppearance />,
     configration: <ChatBotBuilderConfiguration />,
+    integration: <ChatbotIntegration />,
     // chatbotFlow: <ChatbotFlowEditor />,
   };
 

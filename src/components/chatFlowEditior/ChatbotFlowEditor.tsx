@@ -372,7 +372,7 @@ export default function ChatbotFlowEditor() {
   ];
 
   return (
-    <div className="w-full grid grid-cols-8 bg-gray-50 gap-6">
+    <div className="w-full grid grid-cols-8 gap-6">
       <div className="col-span-6">
         <div className="flex justify-between items-center">
           <button
@@ -427,8 +427,8 @@ export default function ChatbotFlowEditor() {
       </div>
 
       <div className="col-span-2">
-        <p>Predefined Button</p>
-        <div className="grid grid-cols-3 gap-5 mt-3 ">
+        <p>Predefined Fields</p>
+        <div className="grid grid-cols-4 gap-5 mt-3 ">
           {chatbotFields.map((item, index) => (
             <div
               onClick={() => addNewNode(item.value, item.label)}

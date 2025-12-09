@@ -45,6 +45,7 @@ import {
   formOptions,
   labelOptions,
   sourceOptions,
+  stageOptions,
   statusOptions,
   WEBSOCKET_EVENTS,
   WEBSOCKET_URL,
@@ -54,10 +55,9 @@ import { usePagination } from "@/hooks/usePagination";
 import { ToastMessageService } from "@/services";
 import { LeadService } from "@/services/lead.service";
 import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
-import type { ApiError } from "@/types";
+import type { ApiError, BasicNumber } from "@/types";
 import buildParams from "@/utils/build-params.utils";
 import { formatDate } from "@/utils/date-utils";
-import { AxiosError } from "axios";
 import {
   ArrowUpDown,
   Bell,
@@ -65,12 +65,10 @@ import {
   Download,
   Filter,
   Info,
-  LayoutList,
   MoreVertical,
   Plus,
   Search,
   Settings,
-  Table2,
   Users,
   X,
 } from "lucide-react";
@@ -147,6 +145,48 @@ export default function LeadsCentre() {
   const [totalItems, setTotalItems] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+
+  const [basicNumber, setBasicNumber] = useState<BasicNumber>({
+    intakeLeads: 0,
+    convertedLeads: 0,
+    qualifiedLeads: 0,
+    conversionRate: 0,
+  })
+
+  const calculateBasicNumber = (leads: any) => {
+
+    console.log("Yaha leads aaya hia", allLeads)
+    const stats = leads.reduce(
+      (acc, lead) => {
+        if (lead.stage === "qualified") {
+          acc.qualifiedLeads += 1;
+        } else if (lead.stage === "converted") {
+          acc.convertedLeads += 1;
+        } else {
+          acc.intakeLeads += 1;
+        }
+
+        return acc;
+      },
+      {
+        intakeLeads: 0,
+        convertedLeads: 0,
+        qualifiedLeads: 0,
+        conversionRate: 0,
+      }
+    );
+
+    // calculate conversion rate
+    const totalLeads = stats.intakeLeads + stats.qualifiedLeads + stats.convertedLeads;
+    stats.conversionRate =
+      totalLeads === 0
+        ? 0
+        : Math.round((stats.convertedLeads / totalLeads) * 100);
+
+    setBasicNumber(stats);
+  };
+
+
   // Pagination hook
   const {
     currentPage: currentPageNumber,
@@ -173,6 +213,7 @@ export default function LeadsCentre() {
     setEditableLead(selectedLead);
     setIsEditing(false);
   };
+
   const handleSave = async () => {
     if (!editableLead) return;
 
@@ -235,7 +276,7 @@ export default function LeadsCentre() {
         q: searchQuery.trim() || undefined,
         stage: filters.stage.value,
         status: filters.status.value,
-        source: filters.source.value,
+        "source.name": filters.source.value,
         assignedTo: filters.assignedTo.value,
         campaign: filters.campaign.value,
         form: filters.form.value,
@@ -246,11 +287,14 @@ export default function LeadsCentre() {
       };
 
       const params = buildParams(allFilters, pageIndex, rowPerPage);
+      console.log(params)
       const response = await leadService.getLeads(String(accountId), params);
 
       if (response.status === 200 || response.status === 201) {
         leadStoreManager.setLeads(response.data?.docs || []);
         setTotalItems(response.data?.pagination?.totalDocs);
+        calculateBasicNumber(response.data?.docs)
+
       }
     } catch (error) {
       console.log(error);
@@ -262,6 +306,7 @@ export default function LeadsCentre() {
   // Auto refresh on filter change
   useEffect(() => {
     getLeads();
+    // calculateBasicNumber()
   }, [currentPageNumber, filters, debouncedSearchQuery]);
 
   // Websocket connection
@@ -302,6 +347,8 @@ export default function LeadsCentre() {
   focus:outline-none focus-visible:outline-none 
   shadow-none focus:border focus-visible:border-gray-300`;
 
+
+  console.log(basicNumber)
   return (
     <div className=" bg-background">
       <div className="border-b bg-card shadow-sm">
@@ -419,10 +466,6 @@ export default function LeadsCentre() {
           </Button>
         </div>
 
-        {/* <div className="flex-1 max-w-md mb-6">
-
-        </div> */}
-
 
 
         {showFilters && (
@@ -462,6 +505,14 @@ export default function LeadsCentre() {
                 allLabel="All Sources"
                 onSelect={(value) =>
                   setFilters((prev) => ({ ...prev, source: value }))
+                }
+              />
+              <FilterDropdown
+                label={filters.stage.label}
+                options={stageOptions}
+                allLabel="All Sources"
+                onSelect={(value) =>
+                  setFilters((prev) => ({ ...prev, stage: value }))
                 }
               />
 
@@ -508,22 +559,29 @@ export default function LeadsCentre() {
 
         <div className="mb-6 flex items-center gap-8">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-primary">Intake leads:</span>
-            {/* <span className="text-muted-foreground">{intakeLeads}</span> */}
+            <span className="font-medium text-primary">Intake:</span>
+            <span className="text-muted-foreground">{basicNumber.intakeLeads}</span>
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-medium text-primary">Converted leads:</span>
-            {/* <span className="text-muted-foreground">{convertedLeads}</span> */}
+            <span className="font-medium text-primary">Qualified:</span>
+            <span className="text-muted-foreground">{basicNumber.qualifiedLeads}</span>
+            <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
+              <Info className="h-3 w-3" />
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-primary">Converted:</span>
+            <span className="text-muted-foreground">{basicNumber.convertedLeads}</span>
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium text-primary">Conversion rate:</span>
-            {/* <span className="text-muted-foreground">{conversionRate}%</span> */}
+            <span className="text-muted-foreground">{basicNumber.conversionRate}%</span>
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
@@ -770,7 +828,7 @@ export default function LeadsCentre() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-auto p-0 text-foreground hover:text-primary"
+                        className="h-auto p-0 text-foreground hover:text-primary capitalize"
                       >
                         {lead.stage}
                         <ChevronDown className="ml-1 h-3 w-3" />
@@ -787,7 +845,7 @@ export default function LeadsCentre() {
 
                     <TableCell>
                       <div className="space-y-1.5">
-                        <Badge variant="secondary" className="font-normal">
+                        <Badge variant="secondary" className="font-normal capitalize">
                           {lead.status}
                         </Badge>
                         <Badge

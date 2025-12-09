@@ -22,4 +22,12 @@ export const LeadSchema = z.object({
   }),
 });
 
+export const BasicNumberSchema=z.object({
+  intakeLeads:z.number(),
+  qualifiedLeads:z.number(),
+  conversionRate:z.number(),
+  convertedLeads:z.number()
+})
+
 export type ILead = z.infer<typeof LeadSchema>;
+export type BasicNumber=z.infer<typeof BasicNumberSchema>;

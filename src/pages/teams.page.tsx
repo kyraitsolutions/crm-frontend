@@ -28,6 +28,11 @@ import { TeamsStoreManager, useTeamsStore } from "@/stores/team.store";
 import { LocalStorageUtils } from "@/utils";
 import { formatDate } from "@/utils/date-utils";
 import { useEffect, useState } from "react";
+import { DataTable, type Column } from "@/components/common";
+import type { TeamListItem } from "@/types/team.type";
+import { Switch } from "@/components/ui/switch";
+import moment from "moment";
+import { Trash2 } from "lucide-react";
 
 export const Teams = () => {
   const teamStoreManager = new TeamsStoreManager();
@@ -126,6 +131,138 @@ export const Teams = () => {
       console.log("Error deleting account:", error);
     }
   };
+
+
+
+
+
+  const columns: Column<TeamListItem>[] = [
+    {
+      key: "name",
+      header: "Name",
+      className: "min-w-[200px]",
+
+      render: (row) => (
+        <div>
+          <div className="font-medium text-gray-900">{row.firstName + " " + row.lastName}</div>
+        </div>
+      ),
+    },
+    {
+      key: "email",
+      header: "Email",
+      className: "min-w-[200px]",
+
+      render: (row) => (
+        <div>
+          <div className="font-medium text-gray-900">{row.email}</div>
+        </div>
+      ),
+    },
+    {
+      key: "roleName",
+      header: "Role",
+      className: "min-w-[200px]",
+
+      render: (row) => (
+        <div>
+          <div className="font-medium text-gray-900">{row.roleName}</div>
+        </div>
+      ),
+    },
+    {
+      key: "inviteStatus",
+      header: "Invite",
+      className: "min-w-[200px]",
+
+      render: (row) => (
+        <div>
+          {/* <div className="font-medium text-gray-900">{row.inviteStatus}</div> */}
+          {row?.inviteStatus?.toLowerCase() === "accepted" ? (
+            <Badge
+              variant="outline"
+              className="text-green-600 border-green-500 cursor-pointer"
+            >
+              Accepted
+            </Badge>
+          ) : (
+            <Badge
+              variant="outline"
+              className="text-red-600 border-red-500 cursor-pointer"
+            >
+              Pending
+            </Badge>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "accountIds",
+      header: "Assigned Accounts",
+      className: "min-w-[200px]",
+
+      render: (row) => (
+        <div>
+          <Badge
+            onClick={() => {
+              setSelectedTeamId(row.userId);
+              setSelectedAccounts([]); // reset previous selection
+              setOpenAssign(true);
+            }}
+            variant="outline"
+            className="text-blue-600 border-blue-500 cursor-pointer"
+          >
+            Assign Accounts
+          </Badge>
+        </div>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <Switch
+            checked={row.status}
+            className="cursor-pointer"
+          // onClick={(e) => handleUpdateStatus(e, row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: "createdDisplay",
+      header: "Created",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <div className="font-medium text-gray-900">
+            {moment(row.createdAt).format("DD-MM-YYYY")}
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "action",
+      header: "Action",
+      cellClassName: "whitespace-nowrap text-gray-700",
+      render: (row) => (
+        <div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteTeamMember(row.userId)
+            }}
+            className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      ),
+    },
+
+  ];
   if (loading) {
     return (
       <div className="p-6 space-y-4">
@@ -201,121 +338,32 @@ export const Teams = () => {
         </Dialog>
       </div>
 
-      <Table>
-        <TableCaption>A list of your team members.</TableCaption>
-        <TableHeader className="px-6">
-          <TableRow>
-            <TableHead className="w-[100px]">Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Assigned Account</TableHead>
-            <TableHead className="">Created At</TableHead>
-            {/* <TableHead className="">Permission</TableHead> */}
-            <TableHead className="">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {teams?.length > 0 ? (
-            teams?.map((team) => (
-              <TableRow key={team.id}>
-                <TableCell className="font-medium">
-                  {team.firstName + " " + team.lastName}
-                </TableCell>
-                <TableCell>{team.email}</TableCell>
-                <TableCell>
-                  {team?.inviteStatus?.toLowerCase() === "accepted" ? (
-                    <Badge
-                      variant="outline"
-                      className="text-green-600 border-green-500 cursor-pointer"
-                    >
-                      Accepted
-                    </Badge>
-                  ) : (
-                    <Badge
-                      variant="outline"
-                      className="text-red-600 border-red-500 cursor-pointer"
-                    >
-                      Pending
-                    </Badge>
-                  )}
-                </TableCell>
-                <TableCell className="">
-                  {/* <MultiSelectDropdown
-                                options={accounts.map((a) => ({
-                                    id: a.id,
-                                    label: a.accountName,
-                                }))}
-                                placeholder="Select Accounts"
-                                onChange={(value) => handleAssignAccount(team.id, value)}
-                            /> */}
-                  <Badge
-                    onClick={() => {
-                      setSelectedTeamId(team.userId);
-                      setSelectedAccounts([]); // reset previous selection
-                      setOpenAssign(true);
-                    }}
-                    variant="outline"
-                    className="text-blue-600 border-blue-500 cursor-pointer"
-                  >
-                    Assign Accounts
-                  </Badge>
-                </TableCell>
-                <TableCell className="">{formatDate(team.createdAt)}</TableCell>
-                {/* <TableCell className="">
-                            <Badge
-                                onClick={() => handleDeleteAccount(team.id)}
-                                variant="outline"
-                                className="text-red-600 border-red-500 cursor-pointer"
-                            >
-                                View
-                            </Badge>
-                        </TableCell> */}
-                <TableCell className="">
-                  {/* add a delete icon to deletet hsi account using shadcn*/}
-                  <Badge
-                    onClick={() => handleDeleteTeamMember(team.userId)}
-                    variant="outline"
-                    className="text-red-600 border-red-500 cursor-pointer"
-                  >
-                    Delete
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={6}
-                className="text-center bg-gray-50 border-b"
-              >
-                <div className="flex flex-col items-center gap-3">
-                  <svg
-                    className="w-10 h-10 text-gray-300"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 16c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8H3v8Zm0-10h18M7 12h.01M11 12h.01M15 12h.01"
-                    />
-                  </svg>
 
-                  <p className="text-gray-600 text-sm font-medium">
-                    No Records Found
-                  </p>
-                  <p className="text-gray-400 text-xs">
-                    Your list is currently empty.
-                  </p>
-                </div>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
+      <div className="mt-2">
+        <DataTable<TeamListItem>
+          data={teams}
+          columns={columns}
+          pageSize={20}
+          //   onRowClick={(row) => {
+          //     console.log(row);
+          //     navigate(
+          //       `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/form/${
+          //         row.id
+          //       }/builder`
+          //     );
+          //   }}
+          // navigate(
+          //   `/dashboard/account/690c79520e764af69f4302ed/chatbot/create`
+          // )
+
+          sortable={true}
+          paginated={true}
+          tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
+          loading={loading}
+        />
 
         {/* Open assigned account dialong */}
+
         <Dialog open={openAssign} onOpenChange={setOpenAssign}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -356,7 +404,7 @@ export const Teams = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </Table>
+      </div>
     </div>
   );
 };

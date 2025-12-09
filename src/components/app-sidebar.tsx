@@ -50,7 +50,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {
         title: "Dashboard",
-        url: DASHBOARD_PATH.ROOT,
+        url: DASHBOARD_PATH.getAccountPath(String(authUser?.account?.id)),
         icon: IconDashboard,
       },
 

@@ -17,6 +17,10 @@ export const ChatNode = ({ data }: any) => {
     setOptions(newOpts);
   };
 
+  const handleClick = () => {
+    alert("clicked")
+  }
+
   return (
     <div
       style={{
@@ -79,7 +83,7 @@ export const ChatNode = ({ data }: any) => {
         </button>
       </div>
 
-      <Handle type="source" position={Position.Bottom} />
+      <Handle onClick={handleClick} type="source" position={Position.Bottom} />
     </div>
   );
 };

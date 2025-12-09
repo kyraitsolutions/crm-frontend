@@ -14,9 +14,21 @@ export const statusOptions = [
 ];
 
 export const sourceOptions = [
-  { label: "Website", value: "website" },
   { label: "Chatbot", value: "chatbot" },
+  { label: "Website", value: "website" },
+  { label: "Google Ads", value: "google_ads" },
+  { label: "Whatsapp", value: "whatsapp" },
+  { label: "Facebook", value: "facebook" },
+  { label: "Instagram", value: "instagram" },
+  { label: "Webform", value: "webform" },
+  { label: "Manual", value: "manual" },
 ];
+
+export const stageOptions=[
+  { label: "intake", value: "intake" },
+  { label: "qualified", value: "qualified" },
+  { label: "converted", value: "converted" },
+]
 
 export const labelOptions = [
   { label: "Hot Lead", value: "hot" },
