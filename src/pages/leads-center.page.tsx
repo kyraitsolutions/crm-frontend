@@ -145,17 +145,15 @@ export default function LeadsCentre() {
   const [totalItems, setTotalItems] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-
   const [basicNumber, setBasicNumber] = useState<BasicNumber>({
     intakeLeads: 0,
     convertedLeads: 0,
     qualifiedLeads: 0,
     conversionRate: 0,
-  })
+  });
 
   const calculateBasicNumber = (leads: any) => {
-
-    console.log("Yaha leads aaya hia", allLeads)
+    console.log("Yaha leads aaya hia", allLeads);
     const stats = leads.reduce(
       (acc, lead) => {
         if (lead.stage === "qualified") {
@@ -177,7 +175,8 @@ export default function LeadsCentre() {
     );
 
     // calculate conversion rate
-    const totalLeads = stats.intakeLeads + stats.qualifiedLeads + stats.convertedLeads;
+    const totalLeads =
+      stats.intakeLeads + stats.qualifiedLeads + stats.convertedLeads;
     stats.conversionRate =
       totalLeads === 0
         ? 0
@@ -185,7 +184,6 @@ export default function LeadsCentre() {
 
     setBasicNumber(stats);
   };
-
 
   // Pagination hook
   const {
@@ -287,14 +285,13 @@ export default function LeadsCentre() {
       };
 
       const params = buildParams(allFilters, pageIndex, rowPerPage);
-      console.log(params)
+      console.log(params);
       const response = await leadService.getLeads(String(accountId), params);
 
       if (response.status === 200 || response.status === 201) {
         leadStoreManager.setLeads(response.data?.docs || []);
         setTotalItems(response.data?.pagination?.totalDocs);
-        calculateBasicNumber(response.data?.docs)
-
+        calculateBasicNumber(response.data?.docs);
       }
     } catch (error) {
       console.log(error);
@@ -328,10 +325,12 @@ export default function LeadsCentre() {
       } else if (
         serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Updated"]
       ) {
+        console.log(serverResponse);
         if (serverResponse.data?.lead?.accountId !== accountId) return;
 
         if (selectedLead && selectedLead.id === serverResponse.data?.lead?.id) {
-          setSelectedLead(serverResponse.data?.lead);
+          setEditableLead(serverResponse.data?.lead);
+          // setSelectedLead(serverResponse.data?.lead);
         }
         leadStoreManager.updateLead(serverResponse.data?.lead);
       }
@@ -347,8 +346,7 @@ export default function LeadsCentre() {
   focus:outline-none focus-visible:outline-none 
   shadow-none focus:border focus-visible:border-gray-300`;
 
-
-  console.log(basicNumber)
+  console.log(basicNumber);
   return (
     <div className=" bg-background">
       <div className="border-b bg-card shadow-sm">
@@ -466,11 +464,8 @@ export default function LeadsCentre() {
           </Button>
         </div>
 
-
-
         {showFilters && (
           <div className="mb-6 flex items-center gap-2">
-
             <div className="flex items-center gap-2">
               <FilterDropdown
                 label={filters.form.label}
@@ -529,59 +524,66 @@ export default function LeadsCentre() {
                 filters.source.value ||
                 filters.assignedTo.value ||
                 filters.stage.value) && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      setFilters({
-                        lead: { label: "All Leads", value: null },
-                        campaign: { label: "All Campaigns", value: null },
-                        form: { label: "All Forms", value: null },
-                        date: { label: "All Dates", value: null },
-                        status: { label: "All Status", value: null },
-                        source: { label: "All Sources", value: null },
-                        assignedTo: { label: "All Users", value: null },
-                        label: { label: "All Labels", value: null },
-                        stage: { label: "All Stages", value: null },
-                        read: { label: "All", value: null },
-                      })
-                    }
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="h-4 w-4 mr-1" />
-                    Clear
-                  </Button>
-                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    setFilters({
+                      lead: { label: "All Leads", value: null },
+                      campaign: { label: "All Campaigns", value: null },
+                      form: { label: "All Forms", value: null },
+                      date: { label: "All Dates", value: null },
+                      status: { label: "All Status", value: null },
+                      source: { label: "All Sources", value: null },
+                      assignedTo: { label: "All Users", value: null },
+                      label: { label: "All Labels", value: null },
+                      stage: { label: "All Stages", value: null },
+                      read: { label: "All", value: null },
+                    })
+                  }
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4 mr-1" />
+                  Clear
+                </Button>
+              )}
             </div>
           </div>
-
         )}
 
         <div className="mb-6 flex items-center gap-8">
           <div className="flex items-center gap-2">
             <span className="font-medium text-primary">Intake:</span>
-            <span className="text-muted-foreground">{basicNumber.intakeLeads}</span>
+            <span className="text-muted-foreground">
+              {basicNumber.intakeLeads}
+            </span>
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium text-primary">Qualified:</span>
-            <span className="text-muted-foreground">{basicNumber.qualifiedLeads}</span>
+            <span className="text-muted-foreground">
+              {basicNumber.qualifiedLeads}
+            </span>
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium text-primary">Converted:</span>
-            <span className="text-muted-foreground">{basicNumber.convertedLeads}</span>
+            <span className="text-muted-foreground">
+              {basicNumber.convertedLeads}
+            </span>
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium text-primary">Conversion rate:</span>
-            <span className="text-muted-foreground">{basicNumber.conversionRate}%</span>
+            <span className="text-muted-foreground">
+              {basicNumber.conversionRate}%
+            </span>
             <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
               <Info className="h-3 w-3" />
             </div>
@@ -627,32 +629,32 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedStageFilter.label === "All"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedStageFilter({ label: "All", value: "" })
-            // }
+              // className={
+              //   selectedStageFilter.label === "All"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedStageFilter({ label: "All", value: "" })
+              // }
             >
               All
             </Button>
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedReadFilter.label === "Unread"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedReadFilter(
-            //     selectedReadFilter.label === "Unread"
-            //       ? { label: "All", value: "all" }
-            //       : { label: "Unread", value: "unread" }
-            //   )
-            // }
+              // className={
+              //   selectedReadFilter.label === "Unread"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedReadFilter(
+              //     selectedReadFilter.label === "Unread"
+              //       ? { label: "All", value: "all" }
+              //       : { label: "Unread", value: "unread" }
+              //   )
+              // }
             >
               Unread
             </Button>
@@ -845,7 +847,10 @@ export default function LeadsCentre() {
 
                     <TableCell>
                       <div className="space-y-1.5">
-                        <Badge variant="secondary" className="font-normal capitalize">
+                        <Badge
+                          variant="secondary"
+                          className="font-normal capitalize"
+                        >
                           {lead.status}
                         </Badge>
                         <Badge
@@ -1061,7 +1066,7 @@ export default function LeadsCentre() {
 
               <div className="space-y-4 rounded-lg border bg-muted/30 p-4 overflow-y-scroll max-h-72 grid grid-cols-2 gap-2">
                 {editableLead?.customFields &&
-                  Object.keys(editableLead.customFields).length > 0 ? (
+                Object.keys(editableLead.customFields).length > 0 ? (
                   Object.entries(editableLead.customFields).map(
                     ([key, value]) => (
                       <div key={key} className="flex flex-col gap-1">
@@ -1077,12 +1082,12 @@ export default function LeadsCentre() {
                               setEditableLead((prev) =>
                                 prev
                                   ? {
-                                    ...prev,
-                                    customFields: {
-                                      ...(prev.customFields ?? {}),
-                                      [key]: e.target.value,
-                                    },
-                                  }
+                                      ...prev,
+                                      customFields: {
+                                        ...(prev.customFields ?? {}),
+                                        [key]: e.target.value,
+                                      },
+                                    }
                                   : prev
                               )
                             }
