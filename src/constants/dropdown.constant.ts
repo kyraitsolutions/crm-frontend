@@ -25,9 +25,9 @@ export const sourceOptions = [
 ];
 
 export const stageOptions=[
-  { label: "intake", value: "intake" },
-  { label: "qualified", value: "qualified" },
-  { label: "converted", value: "converted" },
+  { label: "Intake", value: "intake" },
+  { label: "Qualified", value: "qualified" },
+  { label: "Converted", value: "converted" },
 ]
 
 export const labelOptions = [

@@ -73,7 +73,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 interface Lead {
   id: string;
@@ -422,13 +422,13 @@ export default function LeadsCentre() {
             </Button>
           </div>
           */}
-          <Button variant="outline" size="sm">
+          {/* <Button variant="outline" size="sm">
             Add new stage
-          </Button>
+          </Button> */}
 
-          <Button variant="outline" size="sm">
+          {/* <Button variant="outline" size="sm">
             Bulk edit
-          </Button>
+          </Button> */}
           <InputGroup>
             <InputGroupInput
               placeholder="Search leads..."
@@ -510,7 +510,7 @@ export default function LeadsCentre() {
               <FilterDropdown
                 label={filters.stage.label}
                 options={stageOptions}
-                allLabel="All Sources"
+                allLabel="All Stages"
                 onSelect={(value) =>
                   setFilters((prev) => ({ ...prev, stage: value }))
                 }
@@ -525,10 +525,11 @@ export default function LeadsCentre() {
                 }
               />
 
-              {(filters.status.value ||
+              {(filters.form.value || filters.date.value || filters.status.value ||
                 filters.source.value ||
                 filters.assignedTo.value ||
-                filters.stage.value) && (
+                filters.stage.value ||
+                filters.label.value) && (
                   <Button
                     variant="ghost"
                     size="sm"
@@ -925,9 +926,9 @@ export default function LeadsCentre() {
                       }
                     />
                   ) : (
-                    <p className="text-sm text-foreground">
+                    <Link to={`mailto:${editableLead?.email}`} className="text-sm text-foreground">
                       {editableLead?.email}
-                    </p>
+                    </Link>
                   )}
                 </div>
 
@@ -948,9 +949,9 @@ export default function LeadsCentre() {
                       }
                     />
                   ) : (
-                    <p className="text-sm text-foreground">
+                    <Link target="_blank" to={`https://wa.me/${editableLead?.phone}?text=hello`} className="text-sm text-foreground">
                       {editableLead?.phone}
-                    </p>
+                    </Link>
                   )}
                 </div>
               </div>
@@ -972,6 +973,7 @@ export default function LeadsCentre() {
                   {isEditing ? (
                     <Select
                       value={editableLead?.stage}
+
                       onValueChange={(v) =>
                         setEditableLead((prev) =>
                           prev ? { ...prev, stage: v } : prev
@@ -982,13 +984,13 @@ export default function LeadsCentre() {
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Intake">Intake</SelectItem>
-                        <SelectItem value="In Progress">In Progress</SelectItem>
-                        <SelectItem value="Converted">Converted</SelectItem>
+                        <SelectItem value="intake">Intake</SelectItem>
+                        <SelectItem value="qualified">Qualified</SelectItem>
+                        <SelectItem value="converted">Converted</SelectItem>
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Badge variant="outline">{editableLead?.stage}</Badge>
+                    <Badge variant="outline" className="capitalize">{editableLead?.stage}</Badge>
                   )}
                 </div>
 
@@ -1011,13 +1013,12 @@ export default function LeadsCentre() {
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Pending">Pending</SelectItem>
-                        <SelectItem value="Closed">Closed</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Badge variant="secondary">{editableLead?.status}</Badge>
+                    <Badge variant="secondary" className="capitalize">{editableLead?.status}</Badge>
                   )}
                 </div>
 
@@ -1026,7 +1027,7 @@ export default function LeadsCentre() {
                   <label className="text-xs text-muted-foreground font-medium">
                     Source
                   </label>
-                  <Badge variant="secondary">
+                  <Badge variant="secondary" className="capitalize">
                     {editableLead?.source?.name}
                   </Badge>
                 </div>
