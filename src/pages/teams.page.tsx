@@ -52,6 +52,14 @@ export const Teams = () => {
   const [selectedTeamId, setSelectedTeamId] = useState(null);
   const [selectedAccounts, setSelectedAccounts] = useState([]);
 
+  const handleAddTeamMember = () => {
+    try {
+      const response = teamService.createTeamMember(newTeam);
+      // setTeams([...teams, response?.data.docs]);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
   const getTeams = async () => {
     setLoading(true);
     // fetch teams from api
@@ -69,15 +77,6 @@ export const Teams = () => {
   useEffect(() => {
     getTeams();
   }, []);
-
-  const handleAddTeamMember = () => {
-    try {
-      const response = teamService.createTeamMember(newTeam);
-      // setTeams([...teams, response?.data.docs]);
-    } catch (error) {
-      console.log("Error", error);
-    }
-  };
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -132,10 +131,6 @@ export const Teams = () => {
     }
   };
 
-
-
-
-
   const columns: Column<TeamListItem>[] = [
     {
       key: "name",
@@ -144,7 +139,9 @@ export const Teams = () => {
 
       render: (row) => (
         <div>
-          <div className="font-medium text-gray-900">{row.firstName + " " + row.lastName}</div>
+          <div className="font-medium text-gray-900">
+            {row.firstName + " " + row.lastName}
+          </div>
         </div>
       ),
     },
@@ -226,7 +223,7 @@ export const Teams = () => {
           <Switch
             checked={row.status}
             className="cursor-pointer"
-          // onClick={(e) => handleUpdateStatus(e, row.id)}
+            // onClick={(e) => handleUpdateStatus(e, row.id)}
           />
         </div>
       ),
@@ -252,7 +249,7 @@ export const Teams = () => {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleDeleteTeamMember(row.userId)
+              handleDeleteTeamMember(row.userId);
             }}
             className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
           >
@@ -261,8 +258,8 @@ export const Teams = () => {
         </div>
       ),
     },
-
   ];
+
   if (loading) {
     return (
       <div className="p-6 space-y-4">
@@ -337,7 +334,6 @@ export const Teams = () => {
           </DialogContent>
         </Dialog>
       </div>
-
 
       <div className="mt-2">
         <DataTable<TeamListItem>
