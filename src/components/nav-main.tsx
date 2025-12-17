@@ -36,7 +36,7 @@ export function NavMain({
         "Lead Forms",
         "Leads Centre",
       ].includes(item.title)
-      : ["Home", "Accounts", "Team"].includes(item.title);
+      : ["Home", "Accounts", "Team", "Settings"].includes(item.title);
   });
 
   return (

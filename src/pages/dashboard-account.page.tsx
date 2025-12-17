@@ -35,7 +35,12 @@ import {
   ArrowLeftRight,
 } from "lucide-react";
 // import { DateRange } from "react-day-picker";
-import { isWithinInterval, parseISO, subDays, differenceInDays } from "date-fns";
+import {
+  isWithinInterval,
+  parseISO,
+  subDays,
+  differenceInDays,
+} from "date-fns";
 import { DateRangePicker } from "@/components/common/DateRangePicker";
 import { ComparisonMetricCard } from "@/components/common/ComparisonMetricCard";
 import { exportToCSV, exportToPDF } from "@/lib/exportUtils";
@@ -117,14 +122,16 @@ interface AnalyticsData {
 }
 
 const DashboardAccount = () => {
-  const { ["account-id"]: accountId } = useParams();;
-  console.log(accountId)
+  const { ["account-id"]: accountId } = useParams();
+
   const analyticsService = new AnalyticsService();
 
-  const [timeRange, setTimeRange] = useState<"daily" | "weekly" | "monthly" | "yearly">("weekly");
+  const [timeRange, setTimeRange] = useState<
+    "daily" | "weekly" | "monthly" | "yearly"
+  >("weekly");
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [comparisonMode, setComparisonMode] = useState(false);
-  const [fullAnalytics, setFullAnalytics] = useState<AnalyticsData>([])
+  const [fullAnalytics, setFullAnalytics] = useState<AnalyticsData>([]);
 
   // Full dataset
   // const fullAnalytics: AnalyticsData = {
@@ -248,14 +255,21 @@ const DashboardAccount = () => {
       0
     );
 
-    const todayFromFiltered = filteredLeadsOverTime[filteredLeadsOverTime.length - 1]?.total || 0;
+    const todayFromFiltered =
+      filteredLeadsOverTime[filteredLeadsOverTime.length - 1]?.total || 0;
 
     return {
       ...fullAnalytics,
       totalLeads: totalFromFiltered || fullAnalytics.totalLeads,
       todayLeads: todayFromFiltered,
-      leadsOverTime: filteredLeadsOverTime.length > 0 ? filteredLeadsOverTime : fullAnalytics.leadsOverTime,
-      recentLeads: filteredRecentLeads.length > 0 ? filteredRecentLeads : fullAnalytics.recentLeads,
+      leadsOverTime:
+        filteredLeadsOverTime.length > 0
+          ? filteredLeadsOverTime
+          : fullAnalytics.leadsOverTime,
+      recentLeads:
+        filteredRecentLeads.length > 0
+          ? filteredRecentLeads
+          : fullAnalytics.recentLeads,
     };
   }, [dateRange, fullAnalytics]);
 
@@ -295,7 +309,8 @@ const DashboardAccount = () => {
 
     return {
       totalLeads: totalFromFiltered || 0,
-      todayLeads: filteredLeadsOverTime[filteredLeadsOverTime.length - 1]?.total || 0,
+      todayLeads:
+        filteredLeadsOverTime[filteredLeadsOverTime.length - 1]?.total || 0,
       weeklyLeads: totalFromFiltered || 0,
       monthlyLeads: totalFromFiltered || 0,
       conversionRate: 22.5, // Mock data - would calculate from actual conversions
@@ -346,7 +361,7 @@ const DashboardAccount = () => {
       case "qualified":
         return "bg-primary text-primary-foreground";
       case "converted":
-        return "bg-[#21733F] text-[#21733F]-foreground";
+        return "bg-[#21733F] text-white";
       case "lost":
         return "bg-destructive text-destructive-foreground";
       default:
@@ -370,20 +385,18 @@ const DashboardAccount = () => {
 
   const getOverview = async () => {
     try {
-      console.log(accountId)
       const response = await analyticsService.getOverview(String(accountId));
       const data = await response.data;
-      console.log(data)
-      setFullAnalytics(data.data)
-      console.log(data.data)
+
+      setFullAnalytics(data.data);
     } catch (error) {
-      console.log("Error", error)
+      console.log("Error", error);
     }
-  }
+  };
 
   useEffect(() => {
-    getOverview()
-  }, [])
+    getOverview();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -391,24 +404,30 @@ const DashboardAccount = () => {
         {/* Header */}
         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">Analytics </h1>
-            <p className="text-sm text-[#D3DEF5]-foreground">Track leads, conversions, and channel performance</p>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              Analytics{" "}
+            </h1>
+            <p className="text-sm text-[#D3DEF5]-foreground">
+              Track leads, conversions, and channel performance
+            </p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             {/* Time Range Buttons */}
             <div className="flex gap-2">
-              {(["daily", "weekly", "monthly", "yearly"] as const).map((range) => (
-                <button
-                  key={range}
-                  onClick={() => setTimeRange(range)}
-                  className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${timeRange === range
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card text-card-foreground hover:bg-[#D3DEF5]"
-                    }`}
-                >
-                  {range.charAt(0).toUpperCase() + range.slice(1)}
-                </button>
-              ))}
+              {(["daily", "weekly", "monthly", "yearly"] as const).map(
+                (range) => (
+                  <button
+                    key={range}
+                    onClick={() => setTimeRange(range)}
+                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${timeRange === range
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card text-card-foreground hover:bg-[#D3DEF5]"
+                      }`}
+                  >
+                    {range.charAt(0).toUpperCase() + range.slice(1)}
+                  </button>
+                )
+              )}
             </div>
 
             {/* Date Range Picker */}
@@ -480,7 +499,9 @@ const DashboardAccount = () => {
               previousValue={previousPeriodData.conversionRate}
               suffix="%"
               colorClass="border-l-[#80540A]"
-              formatter={(val) => typeof val === 'number' ? val.toFixed(1) : val}
+              formatter={(val) =>
+                typeof val === "number" ? val.toFixed(1) : val
+              }
             />
             <ComparisonMetricCard
               title="Response Time"
@@ -489,7 +510,9 @@ const DashboardAccount = () => {
               previousValue={previousPeriodData.avgResponseTime}
               suffix="m"
               colorClass="border-l-[#0D587A]"
-              formatter={(val) => typeof val === 'number' ? val.toFixed(1) : val}
+              formatter={(val) =>
+                typeof val === "number" ? val.toFixed(1) : val
+              }
             />
             <ComparisonMetricCard
               title="Active Chatbots"
@@ -516,7 +539,9 @@ const DashboardAccount = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{data.totalLeads?.toLocaleString()}</div>
+                <div className="text-2xl font-bold">
+                  {data.totalLeads?.toLocaleString()}
+                </div>
                 <p className="text-xs text-[#D3DEF5]-foreground">All time</p>
               </CardContent>
             </Card>
@@ -530,7 +555,9 @@ const DashboardAccount = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{data.todayLeads}</div>
-                <p className="text-xs text-[#21733F]">+{data.weeklyLeads} this week</p>
+                <p className="text-xs text-[#21733F]">
+                  +{data.weeklyLeads} this week
+                </p>
               </CardContent>
             </Card>
 
@@ -543,7 +570,9 @@ const DashboardAccount = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{data.conversionRate}%</div>
-                <p className="text-xs text-[#D3DEF5]-foreground">Success rate</p>
+                <p className="text-xs text-[#D3DEF5]-foreground">
+                  Success rate
+                </p>
               </CardContent>
             </Card>
 
@@ -555,7 +584,9 @@ const DashboardAccount = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{data.avgResponseTime}m</div>
+                <div className="text-2xl font-bold">
+                  {data.avgResponseTime}m
+                </div>
                 <p className="text-xs text-[#D3DEF5]-foreground">Average</p>
               </CardContent>
             </Card>
@@ -608,7 +639,9 @@ const DashboardAccount = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{data.activeSocialMedia}</div>
+                <div className="text-2xl font-bold">
+                  {data.activeSocialMedia}
+                </div>
                 <p className="text-xs text-[#21733F]">Channels</p>
               </CardContent>
             </Card>
@@ -621,9 +654,15 @@ const DashboardAccount = () => {
             <CardContent className="py-3">
               <div className="flex items-center gap-2 text-xs">
                 <ArrowLeftRight className="h-4 w-4 text-primary" />
-                <span className="font-semibold text-primary">Comparison Mode Active:</span>
+                <span className="font-semibold text-primary">
+                  Comparison Mode Active:
+                </span>
                 <span className="text-[#D3DEF5]-foreground">
-                  Comparing current period with previous {dateRange?.from && dateRange?.to ? differenceInDays(dateRange.to, dateRange.from) + 1 : 0} days
+                  Comparing current period with previous{" "}
+                  {dateRange?.from && dateRange?.to
+                    ? differenceInDays(dateRange.to, dateRange.from) + 1
+                    : 0}{" "}
+                  days
                 </span>
               </div>
             </CardContent>
@@ -635,23 +674,33 @@ const DashboardAccount = () => {
           {/* Leads Over Time */}
           <Card className="lg:col-span-2">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">Lead Generation Trends</CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">Daily lead acquisition by source</p>
+              <CardTitle className="text-sm font-semibold">
+                Lead Generation Trends
+              </CardTitle>
+              <p className="text-xs text-[#D3DEF5]-foreground">
+                Daily lead acquisition by source
+              </p>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={data.leadsOverTime}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    // stroke="hsl(var(--border))"
+                  />
                   <XAxis
                     dataKey="date"
                     tick={{ fontSize: 10 }}
-                    stroke="hsl(var(--[#D3DEF5]-foreground)) "
+                    // stroke="hsl(var(--[#D3DEF5]-foreground)) "
                     tickFormatter={(value) => {
                       const date = new Date(value);
                       return `${date.getMonth() + 1}/${date.getDate()}`;
                     }}
                   />
-                  <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--[#D3DEF5]-foreground))" />
+                  <YAxis
+                    tick={{ fontSize: 10 }}
+                    // stroke="hsl(var(--[#D3DEF5]-foreground))"
+                  />
                   <Tooltip
                     contentStyle={{
                       fontSize: "12px",
@@ -677,8 +726,12 @@ const DashboardAccount = () => {
           {/* Lead Status Distribution */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">Lead Pipeline Status</CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">Distribution by stage</p>
+              <CardTitle className="text-sm font-semibold">
+                Lead Pipeline Status
+              </CardTitle>
+              <p className="text-xs text-[#D3DEF5]-foreground">
+                Distribution by stage
+              </p>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={250}>
@@ -688,13 +741,18 @@ const DashboardAccount = () => {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ status, percentage }) => `${status}: ${percentage}%`}
+                    label={({ status, percentage }) =>
+                      `${status}: ${percentage}%`
+                    }
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="count"
                   >
                     {data.leadsByStatus?.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip
@@ -716,16 +774,25 @@ const DashboardAccount = () => {
           {/* Lead Sources */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">Lead Sources Performance</CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">Ranked by volume with trends</p>
+              <CardTitle className="text-sm font-semibold">
+                Lead Sources Performance
+              </CardTitle>
+              <p className="text-xs text-[#D3DEF5]-foreground">
+                Ranked by volume with trends
+              </p>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 {data.leadsBySource?.map((source) => (
                   <div key={source.source} className="flex items-center gap-2">
                     <div className="flex min-w-[90px] items-center gap-2">
-                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: source.color }} />
-                      <span className="text-xs font-medium">{source.source}</span>
+                      <div
+                        className="h-2 w-2 rounded-full"
+                        style={{ backgroundColor: source.color }}
+                      />
+                      <span className="text-xs font-medium">
+                        {source.source}
+                      </span>
                     </div>
                     <div className="h-6 flex-1 overflow-hidden rounded-md bg-[#D3DEF5]">
                       <div
@@ -738,8 +805,17 @@ const DashboardAccount = () => {
                     </div>
                     <div className="flex min-w-[80px] items-center gap-2 text-xs">
                       <span className="font-semibold">{source.count}</span>
-                      <span className={`flex items-center gap-0.5 ${source.trend >= 0 ? "text-[#21733F]" : "text-destructive"}`}>
-                        {source.trend >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                      <span
+                        className={`flex items-center gap-0.5 ${source.trend >= 0
+                          ? "text-[#21733F]"
+                          : "text-destructive"
+                          }`}
+                      >
+                        {source.trend >= 0 ? (
+                          <TrendingUp className="h-3 w-3" />
+                        ) : (
+                          <TrendingDown className="h-3 w-3" />
+                        )}
                         {Math.abs(source.trend)}%
                       </span>
                     </div>
@@ -752,26 +828,55 @@ const DashboardAccount = () => {
           {/* Monthly Engagement */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">Monthly Performance</CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">Leads vs Conversions trend</p>
+              <CardTitle className="text-sm font-semibold">
+                Monthly Performance
+              </CardTitle>
+              <p className="text-xs text-[#D3DEF5]-foreground">
+                Leads vs Conversions trend
+              </p>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={data.monthlyEngagement}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" tick={{ fontSize: 10 }} stroke="hsl(var(--[#D3DEF5]-foreground))" />
-                  <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--[#D3DEF5]-foreground))" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    // stroke="hsl(var(--border))"
+                  />
+                  <XAxis
+                    dataKey="month"
+                    tick={{ fontSize: 10 }}
+
+                    // stroke="hsl(var(--[#D3DEF5]-foreground))"
+                  />
+                  <YAxis
+                    tick={{ fontSize: 10 }}
+                    // stroke="hsl(var(--[#D3DEF5]-foreground))"
+                    className="capitalize"
+                  />
                   <Tooltip
                     contentStyle={{
                       fontSize: "12px",
                       backgroundColor: "white",
                       border: "1px solid  grey",
                       borderRadius: "6px",
+                      textDecoration: "capitalize"
                     }}
                   />
                   <Legend wrapperStyle={{ fontSize: "11px" }} />
-                  <Line type="monotone" dataKey="leads" stroke="#3B82F6" strokeWidth={2} dot={{ r: 3 }} />
-                  <Line type="monotone" dataKey="conversions" stroke="#10B981" strokeWidth={2} dot={{ r: 3 }} />
+                  <Line
+                    type="monotone"
+                    dataKey="leads"
+                    stroke="#3B82F6"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="conversions"
+                    stroke="#10B981"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -783,34 +888,59 @@ const DashboardAccount = () => {
           {/* Channel Performance Table */}
           <Card className="lg:col-span-2">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">Channel Performance Metrics</CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">Detailed conversion analytics by source</p>
+              <CardTitle className="text-sm font-semibold">
+                Channel Performance Metrics
+              </CardTitle>
+              <p className="text-xs text-[#D3DEF5]-foreground">
+                Detailed conversion analytics by source
+              </p>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="pb-2 text-left font-semibold text-[#D3DEF5]-foreground">Channel</th>
-                      <th className="pb-2 text-right font-semibold text-[#D3DEF5]-foreground">Leads</th>
-                      <th className="pb-2 text-right font-semibold text-[#D3DEF5]-foreground">Conversions</th>
-                      <th className="pb-2 text-right font-semibold text-[#D3DEF5]-foreground">Rate</th>
-                      <th className="pb-2 text-center font-semibold text-[#D3DEF5]-foreground">Status</th>
+                      <th className="pb-2 text-left font-semibold text-[#D3DEF5]-foreground">
+                        Channel
+                      </th>
+                      <th className="pb-2 text-right font-semibold text-[#D3DEF5]-foreground">
+                        Leads
+                      </th>
+                      <th className="pb-2 text-right font-semibold text-[#D3DEF5]-foreground">
+                        Conversions
+                      </th>
+                      <th className="pb-2 text-right font-semibold text-[#D3DEF5]-foreground">
+                        Rate
+                      </th>
+                      <th className="pb-2 text-center font-semibold text-[#D3DEF5]-foreground">
+                        Status
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.channelPerformance?.map((channel) => (
-                      <tr key={channel.channel} className="border-b border-border/50">
-                        <td className="flex items-center gap-2 py-2.5 font-medium">
+                      <tr
+                        key={channel.channel}
+                        className="border-b border-border/50"
+                      >
+                        <td className="flex items-center gap-2 py-2.5 font-medium capitalize">
                           {getChannelIcon(channel.channel)}
                           {channel.channel}
                         </td>
                         <td className="py-2.5 text-right">{channel.leads}</td>
-                        <td className="py-2.5 text-right font-semibold text-[#21733F]">{channel.conversions}</td>
-                        <td className="py-2.5 text-right font-semibold">{channel.conversionRate}%</td>
+                        <td className="py-2.5 text-right font-semibold text-[#21733F]">
+                          {channel.conversions}
+                        </td>
+                        <td className="py-2.5 text-right font-semibold">
+                          {channel.conversionRate}%
+                        </td>
                         <td className="py-2.5 text-center">
                           <Badge variant="outline" className="text-[10px]">
-                            {channel.status === "active" ? <CheckCircle className="mr-1 h-2.5 w-2.5 text-[#21733F]" /> : <XCircle className="mr-1 h-2.5 w-2.5 text-destructive" />}
+                            {channel.status === "active" ? (
+                              <CheckCircle className="mr-1 h-2.5 w-2.5 text-[#21733F]" />
+                            ) : (
+                              <XCircle className="mr-1 h-2.5 w-2.5 text-destructive" />
+                            )}
                             {channel.status}
                           </Badge>
                         </td>
@@ -825,25 +955,47 @@ const DashboardAccount = () => {
           {/* Recent Leads */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">Recent Leads</CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">Latest incoming leads</p>
+              <CardTitle className="text-sm font-semibold">
+                Recent Leads
+              </CardTitle>
+              <p className="text-xs text-[#D3DEF5]-foreground">
+                Latest incoming leads
+              </p>
             </CardHeader>
             <CardContent>
               <div className="space-y-2.5">
                 {data.recentLeads?.slice(0, 5)?.map((lead, index) => (
-                  <div key={index} className="flex items-start justify-between rounded-lg border border-border p-2.5 transition-colors hover:bg-[#D3DEF5]/50">
+                  <div
+                    key={index}
+                    className="flex items-start justify-between rounded-lg border border-border p-2.5 transition-colors hover:bg-[#D3DEF5]/50"
+                  >
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-xs font-semibold capitalize">{lead.name}</p>
-                        <Badge className={`text-[9px] ${getStatusColor(lead.status)}`}>{lead.status}</Badge>
+                        <p className="text-xs font-semibold capitalize">
+                          {lead.name}
+                        </p>
+                        <Badge
+                          className={`text-[9px] text-white capitalize ${getStatusColor(
+                            lead.status
+                          )}`}
+                        >
+                          {lead.status}
+                        </Badge>
                       </div>
-                      <p className="mt-0.5 text-[10px] text-[#D3DEF5]-foreground">{lead.source}</p>
+                      <p className="mt-0.5 text-[10px] text-[#D3DEF5]-foreground">
+                        {lead.source}
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="text-[10px] font-medium">
-                        {new Date(lead.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        {new Date(lead.date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
                       </p>
-                      <p className="text-[10px] text-[#D3DEF5]-foreground">{lead.time}</p>
+                      <p className="text-[10px] text-[#D3DEF5]-foreground">
+                        {lead.time}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -857,6 +1009,5 @@ const DashboardAccount = () => {
 };
 
 export default DashboardAccount;
-
 
 // export default DashboardAccount;

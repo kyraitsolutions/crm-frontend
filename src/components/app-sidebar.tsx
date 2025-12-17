@@ -10,6 +10,7 @@ import {
   IconInnerShadowTop,
   IconMessageCircle,
   IconReport,
+  IconSearch,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
@@ -35,7 +36,7 @@ import { CookieUtils } from "@/utils/cookie-storage.utils";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user: authUser, accountSelected } = useAuthStore((state) => state);
-
+  // console.log(authUser)
   const data = {
     user: {
       name: "shadcn",
@@ -89,6 +90,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "/dashboard/teams",
         icon: IconUsers,
       },
+
     ],
     navClouds: [
       {
@@ -141,7 +143,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navSecondary: [
       {
         title: "Settings",
-        url: "#",
+        url: "/dashboard/settings",
         icon: IconSettings,
       },
       {
@@ -149,11 +151,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "#",
         icon: IconHelp,
       },
-      // {
-      //   title: "Search",
-      //   url: "#",
-      //   icon: IconSearch,
-      // },
+      {
+        title: "Upgrade to premium",
+        url: "/dashboard/subscription",
+        icon: IconSearch,
+      },
     ],
     documents: [
       {

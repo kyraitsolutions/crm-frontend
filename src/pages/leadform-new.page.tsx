@@ -101,17 +101,14 @@ export default function LeadFormNew() {
         }
         ,
       );
-      console.log("Form created:", response.data);
       if (response.status === 200 || response.status === 201) {
-        toastMessageService.apiSuccess(response.message);
+        toastMessageService.apiSuccess(response.data.responseMessage);
         navigate(
           `${DASHBOARD_PATH.getAccountPath(String(accountId))}/lead-forms`
         );
       }
-      alert("Form created successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to create form");
     }
   };
 
