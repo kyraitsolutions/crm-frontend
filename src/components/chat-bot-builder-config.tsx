@@ -12,145 +12,165 @@ export default function ChatBotBuilderConfiguration() {
   const config = watch("config");
 
   return (
-    <div className="space-y-8 mt-6">
-      {/* --- Chatbot Behavior Section --- */}
-      <Card className="shadow-sm border border-slate-200 rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-800">
-            Chatbot Behavior
-          </CardTitle>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
+      {/* ───────── Chatbot Behavior ───────── */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">Chatbot Behavior</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Control how your chatbot behaves on the website
+          </p>
         </CardHeader>
 
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="showTypingIndicator"
-                className="font-medium text-slate-700"
-              >
+        <CardContent className="space-y-6">
+          {/* Typing Indicator */}
+          <div className="flex items-center justify-between rounded-lg border p-4">
+            <div className="space-y-1">
+              <Label htmlFor="showTypingIndicator" className="font-medium">
                 Show Typing Indicator
               </Label>
-              <Switch
-                className="cursor-pointer"
-                id="showTypingIndicator"
-                checked={config.showTypingIndicator}
-                onCheckedChange={(val) =>
-                  setValue(`config.showTypingIndicator`, val, {
-                    shouldDirty: true,
-                  })
-                }
-              />
+              <p className="text-sm text-muted-foreground">
+                Display a typing animation while the bot prepares a response
+              </p>
             </div>
 
-            <div>
-              <Label
-                htmlFor="autoOpenAfterSeconds"
-                className="font-medium text-slate-700 mb-1 block"
-              >
-                Auto Open After (Seconds)
-              </Label>
-              <Input
-                id="autoOpenAfterSeconds"
-                type="number"
-                min={0}
-                className="w-full"
-                {...register("config.autoOpenAfterSeconds", {
-                  valueAsNumber: true,
-                })}
-              />
-            </div>
+            <Switch
+              id="showTypingIndicator"
+              className="cursor-pointer"
+              checked={config.showTypingIndicator}
+              onCheckedChange={(val) =>
+                setValue("config.showTypingIndicator", val, {
+                  shouldDirty: true,
+                })
+              }
+            />
+          </div>
+
+          {/* Auto Open */}
+          <div className="rounded-lg border p-4 space-y-2">
+            <Label htmlFor="autoOpenAfterSeconds" className="font-medium">
+              Auto Open After (Seconds)
+            </Label>
+            <p className="text-sm text-muted-foreground">
+              Automatically open the chatbot after a delay
+            </p>
+
+            <Input
+              id="autoOpenAfterSeconds"
+              type="number"
+              min={0}
+              {...register("config.autoOpenAfterSeconds", {
+                valueAsNumber: true,
+              })}
+            />
           </div>
         </CardContent>
       </Card>
 
-      {/* --- Branding Section --- */}
-      <Card className="shadow-sm border border-slate-200 rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-800">
-            Branding
-          </CardTitle>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">Branding</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Customize how branding appears inside the chatbot
+          </p>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="enableBrandLabel"
-                className="font-medium text-slate-700"
-              >
+
+        <CardContent className="space-y-6">
+          {/* Enable Brand Label */}
+          <div className="flex items-center justify-between rounded-lg border p-4">
+            <div className="space-y-1">
+              <Label htmlFor="enableBrandLabel" className="font-medium">
                 Enable Brand Label
               </Label>
-              <Switch
-                id="enableBrandLabel"
-                checked={config.enableBrandLabel}
-                className="cursor-pointer"
-                onCheckedChange={(val) =>
-                  setValue("config.enableBrandLabel", val, {
-                    shouldDirty: true,
-                  })
-                }
-              />
+              <p className="text-sm text-muted-foreground">
+                Show your custom brand text in the chatbot footer
+              </p>
             </div>
 
-            <div className="space-y-2">
-              <Label
-                htmlFor="brandLabelText"
-                className="font-medium text-slate-700 block"
-              >
-                Brand Label Text
+            <Switch
+              id="enableBrandLabel"
+              className="cursor-pointer"
+              checked={config.enableBrandLabel}
+              onCheckedChange={(val) =>
+                setValue("config.enableBrandLabel", val, {
+                  shouldDirty: true,
+                })
+              }
+            />
+          </div>
+
+          {/* Brand Text */}
+          <div className="rounded-lg border p-4 space-y-2">
+            <Label htmlFor="brandLabelText" className="font-medium">
+              Brand Label Text
+            </Label>
+            <p className="text-sm text-muted-foreground">
+              Example: Powered by Kyra Solutions
+            </p>
+
+            <Input
+              id="brandLabelText"
+              readOnly
+              placeholder="e.g. Powered by Kyra Solutions"
+              {...register("config.brandLabelText")}
+            />
+          </div>
+
+          {/* Powered By */}
+          <div className="flex items-center justify-between rounded-lg border p-4">
+            <div className="space-y-1">
+              <Label htmlFor="showPoweredBy" className="font-medium">
+                Show “Powered By”
               </Label>
-              <Input
-                id="brandLabelText"
-                placeholder="e.g. Powered by Kyra Solutions"
-                {...register("config.brandLabelText")}
-                className="border-gray-300 focus:outline-none! focus:ring-0 "
-              />
+              <p className="text-sm text-muted-foreground">
+                Display the powered by label below the chatbot
+              </p>
             </div>
 
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="showPoweredBy"
-                className="font-medium text-slate-700"
-              >
-                Show "Powered By" Label
-              </Label>
-              <Switch
-                className="cursor-pointer"
-                id="showPoweredBy"
-                checked={config.showPoweredBy}
-                onCheckedChange={(val) =>
-                  setValue("config.showPoweredBy", val, { shouldDirty: true })
-                }
-              />
-            </div>
+            <Switch
+              id="showPoweredBy"
+              className="cursor-pointer"
+              checked={config.showPoweredBy}
+              onCheckedChange={(val) =>
+                setValue("config.showPoweredBy", val, { shouldDirty: true })
+              }
+            />
           </div>
         </CardContent>
       </Card>
 
-      {/* --- Activation Section --- */}
-      <Card className="shadow-sm border border-slate-200 rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-800">
-            Chatbot Activation
-          </CardTitle>
+      {/* ───────── Activation ───────── */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">Chatbot Activation</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Enable or disable the chatbot on your website
+          </p>
         </CardHeader>
+
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="active" className="font-medium text-slate-700">
+          <div className="flex items-center justify-between rounded-lg border p-4">
+            <div className="space-y-1">
+              <Label htmlFor="active" className="font-medium">
                 Active Chatbot
               </Label>
-              <Switch
-                className="cursor-pointer"
-                id="active"
-                checked={config.active}
-                onCheckedChange={(val) =>
-                  setValue("config.active", val, { shouldDirty: true })
-                }
-              />
+              <p className="text-sm text-muted-foreground">
+                Turn the chatbot on or off instantly
+              </p>
             </div>
+
+            <Switch
+              id="active"
+              className="cursor-pointer"
+              checked={config.active}
+              onCheckedChange={(val) =>
+                setValue("config.active", val, { shouldDirty: true })
+              }
+            />
           </div>
         </CardContent>
       </Card>
     </div>
+
   );
 }

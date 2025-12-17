@@ -23,11 +23,15 @@ import {
 } from "@/components/ui/card";
 import { PlusCircle, Trash2 } from "lucide-react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { LocalStorageUtils } from "@/utils";
+import { ToastMessageService } from "@/services";
+import { DASHBOARD_PATH } from "@/constants";
 
 export default function LeadFormNew() {
   const { accountId } = useParams();
+  const toastMessageService = new ToastMessageService();
+  const navigate = useNavigate();
   const [formTitle, setFormTitle] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [headerImage, setHeaderImage] = useState("");
@@ -87,7 +91,7 @@ export default function LeadFormNew() {
         successCTADestination,
       };
 
-      const res = await axios.post(
+      const response = await axios.post(
         `http://localhost:3000/api/account/${accountId}/form/`,
         payload,
         {
@@ -97,11 +101,14 @@ export default function LeadFormNew() {
         }
         ,
       );
-      console.log("Form created:", res.data);
-      alert("Form created successfully!");
+      if (response.status === 200 || response.status === 201) {
+        toastMessageService.apiSuccess(response.data.responseMessage);
+        navigate(
+          `${DASHBOARD_PATH.getAccountPath(String(accountId))}/lead-forms`
+        );
+      }
     } catch (err) {
       console.error(err);
-      alert("Failed to create form");
     }
   };
 

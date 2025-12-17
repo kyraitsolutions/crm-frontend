@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
-export default function ChatbotIntegration() {
+export default function ChatbotIntegration({ setActiveTab }: any) {
     const { toast } = useToast();
     const { accountId, chatBotId } = useParams();
     const [copy, setCopy] = useState({
@@ -51,7 +51,7 @@ export default function ChatbotIntegration() {
     return (
         <div className="w-full space-y-6">
             {/* Section 1 */}
-            <Card className="shadow-lg">
+            {chatBotId ? <Card className="shadow-lg">
                 <CardContent className="space-y-4">
                     <h2 className="text-md font-semibold">1. Install the below code on your website to start using your Chatbot</h2>
                     <p className="text-sm text-gray-600">Copy and paste the code right before the closing <code>&lt;/body&gt;</code> tag of your website's HTML source code.</p>
@@ -69,6 +69,34 @@ export default function ChatbotIntegration() {
                     <p className={`${copy.copy && copy.id == 2 ? "bg-green-600" : "bg-gray-600"}  w-fit  px-3 py-2  rounded  text-white text-sm mt-2 cursor-pointer`} onClick={() => handleCopy(scriptCode2, 2)}>{copy.copy && copy.id == 2 ? "Copied" : "Copy this code"}</p>
                 </CardContent>
             </Card>
+                :
+
+                <Card className="">
+                    <CardContent className="flex flex-col items-center justify-center py-12 text-center space-y-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                            🤖
+                        </div>
+
+                        <h3 className="text-lg font-semibold">
+                            No chatbot created yet
+                        </h3>
+
+                        <p className="text-sm text-muted-foreground max-w-sm">
+                            You need to create a chatbot before you can install it on your website.
+                            Once created, the installation script will appear here.
+                        </p>
+
+                        <button
+                            onClick={() => setActiveTab("overview")}
+                            className="mt-2 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+                        >
+                            Create Chatbot
+                        </button>
+                    </CardContent>
+                </Card>
+            }
+
+
         </div>
     );
 }

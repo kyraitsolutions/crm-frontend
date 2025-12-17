@@ -361,7 +361,7 @@ const DashboardAccount = () => {
       case "qualified":
         return "bg-primary text-primary-foreground";
       case "converted":
-        return "bg-[#21733F] text-[#21733F]-foreground";
+        return "bg-[#21733F] text-white";
       case "lost":
         return "bg-destructive text-destructive-foreground";
       default:
@@ -419,11 +419,10 @@ const DashboardAccount = () => {
                   <button
                     key={range}
                     onClick={() => setTimeRange(range)}
-                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                      timeRange === range
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-card text-card-foreground hover:bg-[#D3DEF5]"
-                    }`}
+                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${timeRange === range
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card text-card-foreground hover:bg-[#D3DEF5]"
+                      }`}
                   >
                     {range.charAt(0).toUpperCase() + range.slice(1)}
                   </button>
@@ -687,12 +686,12 @@ const DashboardAccount = () => {
                 <BarChart data={data.leadsOverTime}>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    stroke="hsl(var(--border))"
+                    // stroke="hsl(var(--border))"
                   />
                   <XAxis
                     dataKey="date"
                     tick={{ fontSize: 10 }}
-                    stroke="hsl(var(--[#D3DEF5]-foreground)) "
+                    // stroke="hsl(var(--[#D3DEF5]-foreground)) "
                     tickFormatter={(value) => {
                       const date = new Date(value);
                       return `${date.getMonth() + 1}/${date.getDate()}`;
@@ -700,7 +699,7 @@ const DashboardAccount = () => {
                   />
                   <YAxis
                     tick={{ fontSize: 10 }}
-                    stroke="hsl(var(--[#D3DEF5]-foreground))"
+                    // stroke="hsl(var(--[#D3DEF5]-foreground))"
                   />
                   <Tooltip
                     contentStyle={{
@@ -807,11 +806,10 @@ const DashboardAccount = () => {
                     <div className="flex min-w-[80px] items-center gap-2 text-xs">
                       <span className="font-semibold">{source.count}</span>
                       <span
-                        className={`flex items-center gap-0.5 ${
-                          source.trend >= 0
-                            ? "text-[#21733F]"
-                            : "text-destructive"
-                        }`}
+                        className={`flex items-center gap-0.5 ${source.trend >= 0
+                          ? "text-[#21733F]"
+                          : "text-destructive"
+                          }`}
                       >
                         {source.trend >= 0 ? (
                           <TrendingUp className="h-3 w-3" />
@@ -842,16 +840,18 @@ const DashboardAccount = () => {
                 <LineChart data={data.monthlyEngagement}>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    stroke="hsl(var(--border))"
+                    // stroke="hsl(var(--border))"
                   />
                   <XAxis
                     dataKey="month"
                     tick={{ fontSize: 10 }}
-                    stroke="hsl(var(--[#D3DEF5]-foreground))"
+
+                    // stroke="hsl(var(--[#D3DEF5]-foreground))"
                   />
                   <YAxis
                     tick={{ fontSize: 10 }}
-                    stroke="hsl(var(--[#D3DEF5]-foreground))"
+                    // stroke="hsl(var(--[#D3DEF5]-foreground))"
+                    className="capitalize"
                   />
                   <Tooltip
                     contentStyle={{
@@ -859,6 +859,7 @@ const DashboardAccount = () => {
                       backgroundColor: "white",
                       border: "1px solid  grey",
                       borderRadius: "6px",
+                      textDecoration: "capitalize"
                     }}
                   />
                   <Legend wrapperStyle={{ fontSize: "11px" }} />
@@ -922,7 +923,7 @@ const DashboardAccount = () => {
                         key={channel.channel}
                         className="border-b border-border/50"
                       >
-                        <td className="flex items-center gap-2 py-2.5 font-medium">
+                        <td className="flex items-center gap-2 py-2.5 font-medium capitalize">
                           {getChannelIcon(channel.channel)}
                           {channel.channel}
                         </td>
@@ -974,7 +975,7 @@ const DashboardAccount = () => {
                           {lead.name}
                         </p>
                         <Badge
-                          className={`text-[9px] ${getStatusColor(
+                          className={`text-[9px] text-white capitalize ${getStatusColor(
                             lead.status
                           )}`}
                         >

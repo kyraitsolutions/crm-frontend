@@ -86,7 +86,7 @@ export function LeadFormPage() {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              // handleDeleteChatbot(row.id);
+              handleDeleteForm(row.id);
             }}
             className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
           >
@@ -112,10 +112,22 @@ export function LeadFormPage() {
     }
   };
 
+  const handleDeleteForm = async (formId: string) => {
+    try {
+      const res = await leadFormService.deleteFormById(String(accountId), formId)
+      console.log(res.data);
+      getLeadFormList()
+    } catch (error) {
+      toastMessageService.apiError(error as any);
+    }
+  }
+
   useEffect(() => {
     getLeadFormList();
   }, []);
 
+
+  console.log(forms)
 
   return (
     <div className="space-y-6 lg:px-4 px-2 py-2">

@@ -73,7 +73,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 interface Lead {
   id: string;
@@ -420,13 +420,13 @@ export default function LeadsCentre() {
             </Button>
           </div>
           */}
-          <Button variant="outline" size="sm">
+          {/* <Button variant="outline" size="sm">
             Add new stage
-          </Button>
+          </Button> */}
 
-          <Button variant="outline" size="sm">
+          {/* <Button variant="outline" size="sm">
             Bulk edit
-          </Button>
+          </Button> */}
           <InputGroup>
             <InputGroupInput
               placeholder="Search leads..."
@@ -505,7 +505,7 @@ export default function LeadsCentre() {
               <FilterDropdown
                 label={filters.stage.label}
                 options={stageOptions}
-                allLabel="All Sources"
+                allLabel="All Stages"
                 onSelect={(value) =>
                   setFilters((prev) => ({ ...prev, stage: value }))
                 }
@@ -520,33 +520,34 @@ export default function LeadsCentre() {
                 }
               />
 
-              {(filters.status.value ||
+              {(filters.form.value || filters.date.value || filters.status.value ||
                 filters.source.value ||
                 filters.assignedTo.value ||
-                filters.stage.value) && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() =>
-                    setFilters({
-                      lead: { label: "All Leads", value: null },
-                      campaign: { label: "All Campaigns", value: null },
-                      form: { label: "All Forms", value: null },
-                      date: { label: "All Dates", value: null },
-                      status: { label: "All Status", value: null },
-                      source: { label: "All Sources", value: null },
-                      assignedTo: { label: "All Users", value: null },
-                      label: { label: "All Labels", value: null },
-                      stage: { label: "All Stages", value: null },
-                      read: { label: "All", value: null },
-                    })
-                  }
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4 mr-1" />
-                  Clear
-                </Button>
-              )}
+                filters.stage.value ||
+                filters.label.value) && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setFilters({
+                        lead: { label: "All Leads", value: null },
+                        campaign: { label: "All Campaigns", value: null },
+                        form: { label: "All Forms", value: null },
+                        date: { label: "All Dates", value: null },
+                        status: { label: "All Status", value: null },
+                        source: { label: "All Sources", value: null },
+                        assignedTo: { label: "All Users", value: null },
+                        label: { label: "All Labels", value: null },
+                        stage: { label: "All Stages", value: null },
+                        read: { label: "All", value: null },
+                      })
+                    }
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Clear
+                  </Button>
+                )}
             </div>
           </div>
         )}
@@ -629,32 +630,32 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-              // className={
-              //   selectedStageFilter.label === "All"
-              //     ? "bg-accent text-accent-foreground"
-              //     : ""
-              // }
-              // onClick={() =>
-              //   setSelectedStageFilter({ label: "All", value: "" })
-              // }
+            // className={
+            //   selectedStageFilter.label === "All"
+            //     ? "bg-accent text-accent-foreground"
+            //     : ""
+            // }
+            // onClick={() =>
+            //   setSelectedStageFilter({ label: "All", value: "" })
+            // }
             >
               All
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              // className={
-              //   selectedReadFilter.label === "Unread"
-              //     ? "bg-accent text-accent-foreground"
-              //     : ""
-              // }
-              // onClick={() =>
-              //   setSelectedReadFilter(
-              //     selectedReadFilter.label === "Unread"
-              //       ? { label: "All", value: "all" }
-              //       : { label: "Unread", value: "unread" }
-              //   )
-              // }
+            // className={
+            //   selectedReadFilter.label === "Unread"
+            //     ? "bg-accent text-accent-foreground"
+            //     : ""
+            // }
+            // onClick={() =>
+            //   setSelectedReadFilter(
+            //     selectedReadFilter.label === "Unread"
+            //       ? { label: "All", value: "all" }
+            //       : { label: "Unread", value: "unread" }
+            //   )
+            // }
             >
               Unread
             </Button>
@@ -930,9 +931,9 @@ export default function LeadsCentre() {
                       }
                     />
                   ) : (
-                    <p className="text-sm text-foreground">
+                    <Link to={`mailto:${editableLead?.email}`} className="text-sm text-foreground">
                       {editableLead?.email}
-                    </p>
+                    </Link>
                   )}
                 </div>
 
@@ -953,9 +954,9 @@ export default function LeadsCentre() {
                       }
                     />
                   ) : (
-                    <p className="text-sm text-foreground">
+                    <Link target="_blank" to={`https://wa.me/${editableLead?.phone}?text=hello`} className="text-sm text-foreground">
                       {editableLead?.phone}
-                    </p>
+                    </Link>
                   )}
                 </div>
               </div>
@@ -977,6 +978,7 @@ export default function LeadsCentre() {
                   {isEditing ? (
                     <Select
                       value={editableLead?.stage}
+
                       onValueChange={(v) =>
                         setEditableLead((prev) =>
                           prev ? { ...prev, stage: v } : prev
@@ -987,13 +989,13 @@ export default function LeadsCentre() {
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Intake">Intake</SelectItem>
-                        <SelectItem value="In Progress">In Progress</SelectItem>
-                        <SelectItem value="Converted">Converted</SelectItem>
+                        <SelectItem value="intake">Intake</SelectItem>
+                        <SelectItem value="qualified">Qualified</SelectItem>
+                        <SelectItem value="converted">Converted</SelectItem>
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Badge variant="outline">{editableLead?.stage}</Badge>
+                    <Badge variant="outline" className="capitalize">{editableLead?.stage}</Badge>
                   )}
                 </div>
 
@@ -1016,13 +1018,12 @@ export default function LeadsCentre() {
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Pending">Pending</SelectItem>
-                        <SelectItem value="Closed">Closed</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Badge variant="secondary">{editableLead?.status}</Badge>
+                    <Badge variant="secondary" className="capitalize">{editableLead?.status}</Badge>
                   )}
                 </div>
 
@@ -1031,7 +1032,7 @@ export default function LeadsCentre() {
                   <label className="text-xs text-muted-foreground font-medium">
                     Source
                   </label>
-                  <Badge variant="secondary">
+                  <Badge variant="secondary" className="capitalize">
                     {editableLead?.source?.name}
                   </Badge>
                 </div>
@@ -1066,7 +1067,7 @@ export default function LeadsCentre() {
 
               <div className="space-y-4 rounded-lg border bg-muted/30 p-4 overflow-y-scroll max-h-72 grid grid-cols-2 gap-2">
                 {editableLead?.customFields &&
-                Object.keys(editableLead.customFields).length > 0 ? (
+                  Object.keys(editableLead.customFields).length > 0 ? (
                   Object.entries(editableLead.customFields).map(
                     ([key, value]) => (
                       <div key={key} className="flex flex-col gap-1">
@@ -1082,12 +1083,12 @@ export default function LeadsCentre() {
                               setEditableLead((prev) =>
                                 prev
                                   ? {
-                                      ...prev,
-                                      customFields: {
-                                        ...(prev.customFields ?? {}),
-                                        [key]: e.target.value,
-                                      },
-                                    }
+                                    ...prev,
+                                    customFields: {
+                                      ...(prev.customFields ?? {}),
+                                      [key]: e.target.value,
+                                    },
+                                  }
                                   : prev
                               )
                             }

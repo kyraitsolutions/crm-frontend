@@ -278,7 +278,10 @@ export const Teams = () => {
   return (
     <div className="p-2">
       {/* ADD NEW TEAM MEMBER BUTTON + POPUP */}
-      <div className="flex justify-end">
+
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Teams</h1>
+
         <Dialog>
           <DialogTrigger asChild>
             <Button>Add New Team Member</Button>

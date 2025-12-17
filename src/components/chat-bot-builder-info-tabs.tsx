@@ -41,7 +41,7 @@ export default function ChatBotBuilderInfoTabs({
     customization: <ChatBotBuilderCustomization />,
     appearance: <ChatBotBuilderAppearance />,
     configration: <ChatBotBuilderConfiguration />,
-    integration: <ChatbotIntegration />,
+    integration: <ChatbotIntegration setActiveTab={setActiveTab} />,
     // chatbotFlow: <ChatbotFlowEditor />,
   };
 

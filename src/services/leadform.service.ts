@@ -10,4 +10,8 @@ export class LeadFormService extends ApiService{
     async getLeadFromsList(accountId:string):Promise<ApiResponse<[] | null>>{
         return await this.get(`/account/${accountId}/forms`)
     }
+
+    async deleteFormById(accountId:string,formId:string):Promise<ApiResponse<{} | null>>{
+        return await this.delete(`/account/${accountId}/form/${formId}`)
+    }  
 }

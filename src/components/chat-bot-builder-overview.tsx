@@ -14,11 +14,11 @@ import type { ChatBotFormData } from "@/types";
 // import { useState } from "react";
 
 const instructions = [
-  "Keep instructions short and actionable",
-  "Add sample questions so users know where to begin",
-  "Review fallback reply to keep conversations open",
-  "Test with different user scenarios",
-  "Set up proper knowledge sources",
+  "Enter the bot name and a short description",
+  "Customize the flow and initial message for you guest",
+  "Cusotmize chatbot design and position as per your brand",
+  "Manage chatbot behaviour and active time of chatbot",
+  "Copy and integrate scripts in your website code",
 ];
 
 export default function ChatBotBuilderOverview() {

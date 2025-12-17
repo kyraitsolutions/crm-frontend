@@ -14,6 +14,9 @@ export interface IUser {
     accountType: string;
   };
   account?: Account;
+  usersubscription:{
+    planId:string
+  };
 }
 
 export interface Account {
