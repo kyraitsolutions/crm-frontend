@@ -1,14 +1,24 @@
 import { z } from "zod";
 
 export const TeamSchema = z.object({
-  _id: z.string(),
-  name: z.string(),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
-  role: z.string(), // "admin" | "manager" | "member", etc.
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  id: z.string(),
+
+  userId: z.string(),
+  roleId: z.string(),
+
+  firstName: z.string(),
+  lastName: z.string(),
+
+  email: z.email(),
+
+  inviteStatus: z.enum(["PENDING", "ACCEPTED", "REJECTED"]),
+  roleName: z.string(), // e.g. "TEAM_MEMBER"
+
+  status: z.boolean(),
+
+  accountIds: z.array(z.string()),
+
+  createdAt: z.string(), // ISO date string
 });
 
-// Auto TS type from Zod
 export type ITeam = z.infer<typeof TeamSchema>;

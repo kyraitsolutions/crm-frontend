@@ -1,4 +1,3 @@
-import Chatbot from "@/components/chatFlowEditior/ChatBot";
 import { DataTable, type Column } from "@/components/common";
 import { Switch } from "@/components/ui/switch";
 import { DASHBOARD_PATH } from "@/constants";
@@ -143,8 +142,6 @@ export function ChatBotPage() {
     }
   };
 
-
-
   const deleteChatBot = async (chatbotId: string) => {
     const chatbot = chatBotLists.find((chatbot) => chatbot.id === chatbotId);
     if (!chatbot) return;
@@ -167,7 +164,7 @@ export function ChatBotPage() {
         toastMessageService.apiError(err.message);
       }
     }
-  }
+  };
 
   const handleDeleteChatbot = async (chatbotId: string) => {
     alertManager.show({
@@ -178,15 +175,15 @@ export function ChatBotPage() {
         deleteChatBot(chatbotId);
       },
     });
-    // otpimistic delete 
+    // otpimistic delete
   };
 
   useEffect(() => {
     getChatBotsList();
   }, []);
 
-  const nodes = JSON.parse(localStorage.getItem("nodes") || "[]");
-  const edges = JSON.parse(localStorage.getItem("edges") || "[]");
+  // const nodes = JSON.parse(localStorage.getItem("nodes") || "[]");
+  // const edges = JSON.parse(localStorage.getItem("edges") || "[]");
 
   // useEffect(() => {
   //   const webSocket = new WebSocket("ws://localhost:3000");
@@ -238,7 +235,8 @@ export function ChatBotPage() {
           pageSize={20}
           onRowClick={(row) => {
             navigate(
-              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${row.id
+              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${
+                row.id
               }/builder`
             );
           }}

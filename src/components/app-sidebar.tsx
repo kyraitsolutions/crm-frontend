@@ -6,12 +6,10 @@ import {
   IconFileDescription,
   IconFileText,
   IconFileWord,
-  IconHelp,
   IconInnerShadowTop,
   IconMessageCircle,
   IconReport,
   IconSearch,
-  IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
 import * as React from "react";
@@ -31,8 +29,8 @@ import {
 } from "@/components/ui/sidebar";
 import { COOKIES_STORAGE, DASHBOARD_PATH } from "@/constants";
 import { useAuthStore } from "@/stores";
-import { House } from "lucide-react";
 import { CookieUtils } from "@/utils/cookie-storage.utils";
+import { House } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user: authUser, accountSelected } = useAuthStore((state) => state);
@@ -90,7 +88,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "/dashboard/teams",
         icon: IconUsers,
       },
-
     ],
     navClouds: [
       {
@@ -141,16 +138,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
     ],
     navSecondary: [
-      {
-        title: "Settings",
-        url: "/dashboard/settings",
-        icon: IconSettings,
-      },
-      {
-        title: "Feedback",
-        url: "#",
-        icon: IconHelp,
-      },
+      // {
+      //   title: "Settings",
+      //   url: "/dashboard/settings",
+      //   icon: IconSettings,
+      // },
+      // {
+      //   title: "Feedback",
+      //   url: "#",
+      //   icon: IconHelp,
+      // },
       {
         title: "Upgrade to premium",
         url: "/dashboard/subscription",

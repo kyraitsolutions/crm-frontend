@@ -26,8 +26,11 @@ import { useNavigate } from "react-router-dom";
 import { ToastMessageService } from "@/services";
 import type { ApiError } from "@/types";
 import { CookieUtils } from "@/utils/cookie-storage.utils";
+import { AccountService } from "@/services/account.service";
+import { PremiumPopup } from "@/components/popup/PremiumPopup";
 
 export const DashboardPage = () => {
+  const accountService = new AccountService();
   const navigate = useNavigate();
   const authUser = useAuthStore((state) => state.user);
   const authManager = new AuthStoreManager();
@@ -36,6 +39,7 @@ export const DashboardPage = () => {
   const [accounts, setAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [openPremium, setOpenPremium] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [accountName, setAccountName] = useState("");
   const [email, setEmail] = useState("");
@@ -49,25 +53,15 @@ export const DashboardPage = () => {
     // setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/account", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`, // 👈 replace dynamically if needed
-        },
-        body: JSON.stringify({
-          accountName,
-          email,
-        }),
+      const response = await accountService.createAccount({
+        accountName,
+        email,
       });
 
-      if (!response.ok) {
-        throw new Error("Account already exist with this Email Id");
+      if (response.status === 200) {
+        setAccounts((prev) => [...prev, response?.data?.docs]);
       }
-
-      const data = await response.json();
-      // console.log("✅ Account created:", data);
-      setAccounts((prev) => [...prev, data?.result?.docs]);
+      // setAccounts((prev) => [...prev, data?.result?.docs]);
 
       // Close dialog after success
       setOpen(false);
@@ -77,9 +71,15 @@ export const DashboardPage = () => {
       setEmail("");
     } catch (error) {
       const err = error as ApiError;
-
+      if (err.status === 403) {
+        setOpenPremium(true);
+        setOpen(false);
+        setTimeout(() => {
+          navigate("/dashboard/subscription");
+        }, 3000);
+      }
       if (err) {
-        toastService.error(err.message);
+        // toastService.error(err.responseMessage);
       }
     } finally {
       setLoading(false);
@@ -324,6 +324,10 @@ export const DashboardPage = () => {
             </form>
           </DialogContent>
         </Dialog>
+      )}
+
+      {openPremium && (
+        <PremiumPopup open={openPremium} onOpenChange={setOpenPremium} />
       )}
     </div>
   );

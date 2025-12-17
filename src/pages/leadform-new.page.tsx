@@ -54,10 +54,7 @@ export default function LeadFormNew() {
   >([]);
 
   const addCustomField = () => {
-    setCustomFields([
-      ...customFields,
-      { label: "", key: "", required: false },
-    ]);
+    setCustomFields([...customFields, { label: "", key: "", required: false }]);
   };
 
   const removeCustomField = (index: number) => {
@@ -96,10 +93,9 @@ export default function LeadFormNew() {
         payload,
         {
           headers: {
-            Authorization: `Bearer ${LocalStorageUtils.getItem('token')}`,
+            Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
           },
         }
-        ,
       );
       if (response.status === 200 || response.status === 201) {
         toastMessageService.apiSuccess(response.data.responseMessage);
@@ -116,7 +112,11 @@ export default function LeadFormNew() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 py-6">
       {/* LEFT SIDE: Form Builder */}
       <div>
-        <Card role="main" aria-label="Create Lead Form Instructions" className="p-0 border-none shadow-none">
+        <Card
+          role="main"
+          aria-label="Create Lead Form Instructions"
+          className="p-0 border-none shadow-none"
+        >
           <CardHeader>
             <CardTitle>Create New Lead Form</CardTitle>
             <CardDescription>
@@ -188,7 +188,11 @@ export default function LeadFormNew() {
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <Label>Custom Fields</Label>
-                  <Button type="button" variant="ghost" onClick={addCustomField}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={addCustomField}
+                  >
                     <PlusCircle className="w-4 h-4 mr-1" /> Add Field
                   </Button>
                 </div>
@@ -267,9 +271,7 @@ export default function LeadFormNew() {
                     placeholder="https://wa.me/919876543210"
                     className="mt-2"
                     value={successCTADestination}
-                    onChange={(e) =>
-                      setSuccessCTADestination(e.target.value)
-                    }
+                    onChange={(e) => setSuccessCTADestination(e.target.value)}
                   />
                 </div>
               </div>
@@ -319,11 +321,19 @@ export default function LeadFormNew() {
           <CardContent>
             <div className="grid gap-4">
               {formFields.name && <Input placeholder="Name" disabled />}
-              {formFields.phoneNumber && <Input placeholder="Phone Number" disabled />}
+              {formFields.phoneNumber && (
+                <Input placeholder="Phone Number" disabled />
+              )}
               {formFields.email && <Input placeholder="Email" disabled />}
-              {formFields.message && <Textarea placeholder="Message" disabled />}
+              {formFields.message && (
+                <Textarea placeholder="Message" disabled />
+              )}
               {customFields.map((f, i) => (
-                <Input key={i} placeholder={f.label || "Custom Field"} disabled />
+                <Input
+                  key={i}
+                  placeholder={f.label || "Custom Field"}
+                  disabled
+                />
               ))}
               <Button className="w-full mt-2" disabled>
                 Submit

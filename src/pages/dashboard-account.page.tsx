@@ -1,51 +1,49 @@
-import { useState, useMemo, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
-import {
-  TrendingUp,
-  TrendingDown,
-  Users,
-  MessageSquare,
-  Globe,
   Activity,
-  Target,
+  ArrowLeftRight,
   CheckCircle,
-  XCircle,
   Clock,
-  Zap,
-  Filter,
   Download,
   FileDown,
-  ArrowLeftRight,
+  Globe,
+  MessageSquare,
+  Target,
+  TrendingDown,
+  TrendingUp,
+  Users,
+  XCircle,
+  Zap,
 } from "lucide-react";
-// import { DateRange } from "react-day-picker";
+import { useEffect, useMemo, useState } from "react";
 import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+// import { DateRange } from "react-day-picker";
+import { ComparisonMetricCard } from "@/components/common/ComparisonMetricCard";
+import { toast } from "@/hooks/use-toast";
+import { exportToCSV, exportToPDF } from "@/lib/exportUtils";
+import { AnalyticsService } from "@/services/analytics.service";
+import {
+  differenceInDays,
   isWithinInterval,
   parseISO,
   subDays,
-  differenceInDays,
 } from "date-fns";
-import { DateRangePicker } from "@/components/common/DateRangePicker";
-import { ComparisonMetricCard } from "@/components/common/ComparisonMetricCard";
-import { exportToCSV, exportToPDF } from "@/lib/exportUtils";
-import { toast } from "@/hooks/use-toast";
-import { AnalyticsService } from "@/services/analytics.service";
 import { useParams } from "react-router-dom";
 
 interface AnalyticsData {
@@ -419,10 +417,11 @@ const DashboardAccount = () => {
                   <button
                     key={range}
                     onClick={() => setTimeRange(range)}
-                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${timeRange === range
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card text-card-foreground hover:bg-[#D3DEF5]"
-                      }`}
+                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                      timeRange === range
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-card text-card-foreground hover:bg-[#D3DEF5]"
+                    }`}
                   >
                     {range.charAt(0).toUpperCase() + range.slice(1)}
                   </button>
@@ -806,10 +805,11 @@ const DashboardAccount = () => {
                     <div className="flex min-w-[80px] items-center gap-2 text-xs">
                       <span className="font-semibold">{source.count}</span>
                       <span
-                        className={`flex items-center gap-0.5 ${source.trend >= 0
-                          ? "text-[#21733F]"
-                          : "text-destructive"
-                          }`}
+                        className={`flex items-center gap-0.5 ${
+                          source.trend >= 0
+                            ? "text-[#21733F]"
+                            : "text-destructive"
+                        }`}
                       >
                         {source.trend >= 0 ? (
                           <TrendingUp className="h-3 w-3" />
@@ -859,7 +859,7 @@ const DashboardAccount = () => {
                       backgroundColor: "white",
                       border: "1px solid  grey",
                       borderRadius: "6px",
-                      textDecoration: "capitalize"
+                      textDecoration: "capitalize",
                     }}
                   />
                   <Legend wrapperStyle={{ fontSize: "11px" }} />
