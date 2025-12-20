@@ -55,7 +55,7 @@ import { usePagination } from "@/hooks/usePagination";
 import { ToastMessageService } from "@/services";
 import { LeadService } from "@/services/lead.service";
 import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
-import type { ApiError, BasicNumber } from "@/types";
+import type { ApiError, BasicNumber, ILead } from "@/types";
 import buildParams from "@/utils/build-params.utils";
 import { formatDate } from "@/utils/date-utils";
 import {
@@ -75,29 +75,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-interface Lead {
-  id: string;
-  dateAdded: string;
-  name: string;
-  initials: string;
-  stage: string;
-  source: {
-    name: string;
-    url: string;
-  };
-  assignedTo: string;
-  channel: string;
-  status: string;
-  formStatus: string;
-  email: string;
-  phone: string;
-  company: string;
-  notes: string;
-  customFields?: Record<string, any>;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export default function LeadsCentre() {
   // Params
   const { accountId } = useParams();
@@ -115,8 +92,8 @@ export default function LeadsCentre() {
   const leadService = new LeadService();
   const [isLoadingLeads, setIsLoadingLeads] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [editableLead, setEditableLead] = useState<Lead | null>(null);
+  const [selectedLead, setSelectedLead] = useState<ILead | null>(null);
+  const [editableLead, setEditableLead] = useState<ILead | null>(null);
   const [isEditingLoading, setIsEditingLoading] = useState(false);
 
   const isSkeletonShow = useRef(true);
@@ -152,8 +129,7 @@ export default function LeadsCentre() {
     conversionRate: 0,
   });
 
-  const calculateBasicNumber = (leads: any) => {
-    console.log("Yaha leads aaya hia", allLeads);
+  const calculateBasicNumber = (leads: ILead[]) => {
     const stats = leads.reduce(
       (acc, lead) => {
         if (lead.stage === "qualified") {
@@ -199,7 +175,7 @@ export default function LeadsCentre() {
   // Note
   const [note, setNote] = useState("");
 
-  const handleRowClick = (lead: Lead) => {
+  const handleRowClick = (lead: ILead) => {
     setIsEditing(false);
     setSelectedLead(lead);
     setEditableLead(lead);
@@ -328,7 +304,10 @@ export default function LeadsCentre() {
         console.log(serverResponse);
         if (serverResponse.data?.lead?.accountId !== accountId) return;
 
-        if (selectedLead && selectedLead.id === serverResponse.data?.lead?.id) {
+        if (
+          selectedLead &&
+          selectedLead._id === serverResponse.data?.lead?.id
+        ) {
           setEditableLead(serverResponse.data?.lead);
           // setSelectedLead(serverResponse.data?.lead);
         }
@@ -520,34 +499,36 @@ export default function LeadsCentre() {
                 }
               />
 
-              {(filters.form.value || filters.date.value || filters.status.value ||
+              {(filters.form.value ||
+                filters.date.value ||
+                filters.status.value ||
                 filters.source.value ||
                 filters.assignedTo.value ||
                 filters.stage.value ||
                 filters.label.value) && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      setFilters({
-                        lead: { label: "All Leads", value: null },
-                        campaign: { label: "All Campaigns", value: null },
-                        form: { label: "All Forms", value: null },
-                        date: { label: "All Dates", value: null },
-                        status: { label: "All Status", value: null },
-                        source: { label: "All Sources", value: null },
-                        assignedTo: { label: "All Users", value: null },
-                        label: { label: "All Labels", value: null },
-                        stage: { label: "All Stages", value: null },
-                        read: { label: "All", value: null },
-                      })
-                    }
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="h-4 w-4 mr-1" />
-                    Clear
-                  </Button>
-                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    setFilters({
+                      lead: { label: "All Leads", value: null },
+                      campaign: { label: "All Campaigns", value: null },
+                      form: { label: "All Forms", value: null },
+                      date: { label: "All Dates", value: null },
+                      status: { label: "All Status", value: null },
+                      source: { label: "All Sources", value: null },
+                      assignedTo: { label: "All Users", value: null },
+                      label: { label: "All Labels", value: null },
+                      stage: { label: "All Stages", value: null },
+                      read: { label: "All", value: null },
+                    })
+                  }
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4 mr-1" />
+                  Clear
+                </Button>
+              )}
             </div>
           </div>
         )}
@@ -630,32 +611,32 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedStageFilter.label === "All"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedStageFilter({ label: "All", value: "" })
-            // }
+              // className={
+              //   selectedStageFilter.label === "All"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedStageFilter({ label: "All", value: "" })
+              // }
             >
               All
             </Button>
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedReadFilter.label === "Unread"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedReadFilter(
-            //     selectedReadFilter.label === "Unread"
-            //       ? { label: "All", value: "all" }
-            //       : { label: "Unread", value: "unread" }
-            //   )
-            // }
+              // className={
+              //   selectedReadFilter.label === "Unread"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedReadFilter(
+              //     selectedReadFilter.label === "Unread"
+              //       ? { label: "All", value: "all" }
+              //       : { label: "Unread", value: "unread" }
+              //   )
+              // }
             >
               Unread
             </Button>
@@ -900,7 +881,7 @@ export default function LeadsCentre() {
                   {editableLead?.name}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  {editableLead?.company || "No company added"}
+                  {/* {editableLead.co || "No company added"} */}
                 </p>
               </div>
             </SheetTitle>
@@ -931,7 +912,10 @@ export default function LeadsCentre() {
                       }
                     />
                   ) : (
-                    <Link to={`mailto:${editableLead?.email}`} className="text-sm text-foreground">
+                    <Link
+                      to={`mailto:${editableLead?.email}`}
+                      className="text-sm text-foreground"
+                    >
                       {editableLead?.email}
                     </Link>
                   )}
@@ -954,7 +938,11 @@ export default function LeadsCentre() {
                       }
                     />
                   ) : (
-                    <Link target="_blank" to={`https://wa.me/${editableLead?.phone}?text=hello`} className="text-sm text-foreground">
+                    <Link
+                      target="_blank"
+                      to={`https://wa.me/${editableLead?.phone}?text=hello`}
+                      className="text-sm text-foreground"
+                    >
                       {editableLead?.phone}
                     </Link>
                   )}
@@ -978,7 +966,6 @@ export default function LeadsCentre() {
                   {isEditing ? (
                     <Select
                       value={editableLead?.stage}
-
                       onValueChange={(v) =>
                         setEditableLead((prev) =>
                           prev ? { ...prev, stage: v } : prev
@@ -995,7 +982,9 @@ export default function LeadsCentre() {
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Badge variant="outline" className="capitalize">{editableLead?.stage}</Badge>
+                    <Badge variant="outline" className="capitalize">
+                      {editableLead?.stage}
+                    </Badge>
                   )}
                 </div>
 
@@ -1023,7 +1012,9 @@ export default function LeadsCentre() {
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Badge variant="secondary" className="capitalize">{editableLead?.status}</Badge>
+                    <Badge variant="secondary" className="capitalize">
+                      {editableLead?.status}
+                    </Badge>
                   )}
                 </div>
 
@@ -1043,7 +1034,7 @@ export default function LeadsCentre() {
                     Source URL
                   </label>
                   <Badge variant="secondary">
-                    {editableLead?.source?.url || "-"}
+                    {editableLead?.source?.name || "-"}
                   </Badge>
                 </div>
 
@@ -1067,7 +1058,7 @@ export default function LeadsCentre() {
 
               <div className="space-y-4 rounded-lg border bg-muted/30 p-4 overflow-y-scroll max-h-72 grid grid-cols-2 gap-2">
                 {editableLead?.customFields &&
-                  Object.keys(editableLead.customFields).length > 0 ? (
+                Object.keys(editableLead.customFields).length > 0 ? (
                   Object.entries(editableLead.customFields).map(
                     ([key, value]) => (
                       <div key={key} className="flex flex-col gap-1">
@@ -1083,12 +1074,12 @@ export default function LeadsCentre() {
                               setEditableLead((prev) =>
                                 prev
                                   ? {
-                                    ...prev,
-                                    customFields: {
-                                      ...(prev.customFields ?? {}),
-                                      [key]: e.target.value,
-                                    },
-                                  }
+                                      ...prev,
+                                      customFields: {
+                                        ...(prev.customFields ?? {}),
+                                        [key]: e.target.value,
+                                      },
+                                    }
                                   : prev
                               )
                             }
@@ -1117,7 +1108,7 @@ export default function LeadsCentre() {
                   <textarea
                     className="text-sm text-foreground p-3 w-full bg-transparent border-0 resize-none outline-none"
                     rows={4}
-                    value={editableLead?.notes[0] || ""}
+                    value={editableLead?.notes || ""}
                     onChange={(e) => setNote(e.target.value)}
                   />
                 ) : (

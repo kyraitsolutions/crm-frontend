@@ -8,7 +8,7 @@ interface ILeadsStoreState {
 }
 
 export const useLeadsStore = create<ILeadsStoreState>()(
-  immer(() => ({
+  immer<ILeadsStoreState>(() => ({
     leads: [],
     totalLeads: null,
   }))

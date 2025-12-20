@@ -132,13 +132,13 @@ export default function ChatBotAppearanceEditor() {
   };
 
   const CommandSelect = ({ field }: { field: any }) => {
+    const [open, setOpen] = React.useState(false);
     const fieldPath = `theme.${field.key}` as ChatBotFieldPath;
     return (
       <Controller
         name={fieldPath}
         control={control}
         render={({ field: f }) => {
-          const [open, setOpen] = React.useState(false);
           return (
             <div className="space-y-2">
               <Label>{field.label}</Label>

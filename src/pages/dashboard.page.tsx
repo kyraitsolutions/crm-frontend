@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LocalStorageUtils } from "@/utils";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -198,7 +198,7 @@ export const DashboardPage = () => {
       {accounts.map((account, idx) => {
         const initials = account?.accountName
           ?.split(" ")
-          .map((n) => n[0])
+          .map((n: string) => n[0])
           .join("")
           .toUpperCase();
 

@@ -1,3 +1,8 @@
+import { AuthService } from "@/services";
+import { LocalStorageUtils } from "@/utils";
+import { IconCirclePlusFilled, IconMail } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogClose,
@@ -8,18 +13,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
+import { Label } from "./ui/label";
 import { SidebarMenu, SidebarMenuItem } from "./ui/sidebar";
-import { IconCirclePlusFilled, IconMail } from "@tabler/icons-react";
-import { LocalStorageUtils } from "@/utils";
-import { AuthStoreManager } from "@/stores";
-import { AuthService } from "@/services";
 
 const AddAccountPopup = () => {
-  const authManager = new AuthStoreManager();
+  // const authManager = new AuthStoreManager();
   const authService = new AuthService();
   const [open, setOpen] = useState<boolean>(false);
   const [accountName, setAccountName] = useState("");

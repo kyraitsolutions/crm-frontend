@@ -1,7 +1,27 @@
 import { getBezierPath } from "reactflow";
 import { Plus } from "lucide-react";
 
-const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, style = {}, markerEnd, data }) => {
+type CustomEdgeProps = {
+  id: string;
+  sourceX: number;
+  sourceY: number;
+  targetX: number;
+  targetY: number;
+  style: any;
+  markerEnd: any;
+  data: any;
+};
+
+const CustomEdge = ({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  style = {},
+  markerEnd,
+  data,
+}: CustomEdgeProps) => {
   // Generate a smooth bezier path
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -10,7 +30,7 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, style = {}, marker
     targetY,
   });
 
-  const handleAddNode = (e) => {
+  const handleAddNode = (e: React.MouseEvent) => {
     e.stopPropagation();
     data?.onAddNode?.(id);
   };

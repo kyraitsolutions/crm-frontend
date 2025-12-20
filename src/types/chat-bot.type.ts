@@ -87,6 +87,8 @@ export const chatBotSchema = z.object({
   name: z.string().min(3, "Name is required and must be at least 3 characters"),
   status: z.boolean().default(true),
   description: z.string().optional(),
+  conversation: chatBotConversationSchema.default({}).optional(),
+  suggestions: chatBotSuggestionSchema,
   theme: appearanceSchema,
   config: chatBotConfigSchema,
 });

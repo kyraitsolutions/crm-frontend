@@ -4,7 +4,32 @@ import { MdOutlineDelete } from "react-icons/md";
 import ConfirmModal from "@/components/confirm";
 import { Fragment, useState } from "react";
 
-export const ChatNode = ({ id, data }: any) => {
+export type BaseElement = {
+  id: string;
+  type: "text" | "option" | "date";
+};
+
+export type ChatElement = {
+  id: string;
+  type: "text" | "option" | "date";
+  content: string;
+  title?: string;
+  choices?: string[];
+};
+
+type ChatNodeData = {
+  id: string;
+  data: {
+    label: string;
+    value?: "text" | "option";
+    name?: "date";
+    elements: ChatElement[];
+    updateNode: (id: string, elements: ChatElement[]) => void;
+    deleteNode: (id: string) => void;
+  };
+};
+
+export const ChatNode = ({ id, data }: ChatNodeData) => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const addElement = (type: "text" | "option" | "date") => {
     const newElementObj = {
@@ -31,7 +56,7 @@ export const ChatNode = ({ id, data }: any) => {
   ) => {
     const newElements = data.elements.map((el) => {
       if (el.id === elementId && el.type === "option") {
-        const updatedChoices = [...el.choices];
+        const updatedChoices = [...(el.choices as string[])];
         updatedChoices[index] = value;
         return { ...el, choices: updatedChoices };
       }
@@ -45,7 +70,7 @@ export const ChatNode = ({ id, data }: any) => {
     console.log(data);
     const newElements = data.elements.map((el) => {
       if (el.id === elementId && el.type === "option") {
-        return { ...el, choices: [...el.choices, ""] };
+        return { ...el, choices: [...(el.choices as string[]), ""] };
       }
       return el;
     });
@@ -54,7 +79,7 @@ export const ChatNode = ({ id, data }: any) => {
 
   const removeOptionChoice = (elementId: string, index: number) => {
     const newElements = data.elements.map((el) => {
-      if (el.id === elementId && el.type === "option") {
+      if (el.id === elementId && el.type === "option" && el.choices) {
         const updatedChoices = el.choices.filter((_, i) => i !== index);
         return { ...el, choices: updatedChoices };
       }
@@ -96,7 +121,7 @@ export const ChatNode = ({ id, data }: any) => {
           </div>
 
           <div className="px-1 py-2">
-            {data?.elements?.map((el: any) => (
+            {data?.elements?.map((el) => (
               <div key={el.id} className="mb-2">
                 {el.type === "text" ? (
                   <textarea
@@ -194,16 +219,16 @@ export const ChatNode = ({ id, data }: any) => {
                             type="source"
                             id={`${el.id}-choice-${i}`}
                             position={Position.Right}
-                          // style={{
-                          //   right: -9,
-                          //   top: "50%",
-                          //   transform: "translateY(-50%)",
-                          //   background: "#2563eb",
-                          //   width: 8,
-                          //   height: 8,
-                          //   borderRadius: "50%",
-                          //   cursor: "pointer",
-                          // }}
+                            // style={{
+                            //   right: -9,
+                            //   top: "50%",
+                            //   transform: "translateY(-50%)",
+                            //   background: "#2563eb",
+                            //   width: 8,
+                            //   height: 8,
+                            //   borderRadius: "50%",
+                            //   cursor: "pointer",
+                            // }}
                           />
                         </div>
                       </div>
@@ -293,12 +318,16 @@ export const ChatNode = ({ id, data }: any) => {
             </div>
           </div>
 
-          <Handle type="source" position={Position.Bottom} style={{
-            width: 14, // default is 8
-            height: 14,
-            background: "#56c340", // Tailwind's sky-500 for example
-            border: "2px solid #c9f3d2",
-          }} />
+          <Handle
+            type="source"
+            position={Position.Bottom}
+            style={{
+              width: 14, // default is 8
+              height: 14,
+              background: "#56c340", // Tailwind's sky-500 for example
+              border: "2px solid #c9f3d2",
+            }}
+          />
         </div>
       </div>
 

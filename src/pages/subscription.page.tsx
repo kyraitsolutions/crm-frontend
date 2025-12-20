@@ -5,10 +5,20 @@ import { useAuthStore } from "@/stores";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 
+export interface SubscriptionPlan {
+  _id: string;
+  name: string;
+  description: string;
+  price: string; // or number if backend sends number
+  accounts: string;
+  features: string[];
+  highlight?: boolean;
+}
+
 export const SubscriptionPage = () => {
   const subscriptionService = new SubscriptionService();
   const { user: authUser } = useAuthStore((state) => state);
-  const [plans, setPlans] = useState();
+  const [plans, setPlans] = useState<SubscriptionPlan[] | []>([]);
 
   const getSubscription = async () => {
     try {

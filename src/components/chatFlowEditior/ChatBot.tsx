@@ -41,7 +41,7 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
     const texts =
       currentNode?.data.elements.filter((el) => el.type === "text") || [];
 
-    const firstNodeMessages = texts.map((el) => ({
+    const firstNodeMessages: Message[] = texts.map((el) => ({
       from: "bot",
       text: el.content,
     }));
@@ -61,7 +61,7 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
     webSocket.onmessage = function (event) {
       const wsResponse = JSON.parse(event.data);
 
-      setMessages((prev) => [...prev, ...wsResponse?.data]);
+      setMessages((prev) => [...prev, ...wsResponse.data]);
 
       // setNodes(wsResponse?.data?.nodes);
       // setEdges(wsResponse?.data?.edges);
@@ -98,17 +98,41 @@ const Chatbot = ({ nodes, edges }: { nodes: ChatNode[]; edges: Edge[] }) => {
     if (!nextNode) return;
 
     // Prepare bot replies
-    const botReplyData: Message[] = nextNode.data.elements.map((el) => {
-      if (el.type === "option") {
-        return {
-          from: "bot",
-          text: el.title,
-          options: el.choices,
-          optionHandles: el.choices?.map((_, i) => `${el.id}-choice-${i}`),
-        };
-      }
-      return { from: "bot", text: el.content };
-    });
+    // const botReplyData: Message[] = nextNode.data.elements.map((el) => {
+    //   if (el.type === "option" && el.choices) {
+    //     return {
+    //       from: "bot",
+    //       text: el.title,
+    //       options: el.choices,
+    //       optionHandles: el.choices?.map((_, i) => `${el.id}-choice-${i}`),
+    //     };
+    //   }
+    //   return { from: "bot", text: el.content };
+    // });
+
+    const botReplyData: Message[] = nextNode.data.elements
+      .map((el): Message | null => {
+        if (el.type === "option" && el.title) {
+          return {
+            from: "bot",
+            text: el.title,
+            options: el.choices ?? [],
+            optionHandles: el.choices?.map((_, i) => `${el.id}-choice-${i}`),
+          };
+        }
+
+        if (el.type === "text" && el.content) {
+          return {
+            from: "bot",
+            text: el.content,
+          };
+        }
+
+        return null;
+      })
+      .filter((msg): msg is Message => msg !== null);
+
+    setMessages((prev) => [...prev, ...botReplyData]);
 
     setMessages((prev) => [...prev, ...botReplyData]);
     setCurrentNodeId(nextNodeId);

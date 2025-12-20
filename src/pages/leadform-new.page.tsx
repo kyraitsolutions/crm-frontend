@@ -28,6 +28,12 @@ import { LocalStorageUtils } from "@/utils";
 import { ToastMessageService } from "@/services";
 import { DASHBOARD_PATH } from "@/constants";
 
+interface CustomField {
+  label: string;
+  key: string;
+  required: boolean;
+}
+
 export default function LeadFormNew() {
   const { accountId } = useParams();
   const toastMessageService = new ToastMessageService();
@@ -49,9 +55,7 @@ export default function LeadFormNew() {
     message: false,
   });
 
-  const [customFields, setCustomFields] = useState<
-    { label: string; key: string; required: boolean }[]
-  >([]);
+  const [customFields, setCustomFields] = useState<CustomField[]>([]);
 
   const addCustomField = () => {
     setCustomFields([...customFields, { label: "", key: "", required: false }]);
@@ -61,10 +65,10 @@ export default function LeadFormNew() {
     setCustomFields(customFields.filter((_, i) => i !== index));
   };
 
-  const updateCustomField = (
+  const updateCustomField = <K extends keyof CustomField>(
     index: number,
-    key: keyof (typeof customFields)[0],
-    value: any
+    key: K,
+    value: CustomField[K]
   ) => {
     const updated = [...customFields];
     updated[index][key] = value;

@@ -16,7 +16,7 @@ type ConfirmModalProps = {
 // A11y-friendly focus trap (lightweight)
 function useFocusTrap(
   active: boolean,
-  containerRef: React.RefObject<HTMLElement>
+  containerRef: React.RefObject<HTMLElement | null>
 ) {
   useEffect(() => {
     if (!active) return;

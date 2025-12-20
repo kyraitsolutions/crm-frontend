@@ -27,7 +27,11 @@ export class ChatBotService extends ApiService {
   async createChatBot(
     accountId: string,
     data: ChatBotFormData
-  ): Promise<ApiResponse<ChatBotListItem>> {
+  ): Promise<
+    ApiResponse<{
+      docs: ChatBotListItem;
+    }>
+  > {
     return await this.post(`/account/${accountId}/chatbot`, data);
   }
 
@@ -42,7 +46,11 @@ export class ChatBotService extends ApiService {
     accountId: string,
     chabotId: string,
     data: any
-  ): Promise<ApiResponse<ChatBotListItem>> {
+  ): Promise<
+    ApiResponse<{
+      docs: ApiResponseChatBotFlowDto;
+    }>
+  > {
     return await this.post(`/account/${accountId}/chatbot/${chabotId}`, data);
   }
 
@@ -50,7 +58,11 @@ export class ChatBotService extends ApiService {
     accountId: string,
     chatbotId: string,
     data: { status: boolean }
-  ): Promise<ApiResponse<ChatBotListItem>> {
+  ): Promise<
+    ApiResponse<{
+      docs: ChatBotListItem;
+    }>
+  > {
     return await this.put(`/account/${accountId}/chatbot/${chatbotId}`, data);
   }
 

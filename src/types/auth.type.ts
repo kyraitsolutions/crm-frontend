@@ -13,9 +13,9 @@ export interface IUser {
     organizationName: string;
     accountType: string;
   };
-  account?: Account;
-  usersubscription:{
-    planId:string
+  account: Partial<Account>;
+  usersubscription: {
+    planId: string;
   };
 }
 

@@ -24,8 +24,6 @@ export default function ChatBotBuilderCustomization() {
     control: control,
   });
 
-  console.log("Conversation:", conversation);
-
   const suggestions = useWatch({
     name: "suggestions",
     control: control,

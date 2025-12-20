@@ -44,12 +44,12 @@ export function LeadFormPage() {
       key: "status",
       header: "Status",
       cellClassName: "whitespace-nowrap text-gray-700",
-      render: (row) => (
+      render: () => (
         <div>
           <Switch
             checked={true}
             className="cursor-pointer"
-          // onClick={(e) => handleUpdateStatus(e, row.id)}
+            // onClick={(e) => handleUpdateStatus(e, row.id)}
           />
         </div>
       ),
@@ -65,7 +65,8 @@ export function LeadFormPage() {
           </div>
         </div>
       ),
-    }, {
+    },
+    {
       key: "lastActivity",
       header: "Last Activity",
       cellClassName: "whitespace-nowrap text-gray-700",
@@ -95,7 +96,6 @@ export function LeadFormPage() {
         </div>
       ),
     },
-
   ];
   const getLeadFormList = async () => {
     try {
@@ -114,20 +114,22 @@ export function LeadFormPage() {
 
   const handleDeleteForm = async (formId: string) => {
     try {
-      const res = await leadFormService.deleteFormById(String(accountId), formId)
+      const res = await leadFormService.deleteFormById(
+        String(accountId),
+        formId
+      );
       console.log(res.data);
-      getLeadFormList()
+      getLeadFormList();
     } catch (error) {
       toastMessageService.apiError(error as any);
     }
-  }
+  };
 
   useEffect(() => {
     getLeadFormList();
   }, []);
 
-
-  console.log(forms)
+  console.log(forms);
 
   return (
     <div className="space-y-6 lg:px-4 px-2 py-2">
@@ -176,7 +178,6 @@ export function LeadFormPage() {
           tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
           loading={loading}
         />
-
       </div>
     </div>
   );

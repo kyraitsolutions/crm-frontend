@@ -50,7 +50,7 @@ export const Teams = () => {
   const [accounts, setAccounts] = useState<any[]>([]);
   const [openAssign, setOpenAssign] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
-  const [selectedAccounts, setSelectedAccounts] = useState([]);
+  const [selectedAccounts, setSelectedAccounts] = useState<string[] | []>([]);
 
   const handleAddTeamMember = async () => {
     setIsLoadingAddTeamMember(true);
@@ -90,7 +90,7 @@ export const Teams = () => {
     accountIds: string[]
   ) => {
     try {
-      const response = await teamService.assignAccountToTeamMember({
+      await teamService.assignAccountToTeamMember({
         id: memberId,
         accountIds: accountIds,
         leadId: "", // provide the lead ID here
@@ -420,7 +420,10 @@ export const Teams = () => {
 
               <Button
                 onClick={() => {
-                  handleAssignAccount(selectedTeamId, selectedAccounts); // 🔥 API CALL HERE
+                  handleAssignAccount(
+                    selectedTeamId as string,
+                    selectedAccounts
+                  ); // 🔥 API CALL HERE
                   setOpenAssign(false);
                 }}
               >

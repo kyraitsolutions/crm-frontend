@@ -35,7 +35,7 @@ import {
 } from "recharts";
 // import { DateRange } from "react-day-picker";
 import { ComparisonMetricCard } from "@/components/common/ComparisonMetricCard";
-import { toast } from "@/hooks/use-toast";
+
 import { exportToCSV, exportToPDF } from "@/lib/exportUtils";
 import { AnalyticsService } from "@/services/analytics.service";
 import {
@@ -45,6 +45,8 @@ import {
   subDays,
 } from "date-fns";
 import { useParams } from "react-router-dom";
+import type { DateRange } from "react-day-picker";
+import { toast } from "sonner";
 
 interface AnalyticsData {
   totalLeads: number;
@@ -127,9 +129,11 @@ const DashboardAccount = () => {
   const [timeRange, setTimeRange] = useState<
     "daily" | "weekly" | "monthly" | "yearly"
   >("weekly");
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [dateRange] = useState<DateRange | undefined>(undefined);
   const [comparisonMode, setComparisonMode] = useState(false);
-  const [fullAnalytics, setFullAnalytics] = useState<AnalyticsData>([]);
+  const [fullAnalytics, setFullAnalytics] = useState<AnalyticsData | null>(
+    null
+  );
 
   // Full dataset
   // const fullAnalytics: AnalyticsData = {
@@ -238,36 +242,36 @@ const DashboardAccount = () => {
     };
 
     // Filter leads over time
-    const filteredLeadsOverTime = fullAnalytics.leadsOverTime.filter((item) =>
+    const filteredLeadsOverTime = fullAnalytics?.leadsOverTime.filter((item) =>
       filterByDateRange(item.date)
     );
 
     // Filter recent leads
-    const filteredRecentLeads = fullAnalytics.recentLeads.filter((lead) =>
+    const filteredRecentLeads = fullAnalytics?.recentLeads.filter((lead) =>
       filterByDateRange(lead.date)
     );
 
     // Recalculate totals based on filtered data
-    const totalFromFiltered = filteredLeadsOverTime.reduce(
+    const totalFromFiltered = filteredLeadsOverTime?.reduce(
       (sum, item) => sum + item.total,
       0
     );
 
     const todayFromFiltered =
-      filteredLeadsOverTime[filteredLeadsOverTime.length - 1]?.total || 0;
+      filteredLeadsOverTime![filteredLeadsOverTime!.length - 1]?.total || 0;
 
     return {
       ...fullAnalytics,
-      totalLeads: totalFromFiltered || fullAnalytics.totalLeads,
+      totalLeads: totalFromFiltered || fullAnalytics?.totalLeads,
       todayLeads: todayFromFiltered,
       leadsOverTime:
-        filteredLeadsOverTime.length > 0
+        filteredLeadsOverTime!.length > 0
           ? filteredLeadsOverTime
-          : fullAnalytics.leadsOverTime,
+          : fullAnalytics?.leadsOverTime,
       recentLeads:
-        filteredRecentLeads.length > 0
+        filteredRecentLeads!.length > 0
           ? filteredRecentLeads
-          : fullAnalytics.recentLeads,
+          : fullAnalytics?.recentLeads,
     };
   }, [dateRange, fullAnalytics]);
 
@@ -296,11 +300,11 @@ const DashboardAccount = () => {
       }
     };
 
-    const filteredLeadsOverTime = fullAnalytics.leadsOverTime.filter((item) =>
+    const filteredLeadsOverTime = fullAnalytics?.leadsOverTime.filter((item) =>
       filterByPreviousPeriod(item.date)
     );
 
-    const totalFromFiltered = filteredLeadsOverTime.reduce(
+    const totalFromFiltered = filteredLeadsOverTime?.reduce(
       (sum, item) => sum + item.total,
       0
     );
@@ -308,7 +312,7 @@ const DashboardAccount = () => {
     return {
       totalLeads: totalFromFiltered || 0,
       todayLeads:
-        filteredLeadsOverTime[filteredLeadsOverTime.length - 1]?.total || 0,
+        filteredLeadsOverTime![filteredLeadsOverTime!.length - 1]?.total || 0,
       weeklyLeads: totalFromFiltered || 0,
       monthlyLeads: totalFromFiltered || 0,
       conversionRate: 22.5, // Mock data - would calculate from actual conversions
@@ -318,32 +322,30 @@ const DashboardAccount = () => {
 
   const handleExportCSV = () => {
     try {
-      exportToCSV(data, "crm-analytics");
-      toast({
-        title: "Export Successful",
-        description: "Analytics data exported to CSV",
+      exportToCSV(data as any, "crm-analytics");
+      toast.success("CSV exported successfully", {
+        description: "Successfully exported data to CSV",
       });
     } catch (error) {
-      toast({
-        title: "Export Failed",
-        description: "Failed to export data to CSV",
-        variant: "destructive",
+      toast.error("Failed to export CSV", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to export data to CSV",
       });
     }
   };
 
   const handleExportPDF = async () => {
     try {
-      await exportToPDF(data, "crm-analytics");
-      toast({
-        title: "Export Successful",
-        description: "Analytics report exported to PDF",
-      });
+      await exportToPDF(data as any, "crm-analytics");
+      toast.success("PDF exported successfully");
     } catch (error) {
-      toast({
-        title: "Export Failed",
-        description: "Failed to export data to PDF",
-        variant: "destructive",
+      toast.error("Failed to export PDF", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to export data to PDF",
       });
     }
   };
@@ -480,21 +482,21 @@ const DashboardAccount = () => {
             <ComparisonMetricCard
               title="Total Leads"
               icon={Users}
-              currentValue={data.totalLeads}
+              currentValue={String(data?.totalLeads)}
               previousValue={previousPeriodData.totalLeads}
               colorClass="border-l-primary"
             />
             <ComparisonMetricCard
               title="Latest Leads"
               icon={TrendingUp}
-              currentValue={data.todayLeads}
+              currentValue={data!.todayLeads}
               previousValue={previousPeriodData.todayLeads}
               colorClass="border-l-[#21733F]"
             />
             <ComparisonMetricCard
               title="Conversion Rate"
               icon={Target}
-              currentValue={data.conversionRate}
+              currentValue={String(data?.conversionRate)}
               previousValue={previousPeriodData.conversionRate}
               suffix="%"
               colorClass="border-l-[#80540A]"
@@ -505,7 +507,7 @@ const DashboardAccount = () => {
             <ComparisonMetricCard
               title="Response Time"
               icon={Clock}
-              currentValue={data.avgResponseTime}
+              currentValue={String(data?.avgResponseTime)}
               previousValue={previousPeriodData.avgResponseTime}
               suffix="m"
               colorClass="border-l-[#0D587A]"
@@ -516,15 +518,15 @@ const DashboardAccount = () => {
             <ComparisonMetricCard
               title="Active Chatbots"
               icon={MessageSquare}
-              currentValue={data.activeChatbots}
-              previousValue={data.activeChatbots}
+              currentValue={String(data?.activeChatbots)}
+              previousValue={String(data?.activeChatbots)}
               colorClass="border-l-primary"
             />
             <ComparisonMetricCard
               title="Active Webforms"
               icon={Globe}
-              currentValue={data.activeWebforms}
-              previousValue={data.activeWebforms}
+              currentValue={String(data?.activeWebforms)}
+              previousValue={String(data?.activeWebforms)}
               colorClass="border-l-[#21733F]"
             />
           </div>
@@ -539,7 +541,7 @@ const DashboardAccount = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {data.totalLeads?.toLocaleString()}
+                  {data?.totalLeads?.toLocaleString()}
                 </div>
                 <p className="text-xs text-[#D3DEF5]-foreground">All time</p>
               </CardContent>
@@ -553,9 +555,9 @@ const DashboardAccount = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{data.todayLeads}</div>
+                <div className="text-2xl font-bold">{data?.todayLeads}</div>
                 <p className="text-xs text-[#21733F]">
-                  +{data.weeklyLeads} this week
+                  +{data?.weeklyLeads} this week
                 </p>
               </CardContent>
             </Card>
@@ -568,7 +570,9 @@ const DashboardAccount = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{data.conversionRate}%</div>
+                <div className="text-2xl font-bold">
+                  {data?.conversionRate}%
+                </div>
                 <p className="text-xs text-[#D3DEF5]-foreground">
                   Success rate
                 </p>
@@ -584,7 +588,7 @@ const DashboardAccount = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {data.avgResponseTime}m
+                  {data?.avgResponseTime}m
                 </div>
                 <p className="text-xs text-[#D3DEF5]-foreground">Average</p>
               </CardContent>
@@ -599,7 +603,7 @@ const DashboardAccount = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{data.activeChatbots}</div>
+                <div className="text-2xl font-bold">{data?.activeChatbots}</div>
                 <p className="text-xs text-[#21733F]">Active</p>
               </CardContent>
             </Card>
@@ -612,7 +616,7 @@ const DashboardAccount = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{data.activeWebforms}</div>
+                <div className="text-2xl font-bold">{data?.activeWebforms}</div>
                 <p className="text-xs text-[#21733F]">Active</p>
               </CardContent>
             </Card>
@@ -625,7 +629,9 @@ const DashboardAccount = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{data.activeGoogleAds}</div>
+                <div className="text-2xl font-bold">
+                  {data?.activeGoogleAds}
+                </div>
                 <p className="text-xs text-[#21733F]">Campaigns</p>
               </CardContent>
             </Card>
@@ -639,7 +645,7 @@ const DashboardAccount = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {data.activeSocialMedia}
+                  {data?.activeSocialMedia}
                 </div>
                 <p className="text-xs text-[#21733F]">Channels</p>
               </CardContent>
@@ -682,7 +688,7 @@ const DashboardAccount = () => {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={data.leadsOverTime}>
+                <BarChart data={data?.leadsOverTime}>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     // stroke="hsl(var(--border))"
@@ -736,7 +742,7 @@ const DashboardAccount = () => {
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
-                    data={data.leadsByStatus}
+                    data={data?.leadsByStatus}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
@@ -747,7 +753,7 @@ const DashboardAccount = () => {
                     fill="#8884d8"
                     dataKey="count"
                   >
-                    {data.leadsByStatus?.map((entry, index) => (
+                    {data?.leadsByStatus?.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
@@ -782,7 +788,7 @@ const DashboardAccount = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {data.leadsBySource?.map((source) => (
+                {data?.leadsBySource?.map((source) => (
                   <div key={source.source} className="flex items-center gap-2">
                     <div className="flex min-w-[90px] items-center gap-2">
                       <div
@@ -797,7 +803,9 @@ const DashboardAccount = () => {
                       <div
                         className="h-full transition-all"
                         style={{
-                          width: `${(source.count / data.totalLeads) * 100}%`,
+                          width: `${
+                            (source.count / (data?.totalLeads || 1)) * 100
+                          }%`,
                           backgroundColor: source.color,
                         }}
                       />
@@ -837,7 +845,7 @@ const DashboardAccount = () => {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={280}>
-                <LineChart data={data.monthlyEngagement}>
+                <LineChart data={data?.monthlyEngagement}>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     // stroke="hsl(var(--border))"
@@ -918,7 +926,7 @@ const DashboardAccount = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.channelPerformance?.map((channel) => (
+                    {data?.channelPerformance?.map((channel) => (
                       <tr
                         key={channel.channel}
                         className="border-b border-border/50"
@@ -964,7 +972,7 @@ const DashboardAccount = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2.5">
-                {data.recentLeads?.slice(0, 5)?.map((lead, index) => (
+                {data?.recentLeads?.slice(0, 5)?.map((lead, index) => (
                   <div
                     key={index}
                     className="flex items-start justify-between rounded-lg border border-border p-2.5 transition-colors hover:bg-[#D3DEF5]/50"
