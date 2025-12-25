@@ -20,7 +20,7 @@ export const Accounts = () => {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/account", {
+        const res = await fetch("https://crm-backend-7lf9.onrender.com/api/account", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
@@ -48,7 +48,7 @@ export const Accounts = () => {
   const handleDeleteAccount = async (accountId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/account/${accountId}`,
+        `https://crm-backend-7lf9.onrender.com/api/account/${accountId}`,
         {
           method: "DELETE",
           headers: {

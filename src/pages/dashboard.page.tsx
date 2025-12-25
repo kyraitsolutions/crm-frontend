@@ -109,7 +109,7 @@ export const DashboardPage = () => {
   const handleDeleteAccount = async (accountId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/account/${accountId}`,
+        `https://crm-backend-7lf9.onrender.com/api/account/${accountId}`,
         {
           method: "DELETE",
           headers: {
@@ -146,7 +146,7 @@ export const DashboardPage = () => {
 
   const fetchAccounts = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/account", {
+      const res = await fetch("https://crm-backend-7lf9.onrender.com/api/account", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
@@ -206,11 +206,10 @@ export const DashboardPage = () => {
           <div
             key={account.id}
             onClick={() => handleProfileClick(idx)}
-            className={`space-y-8 border border-accent cursor-pointer transform transition-all duration-300 hover:scale-105 rounded-xl py-6 px-4 bg-white shadow-sm ${
-              currentSelectedAccountIndex === idx
+            className={`space-y-8 border border-accent cursor-pointer transform transition-all duration-300 hover:scale-105 rounded-xl py-6 px-4 bg-white shadow-sm ${currentSelectedAccountIndex === idx
                 ? "ring-2 ring-blue-400 shadow-lg"
                 : ""
-            }`}
+              }`}
           >
             {/* Header */}
             <div className="flex items-start justify-between gap-3">
@@ -245,13 +244,12 @@ export const DashboardPage = () => {
             <div className="flex justify-between items-center text-gray-500 text-xs font-medium">
               <span>Created: {formatDate(account.createdAt)}</span>
               <span
-                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                  account.status === "active"
+                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${account.status === "active"
                     ? "bg-green-100 text-green-600"
                     : account.status === "inactive"
-                    ? "bg-gray-100 text-gray-800"
-                    : "bg-red-100 text-red-800"
-                }`}
+                      ? "bg-gray-100 text-gray-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
               >
                 {account.status}
               </span>

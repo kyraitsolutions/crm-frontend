@@ -92,7 +92,7 @@ export function LoginPage() {
                 "w-full flex items-center justify-center gap-2 hover:bg-gray-50"
               )}
             >
-              <a href="http://localhost:3000/api/auth/google">
+              <a href="https://crm-backend-7lf9.onrender.com/api/auth/google">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
