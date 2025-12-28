@@ -132,7 +132,7 @@ export const Teams = () => {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/account", {
+        const res = await fetch("https://crm-backend-7lf9.onrender.com/api/account", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
