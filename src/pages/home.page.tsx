@@ -11,9 +11,9 @@ import PricingSection from "../components/pricing-section";
 import CTASection from "../components/cta-section";
 import FooterSection from "../components/footer-section";
 import { ArrowRight } from "lucide-react";
-import DashboardImage2 from "../assets/image2.png";
-import DashboardImage3 from "../assets/image3.png";
-import DashboardImage4 from "../assets/image4.png";
+// import DashboardImage2 from "../assets/image2.png";
+// import DashboardImage3 from "../assets/image3.png";
+// import DashboardImage4 from "../assets/image4.png";
 function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
     <div className="px-[14px] py-[6px] bg-white shadow-[0px_0px_0px_4px_rgba(55,50,47,0.05)] overflow-hidden rounded-[90px] flex justify-start items-center gap-[8px] border border-[rgba(2,6,23,0.08)] shadow-xs">
