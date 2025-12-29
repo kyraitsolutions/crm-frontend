@@ -11,7 +11,9 @@ import PricingSection from "../components/pricing-section";
 import CTASection from "../components/cta-section";
 import FooterSection from "../components/footer-section";
 import { ArrowRight } from "lucide-react";
-
+import DashboardImage2 from "../assets/image2.png";
+import DashboardImage3 from "../assets/image3.png";
+import DashboardImage4 from "../assets/image4.png";
 function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
     <div className="px-[14px] py-[6px] bg-white shadow-[0px_0px_0px_4px_rgba(55,50,47,0.05)] overflow-hidden rounded-[90px] flex justify-start items-center gap-[8px] border border-[rgba(2,6,23,0.08)] shadow-xs">
@@ -28,46 +30,40 @@ function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
 export function HomePage() {
   const [activeCard, setActiveCard] = useState(0);
   const [progress, setProgress] = useState(0);
-  const mountedRef = useRef(true);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const progressInterval = setInterval(() => {
-      if (!mountedRef.current) return;
+    // Prevent double interval in Strict Mode
+    if (intervalRef.current) return;
 
-      setProgress((prev) => {
-        if (prev >= 100) {
-          if (mountedRef.current) {
-            setActiveCard((current) => (current + 1) % 3);
-          }
-          return 0;
-        }
-        return prev + 2; // 2% every 100ms = 5 seconds total
-      });
+    intervalRef.current = setInterval(() => {
+      setProgress((prev) => Math.min(prev + 2, 100));
     }, 100);
 
     return () => {
-      clearInterval(progressInterval);
-      // mountedRef.current = false;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
   }, []);
-
   useEffect(() => {
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-
+    if (progress >= 100) {
+      setActiveCard((prev) => (prev + 1) % 3);
+      setProgress(0);
+    }
+  }, [progress]);
   const handleCardClick = (index: number) => {
-    if (!mountedRef.current) return;
     setActiveCard(index);
     setProgress(0);
   };
+
 
   return (
     <div className="w-full min-h-screen relative bg-[#F7F5F3] overflow-x-hidden flex flex-col justify-start items-center">
       <div className="relative flex flex-col justify-start items-center w-full">
         {/* Main container with proper margins */}
-        <div className="w-full max-w-none px-4 sm:px-6 md:px-8 lg:px-0 lg:max-w-[1060px] lg:w-[1060px] relative flex flex-col justify-start items-start min-h-screen">
+        <div className="w-full max-w-none px-4 sm:px-6 md:px-8 lg:px-0 lg:max-w-[1280px] lg:w-[1280px] relative flex flex-col justify-start items-start min-h-screen">
           {/* Left vertical line */}
           <div className="w-px h-full absolute left-4 sm:left-6 md:left-8 lg:left-0 top-0 bg-[rgba(55,50,47,0.12)] shadow-[1px_0px_0px_white] z-0"></div>
 
@@ -79,17 +75,17 @@ export function HomePage() {
             <div className="w-full h-12 sm:h-14 md:h-16 lg:h-[84px] absolute left-0 top-0 flex justify-center items-center z-20 px-6 sm:px-8 md:px-12 lg:px-0">
               <div className="w-full h-0 absolute left-0 top-6 sm:top-7 md:top-8 lg:top-[42px] border-t border-[rgba(55,50,47,0.12)] shadow-[0px_1px_0px_white]"></div>
 
-              <div className="w-full max-w-[calc(100%-32px)] sm:max-w-[calc(100%-48px)] md:max-w-[calc(100%-64px)] lg:max-w-[700px] lg:w-[700px] h-10 sm:h-11 md:h-12 py-1.5 sm:py-2 px-3 sm:px-4 md:px-4 pr-2 sm:pr-3 bg-[#F7F5F3] backdrop-blur-sm shadow-[0px_0px_0px_2px_white] overflow-hidden rounded-[50px] flex justify-between items-center relative z-30">
+              <div className="w-full max-w-[calc(100%-32px)] sm:max-w-[calc(100%-48px)] md:max-w-[calc(100%-64px)] lg:max-w-[900px] lg:w-[900px] h-10 sm:h-11 md:h-12 py-1.5 sm:py-2 px-3 sm:px-4 md:px-4 pr-2 sm:pr-3 bg-[#F7F5F3] backdrop-blur-sm shadow-[0px_0px_0px_2px_white] overflow-hidden rounded-[50px] flex justify-between items-center relative z-30">
                 <div className="flex justify-center items-center">
                   <div className="flex justify-start items-center">
                     <div className="flex flex-col justify-center text-[#2F3037] text-sm sm:text-base md:text-lg lg:text-xl font-medium leading-5 font-sans">
-                      Inquiro
+                      Home
                     </div>
                   </div>
                   <div className="pl-3 sm:pl-4 md:pl-5 lg:pl-5 flex justify-start items-start hidden sm:flex flex-row gap-2 sm:gap-3 md:gap-4 lg:gap-4">
                     <div className="flex justify-start items-center">
                       <div className="flex flex-col justify-center text-[rgba(49,45,43,0.80)] text-xs md:text-[13px] font-medium leading-[14px] font-sans">
-                        Products
+                        Product
                       </div>
                     </div>
                     <div className="flex justify-start items-center">
@@ -99,7 +95,7 @@ export function HomePage() {
                     </div>
                     <div className="flex justify-start items-center">
                       <div className="flex flex-col justify-center text-[rgba(49,45,43,0.80)] text-xs md:text-[13px] font-medium leading-[14px] font-sans">
-                        Docs
+                        Review
                       </div>
                     </div>
                   </div>
@@ -123,14 +119,12 @@ export function HomePage() {
             {/* Hero Section */}
             <div className="pt-16 sm:pt-20 md:pt-24 lg:pt-[216px] pb-8 sm:pb-12 md:pb-16 flex flex-col justify-start items-center px-2 sm:px-4 md:px-8 lg:px-0 w-full sm:pl-0 sm:pr-0 pl-0 pr-0">
               <div className="w-full max-w-[937px] lg:w-[937px] flex flex-col justify-center items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 ">
-                <div className="self-stretch rounded-[3px] flex flex-col justify-center items-center gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+                <div className="self-stretch rounded-[3px] flex flex-col justify-center items-center gap-4 sm:gap-5 md:gap-6 lg:gap-">
                   <div className="w-full max-w-[748.71px] lg:w-[748.71px] text-center flex justify-center flex-col text-[#37322F] text-[24px] xs:text-[28px] sm:text-[36px] md:text-[52px] lg:text-[80px] font-instrument-serif leading-[1.1] sm:leading-[1.15] md:leading-[1.2] lg:leading-24 px-2 sm:px-4 md:px-0">
                     Smart Chatbots <br /> Lead Capture & Analysis
                   </div>
-                  <div className="w-full max-w-[506.08px] lg:w-[506.08px] text-center flex justify-center flex-col text-[rgba(55,50,47,0.80)] sm:text-lg md:text-xl leading-[1.4] sm:leading-[1.45] md:leading-[1.5] lg:leading-7 font-instrument-serif px-2 sm:px-4 md:px-0 lg:text-lg font-medium text-sm">
-                    Add an AI chatbot to your site that talks to visitors,
-                    gathers insights, and helps you understand your audience
-                    through data-driven conversation analytics.
+                  <div className="w-full max-w-[506.08px] lg:w-[506.08px] text-center flex justify-center flex-col text-[rgba(55,50,47,0.80)] sm:text-lg md:text-xl leading-[1.4] sm:leading-[1.45] md:leading-[1.5] lg:leading-7  px-2 sm:px-4 md:px-0 lg:text-lg font-medium text-sm">
+                    Build intelligent chatbots that capture leads, qualify users, and convert conversations into revenue — all from one powerful CRM dashboard.
                   </div>
                 </div>
               </div>
@@ -150,7 +144,164 @@ export function HomePage() {
                     </div>
                   </div>
                 </div>
+                <p>
+                  No credit card required · Setup in minutes · Built for modern teams
+                </p>
               </div>
+
+              <section className="w-full bg-white max-w-[1280px] border-t border-b mt-10 mx-auto py-20 px-4">
+                <div className="flex flex-col items-center text-center gap-6">
+                  <h2 className="text-[32px] md:text-[40px] font-semibold text-[#49423D]">
+                    One Platform. Real Conversations. Real Results.
+                  </h2>
+
+                  <p className="max-w-[720px] text-[rgba(55,50,47,0.8)] text-lg">
+                    Inquiro helps businesses turn website visitors into qualified leads
+                    using smart chatbots, automated workflows, and real-time analytics.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 w-full">
+                    {[
+                      {
+                        title: "No-Code Chatbots",
+                        desc: "Design chatbot flows visually without writing any code.",
+                      },
+                      {
+                        title: "Auto Lead Capture",
+                        desc: "Capture name, email, phone, and intent automatically.",
+                      },
+                      {
+                        title: "CRM-First Approach",
+                        desc: "Every conversation instantly becomes a lead.",
+                      },
+                    ].map((item, i) => (
+                      <div
+                        key={i}
+                        className="bg-white rounded-xl p-6 shadow-sm border border-[#E5E3E0]"
+                      >
+                        <h3 className="text-lg font-medium text-[#37322F]">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 text-sm text-[rgba(55,50,47,0.75)]">
+                          {item.desc}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+              <section className="w-full max-w-[1280px] mx-auto py-20 px-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                  <div>
+                    <h2 className="text-[40px] font-semibold text-[#49423D]">
+                      Visual Chatbot Builder
+                    </h2>
+
+                    <p className="mt-4 text-[rgba(55,50,47,0.8)] text-lg">
+                      Create intelligent chatbot flows using a simple drag-and-drop
+                      interface. Perfect for sales, support, and onboarding.
+                    </p>
+
+                    <ul className="mt-6 space-y-3 text-sm">
+                      {[
+                        "Greeting messages & follow-ups",
+                        "Name, email & phone capture",
+                        "Conditional logic & options",
+                        "End-chat actions",
+                      ].map((item, i) => (
+                        <li key={i} className="flex items-center gap-2">
+                          <span className="w-2 h-2 bg-[#37322F] rounded-full" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-red-900 h-full w-full rounded-xl border border-[#E5E3E0] shadow-sm">
+                    <img
+                      src={DashboardImage3}
+                      alt="Chatbot Builder"
+                      className="rounded-lg  object-cover object-left-top "
+                    />
+                  </div>
+                </div>
+              </section>
+              <section className="w-full max-w-[1280px] mx-auto py-20 px-4">
+                <div className="text-center max-w-[700px] mx-auto">
+                  <h2 className="text-[40px] font-semibold text-[#49423D]">
+                    A Sales Pipeline That Makes Sense
+                  </h2>
+
+                  <p className="mt-4 text-[rgba(55,50,47,0.8)] text-lg">
+                    Track every lead from first conversation to final conversion with
+                    clear pipeline stages.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                  {[
+                    { title: "Intake", desc: "New leads captured via chatbot or forms" },
+                    { title: "Qualified", desc: "High-intent leads ready for action" },
+                    { title: "Converted", desc: "Successfully closed customers" },
+                  ].map((item, i) => (
+                    <div
+                      key={i}
+                      className="bg-white border border-[#E5E3E0] rounded-xl p-6 shadow-sm"
+                    >
+                      <h3 className="text-lg font-medium">{item.title}</h3>
+                      <p className="mt-2 text-sm text-[rgba(55,50,47,0.75)]">
+                        {item.desc}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+              <section className="w-full bg-white py-20 px-4 border-t border-b border-[#E5E3E0]">
+                <div className="max-w-[1280px] mx-auto px-4 text-center">
+                  <h2 className="text-[40px] font-semibold text-[#49423D]">
+                    Built for Teams & Agencies
+                  </h2>
+
+                  <p className="mt-4 max-w-[680px] mx-auto text-[rgba(55,50,47,0.8)] text-lg">
+                    Manage multiple accounts, chatbots, and leads — all from one powerful
+                    CRM dashboard.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">
+                    {[
+                      {
+                        title: "Multiple Workspaces",
+                        desc: "Create separate workspaces for teams, departments, or clients — each with its own chatbots, leads, and analytics.",
+                      },
+                      {
+                        title: "Team Collaboration",
+                        desc: "Allow multiple team members to access and manage conversations, assign leads, and collaborate in real time.",
+                      },
+                      {
+                        title: "Role-Based Access",
+                        desc: "Control what each user can view or edit with flexible admin, agent, and viewer permissions.",
+                      },
+                      {
+                        title: "Shared Analytics",
+                        desc: "Keep everyone aligned with shared dashboards showing chatbot performance, lead stages, and conversions.",
+                      },
+                    ].map((item, i) => (
+                      <div
+                        key={i}
+                        className="border border-[#E5E3E0] rounded-lg p-6"
+                      >
+                        <h3 className="text-lg font-medium text-[#37322F]">
+                          {item.title}
+                        </h3>
+
+                        <p className="mt-2 text-sm leading-relaxed text-[rgba(55,50,47,0.75)]">
+                          {item.desc}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
 
               <div className="absolute top-[232px] sm:top-[248px] md:top-[264px] lg:top-[320px] left-1/2 transform -translate-x-1/2 z-0 pointer-events-none">
                 <img
@@ -163,14 +314,11 @@ export function HomePage() {
                 />
               </div>
 
-              <div className="w-full max-w-[960px] lg:w-[960px] pt-2 sm:pt-4 pb-6 sm:pb-8 md:pb-10 px-2 sm:px-4 md:px-6 lg:px-11 flex flex-col justify-center items-center gap-2 relative z-5 my-8 sm:my-12 md:my-16 lg:my-16 mb-0 lg:pb-0">
+              {/* <div className="w-full max-w-[960px] lg:w-[960px] pt-2 sm:pt-4 pb-6 sm:pb-8 md:pb-10 px-2 sm:px-4 md:px-6 lg:px-11 flex flex-col justify-center items-center gap-2 relative z-5 my-8 sm:my-12 md:my-16 lg:my-16 mb-0 lg:pb-0">
                 <div className="w-full max-w-[960px] lg:w-[960px] h-[200px] sm:h-[280px] md:h-[450px] lg:h-[695.55px] bg-white shadow-[0px_0px_0px_0.9056603908538818px_rgba(0,0,0,0.08)] overflow-hidden rounded-[6px] sm:rounded-[8px] lg:rounded-[9.06px] flex flex-col justify-start items-start">
-                  {/* Dashboard Content */}
                   <div className="self-stretch flex-1 flex justify-start items-start">
-                    {/* Main Content */}
                     <div className="w-full h-full flex items-center justify-center">
                       <div className="relative w-full h-full overflow-hidden">
-                        {/* Product Image 1 - Plan your schedules */}
                         <div
                           className={`absolute inset-0 transition-all duration-500 ease-in-out ${activeCard === 0
                             ? "opacity-100 scale-100 blur-0"
@@ -178,13 +326,12 @@ export function HomePage() {
                             }`}
                         >
                           <img
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dsadsadsa.jpg-xTHS4hGwCWp2H5bTj8np6DXZUyrxX7.jpeg"
+                            src={DashboardImage3}
                             alt="Schedules Dashboard - Customer Subscription Management"
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover object-left-top"
                           />
                         </div>
 
-                        {/* Product Image 2 - Data to insights */}
                         <div
                           className={`absolute inset-0 transition-all duration-500 ease-in-out ${activeCard === 1
                             ? "opacity-100 scale-100 blur-0"
@@ -192,13 +339,12 @@ export function HomePage() {
                             }`}
                         >
                           <img
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dsadsadsa.jpg-xTHS4hGwCWp2H5bTj8np6DXZUyrxX7.jpeg"
+                            src={DashboardImage2}
                             alt="Analytics Dashboard"
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover object-left-top"
                           />
                         </div>
 
-                        {/* Product Image 3 - Data visualization */}
                         <div
                           className={`absolute inset-0 transition-all duration-500 ease-in-out ${activeCard === 2
                             ? "opacity-100 scale-100 blur-0"
@@ -206,20 +352,19 @@ export function HomePage() {
                             }`}
                         >
                           <img
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dsadsadsa.jpg-xTHS4hGwCWp2H5bTj8np6DXZUyrxX7.jpeg"
+                            src={DashboardImage4}
                             alt="Data Visualization Dashboard"
-                            className="w-full h-full object-contain" // Changed from object-cover to object-contain to preserve landscape aspect ratio
+                            className="w-full h-full object-cover object-left-top" // Changed from object-cover to object-contain to preserve landscape aspect ratio
                           />
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
-              <div className="self-stretch border-t border-b border-[#E0DEDB] flex justify-center items-start">
+              {/* <div className="self-stretch border-t border-b border-[#E0DEDB] flex justify-center items-start">
                 <div className="w-4 sm:w-6 md:w-8 lg:w-12 self-stretch relative overflow-hidden">
-                  {/* Left decorative pattern */}
                   <div className="w-[120px] sm:w-[140px] md:w-[162px] left-[-40px] sm:left-[-50px] md:left-[-58px] top-[-120px] absolute flex flex-col justify-start items-start">
                     {Array.from({ length: 50 }).map((_, i) => (
                       <div
@@ -231,10 +376,10 @@ export function HomePage() {
                 </div>
 
                 <div className="flex-1 px-0 sm:px-2 md:px-0 flex flex-col md:flex-row justify-center items-stretch gap-0">
-                  {/* Feature Cards */}
+
                   <FeatureCard
-                    title="Plan your schedules"
-                    description="Streamline customer subscriptions and billing with automated scheduling tools."
+                    title="Plan your boost"
+                    description="Automate customer flow and boost conversions with smart chatbots"
                     isActive={activeCard === 0}
                     progress={activeCard === 0 ? progress : 0}
                     onClick={() => handleCardClick(0)}
@@ -246,6 +391,7 @@ export function HomePage() {
                     progress={activeCard === 1 ? progress : 0}
                     onClick={() => handleCardClick(1)}
                   />
+
                   <FeatureCard
                     title="Collaborate seamlessly"
                     description="Keep your team aligned with shared dashboards and collaborative workflows."
@@ -256,7 +402,6 @@ export function HomePage() {
                 </div>
 
                 <div className="w-4 sm:w-6 md:w-8 lg:w-12 self-stretch relative overflow-hidden">
-                  {/* Right decorative pattern */}
                   <div className="w-[120px] sm:w-[140px] md:w-[162px] left-[-40px] sm:left-[-50px] md:left-[-58px] top-[-120px] absolute flex flex-col justify-start items-start">
                     {Array.from({ length: 50 }).map((_, i) => (
                       <div
@@ -266,7 +411,10 @@ export function HomePage() {
                     ))}
                   </div>
                 </div>
-              </div>
+              </div> */}
+              {/* Documentation Section */}
+              <DocumentationSection />
+
 
               {/* Social Proof Section */}
               <div className="w-full border-b border-[rgba(55,50,47,0.12)] flex flex-col justify-center items-center">
@@ -466,8 +614,7 @@ export function HomePage() {
 
               {/* Bento Grid Section */}
               <div className="w-full border-b border-[rgba(55,50,47,0.12)] flex flex-col justify-center items-center">
-                {/* Header Section */}
-                <div className="self-stretch px-4 sm:px-6 md:px-8 lg:px-0 lg:max-w-[1060px] lg:w-[1060px] py-8 sm:py-12 md:py-16 border-b border-[rgba(55,50,47,0.12)] flex justify-center items-center gap-6">
+                <div className="self-stretch px-4 sm:px-6 md:px-8 lg:px-0 lg:max-w-[1280px] lg:w-[1280px] py-8 sm:py-12 md:py-16 border-b border-[rgba(55,50,47,0.12)] flex justify-center items-center gap-6">
                   <div className="w-full max-w-[616px] lg:w-[616px] px-4 sm:px-6 py-4 sm:py-5 shadow-[0px_2px_4px_rgba(50,45,43,0.06)] overflow-hidden rounded-lg flex flex-col justify-start items-center gap-3 sm:gap-4 shadow-none">
                     <Badge
                       icon={
@@ -529,10 +676,8 @@ export function HomePage() {
                   </div>
                 </div>
 
-                {/* Bento Grid Content */}
                 <div className="self-stretch flex justify-center items-start">
                   <div className="w-4 sm:w-6 md:w-8 lg:w-12 self-stretch relative overflow-hidden">
-                    {/* Left decorative pattern */}
                     <div className="w-[120px] sm:w-[140px] md:w-[162px] left-[-40px] sm:left-[-50px] md:left-[-58px] top-[-120px] absolute flex flex-col justify-start items-start">
                       {Array.from({ length: 200 }).map((_, i) => (
                         <div
@@ -544,7 +689,6 @@ export function HomePage() {
                   </div>
 
                   <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-0 border-l border-r border-[rgba(55,50,47,0.12)]">
-                    {/* Top Left - Smart. Simple. Brilliant. */}
                     <div className="border-b border-r-0 md:border-r border-[rgba(55,50,47,0.12)] p-4 sm:p-6 md:p-8 lg:p-12 flex flex-col justify-start items-start gap-4 sm:gap-6">
                       <div className="flex flex-col gap-2">
                         <h3 className="text-[#37322F] text-lg sm:text-xl font-semibold leading-tight font-sans">
@@ -565,7 +709,6 @@ export function HomePage() {
                       </div>
                     </div>
 
-                    {/* Top Right - Your work, in sync */}
                     <div className="border-b border-[rgba(55,50,47,0.12)] p-4 sm:p-6 md:p-8 lg:p-12 flex flex-col justify-start items-start gap-4 sm:gap-6">
                       <div className="flex flex-col gap-2">
                         <h3 className="text-[#37322F] font-semibold leading-tight font-sans text-lg sm:text-xl">
@@ -586,7 +729,6 @@ export function HomePage() {
                       </div>
                     </div>
 
-                    {/* Bottom Left - Effortless integration */}
                     <div className="border-r-0 md:border-r border-[rgba(55,50,47,0.12)] p-4 sm:p-6 md:p-8 lg:p-12 flex flex-col justify-start items-start gap-4 sm:gap-6 bg-transparent">
                       <div className="flex flex-col gap-2">
                         <h3 className="text-[#37322F] text-lg sm:text-xl font-semibold leading-tight font-sans">
@@ -605,7 +747,6 @@ export function HomePage() {
                             className="max-w-full max-h-full"
                           />
                         </div>
-                        {/* Gradient mask for soft bottom edge */}
                         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#F7F5F3] to-transparent pointer-events-none"></div>
                       </div>
                     </div>
@@ -659,8 +800,6 @@ export function HomePage() {
                 </div>
               </div>
 
-              {/* Documentation Section */}
-              <DocumentationSection />
 
               {/* Testimonials Section */}
               <TestimonialsSection />
