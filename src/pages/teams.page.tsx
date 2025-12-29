@@ -17,23 +17,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToastMessageService } from "@/services";
+import { AccountService } from "@/services/account.service";
 import { TeamService } from "@/services/team.service";
 import { alertManager } from "@/stores/alert.store";
 import { TeamsStoreManager, useTeamsStore } from "@/stores/team.store";
 import type { ApiError } from "@/types";
 import type { ITeam } from "@/types/teams.type";
-import { LocalStorageUtils } from "@/utils";
 import { Trash2 } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
 export const Teams = () => {
   const toastService = new ToastMessageService();
-  const teamStoreManager = new TeamsStoreManager();
   const teamService = new TeamService();
-  const { teams } = useTeamsStore((state) => state);
+  const accountService = new AccountService();
 
-  console.log(teams);
+  const teamStoreManager = new TeamsStoreManager();
+  const { teams } = useTeamsStore((state) => state);
 
   const [openAddTeamMember, setOpenAddTeamMember] = useState(false);
 
@@ -76,7 +76,6 @@ export const Teams = () => {
     try {
       const response = await teamService.getTeamMembers();
       const data = await response.data;
-      console.log(data);
       teamStoreManager.setTeams(data.docs);
     } catch (error) {
       console.error("Error fetching teams:", error);
@@ -125,34 +124,25 @@ export const Teams = () => {
     }
   };
 
+  const fetchAccounts = async () => {
+    try {
+      const response = await accountService.getAccounts();
+
+      if (response.status === 200) {
+        setAccounts(response?.data?.docs);
+      }
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     getTeams();
   }, []);
 
   useEffect(() => {
-    const fetchAccounts = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/account", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch accounts");
-        }
-
-        const data = await res.json();
-        setAccounts(data.result.docs);
-      } catch (error) {
-        console.error("Error fetching accounts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchAccounts();
   }, []);
 
@@ -400,7 +390,7 @@ export const Teams = () => {
             <div className="py-4">
               <MultiSelectDropdown
                 value={
-                  teams.find((team) => team?.userId == selectedTeamId)
+                  teams.find((team) => team?.userId === selectedTeamId)
                     ?.accountIds
                 }
                 options={accounts.map((a) => ({

@@ -3,7 +3,10 @@ import { Switch } from "@/components/ui/switch";
 import { DASHBOARD_PATH } from "@/constants";
 import { ToastMessageService } from "@/services";
 import { LeadFormService } from "@/services/leadform.service";
-import type { LeadFormListItem } from "@/types/leadform.type";
+import { alertManager } from "@/stores/alert.store";
+import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
+import type { ILeadFormListItem } from "@/types/leadform.type";
+// import   LeadFormListItem } from "@/types/leadform.type";
 import { Plus, Trash2 } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -13,11 +16,13 @@ export function LeadFormPage() {
   const { accountId } = useParams();
   // const navigate = useNavigate();
   const leadFormService = new LeadFormService();
+  const leadStoreManager = new LeadsStoreManager();
+  const { leadForms } = useLeadsStore((state) => state);
   const toastMessageService = new ToastMessageService();
   const [loading, setLoading] = useState(false);
-  const [forms, setLeadForms] = useState<[]>([]);
+  // const [forms, setLeadForms] = useState<[]>([]);
 
-  const columns: Column<LeadFormListItem>[] = [
+  const columns: Column<ILeadFormListItem>[] = [
     //   // {
     //   //   key: "id",
     //   //   header: "Id",
@@ -100,11 +105,12 @@ export function LeadFormPage() {
   const getLeadFormList = async () => {
     try {
       setLoading(true);
-      const res: any = await leadFormService.getLeadFromsList(
+      const response = await leadFormService.getLeadFromsList(
         String(accountId)
       );
-      setLeadForms(res.data.docs);
-      console.log(res.data.docs);
+      if (response?.status === 200) {
+        leadStoreManager.setLeadForm(response?.data?.docs || []);
+      }
     } catch (error) {
       toastMessageService.apiError(error as any);
     } finally {
@@ -112,24 +118,38 @@ export function LeadFormPage() {
     }
   };
 
-  const handleDeleteForm = async (formId: string) => {
+  const handleDeleteForm = (formId: string) => {
+    alertManager.show({
+      type: "warning",
+      title: "Delete Account",
+      message: "Are you sure you want to delete this account?",
+      onConfirm: () => {
+        handleDeleteFormById(formId);
+      },
+    });
+  };
+
+  const handleDeleteFormById = async (formId: string) => {
+    const rollback = leadStoreManager.deleteLeadFormOptimistic(formId);
     try {
-      const res = await leadFormService.deleteFormById(
+      const response = await leadFormService.deleteFormById(
         String(accountId),
         formId
       );
-      console.log(res.data);
-      getLeadFormList();
+
+      if (response.status === 200) {
+        toastMessageService.success("Form deleted successfully");
+        // getLeadFormList();
+      }
     } catch (error) {
       toastMessageService.apiError(error as any);
+      rollback();
     }
   };
 
   useEffect(() => {
     getLeadFormList();
   }, []);
-
-  console.log(forms);
 
   return (
     <div className="space-y-6 lg:px-4 px-2 py-2">
@@ -157,8 +177,8 @@ export function LeadFormPage() {
       </div>
 
       <div className="">
-        <DataTable<LeadFormListItem>
-          data={forms}
+        <DataTable<ILeadFormListItem>
+          data={leadForms}
           columns={columns}
           pageSize={20}
           //   onRowClick={(row) => {

@@ -6,7 +6,7 @@ export class LeadFormService extends ApiService {
     super();
   }
 
-  async getLeadFromsList(accountId: string): Promise<ApiResponse<[] | null>> {
+  async getLeadFromsList(accountId: string): Promise<ApiResponse<any | null>> {
     return await this.get(`/account/${accountId}/forms`);
   }
 

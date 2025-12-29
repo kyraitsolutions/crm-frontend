@@ -65,6 +65,7 @@ export function DataTable<T extends Record<string, any>>({
     direction: null,
   });
 
+  console.log(data);
   // Sorting logic
   const sortedData = useMemo(() => {
     if (!sortConfig.key || !sortable) return data;
@@ -171,7 +172,7 @@ export function DataTable<T extends Record<string, any>>({
               </tr>
             </thead>
             <tbody className={cn("divide-y divide-gray-200", tbodyClassName)}>
-              {paginatedData?.length === 0 ? (
+              {!loading && paginatedData?.length === 0 ? (
                 <tr>
                   <td
                     colSpan={columns?.length}

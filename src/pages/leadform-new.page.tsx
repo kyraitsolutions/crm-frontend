@@ -27,6 +27,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LocalStorageUtils } from "@/utils";
 import { ToastMessageService } from "@/services";
 import { DASHBOARD_PATH } from "@/constants";
+import Loader from "@/components/Loader";
 
 interface CustomField {
   label: string;
@@ -47,6 +48,8 @@ export default function LeadFormNew() {
   );
   const [successCTA, setSuccessCTA] = useState("whatsapp");
   const [successCTADestination, setSuccessCTADestination] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formFields, setFormFields] = useState({
     name: true,
@@ -77,6 +80,7 @@ export default function LeadFormNew() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const payload = {
         formTitle,
@@ -109,6 +113,8 @@ export default function LeadFormNew() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -297,8 +303,8 @@ export default function LeadFormNew() {
                 <Button type="button" variant="outline">
                   Cancel
                 </Button>
-                <Button type="submit" className="flex-1">
-                  Create Form
+                <Button type="submit" className="flex-1" disabled={isLoading}>
+                  Create Form {isLoading && <Loader />}
                 </Button>
               </CardFooter>
             </form>
