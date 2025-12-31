@@ -94,7 +94,7 @@ export function LeadFormPage() {
               e.stopPropagation();
               handleDeleteForm(row.id);
             }}
-            className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
+            className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0 cursor-pointer"
           >
             <Trash2 size={16} />
           </button>

@@ -1,8 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LocalStorageUtils } from "@/utils";
 import { useEffect, useState } from "react";
 
+import Loader from "@/components/Loader";
+import { PremiumPopup } from "@/components/popup/PremiumPopup";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,27 +18,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { COOKIES_STORAGE, DASHBOARD_PATH } from "@/constants";
+import { ToastMessageService } from "@/services";
+import { AccountService } from "@/services/account.service";
 import { AuthStoreManager, useAuthStore } from "@/stores";
+import {
+  AccountsStoreManager,
+  useAccountsStore,
+} from "@/stores/accounts.store";
 import { alertManager } from "@/stores/alert.store";
+import type { ApiError } from "@/types";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { formatDate } from "@/utils/date-utils";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ToastMessageService } from "@/services";
-import type { ApiError } from "@/types";
-import { CookieUtils } from "@/utils/cookie-storage.utils";
-import { AccountService } from "@/services/account.service";
-import { PremiumPopup } from "@/components/popup/PremiumPopup";
 
 export const DashboardPage = () => {
-  const accountService = new AccountService();
   const navigate = useNavigate();
-  const authUser = useAuthStore((state) => state.user);
+
+  //services
+  const accountService = new AccountService();
   const authManager = new AuthStoreManager();
   const toastService = new ToastMessageService();
+
+  // store managers
+  const accountStoreManager = new AccountsStoreManager();
+  const { accounts } = useAccountsStore((state) => state);
   const { user } = useAuthStore((state) => state);
-  const [accounts, setAccounts] = useState<any[]>([]);
+  const authUser = useAuthStore((state) => state.user);
+  // const [accounts, setAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingCreate, setLoadingCreate] = useState<boolean>(false);
 
   const [openPremium, setOpenPremium] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -50,7 +61,7 @@ export const DashboardPage = () => {
   // ✅ Function to create account
   const handleCreateAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    // setLoading(true);
+    setLoadingCreate(true);
 
     try {
       const response = await accountService.createAccount({
@@ -58,8 +69,17 @@ export const DashboardPage = () => {
         email,
       });
 
-      if (response.status === 200) {
-        setAccounts((prev) => [...prev, response?.data?.docs]);
+      if (response.status === 201 || response.status === 200) {
+        accountStoreManager.setAccountTop({
+          accountName,
+          email,
+          id: response?.data?.docs?.id,
+          createdAt: new Date().toISOString(),
+          status: "active",
+        });
+
+        toastService.success("Account created successfully");
+        // setAccounts((prev) => [...prev, response?.data?.docs]);
       }
       // setAccounts((prev) => [...prev, data?.result?.docs]);
 
@@ -77,12 +97,11 @@ export const DashboardPage = () => {
         // setTimeout(() => {
         //   navigate("/dashboard/subscription");
         // }, 3000);
-      }
-      if (err) {
-        // toastService.error(err.responseMessage);
+      } else {
+        toastService.apiError(err.message);
       }
     } finally {
-      setLoading(false);
+      setLoadingCreate(false);
     }
   };
 
@@ -107,29 +126,18 @@ export const DashboardPage = () => {
   };
 
   const handleDeleteAccount = async (accountId: string) => {
+    const rollback = accountStoreManager.deleteAccountOptimistic(accountId);
     try {
-      const response = await fetch(
-        `https://crm-backend-7lf9.onrender.com/api/account/${accountId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
-          },
-        }
-      );
-
-      console.log(await response.json());
-      if (!response.ok) {
-        throw new Error("Failed to delete account");
+      const response = await accountService.deleteAccount(accountId);
+      if (response.status === 200) {
+        toastService.success("Account deleted successfully");
       }
-      // Remove deleted account from state
-      setAccounts((prevAccounts) =>
-        prevAccounts.filter((account) => account.id !== accountId)
-      );
-      toastService.success("Account deleted successfully");
     } catch (error) {
-      console.error("Error deleting account:", error);
+      rollback();
+      const err = error as ApiError;
+      if (err) {
+        toastService.apiError(err.message);
+      }
     }
   };
 
@@ -145,31 +153,17 @@ export const DashboardPage = () => {
   };
 
   const fetchAccounts = async () => {
+    setLoading(true);
     try {
-      const res = await fetch(
-        "https://crm-backend-7lf9.onrender.com/api/account",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
+      const response = await accountService.getAccounts();
+      if (response.status === 200) {
+        accountStoreManager.setAccounts(response?.data?.docs);
+        if (
+          user?.userprofile?.accountType?.toLowerCase() === "individual" &&
+          response?.data?.docs?.length === 1
+        ) {
+          navigate(DASHBOARD_PATH.getAccountPath(response?.data?.docs[0]?.id));
         }
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch accounts");
-      }
-
-      const data = await res.json();
-      setAccounts(data.result.docs);
-      console.log(data);
-
-      if (
-        user?.userprofile?.accountType?.toLowerCase() === "individual" &&
-        data?.result?.docs?.length === 1
-      ) {
-        navigate(DASHBOARD_PATH.getAccountPath(data?.result?.docs[0]?.id));
       }
     } catch (error) {
       console.error("Error fetching accounts:", error);
@@ -238,7 +232,7 @@ export const DashboardPage = () => {
                   e.stopPropagation();
                   handleDeleAccountClick(account.id);
                 }}
-                className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0"
+                className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0 cursor-pointer"
               >
                 <Trash2 size={16} />
               </button>
@@ -321,7 +315,7 @@ export const DashboardPage = () => {
                   <Button variant="outline">Cancel</Button>
                 </DialogClose>
                 <Button type="submit" disabled={loading}>
-                  {loading ? "Creating..." : "Create"}
+                  Create {loadingCreate && <Loader />}
                 </Button>
               </DialogFooter>
             </form>

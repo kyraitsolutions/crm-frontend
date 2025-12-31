@@ -60,6 +60,7 @@ export const Teams = () => {
       if (response.status === 200) {
         teamStoreManager.setTeamsTop(response?.data?.docs);
         setOpenAddTeamMember(false);
+        toastService.success("Team member added successfully");
       }
     } catch (error) {
       const err = error as ApiError;
@@ -89,11 +90,15 @@ export const Teams = () => {
     accountIds: string[]
   ) => {
     try {
-      await teamService.assignAccountToTeamMember({
+      const response = await teamService.assignAccountToTeamMember({
         id: memberId,
         accountIds: accountIds,
         leadId: "", // provide the lead ID here
       });
+
+      if (response.status === 200) {
+        toastService.success("Account assigned successfully");
+      }
     } catch (error) {
       console.log("Error", error);
     }
@@ -290,6 +295,8 @@ export const Teams = () => {
     );
   }
 
+  console.log(teams);
+
   return (
     <div className="p-3">
       {/* ADD NEW TEAM MEMBER BUTTON + POPUP */}
@@ -390,8 +397,7 @@ export const Teams = () => {
             <div className="py-4">
               <MultiSelectDropdown
                 value={
-                  teams.find((team) => team?.userId === selectedTeamId)
-                    ?.accountIds
+                  teams.find((team) => team?.id === selectedTeamId)?.accountIds
                 }
                 options={accounts.map((a) => ({
                   id: a.id,

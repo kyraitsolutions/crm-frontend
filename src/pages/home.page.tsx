@@ -172,10 +172,11 @@ export function HomePage() {
                       <div className="relative w-full h-full overflow-hidden">
                         {/* Product Image 1 - Plan your schedules */}
                         <div
-                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${activeCard === 0
-                            ? "opacity-100 scale-100 blur-0"
-                            : "opacity-0 scale-95 blur-sm"
-                            }`}
+                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+                            activeCard === 0
+                              ? "opacity-100 scale-100 blur-0"
+                              : "opacity-0 scale-95 blur-sm"
+                          }`}
                         >
                           <img
                             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dsadsadsa.jpg-xTHS4hGwCWp2H5bTj8np6DXZUyrxX7.jpeg"
@@ -186,10 +187,11 @@ export function HomePage() {
 
                         {/* Product Image 2 - Data to insights */}
                         <div
-                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${activeCard === 1
-                            ? "opacity-100 scale-100 blur-0"
-                            : "opacity-0 scale-95 blur-sm"
-                            }`}
+                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+                            activeCard === 1
+                              ? "opacity-100 scale-100 blur-0"
+                              : "opacity-0 scale-95 blur-sm"
+                          }`}
                         >
                           <img
                             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dsadsadsa.jpg-xTHS4hGwCWp2H5bTj8np6DXZUyrxX7.jpeg"
@@ -200,10 +202,11 @@ export function HomePage() {
 
                         {/* Product Image 3 - Data visualization */}
                         <div
-                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${activeCard === 2
-                            ? "opacity-100 scale-100 blur-0"
-                            : "opacity-0 scale-95 blur-sm"
-                            }`}
+                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+                            activeCard === 2
+                              ? "opacity-100 scale-100 blur-0"
+                              : "opacity-0 scale-95 blur-sm"
+                          }`}
                         >
                           <img
                             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dsadsadsa.jpg-xTHS4hGwCWp2H5bTj8np6DXZUyrxX7.jpeg"
@@ -419,18 +422,21 @@ export function HomePage() {
                             ${index >= 6 ? "border-b" : ""}
                             ${isMobileFirstColumn ? "border-r-[0.5px]" : ""}
                             sm:border-r-[0.5px] sm:border-l-0
-                            ${isDesktopFirstColumn
-                              ? "md:border-l"
-                              : "md:border-l-[0.5px]"
+                            ${
+                              isDesktopFirstColumn
+                                ? "md:border-l"
+                                : "md:border-l-[0.5px]"
                             }
-                            ${isDesktopLastColumn
-                              ? "md:border-r"
-                              : "md:border-r-[0.5px]"
+                            ${
+                              isDesktopLastColumn
+                                ? "md:border-r"
+                                : "md:border-r-[0.5px]"
                             }
                             ${isDesktopTopRow ? "md:border-b-[0.5px]" : ""}
-                            ${isDesktopBottomRow
-                              ? "md:border-t-[0.5px] md:border-b"
-                              : ""
+                            ${
+                              isDesktopBottomRow
+                                ? "md:border-t-[0.5px] md:border-b"
+                                : ""
                             }
                             border-[#E3E2E1]
                           `}
@@ -700,10 +706,11 @@ function FeatureCard({
 }) {
   return (
     <div
-      className={`w-full md:flex-1 self-stretch px-6 py-5 overflow-hidden flex flex-col justify-start items-start gap-2 cursor-pointer relative border-b md:border-b-0 last:border-b-0 ${isActive
-        ? "bg-white shadow-[0px_0px_0px_0.75px_#E0DEDB_inset]"
-        : "border-l-0 border-r-0 md:border border-[#E0DEDB]/80"
-        }`}
+      className={`w-full md:flex-1 self-stretch px-6 py-5 overflow-hidden flex flex-col justify-start items-start gap-2 cursor-pointer relative border-b md:border-b-0 last:border-b-0 ${
+        isActive
+          ? "bg-white shadow-[0px_0px_0px_0.75px_#E0DEDB_inset]"
+          : "border-l-0 border-r-0 md:border border-[#E0DEDB]/80"
+      }`}
       onClick={onClick}
     >
       {isActive && (

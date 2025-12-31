@@ -75,7 +75,6 @@ export const ChatBotBuilder = () => {
     async (data: any) => {
       try {
         setIsSubmitting(true);
-        alert("aaya");
 
         const response = !chatBotId
           ? await chatBotService?.createChatBot(String(accountId), data)
