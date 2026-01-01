@@ -36,7 +36,7 @@ class WebSocketClient {
     };
 
     this.socket.onerror = (err) => {
-      // console.error("WebSocket error:", err);
+      console.error("WebSocket error:", err);
     };
   }
 
