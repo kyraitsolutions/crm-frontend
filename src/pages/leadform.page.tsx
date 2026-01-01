@@ -1,4 +1,6 @@
 import { DataTable, type Column } from "@/components/common";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { DASHBOARD_PATH } from "@/constants";
 import { ToastMessageService } from "@/services";
@@ -150,6 +152,20 @@ export function LeadFormPage() {
   useEffect(() => {
     getLeadFormList();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="p-6 space-y-4">
+        <Card className="p-6">
+          <div className="space-y-2">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-10 w-full" />
+            ))}
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 lg:px-4 px-2 py-2">

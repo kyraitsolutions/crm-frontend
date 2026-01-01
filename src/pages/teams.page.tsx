@@ -283,7 +283,6 @@ export const Teams = () => {
   if (loading) {
     return (
       <div className="p-6 space-y-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Teams</h1>
         <Card className="p-6">
           <div className="space-y-2">
             {[...Array(5)].map((_, i) => (
