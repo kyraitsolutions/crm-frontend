@@ -23,7 +23,7 @@ import { alertManager } from "@/stores/alert.store";
 import { TeamsStoreManager, useTeamsStore } from "@/stores/team.store";
 import type { ApiError } from "@/types";
 import type { ITeam } from "@/types/teams.type";
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -57,6 +57,7 @@ export const Teams = () => {
     try {
       const response = await teamService.createTeamMember(newTeam);
 
+      console.log(response)
       if (response.status === 200) {
         teamStoreManager.setTeamsTop(response?.data?.docs);
         setOpenAddTeamMember(false);
@@ -306,75 +307,18 @@ export const Teams = () => {
           Teams
         </h1>
 
-        <div>
-          <Dialog
-            open={openAddTeamMember}
-            onOpenChange={() => setOpenAddTeamMember(!openAddTeamMember)}
-          >
-            <DialogTrigger asChild>
-              <Button onClick={() => setOpenAddTeamMember(true)}>
-                Add New Team Member
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add Team Member</DialogTitle>
-                <DialogDescription>
-                  Fill the details below to add a new team member.
-                </DialogDescription>
-              </DialogHeader>
-
-              <div className="grid gap-4 py-2">
-                <div className="grid gap-2">
-                  <Label>First Name</Label>
-                  <Input
-                    value={newTeam.firstName}
-                    onChange={(e) =>
-                      setNewTeam({ ...newTeam, firstName: e.target.value })
-                    }
-                    placeholder="Enter first name"
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label>Last Name</Label>
-                  <Input
-                    value={newTeam.lastName}
-                    onChange={(e) =>
-                      setNewTeam({ ...newTeam, lastName: e.target.value })
-                    }
-                    placeholder="Enter last name"
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label>Email</Label>
-                  <Input
-                    type="email"
-                    value={newTeam.email}
-                    onChange={(e) =>
-                      setNewTeam({ ...newTeam, email: e.target.value })
-                    }
-                    placeholder="Enter email"
-                  />
-                </div>
-              </div>
-
-              <DialogFooter>
-                <Button
-                  disabled={isLoadingAddTeamMember}
-                  onClick={handleAddTeamMember}
-                >
-                  Add Member {isLoadingAddTeamMember && <Loader />}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
+        {teams.length > 0 &&
+          <AddNewTeamMemberPopupDialog
+            openAddTeamMember={openAddTeamMember}
+            setOpenAddTeamMember={setOpenAddTeamMember}
+            newTeam={newTeam}
+            setNewTeam={setNewTeam}
+            isLoadingAddTeamMember={isLoadingAddTeamMember}
+            handleAddTeamMember={handleAddTeamMember}
+          />}
       </div>
 
-      <div className="mt-2">
+      {teams.length > 0 ? <div className="mt-2">
         <DataTable<ITeam>
           data={teams}
           columns={columns}
@@ -429,6 +373,106 @@ export const Teams = () => {
           </DialogContent>
         </Dialog>
       </div>
+        :
+
+        <div className="flex w-full justify-center items-center h-[75vh]">
+          <div className="flex flex-col max-w-xl w-full justify-center items-center gap-6 p-10 text-center shadow-sm rounded-2xl border border-dashed">
+            {/* Plus Icon */}
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+              <Plus className="h-8 w-8 text-muted-foreground" />
+            </div>
+
+            {/* Text */}
+            <div>
+              <h2 className="text-xl font-semibold">No team member found</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Add team member to easy management.
+              </p>
+            </div>
+
+            <div>
+              <AddNewTeamMemberPopupDialog
+                openAddTeamMember={openAddTeamMember}
+                setOpenAddTeamMember={setOpenAddTeamMember}
+                newTeam={newTeam}
+                setNewTeam={setNewTeam}
+                isLoadingAddTeamMember={isLoadingAddTeamMember}
+                handleAddTeamMember={handleAddTeamMember}
+              />
+            </div>
+          </div>
+        </div>
+      }
     </div>
   );
 };
+
+
+const AddNewTeamMemberPopupDialog = ({ openAddTeamMember, setOpenAddTeamMember, newTeam, setNewTeam, isLoadingAddTeamMember, handleAddTeamMember }: any) => {
+  return (
+    <Dialog
+      open={openAddTeamMember}
+      onOpenChange={() => setOpenAddTeamMember(!openAddTeamMember)}
+    >
+      <DialogTrigger asChild>
+        <Button onClick={() => setOpenAddTeamMember(true)}>
+          Add New Team Member
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add Team Member</DialogTitle>
+          <DialogDescription>
+            Fill the details below to add a new team member.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-4 py-2">
+          <div className="grid gap-2">
+            <Label>First Name</Label>
+            <Input
+              value={newTeam.firstName}
+              onChange={(e) =>
+                setNewTeam({ ...newTeam, firstName: e.target.value })
+              }
+              placeholder="Enter first name"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label>Last Name</Label>
+            <Input
+              value={newTeam.lastName}
+              onChange={(e) =>
+                setNewTeam({ ...newTeam, lastName: e.target.value })
+              }
+              placeholder="Enter last name"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label>Email</Label>
+            <Input
+              type="email"
+              value={newTeam.email}
+              onChange={(e) =>
+                setNewTeam({ ...newTeam, email: e.target.value })
+              }
+              placeholder="Enter email"
+            />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button
+            disabled={isLoadingAddTeamMember}
+            onClick={handleAddTeamMember}
+          >
+            Add Member {isLoadingAddTeamMember && <Loader />}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}

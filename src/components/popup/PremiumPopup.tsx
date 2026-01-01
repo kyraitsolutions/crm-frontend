@@ -6,6 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Crown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface PremiumPopupProps {
   open: boolean;
@@ -29,11 +30,11 @@ export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-4 text-sm text-gray-600">
+        {/* <div className="mt-4 text-sm text-gray-600">
           Redirecting you to subscription page…
-        </div>
+        </div> */}
 
-        {/* <Button className="mt-6 w-full">Upgrade Now</Button> */}
+        <Link to={"/dashboard/subscription"} className="mt-6 w-full bg-primary p-2 text-white hover:bg-primary/90">Upgrade Now</Link>
       </DialogContent>
     </Dialog>
   );

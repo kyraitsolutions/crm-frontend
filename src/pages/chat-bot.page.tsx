@@ -22,6 +22,7 @@ export function ChatBotPage() {
   const chatBotLists = useChatBotStore((state) => state.chatBotsList);
   const [loading, setLoading] = useState(false);
 
+
   const columns: Column<ChatBotListItem>[] = [
     {
       key: "name",
@@ -182,61 +183,39 @@ export function ChatBotPage() {
     getChatBotsList();
   }, []);
 
-  // const nodes = JSON.parse(localStorage.getItem("nodes") || "[]");
-  // const edges = JSON.parse(localStorage.getItem("edges") || "[]");
-
-  // useEffect(() => {
-  //   const webSocket = new WebSocket("ws://localhost:3000");
-
-  //   webSocket.onopen = function () {
-  //     // console.log("WebSocket connection opened");
-  //     // const payload = JSON.stringify({ event: "chat:messages" });
-  //     // webSocket.send(payload);
-  //   };
-
-  //   webSocket.onmessage = function (event) {
-  //     const wsResponse = JSON.parse(event.data);
-
-  //     console.log(wsResponse);
-
-  //     // setNodes(wsResponse?.data?.nodes);
-  //     // setEdges(wsResponse?.data?.edges);
-  //   };
-  // }, []);
-
   return (
     <div className="space-y-6 lg:px-4 px-2 py-2">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Chatbot Directory</h1>
-        <p className="text-muted-foreground">
-          Manage deployment status, monitor engagement, and open detailed user
-          insights.
-        </p>
-      </div>
-
-      <div className="flex justify-end">
-        {/* create button and redicrect on the /builder/:id */}
-        <Link
-          to={`${DASHBOARD_PATH?.getAccountPath(
-            String(accountId)
-          )}/chatbot/create`}
-          className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300"
-        >
-          <Plus size={18} />
-          Create Chatbot
-        </Link>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Chatbot Directory</h1>
+          <p className="text-muted-foreground">
+            Manage deployment status, monitor engagement, and open detailed user
+            insights.
+          </p>
+        </div>
+        {chatBotLists.length > 0 && <div className="flex justify-end">
+          <Link
+            to={`${DASHBOARD_PATH?.getAccountPath(
+              String(accountId)
+            )}/chatbot/create`}
+            className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300"
+          >
+            <Plus size={18} />
+            Create Chatbot
+          </Link>
+        </div>
+        }
       </div>
 
       {/* <div className="grid grid-cols-[2fr_1fr]"> */}
-      <div className="">
+      {chatBotLists.length > 0 ? <div className="">
         <DataTable<ChatBotListItem>
           data={chatBotLists}
           columns={columns}
           pageSize={20}
           onRowClick={(row) => {
             navigate(
-              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${
-                row.id
+              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${row.id
               }/builder`
             );
           }}
@@ -245,8 +224,35 @@ export function ChatBotPage() {
           tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
           loading={loading}
         />
-        {/* <Chatbot nodes={nodes && nodes} edges={edges && edges} /> */}
       </div>
+        :
+        <div className="flex w-full justify-center items-center h-[75vh]">
+          <div className="flex flex-col justify-center items-center max-w-xl w-full gap-6 p-10 text-center shadow-sm rounded-2xl border border-dashed">
+            {/* Plus Icon */}
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+              <Plus className="h-8 w-8 text-muted-foreground" />
+            </div>
+
+            {/* Text */}
+            <div>
+              <h2 className="text-xl font-semibold">No chatbot found</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Get started by creating your first chatbot for your website or app.
+              </p>
+            </div>
+
+            {/* CTA Button */}
+            <Link
+              to={`${DASHBOARD_PATH?.getAccountPath(
+                String(accountId)
+              )}/chatbot/create`}
+              className="inline-flex items-center gap-1 rounded-2xl border border-slate-300 bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            >
+              Create First Chatbot
+            </Link>
+          </div>
+        </div>
+      }
     </div>
   );
 }
