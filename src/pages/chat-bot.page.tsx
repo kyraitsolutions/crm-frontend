@@ -201,11 +201,11 @@ export function ChatBotPage() {
   }
 
   return (
-    <div className="space-y-6 lg:px-4 px-2 py-2">
+    <div className="space-y-6 lg:px-3 px-2 py-2">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Chatbot Directory</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-bold text-[#37322F]">Chatbot Directory</h1>
+          <p className="mt-1 text-sm text-[#847971]">
             Manage deployment status, monitor engagement, and open detailed user
             insights.
           </p>
@@ -245,26 +245,48 @@ export function ChatBotPage() {
       </div>
         :
         <div className="flex w-full justify-center items-center h-[75vh]">
-          <div className="flex flex-col justify-center items-center max-w-xl w-full gap-6 p-10 text-center shadow-sm rounded-2xl border border-dashed">
-            {/* Plus Icon */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-              <Plus className="h-8 w-8 text-muted-foreground" />
+          <div
+            className="
+          flex flex-col justify-center items-center
+          max-w-xl w-full
+          gap-6
+          p-10
+          text-center
+          rounded-2xl
+          border border-dashed border-[rgba(50,45,43,0.20)]
+          bg-[rgba(255,255,255,0)]
+        "
+          >
+            {/* Icon */}
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
+              <Plus className="h-8 w-8 text-[#37322F]" />
             </div>
 
             {/* Text */}
             <div>
-              <h2 className="text-xl font-semibold">No chatbot found</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h2 className="text-xl font-medium text-[#37322F]">
+                No Chatbot found
+              </h2>
+              <p className="mt-2 text-sm text-[#847971]">
                 Get started by creating your first chatbot for your website or app.
               </p>
             </div>
 
-            {/* CTA Button */}
+            {/* CTA */}
             <Link
               to={`${DASHBOARD_PATH?.getAccountPath(
                 String(accountId)
               )}/chatbot/create`}
-              className="inline-flex items-center gap-1 rounded-2xl border border-slate-300 bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300"
+              className="
+            inline-flex items-center gap-2
+            rounded-[99px]
+            bg-[#37322F]
+            px-5 py-2
+            text-sm font-medium text-[#FBFAF9]
+            shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+            transition
+            hover:opacity-90
+          "
             >
               Create First Chatbot
             </Link>

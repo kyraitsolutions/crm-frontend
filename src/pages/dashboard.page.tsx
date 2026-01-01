@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import Loader from "@/components/Loader";
 import { PremiumPopup } from "@/components/popup/PremiumPopup";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -191,7 +190,9 @@ export const DashboardPage = () => {
   }
 
   return (
-    <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-5 p-5">
+
+
+    <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 px-5 py-5">
       {accounts.map((account, idx) => {
         const initials = account?.accountName
           ?.split(" ")
@@ -199,27 +200,33 @@ export const DashboardPage = () => {
           .join("")
           .toUpperCase();
 
+        const isActive = currentSelectedAccountIndex === idx;
+
         return (
           <div
             key={account.id}
             onClick={() => handleProfileClick(idx)}
-            className={`space-y-8 border border-accent cursor-pointer transform transition-all duration-300 hover:scale-105 rounded-xl py-6 px-4 bg-white shadow-sm ${currentSelectedAccountIndex === idx
-                ? "ring-2 ring-blue-400 shadow-lg"
-                : ""
-              }`}
+            className={`
+        relative flex flex-col justify-between gap-4
+        px-4 py-3
+        cursor-pointer
+        transition-all duration-200
+        ${isActive ? "ring-1 ring-[#37322F]" : ""}
+        hover:bg-[rgba(55,50,47,0.04)]
+      `}
           >
             {/* Header */}
-            <div className="flex items-start justify-between gap-3">
-              {/* Left: Avatar + Info */}
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <div className="size-8 rounded-full bg-blue-300 flex items-center justify-center text-white font-medium text-xs flex-shrink-0">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="h-9 w-9 rounded-full bg-[#37322F] text-[#FBFAF9] flex items-center justify-center text-xs font-medium">
                   {initials}
                 </div>
-                <div className="min-w-0">
-                  <h3 className="text-lg font-semibold capitalize text-gray-800 truncate">
+
+                <div className="min-w-0 flex flex-col">
+                  <h3 className="text-md font-medium capitalize text-[#37322F] truncate">
                     {account.accountName}
                   </h3>
-                  <p className="text-sm text-gray-500 truncate">
+                  <p className="text-sm text-[#847971] truncate">
                     {account.email}
                   </p>
                 </div>
@@ -231,22 +238,28 @@ export const DashboardPage = () => {
                   e.stopPropagation();
                   handleDeleAccountClick(account.id);
                 }}
-                className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0 cursor-pointer"
+                className="p-1 rounded-md text-[#847971] hover:text-red-600 transition"
               >
                 <Trash2 size={16} />
               </button>
             </div>
 
             {/* Footer */}
-            <div className="flex justify-between items-center text-gray-500 text-xs font-medium">
-              <span>Created: {formatDate(account.createdAt)}</span>
+            <div className="flex justify-between items-center text-xs font-medium">
+              <span className="text-[#847971]">
+                Created: {formatDate(account.createdAt)}
+              </span>
+
               <span
-                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${account.status === "active"
-                    ? "bg-green-100 text-green-600"
+                className={`
+            px-2 py-0.5 rounded-full text-xs font-medium
+            ${account.status === "active"
+                    ? "bg-[rgba(55,50,47,0.08)] text-[#37322F]"
                     : account.status === "inactive"
-                      ? "bg-gray-100 text-gray-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
+                      ? "bg-[rgba(132,121,113,0.12)] text-[#847971]"
+                      : "bg-[rgba(220,38,38,0.10)] text-red-700"
+                  }
+          `}
               >
                 {account.status}
               </span>
@@ -255,69 +268,133 @@ export const DashboardPage = () => {
         );
       })}
 
+
+      {/* Add New Account */}
       {user?.userprofile?.accountType === "organization" && (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <div className="group h-[150px] border-2 border-dashed flex flex-1 justify-center bg-white items-center rounded-md transition-colors hover:bg-primary/10 cursor-pointer">
-              <Button
-                variant="ghost"
-                className=" text-primary font-medium hover:bg-transparent"
-              >
-                <IconCirclePlusFilled className="size-10" />
+            <div
+              className="
+            flex flex-col justify-center items-center gap-2
+            px-6 py-5
+            border-2 border-dashed border-[rgba(50,45,43,0.20)]
+            rounded-xl
+            cursor-pointer
+            transition-all
+            hover:bg-[rgba(55,50,47,0.04)]
+          "
+            >
+              <IconCirclePlusFilled className="size-10 text-[#37322F]" />
+              <span className="text-sm font-medium text-[#37322F]">
                 Add New Account
-              </Button>
+              </span>
             </div>
           </DialogTrigger>
 
-          <DialogContent className="sm:max-w-[425px]">
+          {/* Dialog stays unchanged */}
+          <DialogContent
+            className="
+    sm:max-w-[420px]
+    rounded-2xl
+    border border-[rgba(50,45,43,0.12)]
+    p-6
+    shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
+  "
+          >
             <form
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-6"
               onSubmit={handleCreateAccount}
             >
-              <DialogHeader>
-                <DialogTitle>Create New Account</DialogTitle>
-                <DialogDescription>
-                  Make changes to your profile here. Click save when you&apos;re
-                  done.
+              {/* Header */}
+              <DialogHeader className="gap-2">
+                <DialogTitle className="text-xl font-medium text-[#37322F]">
+                  Create New Account
+                </DialogTitle>
+                <DialogDescription className="text-sm text-[#847971]">
+                  Set up a new account to manage your workspace.
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="grid gap-4">
-                <div className="grid gap-3">
-                  <Label htmlFor="name-1">Account Name</Label>
+              {/* Fields */}
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <Label className="text-sm font-medium text-[#37322F]">
+                    Account Name
+                  </Label>
                   <Input
-                    id="name-1"
                     name="name"
                     placeholder="Enter account name"
                     value={accountName}
                     onChange={(e) => setAccountName(e.target.value)}
                     required
+                    className="
+                mt-2
+                bg-[#F7F6F4]
+                border-none
+                rounded-lg
+                focus-visible:ring-0
+                text-[#37322F]
+          "
                   />
                 </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="email">Email</Label>
+
+                <div className="flex flex-col gap-2">
+                  <Label className="text-sm font-medium text-[#37322F]">
+                    Email
+                  </Label>
                   <Input
-                    id="email"
-                    name="email"
                     type="email"
                     placeholder="Enter email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    className="
+                mt-2
+                bg-[#F7F6F4]
+                border-none
+                rounded-lg
+                focus-visible:ring-0
+                text-[#37322F]
+          "
                   />
                 </div>
               </div>
 
-              <DialogFooter>
+              {/* Footer */}
+              <DialogFooter className="flex justify-end gap-3 pt-2">
                 <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <button
+                    type="button"
+                    className="
+              px-4 py-2 rounded-[99px]
+              border border-[rgba(50,45,43,0.20)]
+              text-sm font-medium text-[#37322F]
+              hover:bg-[rgba(55,50,47,0.05)]
+              transition
+          "
+                  >
+                    Cancel
+                  </button>
                 </DialogClose>
-                <Button type="submit" disabled={loading}>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="
+            relative px-5 py-2 flex items-center gap-2 rounded-[99px]
+            bg-[#37322F]
+            text-sm font-medium text-[#FBFAF9]
+            shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+            disabled:opacity-60
+            transition
+        "
+                >
                   Create {loadingCreate && <Loader />}
-                </Button>
+                </button>
               </DialogFooter>
             </form>
           </DialogContent>
+
         </Dialog>
       )}
 
@@ -325,5 +402,8 @@ export const DashboardPage = () => {
         <PremiumPopup open={openPremium} onOpenChange={setOpenPremium} />
       )}
     </div>
+
   );
 };
+
+

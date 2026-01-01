@@ -290,14 +290,14 @@ export default function ChatbotFlowEditor() {
       nds.map((node) =>
         node.id === id
           ? {
-              ...node,
-              data: {
-                ...node.data,
-                elements: newElements,
-                deleteNode,
-                updateNode,
-              },
-            }
+            ...node,
+            data: {
+              ...node.data,
+              elements: newElements,
+              deleteNode,
+              updateNode,
+            },
+          }
           : node
       )
     );
@@ -437,41 +437,57 @@ export default function ChatbotFlowEditor() {
 
   return (
     <div className="w-full grid grid-cols-8 gap-6">
-      <div className="col-span-6">
-        <div className="flex justify-between items-center">
+      {/* LEFT: Flow Builder */}
+      <div className="col-span-6 flex flex-col gap-3">
+        {/* Header Buttons */}
+        <div className="flex justify-between items-center mb-2">
           <button
             onClick={() => navigate(-1)}
-            className="bg-slate-700 text-white flex justify-center items-center h-7 w-10 rounded cursor-pointer "
+            className="
+          bg-[rgba(55,50,47,0.08)]
+          text-[#37322F]
+          flex justify-center items-center
+          h-8 w-10
+          rounded-md
+          shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+          hover:bg-[rgba(55,50,47,0.12)]
+          transition
+        "
           >
             <ArrowLeft size={16} />
           </button>
 
           <button
             onClick={publishChanges}
-            className="bg-slate-800 text-white px-4 py-1 rounded  cursor-pointer flex items-center gap-2"
+            className="
+          bg-[#37322F]
+          text-[#FBFAF9]
+          px-4 py-1
+          rounded-[99px]
+          flex items-center gap-2
+          shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+          hover:bg-[#2e2a28]
+          transition
+        "
           >
-            Publish{" "}
+            Publish
             {publishLoading && (
-              <div className="size-4 border-t border-t-white rounded-full animate-spin" />
+              <div className="h-4 w-4 border-t-2 border-t-white rounded-full animate-spin" />
             )}
           </button>
         </div>
 
-        <div className="h-[70vh] border border-gray-300 rounded mt-2">
-          {/* <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            nodeTypes={nodeTypes}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onEdgeClick={onEdgeClick}
-            onConnect={onConnect}
-            fitView
-          >
-            <MiniMap />
-            <Controls />
-            <Background />
-          </ReactFlow> */}
+        {/* React Flow Area */}
+        <div
+          className="
+        h-[80vh]
+        rounded-xl
+        border border-[rgba(50,45,43,0.12)]
+        bg-[#FBFAF9]
+        shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
+        overflow-hidden
+      "
+        >
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -480,27 +496,50 @@ export default function ChatbotFlowEditor() {
             onEdgesChange={onEdgesChange}
             onEdgeClick={onEdgeClick}
             onConnect={onConnect}
-            // connectable={true}
             fitView
           >
-            {/* <MiniMap /> */}
-            <Controls />
-            <Background />
+            <Controls
+              className="
+            bg-[#FBFAF9]/70
+            rounded-md
+            p-1
+            shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+          "
+            />
+            <Background className="bg-[rgba(55,50,47,0.04)]" />
           </ReactFlow>
         </div>
       </div>
 
-      <div className="col-span-2">
-        <p>Predefined Fields</p>
-        <div className="grid grid-cols-4 gap-5 mt-3 ">
+      {/* RIGHT: Predefined Fields */}
+      <div className="col-span-2 flex flex-col gap-4">
+        <p className="text-sm font-medium text-[#37322F]">Predefined Fields</p>
+
+        <div className="grid grid-cols-4 gap-4">
           {chatbotFields.map((item, index) => (
             <div
-              onClick={() => addNewNode(item.value, item.label)}
               key={index}
-              className=""
+              onClick={() => addNewNode(item.value, item.label)}
+              className="
+            flex flex-col items-center
+            cursor-pointer
+            transition
+            hover:scale-[1.03] hover:shadow-[0px_4px_8px_rgba(55,50,47,0.12)]
+          "
             >
-              <p className="text-xs whitespace-nowrap">{item.label}</p>
-              <div className="border h-20 rounded-xl flex items-center mt-2 justify-center text-gray-400 cursor-pointer hover:bg-gray-100">
+              <p className="text-xs text-[#847971] whitespace-nowrap">{item.label}</p>
+              <div
+                className="
+              h-20 w-full
+              rounded-xl
+              border border-[rgba(50,45,43,0.12)]
+              flex items-center justify-center
+              text-[#847971]
+              bg-[rgba(55,50,47,0.04)]
+              hover:bg-[rgba(55,50,47,0.08)]
+              transition
+            "
+              >
                 {item.icon}
               </div>
             </div>
@@ -508,5 +547,6 @@ export default function ChatbotFlowEditor() {
         </div>
       </div>
     </div>
+
   );
 }

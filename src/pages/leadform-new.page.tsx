@@ -19,7 +19,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { PlusCircle, Trash2 } from "lucide-react";
 import axios from "axios";
@@ -119,70 +118,94 @@ export default function LeadFormNew() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 py-6">
-      {/* LEFT SIDE: Form Builder */}
-      <div>
-        <Card
-          role="main"
-          aria-label="Create Lead Form Instructions"
-          className="p-0 border-none shadow-none"
-        >
-          <CardHeader>
-            <CardTitle>Create New Lead Form</CardTitle>
-            <CardDescription>
-              Customize your lead form and send details to your API endpoint.
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 px-6">
+      {/* LEFT: Builder */}
+      <div className="">
+        <Card className="border-none shadow-none bg-transparent">
+          <CardHeader className="px-0">
+            <CardTitle className="text-2xl font-medium text-[#37322F]">
+              Create New Lead Form
+            </CardTitle>
+            <CardDescription className="text-[#847971]">
+              Design a lead form that feels native to your website.
             </CardDescription>
           </CardHeader>
 
-          <CardContent>
-            <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+          <CardContent className="px-0">
+            <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
               {/* Title */}
               <div>
-                <Label htmlFor="formTitle">Title*</Label>
+                <Label className="text-sm font-medium text-[#37322F]">
+                  Title
+                </Label>
                 <Input
-                  id="formTitle"
-                  placeholder="e.g. ACME Residences Showflat Booking"
                   value={formTitle}
-                  className="mt-2"
-                  onChange={(e) => setFormTitle(e.target.value)}
                   required
+                  placeholder="ACME Residences Showflat Booking"
+                  onChange={(e) => setFormTitle(e.target.value)}
+                  className="
+                mt-2
+                bg-[#F7F6F4]
+                border-none
+                rounded-lg
+                focus-visible:ring-0
+                text-[#37322F]
+              "
                 />
               </div>
 
               {/* Description */}
               <div>
-                <Label htmlFor="formDescription">Description</Label>
+                <Label className="text-sm font-medium text-[#37322F]">
+                  Description
+                </Label>
                 <Textarea
-                  id="formDescription"
-                  placeholder="Add a description about your product or event"
                   value={formDescription}
-                  className="mt-2"
+                  placeholder="Tell users why they should submit this form"
                   onChange={(e) => setFormDescription(e.target.value)}
+                  className="
+                mt-2
+                bg-[#F7F6F4]
+                border-none
+                rounded-lg
+                focus-visible:ring-0
+              "
                 />
               </div>
 
               {/* Header Image */}
               <div>
-                <Label htmlFor="headerImage">Header Image</Label>
+                <Label className="text-sm font-medium text-[#37322F]">
+                  Header Image URL
+                </Label>
                 <Input
-                  id="headerImage"
-                  placeholder="https://example.com/uploads/header-image.png"
                   value={headerImage}
-                  className="mt-2"
+                  placeholder="https://..."
                   onChange={(e) => setHeaderImage(e.target.value)}
+                  className="
+                mt-2
+                bg-[#F7F6F4]
+                border-none
+                rounded-lg
+                focus-visible:ring-0
+              "
                 />
               </div>
 
               {/* Form Fields */}
               <div>
-                <Label>Form Fields</Label>
-                <div className="border rounded-lg p-4 grid gap-3 mt-2">
+                <Label className="text-sm font-medium text-[#37322F]">
+                  Fields
+                </Label>
+                <div className="mt-3 flex flex-col gap-3">
                   {Object.keys(formFields).map((field) => (
                     <div
                       key={field}
-                      className="flex justify-between items-center"
+                      className="flex justify-between items-center text-sm"
                     >
-                      <span className="capitalize">{field}</span>
+                      <span className="capitalize text-[#37322F]">
+                        {field}
+                      </span>
                       <Switch
                         checked={formFields[field as keyof typeof formFields]}
                         onCheckedChange={(val) =>
@@ -196,76 +219,85 @@ export default function LeadFormNew() {
 
               {/* Custom Fields */}
               <div>
-                <div className="flex justify-between items-center mb-2">
-                  <Label>Custom Fields</Label>
+                <div className="flex justify-between items-center mb-3">
+                  <Label className="text-sm font-medium text-[#37322F]">
+                    Custom Fields
+                  </Label>
                   <Button
                     type="button"
                     variant="ghost"
                     onClick={addCustomField}
+                    className="text-[#37322F]"
                   >
-                    <PlusCircle className="w-4 h-4 mr-1" /> Add Field
+                    <PlusCircle className="w-4 h-4 mr-1" /> Add
                   </Button>
                 </div>
-                <div className="grid gap-3">
+
+                <div className="flex flex-col gap-4">
                   {customFields.map((field, index) => (
-                    <div
-                      key={index}
-                      className="grid grid-cols-[1fr_1fr_auto] gap-3 items-center border p-3 rounded-lg"
-                    >
+                    <div key={index} className="flex gap-3 items-center">
                       <Input
-                        placeholder="Label"
                         value={field.label}
+                        placeholder="Label"
                         onChange={(e) =>
                           updateCustomField(index, "label", e.target.value)
                         }
+                        className="mt-2
+                        bg-[#F7F6F4]
+                        border-none
+                        rounded-lg
+                        focus-visible:ring-0"
                       />
                       <Input
-                        placeholder="Key"
                         value={field.key}
+                        placeholder="Key"
                         onChange={(e) =>
                           updateCustomField(index, "key", e.target.value)
                         }
+                        className="mt-2
+                        bg-[#F7F6F4]
+                        border-none
+                        rounded-lg
+                        focus-visible:ring-0"
                       />
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={field.required}
-                          onCheckedChange={(val) =>
-                            updateCustomField(index, "required", val)
-                          }
-                        />
-                        <span>Required</span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeCustomField(index)}
-                        >
-                          <Trash2 className="w-4 h-4 text-red-500" />
-                        </Button>
-                      </div>
+                      <Switch
+                        checked={field.required}
+                        onCheckedChange={(val) =>
+                          updateCustomField(index, "required", val)
+                        }
+                      />
+                      <Trash2
+                        className="size-12 text-red-500 cursor-pointer"
+                        onClick={() => removeCustomField(index)}
+                      />
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Success Message */}
               <div>
-                <Label htmlFor="successMessage">Success Message</Label>
+                <Label htmlFor="successMessage" className="text-sm font-medium text-[#37322F]">Success Message</Label>
                 <Textarea
                   id="successMessage"
                   value={successMessage}
-                  className="mt-2"
+                  className="mt-2
+                  bg-[#F7F6F4]
+                  border-none
+                  rounded-lg
+                  focus-visible:ring-0"
                   onChange={(e) => setSuccessMessage(e.target.value)}
                 />
               </div>
 
               {/* CTA */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <Label className="mb-2">Success CTA</Label>
+                  <Label className="text-sm font-medium text-[#37322F]">
+                    Success CTA
+                  </Label>
                   <Select value={successCTA} onValueChange={setSuccessCTA}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select CTA" />
+                    <SelectTrigger className="mt-2 bg-[#F7F6F4] border-none rounded-lg">
+                      <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="whatsapp">WhatsApp</SelectItem>
@@ -276,82 +308,97 @@ export default function LeadFormNew() {
                 </div>
 
                 <div>
-                  <Label>CTA Destination</Label>
+                  <Label className="text-sm font-medium text-[#37322F]">
+                    CTA Destination
+                  </Label>
                   <Input
-                    placeholder="https://wa.me/919876543210"
-                    className="mt-2"
                     value={successCTADestination}
+                    placeholder="https://..."
                     onChange={(e) => setSuccessCTADestination(e.target.value)}
+                    className="mt-2
+                    bg-[#F7F6F4]
+                    border-none
+                    rounded-lg
+                    focus-visible:ring-0"
                   />
                 </div>
               </div>
 
-              {/* Form Name */}
               <div>
-                <Label htmlFor="formName">Form Name*</Label>
+                <Label htmlFor="formName" className="text-sm font-medium text-[#37322F]">Form Name*</Label>
                 <Input
                   id="formName"
                   placeholder="e.g. website_lead_form"
                   value={formName}
-                  className="mt-2"
+                  className="mt-2
+                  bg-[#F7F6F4]
+                  border-none
+                  rounded-lg
+                  focus-visible:ring-0"
                   onChange={(e) => setFormName(e.target.value)}
                   required
                 />
               </div>
 
-              <CardFooter className="flex justify-end gap-3 mt-4 p-0">
-                <Button type="button" variant="outline">
-                  Cancel
-                </Button>
-                <Button type="submit" className="flex-1" disabled={isLoading}>
+              {/* Submit */}
+              <div className="flex justify-end gap-4 pt-4">
+                <Button variant="ghost">Cancel</Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="
+                rounded-[99px]
+                bg-[#37322F]
+                text-[#FBFAF9]
+                px-6
+                shadow-[0px_2px_6px_rgba(55,50,47,0.15)]
+              "
+                >
                   Create Form {isLoading && <Loader />}
                 </Button>
-              </CardFooter>
+              </div>
             </form>
           </CardContent>
         </Card>
       </div>
 
-      {/* RIGHT SIDE: Live Preview */}
-      <div className="sticky top-6">
-        <Card className="border border-muted shadow-sm">
-          {headerImage && (
-            <img
-              src={headerImage}
-              alt="Form header"
-              className="w-full h-40 object-cover rounded-t-xl"
-            />
-          )}
-          <CardHeader>
-            <CardTitle>{formTitle || "Form Title Preview"}</CardTitle>
-            <CardDescription>
-              {formDescription || "Form description will appear here."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+      {/* RIGHT: Preview */}
+      <div className="py-8">
+        <Card className="border-none shadow-none bg-[#FBFAF9] rounded-2xl">
+          <CardContent className="">
             <div className="grid gap-4">
-              {formFields.name && <Input placeholder="Name" disabled />}
-              {formFields.phoneNumber && (
-                <Input placeholder="Phone Number" disabled />
-              )}
-              {formFields.email && <Input placeholder="Email" disabled />}
-              {formFields.message && (
-                <Textarea placeholder="Message" disabled />
-              )}
-              {customFields.map((f, i) => (
-                <Input
-                  key={i}
-                  placeholder={f.label || "Custom Field"}
-                  disabled
+              {headerImage && (
+                <img
+                  src={headerImage}
+                  className="w-full h-44 object-cover rounded-t-2xl"
                 />
+              )}
+              {formFields.name && <Input placeholder="Name" disabled className="rounded-xl" />}
+              {formFields.phoneNumber && <Input placeholder="Phone Number" disabled className="rounded-xl" />}
+              {formFields.email && <Input placeholder="Email" disabled className="rounded-xl" />}
+              {formFields.message && <Textarea placeholder="Message" disabled className="rounded-xl" />}
+              {customFields.map((f, i) => (
+                <Input key={i} placeholder={f.label || "Custom Field"} disabled className="rounded-xl" />
               ))}
-              <Button className="w-full mt-2" disabled>
+
+              <Button
+                disabled
+                className="
+                mt-4
+                rounded-[99px]
+                bg-[#37322F]
+                text-[#FBFAF9]
+              "
+              >
                 Submit
               </Button>
             </div>
           </CardContent>
+
         </Card>
       </div>
     </div>
+
+
   );
 }

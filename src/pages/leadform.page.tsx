@@ -168,86 +168,111 @@ export function LeadFormPage() {
   }
 
   return (
-    <div className="space-y-6 lg:px-4 px-2 py-2">
+    <div className="space-y-6 px-3 py-3 lg:px-4">
+      {/* Header */}
       <div className="flex justify-between items-center">
-
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
+          <h1 className="text-2xl font-medium text-[#37322F]">
             Lead Form Directory
           </h1>
-          <p className="text-muted-foreground">
+          <p className="mt-1 text-sm text-[#847971]">
             Manage deployment status, monitor engagement, and open detailed user
             insights.
           </p>
         </div>
 
-        {leadForms.length > 0 && <div className="flex justify-end">
-          {/* create button and redicrect on the /builder/:id */}
+        {leadForms.length > 0 && (
           <Link
             to={`${DASHBOARD_PATH?.getAccountPath(
               String(accountId)
             )}/lead-forms/create`}
-            className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            className="
+          inline-flex items-center gap-2
+          rounded-[99px]
+          bg-[#37322F]
+          px-4 py-2
+          text-sm font-medium text-[#FBFAF9]
+          shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+          transition
+          hover:opacity-90
+        "
           >
-            <Plus size={18} />
+            <Plus size={16} />
             Create Form
           </Link>
-        </div>
-        }
+        )}
       </div>
 
-
-      {leadForms.length > 0 ? <div className="">
-        <DataTable<ILeadFormListItem>
-          data={leadForms}
-          columns={columns}
-          pageSize={20}
-          //   onRowClick={(row) => {
-          //     console.log(row);
-          //     navigate(
-          //       `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/form/${
-          //         row.id
-          //       }/builder`
-          //     );
-          //   }}
-          // navigate(
-          //   `/dashboard/account/690c79520e764af69f4302ed/chatbot/create`
-          // )
-
-          sortable={true}
-          paginated={true}
-          tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
-          loading={loading}
-        />
-      </div> :
-
+      {leadForms.length > 0 ? (
+        <div>
+          <DataTable<ILeadFormListItem>
+            data={leadForms}
+            columns={columns}
+            pageSize={20}
+            sortable={true}
+            paginated={true}
+            tableContainerClassName="
+          max-h-[calc(100vh-270px)]
+          sm:max-h-[calc(100vh-220px)]
+          border border-[rgba(50,45,43,0.12)]
+          rounded-xl
+          shadow-none
+        "
+            loading={loading}
+          />
+        </div>
+      ) : (
+        /* Empty State */
         <div className="flex w-full justify-center items-center h-[75vh]">
-          <div className="flex flex-col justify-center items-center max-w-xl w-full gap-6 p-10 text-center shadow-sm rounded-2xl border border-dashed">
-            {/* Plus Icon */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-              <Plus className="h-8 w-8 text-muted-foreground" />
+          <div
+            className="
+          flex flex-col justify-center items-center
+          max-w-xl w-full
+          gap-6
+          p-10
+          text-center
+          rounded-2xl
+          border border-dashed border-[rgba(50,45,43,0.20)]
+          bg-[rgba(255,255,255,0)]
+        "
+          >
+            {/* Icon */}
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
+              <Plus className="h-8 w-8 text-[#37322F]" />
             </div>
 
             {/* Text */}
             <div>
-              <h2 className="text-xl font-semibold">No lead form found</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h2 className="text-xl font-medium text-[#37322F]">
+                No lead form found
+              </h2>
+              <p className="mt-2 text-sm text-[#847971]">
                 Get started by creating your first Lead form for your website or app.
               </p>
             </div>
 
-            {/* CTA Button */}
+            {/* CTA */}
             <Link
               to={`${DASHBOARD_PATH?.getAccountPath(
                 String(accountId)
               )}/lead-forms/create`}
-              className="inline-flex items-center gap-1 rounded-2xl border border-slate-300 bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300"
+              className="
+            inline-flex items-center gap-2
+            rounded-[99px]
+            bg-[#37322F]
+            px-5 py-2
+            text-sm font-medium text-[#FBFAF9]
+            shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+            transition
+            hover:opacity-90
+          "
             >
               Create First Lead Form
             </Link>
           </div>
         </div>
-      }
+      )}
     </div>
+
   );
 }

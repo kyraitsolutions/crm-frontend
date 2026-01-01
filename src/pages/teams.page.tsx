@@ -296,15 +296,14 @@ export const Teams = () => {
 
 
   return (
-    <div className="p-3">
-      {/* ADD NEW TEAM MEMBER BUTTON + POPUP */}
-
-      <div className="flex justify-between w-full">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+    <div className="p-4">
+      {/* Header */}
+      <div className="flex justify-between items-center w-full">
+        <h1 className="text-2xl font-medium text-[#37322F]">
           Teams
         </h1>
 
-        {teams.length > 0 &&
+        {teams.length > 0 && (
           <AddNewTeamMemberPopupDialog
             openAddTeamMember={openAddTeamMember}
             setOpenAddTeamMember={setOpenAddTeamMember}
@@ -312,95 +311,134 @@ export const Teams = () => {
             setNewTeam={setNewTeam}
             isLoadingAddTeamMember={isLoadingAddTeamMember}
             handleAddTeamMember={handleAddTeamMember}
-          />}
+          />
+        )}
       </div>
 
-      {teams.length > 0 ? <div className="mt-2">
-        <DataTable<ITeam>
-          data={teams}
-          columns={columns}
-          pageSize={20}
-          sortable={true}
-          paginated={true}
-          tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
-          loading={loading}
-        />
+      {teams.length > 0 ? (
+        <div className="mt-4">
+          <DataTable<ITeam>
+            data={teams}
+            columns={columns}
+            pageSize={20}
+            sortable={true}
+            paginated={true}
+            tableContainerClassName="
+          max-h-[calc(100vh-270px)]
+          sm:max-h-[calc(100vh-220px)]
+          border border-[rgba(50,45,43,0.12)]
+          rounded-xl
+          shadow-none
+        "
+            loading={loading}
+          />
 
-        {/* Open assigned account dialong */}
-        <Dialog open={openAssign} onOpenChange={setOpenAssign}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Assign Accounts</DialogTitle>
-              <DialogDescription>
-                Select accounts for this team member.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="py-4">
-              <MultiSelectDropdown
-                value={
-                  teams.find((team) => team?.id === selectedTeamId)?.accountIds
-                }
-                options={accounts.map((a) => ({
-                  id: a.id,
-                  label: a.accountName,
-                }))}
-                placeholder="Select Accounts"
-                // ❗ Only update local state (no API call)
-                onChange={(value) => setSelectedAccounts(value)}
-              />
-            </div>
+          {/* Assign Accounts Dialog */}
+          <Dialog open={openAssign} onOpenChange={setOpenAssign}>
+            <DialogContent
+              className="
+            sm:max-w-md
+            rounded-2xl
+            border border-[rgba(50,45,43,0.12)]
+            bg-[#FBFAF9]
+            shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
+          "
+            >
+              <DialogHeader className="gap-2">
+                <DialogTitle className="text-lg font-medium text-[#37322F]">
+                  Assign Accounts
+                </DialogTitle>
+                <DialogDescription className="text-sm text-[#847971]">
+                  Select accounts for this team member.
+                </DialogDescription>
+              </DialogHeader>
 
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setOpenAssign(false)}>
-                Cancel
-              </Button>
+              <div className="py-4">
+                <MultiSelectDropdown
+                  value={
+                    teams.find((team) => team?.id === selectedTeamId)?.accountIds
+                  }
+                  options={accounts.map((a) => ({
+                    id: a.id,
+                    label: a.accountName,
+                  }))}
+                  placeholder="Select Accounts"
+                  onChange={(value) => setSelectedAccounts(value)}
+                />
+              </div>
 
-              <Button
-                onClick={() => {
-                  handleAssignAccount(
-                    selectedTeamId as string,
-                    selectedAccounts
-                  ); // 🔥 API CALL HERE
-                  setOpenAssign(false);
-                }}
-              >
-                Save
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-        :
+              <DialogFooter className="gap-3">
+                <Button
+                  variant="outline"
+                  className="
+                rounded-[99px]
+                border-[rgba(50,45,43,0.20)]
+                text-[#37322F]
+              "
+                  onClick={() => setOpenAssign(false)}
+                >
+                  Cancel
+                </Button>
 
+                <Button
+                  className="
+                rounded-[99px]
+                bg-[#37322F]
+                text-[#FBFAF9]
+                shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+              "
+                  onClick={() => {
+                    handleAssignAccount(
+                      selectedTeamId as string,
+                      selectedAccounts
+                    );
+                    setOpenAssign(false);
+                  }}
+                >
+                  Save
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      ) : (
+        /* Empty State */
         <div className="flex w-full justify-center items-center h-[75vh]">
-          <div className="flex flex-col max-w-xl w-full justify-center items-center gap-6 p-10 text-center shadow-sm rounded-2xl border border-dashed">
-            {/* Plus Icon */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-              <Plus className="h-8 w-8 text-muted-foreground" />
+          <div
+            className="
+          flex flex-col max-w-xl w-full items-center gap-6
+          p-10 text-center
+          rounded-2xl
+          border border-dashed border-[rgba(50,45,43,0.20)]
+          bg-[rgba(255,255,255,0)]
+        "
+          >
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
+              <Plus className="h-8 w-8 text-[#37322F]" />
             </div>
 
-            {/* Text */}
             <div>
-              <h2 className="text-xl font-semibold">No team member found</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Add team member to easy management.
+              <h2 className="text-xl font-medium text-[#37322F]">
+                No team member found
+              </h2>
+              <p className="mt-2 text-sm text-[#847971]">
+                Add team member for easy management.
               </p>
             </div>
 
-            <div>
-              <AddNewTeamMemberPopupDialog
-                openAddTeamMember={openAddTeamMember}
-                setOpenAddTeamMember={setOpenAddTeamMember}
-                newTeam={newTeam}
-                setNewTeam={setNewTeam}
-                isLoadingAddTeamMember={isLoadingAddTeamMember}
-                handleAddTeamMember={handleAddTeamMember}
-              />
-            </div>
+            <AddNewTeamMemberPopupDialog
+              openAddTeamMember={openAddTeamMember}
+              setOpenAddTeamMember={setOpenAddTeamMember}
+              newTeam={newTeam}
+              setNewTeam={setNewTeam}
+              isLoadingAddTeamMember={isLoadingAddTeamMember}
+              handleAddTeamMember={handleAddTeamMember}
+            />
           </div>
         </div>
-      }
+      )}
     </div>
+
   );
 };
 
@@ -412,64 +450,143 @@ const AddNewTeamMemberPopupDialog = ({ openAddTeamMember, setOpenAddTeamMember, 
       onOpenChange={() => setOpenAddTeamMember(!openAddTeamMember)}
     >
       <DialogTrigger asChild>
-        <Button onClick={() => setOpenAddTeamMember(true)}>
+        <Button
+          onClick={() => setOpenAddTeamMember(true)}
+          className="
+        rounded-[99px]
+        bg-[#37322F]
+        text-[#FBFAF9]
+        px-5 py-2
+        shadow-[0px_2px_4px_rgba(55,50,47,0.08)]
+        hover:bg-[#2e2a28]
+        transition
+      "
+        >
           Add New Team Member
         </Button>
       </DialogTrigger>
 
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add Team Member</DialogTitle>
-          <DialogDescription>
+      <DialogContent
+        className="
+      sm:max-w-md
+      rounded-2xl
+      shadow-none
+    "
+      >
+        <DialogHeader className="mb-6">
+          <DialogTitle className="text-xl font-medium text-[#37322F]">
+            Add Team Member
+          </DialogTitle>
+          <DialogDescription className="text-sm text-[#847971]">
             Fill the details below to add a new team member.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-2">
-          <div className="grid gap-2">
-            <Label>First Name</Label>
+        <form className="flex flex-col gap-6" onSubmit={handleAddTeamMember}>
+          {/* First Name */}
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium text-[#37322F]">
+              First Name
+            </Label>
             <Input
               value={newTeam.firstName}
               onChange={(e) =>
                 setNewTeam({ ...newTeam, firstName: e.target.value })
               }
+              required
               placeholder="Enter first name"
+              className="
+                mt-2
+                bg-[#F7F6F4]
+                border-none
+                rounded-lg
+                focus-visible:ring-0
+                text-[#37322F]"
             />
           </div>
 
-          <div className="grid gap-2">
-            <Label>Last Name</Label>
+          {/* Last Name */}
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium text-[#37322F]">
+              Last Name
+            </Label>
             <Input
               value={newTeam.lastName}
               onChange={(e) =>
                 setNewTeam({ ...newTeam, lastName: e.target.value })
               }
+              required
               placeholder="Enter last name"
+              className="
+                mt-2
+                bg-[#F7F6F4]
+                border-none
+                rounded-lg
+                focus-visible:ring-0
+                text-[#37322F]"
             />
           </div>
 
-          <div className="grid gap-2">
-            <Label>Email</Label>
+          {/* Email */}
+          <div className="flex flex-col gap-1">
+            <Label className="text-sm font-medium text-[#37322F]">
+              Email
+            </Label>
             <Input
               type="email"
               value={newTeam.email}
               onChange={(e) =>
                 setNewTeam({ ...newTeam, email: e.target.value })
               }
+              required
               placeholder="Enter email"
+              className="
+                mt-2
+                bg-[#F7F6F4]
+                border-none
+                rounded-lg
+                focus-visible:ring-0
+                text-[#37322F]
+          "
             />
           </div>
-        </div>
 
-        <DialogFooter>
-          <Button
-            disabled={isLoadingAddTeamMember}
-            onClick={handleAddTeamMember}
-          >
-            Add Member {isLoadingAddTeamMember && <Loader />}
-          </Button>
-        </DialogFooter>
+          {/* Submit Button */}
+
+          <DialogFooter className="gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              className="
+                rounded-[99px]
+                border-[rgba(50,45,43,0.20)]
+                text-[#37322F]
+              "
+              onClick={() => setOpenAddTeamMember(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoadingAddTeamMember}
+              className="
+              rounded-[99px]
+              bg-[#37322F]
+              text-[#FBFAF9]
+              px-5 py-2
+              shadow-[0px_2px_4px_rgba(55,50,47,0.08)]
+              hover:bg-[#2e2a28]
+              disabled:opacity-60
+              transition
+          "
+            >
+              Add Member {isLoadingAddTeamMember && <Loader />}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
+
+
   )
 }

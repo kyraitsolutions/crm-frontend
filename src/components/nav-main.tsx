@@ -27,12 +27,12 @@ export function NavMain({
   const visibleItems = items.filter((item) => {
     return show
       ? [
-          "Home",
-          "Dashboard",
-          "Chat bot",
-          "Lead Forms",
-          "Leads Centre",
-        ].includes(item.title)
+        "Home",
+        "Dashboard",
+        "Chat bot",
+        "Lead Forms",
+        "Leads Centre",
+      ].includes(item.title)
       : ["Home", "Accounts", "Team", "Settings"].includes(item.title);
   });
 
@@ -75,9 +75,8 @@ export function NavMain({
                   <Link
                     to={item.url}
                     onClick={handleClick}
-                    className={`transition-colors ${
-                      isActive ? "bg-accent text-accent-foreground" : ""
-                    }`}
+                    className={`transition-colors ${isActive ? "bg-accent text-accent-foreground" : ""
+                      }`}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>

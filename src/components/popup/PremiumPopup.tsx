@@ -16,7 +16,7 @@ interface PremiumPopupProps {
 export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md text-center">
+      <DialogContent className="sm:max-w-md text-center rounded-2xl">
         <DialogHeader>
           <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-yellow-100">
             <Crown className="size-7 text-yellow-600" />
@@ -34,7 +34,7 @@ export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
           Redirecting you to subscription page…
         </div> */}
 
-        <Link to={"/dashboard/subscription"} className="mt-6 w-full bg-primary p-2 text-white hover:bg-primary/90">Upgrade Now</Link>
+        <Link to={"/dashboard/subscription"} className="mt-6 w-full p-2  rounded-full   bg-[#37322F] text-white hover:bg-[#37322F]/90">Upgrade Now</Link>
       </DialogContent>
     </Dialog>
   );

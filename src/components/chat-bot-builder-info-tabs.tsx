@@ -70,15 +70,20 @@ export default function ChatBotBuilderInfoTabs({
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
+        {/* Tabs Header */}
+        <TabsList className="flex border-b border-[#E5E3E0] bg-transparent gap-2">
           {tabs.map((tab) => {
-            if (tab.label.toLowerCase() === "chatbot flow" && !chatBotId)
-              return null;
+            if (tab.label.toLowerCase() === "chatbot flow" && !chatBotId) return null;
             return (
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className="cursor-pointer"
+                className={`
+            flex items-center gap-2 px-4 py-2 text-sm font-medium
+            rounded-t-md
+            transition-colors
+            ${activeTab === tab.id ? "bg-[#FBFAF9] text-[#37322F] shadow" : "text-[#847971] hover:bg-[#F7F6F4] hover:text-[#37322F]"}
+          `}
                 onClick={() => {
                   if (tab?.id === "chatbotFlow") {
                     navigate(
@@ -97,8 +102,14 @@ export default function ChatBotBuilderInfoTabs({
           })}
         </TabsList>
 
-        <TabsContent value={activeTab}>{tabsMaps[activeTab]}</TabsContent>
+        {/* Tabs Content */}
+        <TabsContent
+          value={activeTab}
+        >
+          {tabsMaps[activeTab]}
+        </TabsContent>
       </Tabs>
+
     </div>
   );
 }
