@@ -65,7 +65,7 @@ export function DataTable<T extends Record<string, any>>({
     direction: null,
   });
 
-  console.log(data);
+  // console.log(data);
   // Sorting logic
   const sortedData = useMemo(() => {
     if (!sortConfig.key || !sortable) return data;
@@ -147,9 +147,8 @@ export function DataTable<T extends Record<string, any>>({
                 {columns.map((column) => (
                   <th
                     key={String(column.key)}
-                    className={`px-4 py-3 text-left font-medium text-gray-700 ${
-                      column.className || ""
-                    }`}
+                    className={`px-4 py-3 text-left font-medium text-gray-700 ${column.className || ""
+                      }`}
                     onClick={() =>
                       column.sortable !== false &&
                       handleSort(String(column.key))
@@ -185,11 +184,10 @@ export function DataTable<T extends Record<string, any>>({
                 paginatedData?.map((row, idx) => (
                   <tr
                     key={row.id || idx}
-                    className={`${
-                      onRowClick
+                    className={`${onRowClick
                         ? "cursor-pointer hover:bg-gray-50 transition"
                         : ""
-                    } ${rowClassName}`}
+                      } ${rowClassName}`}
                     onClick={() => onRowClick?.(row)}
                   >
                     {columns.map((column) => (

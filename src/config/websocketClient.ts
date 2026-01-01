@@ -12,7 +12,7 @@ class WebSocketClient {
     this.socket = new WebSocket(this.url);
 
     this.socket.onopen = () => {
-      console.log("WebSocket connected 🚀");
+      // console.log("WebSocket connected 🚀");
     };
 
     this.socket.onmessage = (event) => {
@@ -26,17 +26,17 @@ class WebSocketClient {
     };
 
     this.socket.onclose = () => {
-      console.log("WebSocket closed");
+      // console.log("WebSocket closed");
       if (this.shouldReconnect) {
         setTimeout(() => {
-          console.log("Reconnecting WebSocket...");
+          // console.log("Reconnecting WebSocket...");
           this.connect(onMessage);
         }, this.reconnectInterval);
       }
     };
 
     this.socket.onerror = (err) => {
-      console.error("WebSocket error:", err);
+      // console.error("WebSocket error:", err);
     };
   }
 

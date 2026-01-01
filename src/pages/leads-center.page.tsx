@@ -261,7 +261,7 @@ export default function LeadsCentre() {
       };
 
       const params = buildParams(allFilters, pageIndex, rowPerPage);
-      console.log(params);
+      // console.log(params);
       const response = await leadService.getLeads(String(accountId), params);
 
       if (response.status === 200 || response.status === 201) {
@@ -301,7 +301,7 @@ export default function LeadsCentre() {
       } else if (
         serverResponse.event === WEBSOCKET_EVENTS["Chatbot Lead Updated"]
       ) {
-        console.log(serverResponse);
+        // console.log(serverResponse);
         if (serverResponse.data?.lead?.accountId !== accountId) return;
 
         if (
@@ -325,7 +325,7 @@ export default function LeadsCentre() {
   focus:outline-none focus-visible:outline-none 
   shadow-none focus:border focus-visible:border-gray-300`;
 
-  console.log(basicNumber);
+  // console.log(basicNumber);
   return (
     <div className=" bg-background">
       <div className="border-b bg-card shadow-sm">
@@ -506,29 +506,29 @@ export default function LeadsCentre() {
                 filters.assignedTo.value ||
                 filters.stage.value ||
                 filters.label.value) && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() =>
-                    setFilters({
-                      lead: { label: "All Leads", value: null },
-                      campaign: { label: "All Campaigns", value: null },
-                      form: { label: "All Forms", value: null },
-                      date: { label: "All Dates", value: null },
-                      status: { label: "All Status", value: null },
-                      source: { label: "All Sources", value: null },
-                      assignedTo: { label: "All Users", value: null },
-                      label: { label: "All Labels", value: null },
-                      stage: { label: "All Stages", value: null },
-                      read: { label: "All", value: null },
-                    })
-                  }
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4 mr-1" />
-                  Clear
-                </Button>
-              )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setFilters({
+                        lead: { label: "All Leads", value: null },
+                        campaign: { label: "All Campaigns", value: null },
+                        form: { label: "All Forms", value: null },
+                        date: { label: "All Dates", value: null },
+                        status: { label: "All Status", value: null },
+                        source: { label: "All Sources", value: null },
+                        assignedTo: { label: "All Users", value: null },
+                        label: { label: "All Labels", value: null },
+                        stage: { label: "All Stages", value: null },
+                        read: { label: "All", value: null },
+                      })
+                    }
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Clear
+                  </Button>
+                )}
             </div>
           </div>
         )}
@@ -611,32 +611,32 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-              // className={
-              //   selectedStageFilter.label === "All"
-              //     ? "bg-accent text-accent-foreground"
-              //     : ""
-              // }
-              // onClick={() =>
-              //   setSelectedStageFilter({ label: "All", value: "" })
-              // }
+            // className={
+            //   selectedStageFilter.label === "All"
+            //     ? "bg-accent text-accent-foreground"
+            //     : ""
+            // }
+            // onClick={() =>
+            //   setSelectedStageFilter({ label: "All", value: "" })
+            // }
             >
               All
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              // className={
-              //   selectedReadFilter.label === "Unread"
-              //     ? "bg-accent text-accent-foreground"
-              //     : ""
-              // }
-              // onClick={() =>
-              //   setSelectedReadFilter(
-              //     selectedReadFilter.label === "Unread"
-              //       ? { label: "All", value: "all" }
-              //       : { label: "Unread", value: "unread" }
-              //   )
-              // }
+            // className={
+            //   selectedReadFilter.label === "Unread"
+            //     ? "bg-accent text-accent-foreground"
+            //     : ""
+            // }
+            // onClick={() =>
+            //   setSelectedReadFilter(
+            //     selectedReadFilter.label === "Unread"
+            //       ? { label: "All", value: "all" }
+            //       : { label: "Unread", value: "unread" }
+            //   )
+            // }
             >
               Unread
             </Button>
@@ -1058,7 +1058,7 @@ export default function LeadsCentre() {
 
               <div className="space-y-4 rounded-lg border bg-muted/30 p-4 overflow-y-scroll max-h-72 grid grid-cols-2 gap-2">
                 {editableLead?.customFields &&
-                Object.keys(editableLead.customFields).length > 0 ? (
+                  Object.keys(editableLead.customFields).length > 0 ? (
                   Object.entries(editableLead.customFields).map(
                     ([key, value]) => (
                       <div key={key} className="flex flex-col gap-1">
@@ -1074,12 +1074,12 @@ export default function LeadsCentre() {
                               setEditableLead((prev) =>
                                 prev
                                   ? {
-                                      ...prev,
-                                      customFields: {
-                                        ...(prev.customFields ?? {}),
-                                        [key]: e.target.value,
-                                      },
-                                    }
+                                    ...prev,
+                                    customFields: {
+                                      ...(prev.customFields ?? {}),
+                                      [key]: e.target.value,
+                                    },
+                                  }
                                   : prev
                               )
                             }

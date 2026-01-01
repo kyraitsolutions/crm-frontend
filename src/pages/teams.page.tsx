@@ -57,7 +57,6 @@ export const Teams = () => {
     try {
       const response = await teamService.createTeamMember(newTeam);
 
-      console.log(response)
       if (response.status === 200) {
         teamStoreManager.setTeamsTop(response?.data?.docs);
         setOpenAddTeamMember(false);
@@ -101,7 +100,7 @@ export const Teams = () => {
         toastService.success("Account assigned successfully");
       }
     } catch (error) {
-      console.log("Error", error);
+      // console.log("Error", error);
     }
   };
 
@@ -125,7 +124,7 @@ export const Teams = () => {
         toastService.success("Account deleted successfully");
       }
     } catch (error) {
-      console.log("Error deleting account:", error);
+      // console.log("Error deleting account:", error);
       rollback();
     }
   };
@@ -296,7 +295,6 @@ export const Teams = () => {
     );
   }
 
-  console.log(teams);
 
   return (
     <div className="p-3">
