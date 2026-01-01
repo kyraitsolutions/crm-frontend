@@ -57,6 +57,7 @@ export const Teams = () => {
     try {
       const response = await teamService.createTeamMember(newTeam);
 
+      console.log(response)
       if (response.status === 200) {
         teamStoreManager.setTeamsTop(response?.data?.docs);
         setOpenAddTeamMember(false);
