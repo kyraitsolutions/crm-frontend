@@ -482,7 +482,10 @@ const AddNewTeamMemberPopupDialog = ({ openAddTeamMember, setOpenAddTeamMember, 
           </DialogDescription>
         </DialogHeader>
 
-        <form className="flex flex-col gap-6" onSubmit={handleAddTeamMember}>
+        <form className="flex flex-col gap-6" onSubmit={(e) => {
+          e.preventDefault(); // ✅ prevent page reload
+          handleAddTeamMember();
+        }}>
           {/* First Name */}
           <div className="flex flex-col gap-1">
             <Label className="text-sm font-medium text-[#37322F]">
