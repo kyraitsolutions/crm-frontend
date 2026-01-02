@@ -400,81 +400,105 @@ const DashboardAccount = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="mx-auto max-w-[1600px] space-y-4">
+      <div className="mx-auto max-w-[1600px] space-y-6">
         {/* Header */}
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          {/* LEFT: Title */}
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Analytics{" "}
+            <h1 className="text-2xl font-medium text-[#37322F]">
+              Analytics
             </h1>
-            <p className="text-sm text-[#D3DEF5]-foreground">
+            <p className="mt-1 text-sm text-[#847971]">
               Track leads, conversions, and channel performance
             </p>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-            {/* Time Range Buttons */}
-            <div className="flex gap-2">
-              {(["daily", "weekly", "monthly", "yearly"] as const).map(
-                (range) => (
+
+          {/* RIGHT: Controls */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Time Range */}
+            <div className="flex items-center gap-1 rounded-full bg-[#F7F6F4] p-1">
+              {(["daily", "weekly", "monthly", "yearly"] as const).map((range) => {
+                const active = timeRange === range;
+
+                return (
                   <button
                     key={range}
                     onClick={() => setTimeRange(range)}
-                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                      timeRange === range
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-card text-card-foreground hover:bg-[#D3DEF5]"
-                    }`}
+                    className={`
+              rounded-full
+              px-4 py-1.5
+              text-xs font-medium
+              transition
+              ${active
+                        ? "bg-[#37322F] text-[#FBFAF9]"
+                        : "text-[#37322F] hover:bg-[#EFEDEB]"
+                      }
+            `}
                   >
                     {range.charAt(0).toUpperCase() + range.slice(1)}
                   </button>
-                )
-              )}
+                );
+              })}
             </div>
 
-            {/* Date Range Picker */}
-            {/* <div className="flex items-center gap-2">
-              <Filter className="h-3.5 w-3.5 text-[#D3DEF5]-foreground" />
-              <DateRangePicker
-                dateRange={dateRange}
-                onDateRangeChange={setDateRange}
-              />
-            </div> */}
-
-            {/* Comparison Toggle */}
-            <Button
-              variant={comparisonMode ? "default" : "outline"}
-              size="sm"
+            {/* Compare */}
+            <button
               onClick={() => setComparisonMode(!comparisonMode)}
-              className="h-9 text-xs"
               disabled={!dateRange?.from}
+              className={`
+        inline-flex items-center gap-2
+        rounded-full
+        px-4 py-1.5
+        text-xs font-medium
+        transition
+        ${comparisonMode
+                  ? "bg-[#37322F] text-[#FBFAF9]"
+                  : "bg-[#F7F6F4] text-[#37322F] hover:bg-[#EFEDEB]"
+                }
+        disabled:opacity-50
+      `}
             >
-              <ArrowLeftRight className="mr-2 h-3.5 w-3.5" />
+              <ArrowLeftRight className="h-3.5 w-3.5" />
               Compare
-            </Button>
+            </button>
 
-            {/* Export Buttons */}
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
+            {/* Export */}
+            <div className="flex items-center gap-2">
+              <button
                 onClick={handleExportCSV}
-                className="h-9 text-xs"
+                className="
+          inline-flex items-center gap-2
+          rounded-full
+          bg-[#F7F6F4]
+          px-4 py-1.5
+          text-xs font-medium text-[#37322F]
+          hover:bg-[#EFEDEB]
+          transition
+        "
               >
-                <FileDown className="mr-2 h-3.5 w-3.5" />
+                <FileDown className="h-3.5 w-3.5" />
                 CSV
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
+              </button>
+
+              <button
                 onClick={handleExportPDF}
-                className="h-9 text-xs"
+                className="
+          inline-flex items-center gap-2
+          rounded-full
+          bg-[#F7F6F4]
+          px-4 py-1.5
+          text-xs font-medium text-[#37322F]
+          hover:bg-[#EFEDEB]
+          transition
+        "
               >
-                <Download className="mr-2 h-3.5 w-3.5" />
+                <Download className="h-3.5 w-3.5" />
                 PDF
-              </Button>
+              </button>
             </div>
           </div>
         </div>
+
 
         {/* Key Metrics */}
         {comparisonMode && previousPeriodData ? (
@@ -531,126 +555,88 @@ const DashboardAccount = () => {
             />
           </div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
-            <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-l-4 border-l-primary">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-xs font-medium text-[#D3DEF5]-foreground">
-                  Total Leads
-                  <Users className="h-3.5 w-3.5 text-primary" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {data?.totalLeads?.toLocaleString()}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-6">
+            {[
+              {
+                label: "Total Leads",
+                value: data?.totalLeads?.toLocaleString() || 0,
+                meta: "All time",
+                icon: Users,
+              },
+              {
+                label: "Today",
+                value: data?.todayLeads || 0,
+                meta: `+${data?.weeklyLeads} this week`,
+                icon: TrendingUp,
+              },
+              {
+                label: "Conversion",
+                value: `${data?.conversionRate || 0}%`,
+                meta: "Success rate",
+                icon: Target,
+              },
+              {
+                label: "Response Time",
+                value: `${data?.avgResponseTime || 0}m`,
+                meta: "Average",
+                icon: Clock,
+              },
+              {
+                label: "Chatbots",
+                value: data?.activeChatbots || 0,
+                meta: "Active",
+                icon: MessageSquare,
+              },
+              {
+                label: "Webforms",
+                value: data?.activeWebforms || 0,
+                meta: "Active",
+                icon: Globe,
+              },
+              {
+                label: "Google Ads",
+                value: data?.activeGoogleAds || 0,
+                meta: "Campaigns",
+                icon: Target,
+              },
+              {
+                label: "Social Media",
+                value: data?.activeSocialMedia || 0,
+                meta: "Channels",
+                icon: Zap,
+              },
+            ].map(({ label, value, meta, icon: Icon }) => (
+              <div
+                key={label}
+                className="
+                  rounded-xl
+                  bg-[#F7F6F4]
+                  px-5 py-4
+                  transition
+                  hover:bg-[#EFEDEB]
+                "
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-medium text-[#37322F]">
+                    {label}
+                  </p>
+                  <Icon className="h-4 w-4 text-[#847971]" />
                 </div>
-                <p className="text-xs text-[#D3DEF5]-foreground">All time</p>
-              </CardContent>
-            </Card>
 
-            <Card className="bg-gradient-to-br from-[#21733F]/10 to-[#21733F]/5 border-l-4 border-l-[#21733F]">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-xs font-medium text-[#D3DEF5]-foreground">
-                  Today
-                  <TrendingUp className="h-3.5 w-3.5 text-[#21733F]" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data?.todayLeads}</div>
-                <p className="text-xs text-[#21733F]">
-                  +{data?.weeklyLeads} this week
+                {/* Value */}
+                <div className="text-2xl font-medium text-[#37322F]">
+                  {value}
+                </div>
+
+                {/* Meta */}
+                <p className="mt-1 text-xs text-[#847971]">
+                  {meta}
                 </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-[#80540A]/10 to-[#80540A]/5 border-l-4 border-l-[#80540A]">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-xs font-medium text-[#D3DEF5]-foreground">
-                  Conversion
-                  <Target className="h-3.5 w-3.5 text-[#80540A]" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {data?.conversionRate}%
-                </div>
-                <p className="text-xs text-[#D3DEF5]-foreground">
-                  Success rate
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-[#0D587A]/10 to-[#0D587A]/5 border-l-4 border-l-[#0D587A]">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-xs font-medium text-[#D3DEF5]-foreground">
-                  Response Time
-                  <Clock className="h-3.5 w-3.5 text-[#0D587A]" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {data?.avgResponseTime}m
-                </div>
-                <p className="text-xs text-[#D3DEF5]-foreground">Average</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-l-4 border-l-primary">
-              {/* <Card className="border-l-4 border-l-[#0D587A]"> */}
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-xs font-medium text-[#D3DEF5]-foreground">
-                  Chatbots
-                  <MessageSquare className="h-3.5 w-3.5 text-primary" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data?.activeChatbots}</div>
-                <p className="text-xs text-[#21733F]">Active</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-[#21733F]/10 to-[#21733F]/5 border-l-4 border-l-[#21733F]">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-xs font-medium text-[#D3DEF5]-foreground">
-                  Webforms
-                  <Globe className="h-3.5 w-3.5 text-[#21733F]" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data?.activeWebforms}</div>
-                <p className="text-xs text-[#21733F]">Active</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-[#80540A]/10 to-[#80540A]/5 border-l-4 border-l-[#80540A]">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-xs font-medium text-[#D3DEF5]-foreground">
-                  Google Ads
-                  <Target className="h-3.5 w-3.5 text-[#80540A]" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {data?.activeGoogleAds}
-                </div>
-                <p className="text-xs text-[#21733F]">Campaigns</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-[#21733F]/10 to-[#21733F]/5 border-l-4 border-l-[#21733F]">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-xs font-medium text-[#D3DEF5]-foreground">
-                  Social Media
-                  <Zap className="h-3.5 w-3.5 text-[#21733F]" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {data?.activeSocialMedia}
-                </div>
-                <p className="text-xs text-[#21733F]">Channels</p>
-              </CardContent>
-            </Card>
+              </div>
+            ))}
           </div>
+
         )}
 
         {/* Comparison Info Banner */}
@@ -675,9 +661,15 @@ const DashboardAccount = () => {
         )}
 
         {/* Charts Row - Wrapped for PDF export */}
-        <div id="charts-for-export" className="grid gap-3 lg:grid-cols-3">
+        <div id="charts-for-export" className="grid gap-6 lg:grid-cols-3">
           {/* Leads Over Time */}
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2 rounded-xl
+        bg-[#F7F6F4]
+        border-0
+        shadow-none
+        px-0 py-4
+        transition
+        hover:bg-[#EFEDEB]">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-semibold">
                 Lead Generation Trends
@@ -691,7 +683,7 @@ const DashboardAccount = () => {
                 <BarChart data={data?.leadsOverTime}>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    // stroke="hsl(var(--border))"
+                  // stroke="hsl(var(--border))"
                   />
                   <XAxis
                     dataKey="date"
@@ -704,7 +696,7 @@ const DashboardAccount = () => {
                   />
                   <YAxis
                     tick={{ fontSize: 10 }}
-                    // stroke="hsl(var(--[#D3DEF5]-foreground))"
+                  // stroke="hsl(var(--[#D3DEF5]-foreground))"
                   />
                   <Tooltip
                     contentStyle={{
@@ -729,7 +721,12 @@ const DashboardAccount = () => {
           </Card>
 
           {/* Lead Status Distribution */}
-          <Card>
+          <Card className="  bg-[#F7F6F4]
+        border-0
+        shadow-none
+        px-0 py-4
+        transition
+        hover:bg-[#EFEDEB]">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-semibold">
                 Lead Pipeline Status
@@ -775,9 +772,14 @@ const DashboardAccount = () => {
         </div>
 
         {/* Source Performance & Monthly Trends */}
-        <div className="grid gap-3 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
           {/* Lead Sources */}
-          <Card>
+          <Card className="  bg-[#F7F6F4]
+        border-0
+        shadow-none
+        px-0 py-4
+        transition
+        hover:bg-[#EFEDEB]">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-semibold">
                 Lead Sources Performance
@@ -803,9 +805,8 @@ const DashboardAccount = () => {
                       <div
                         className="h-full transition-all"
                         style={{
-                          width: `${
-                            (source.count / (data?.totalLeads || 1)) * 100
-                          }%`,
+                          width: `${(source.count / (data?.totalLeads || 1)) * 100
+                            }%`,
                           backgroundColor: source.color,
                         }}
                       />
@@ -813,11 +814,10 @@ const DashboardAccount = () => {
                     <div className="flex min-w-[80px] items-center gap-2 text-xs">
                       <span className="font-semibold">{source.count}</span>
                       <span
-                        className={`flex items-center gap-0.5 ${
-                          source.trend >= 0
-                            ? "text-[#21733F]"
-                            : "text-destructive"
-                        }`}
+                        className={`flex items-center gap-0.5 ${source.trend >= 0
+                          ? "text-[#21733F]"
+                          : "text-destructive"
+                          }`}
                       >
                         {source.trend >= 0 ? (
                           <TrendingUp className="h-3 w-3" />
@@ -834,7 +834,12 @@ const DashboardAccount = () => {
           </Card>
 
           {/* Monthly Engagement */}
-          <Card>
+          <Card className="  bg-[#F7F6F4]
+        border-0
+        shadow-none
+        px-0 py-4
+        transition
+        hover:bg-[#EFEDEB]">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-semibold">
                 Monthly Performance
@@ -848,13 +853,13 @@ const DashboardAccount = () => {
                 <LineChart data={data?.monthlyEngagement}>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    // stroke="hsl(var(--border))"
+                  // stroke="hsl(var(--border))"
                   />
                   <XAxis
                     dataKey="month"
                     tick={{ fontSize: 10 }}
 
-                    // stroke="hsl(var(--[#D3DEF5]-foreground))"
+                  // stroke="hsl(var(--[#D3DEF5]-foreground))"
                   />
                   <YAxis
                     tick={{ fontSize: 10 }}
@@ -892,9 +897,14 @@ const DashboardAccount = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="grid gap-3 lg:grid-cols-3">
+        <div className="grid gap-6 lg:grid-cols-3">
           {/* Channel Performance Table */}
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2   bg-[#F7F6F4]
+        border-0
+        shadow-none
+        px-0 py-4
+        transition
+        hover:bg-[#EFEDEB]">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-semibold">
                 Channel Performance Metrics
@@ -961,7 +971,12 @@ const DashboardAccount = () => {
           </Card>
 
           {/* Recent Leads */}
-          <Card>
+          <Card className="  bg-[#F7F6F4]
+        border-0
+        shadow-none
+        px-0 py-4
+        transition
+        hover:bg-[#EFEDEB]">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-semibold">
                 Recent Leads

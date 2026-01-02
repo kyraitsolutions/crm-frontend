@@ -13,6 +13,7 @@ import FooterSection from "../components/footer-section";
 import { ArrowRight } from "lucide-react";
 // import DashboardImage2 from "../assets/image2.png";
 import DashboardImage3 from "../assets/image3.png";
+import ContactForm from "@/components/common/ContactForm";
 // import DashboardImage4 from "../assets/image4.png";
 function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
@@ -133,8 +134,8 @@ export function HomePage() {
               <div
                 onClick={() => {
                   window.location.href =
-                    "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                  // "http://localhost:3000/api/auth/google";
+                    // "https://crm-backend-7lf9.onrender.com/api/auth/google";
+                    "http://localhost:3000/api/auth/google";
                 }}
                 className="cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 w-full max-w-[497px] lg:w-[497px] flex flex-col justify-center items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 relative z-10 mt-6 sm:mt-8 md:mt-10 lg:mt-12"
               >
@@ -158,7 +159,7 @@ export function HomePage() {
                   </h2>
 
                   <p className="max-w-[720px] text-[rgba(55,50,47,0.8)] text-lg">
-                    Inquiro helps businesses turn website visitors into qualified leads
+                    Kyra CRM helps businesses turn website visitors into qualified leads
                     using smart chatbots, automated workflows, and real-time analytics.
                   </p>
 
@@ -316,108 +317,7 @@ export function HomePage() {
                 />
               </div>
 
-              {/* <div className="w-full max-w-[960px] lg:w-[960px] pt-2 sm:pt-4 pb-6 sm:pb-8 md:pb-10 px-2 sm:px-4 md:px-6 lg:px-11 flex flex-col justify-center items-center gap-2 relative z-5 my-8 sm:my-12 md:my-16 lg:my-16 mb-0 lg:pb-0">
-                <div className="w-full max-w-[960px] lg:w-[960px] h-[200px] sm:h-[280px] md:h-[450px] lg:h-[695.55px] bg-white shadow-[0px_0px_0px_0.9056603908538818px_rgba(0,0,0,0.08)] overflow-hidden rounded-[6px] sm:rounded-[8px] lg:rounded-[9.06px] flex flex-col justify-start items-start">
-                  <div className="self-stretch flex-1 flex justify-start items-start">
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="relative w-full h-full overflow-hidden">
-                        <div
-                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
-                            activeCard === 0
-                              ? "opacity-100 scale-100 blur-0"
-                              : "opacity-0 scale-95 blur-sm"
-                          }`}
-                        >
-                          <img
-                            src={DashboardImage3}
-                            alt="Schedules Dashboard - Customer Subscription Management"
-                            className="w-full h-full object-cover object-left-top"
-                          />
-                        </div>
 
-                        <div
-                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
-                            activeCard === 1
-                              ? "opacity-100 scale-100 blur-0"
-                              : "opacity-0 scale-95 blur-sm"
-                          }`}
-                        >
-                          <img
-                            src={DashboardImage2}
-                            alt="Analytics Dashboard"
-                            className="w-full h-full object-cover object-left-top"
-                          />
-                        </div>
-
-                        <div
-                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
-                            activeCard === 2
-                              ? "opacity-100 scale-100 blur-0"
-                              : "opacity-0 scale-95 blur-sm"
-                          }`}
-                        >
-                          <img
-                            src={DashboardImage4}
-                            alt="Data Visualization Dashboard"
-                            className="w-full h-full object-cover object-left-top" // Changed from object-cover to object-contain to preserve landscape aspect ratio
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
-
-              {/* <div className="self-stretch border-t border-b border-[#E0DEDB] flex justify-center items-start">
-                <div className="w-4 sm:w-6 md:w-8 lg:w-12 self-stretch relative overflow-hidden">
-                  <div className="w-[120px] sm:w-[140px] md:w-[162px] left-[-40px] sm:left-[-50px] md:left-[-58px] top-[-120px] absolute flex flex-col justify-start items-start">
-                    {Array.from({ length: 50 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="self-stretch h-3 sm:h-4 rotate-[-45deg] origin-top-left outline outline-[0.5px] outline-[rgba(3,7,18,0.08)] outline-offset-[-0.25px]"
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex-1 px-0 sm:px-2 md:px-0 flex flex-col md:flex-row justify-center items-stretch gap-0">
-
-                  <FeatureCard
-                    title="Plan your boost"
-                    description="Automate customer flow and boost conversions with smart chatbots"
-                    isActive={activeCard === 0}
-                    progress={activeCard === 0 ? progress : 0}
-                    onClick={() => handleCardClick(0)}
-                  />
-                  <FeatureCard
-                    title="Analytics & insights"
-                    description="Transform your business data into actionable insights with real-time analytics."
-                    isActive={activeCard === 1}
-                    progress={activeCard === 1 ? progress : 0}
-                    onClick={() => handleCardClick(1)}
-                  />
-
-                  <FeatureCard
-                    title="Collaborate seamlessly"
-                    description="Keep your team aligned with shared dashboards and collaborative workflows."
-                    isActive={activeCard === 2}
-                    progress={activeCard === 2 ? progress : 0}
-                    onClick={() => handleCardClick(2)}
-                  />
-                </div>
-
-                <div className="w-4 sm:w-6 md:w-8 lg:w-12 self-stretch relative overflow-hidden">
-                  <div className="w-[120px] sm:w-[140px] md:w-[162px] left-[-40px] sm:left-[-50px] md:left-[-58px] top-[-120px] absolute flex flex-col justify-start items-start">
-                    {Array.from({ length: 50 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="self-stretch h-3 sm:h-4 rotate-[-45deg] origin-top-left outline outline-[0.5px] outline-[rgba(3,7,18,0.08)] outline-offset-[-0.25px]"
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-              </div> */}
-              {/* Documentation Section */}
               <DocumentationSection />
 
 
@@ -815,6 +715,8 @@ export function HomePage() {
               {/* FAQ Section */}
               <FAQSection />
 
+              {/* Contact Section */}
+              <ContactForm />
               {/* CTA Section */}
               <CTASection />
 

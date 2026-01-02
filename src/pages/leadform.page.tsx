@@ -168,7 +168,7 @@ export function LeadFormPage() {
   }
 
   return (
-    <div className="space-y-6 px-3 py-3 lg:px-4">
+    <div className="space-y-6 px-3 py-2 lg:py-6 lg:px-8">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

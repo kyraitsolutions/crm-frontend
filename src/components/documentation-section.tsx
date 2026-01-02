@@ -42,14 +42,14 @@ export default function DocumentationSection() {
     },
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveCard((prev) => (prev + 1) % cards.length);
-      setAnimationKey((prev) => prev + 1);
-    }, 5000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setActiveCard((prev) => (prev + 1) % cards.length);
+  //     setAnimationKey((prev) => prev + 1);
+  //   }, 5000);
 
-    return () => clearInterval(interval);
-  }, [cards.length]);
+  //   return () => clearInterval(interval);
+  // }, [cards.length]);
 
   const handleCardClick = (index: number) => {
     setActiveCard(index);
