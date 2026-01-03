@@ -105,10 +105,10 @@ export default function DocumentationSection() {
                     />
                   </div>
                   <div className="px-6 py-5 w-full flex flex-col gap-2">
-                    <div className="self-stretch flex justify-center flex-col text-[#49423D] text-sm font-semibold leading-6 font-sans">
+                    <div className="self-stretch flex justify-center flex-col text-[#49423D] text-lg font-semibold leading-6 font-sans">
                       {card.title}
                     </div>
-                    <div className="self-stretch text-[#605A57] text-[13px] font-normal leading-[22px] font-sans whitespace-pre-line">
+                    <div className="self-stretch text-[#605A57] text-md font-normal leading-[22px] font-sans whitespace-pre-line">
                       {card.description}
                     </div>
                   </div>

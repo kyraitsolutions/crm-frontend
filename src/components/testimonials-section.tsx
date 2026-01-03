@@ -19,29 +19,70 @@ export default function TestimonialsSection() {
   const testimonials = [
     {
       quote:
-        "In just a few minutes, we transformed our data into actionable insights. The process was seamless and incredibly efficient!",
-      name: "Jamie Marshall",
-      company: "Co-founder, Exponent",
+        "Kyra helped us turn website conversations into real leads almost instantly. Setup was quick, and everything flows directly into the CRM.",
+      name: "Amit Verma",
+      company: "Founder, SaaS Startup",
       image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2011%2C%202025%2C%2011_35_19%20AM-z4zSRLsbOQDp7MJS1t8EXmGNB6Al9Z.png",
+        "https://avatars.githubusercontent.com/u/1?v=4",
     },
     {
       quote:
-        "Brillance has revolutionized how we handle custom contracts. The automation saves us hours every week and eliminates errors completely.",
-      name: "Sarah Chen",
-      company: "VP Operations, TechFlow",
+        "The no-code chatbot builder is extremely intuitive. We launched multiple chatbot flows without any developer support.",
+      name: "Priya Sharma",
+      company: "Marketing Manager",
       image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2011%2C%202025%2C%2010_54_18%20AM-nbiecp92QNdTudmCrHr97uekrIPzCP.png",
+        "https://avatars.githubusercontent.com/u/2?v=4",
     },
     {
       quote:
-        "The billing automation is a game-changer. What used to take our team days now happens automatically with perfect accuracy.",
-      name: "Marcus Rodriguez",
-      company: "Finance Director, InnovateCorp",
+        "What stands out is the CRM-first approach. Every conversation automatically becomes a lead, making our sales pipeline crystal clear.",
+      name: "Rahul Mehta",
+      company: "Head of Sales, GrowthCo",
       image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2011%2C%202025%2C%2011_01_05%20AM-TBOe92trRxKn4G5So1m9D2h7LRH4PG.png",
+        "https://avatars.githubusercontent.com/u/3?v=4",
+    },
+    {
+      quote:
+        "Managing multiple clients is effortless with Kyra. Separate workspaces, shared analytics, and clean lead tracking make it perfect for agencies.",
+      name: "Sneha Patel",
+      company: "Agency Owner, DigitalCraft",
+      image:
+        "https://avatars.githubusercontent.com/u/4?v=4",
+    },
+    {
+      quote:
+        "The analytics dashboard gives us real-time insights into chatbot performance and conversions. It keeps the entire team aligned.",
+      name: "Arjun Malhotra",
+      company: "Operations Manager, ScaleOps",
+      image:
+        "https://avatars.githubusercontent.com/u/5?v=4",
+    },
+    {
+      quote:
+        "Kyra streamlined how our team collaborates on leads. Assignments, follow-ups, and conversations all happen in one place.",
+      name: "Neha Gupta",
+      company: "Customer Success Lead, HelpDeskPro",
+      image:
+        "https://avatars.githubusercontent.com/u/6?v=4",
+    },
+    {
+      quote:
+        "We saw a noticeable improvement in lead quality and conversions after switching to Kyra’s smart chatbots.",
+      name: "Kunal Singh",
+      company: "Growth Marketer, Marketly",
+      image:
+        "https://avatars.githubusercontent.com/u/7?v=4",
+    },
+    {
+      quote:
+        "Clean interface, powerful features, and zero complexity. Kyra feels like it was built specifically for modern teams.",
+      name: "Ritika Jain",
+      company: "Product Manager, NextGen Apps",
+      image:
+        "https://avatars.githubusercontent.com/u/8?v=4",
     },
   ];
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -68,109 +109,110 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <div className="w-full border-b border-[rgba(55,50,47,0.12)] flex flex-col justify-center items-center">
-      {/* Header Section */}
+    <div className="w-full border-b border-border bg-background">
+      <div className="mx-auto max-w-6xl px-4 py-20">
+        <div className="flex flex-col gap-10">
 
-      {/* Testimonial Content */}
-      <div className="self-stretch px-2 overflow-hidden flex justify-start items-center bg-background border border-b border-l-0 border-r-0 border-t-0">
-        <div className="flex-1 py-16 md:py-17 flex flex-col md:flex-row justify-center items-end gap-6">
-          <div className="self-stretch px-3 md:px-12 justify-center items-start gap-4 flex flex-col md:flex-row">
-            <img
-              className="w-48 h-50 md:w-48 md:h-50 rounded-lg object-cover transition-all duration-700 ease-in-out"
-              style={{
-                opacity: isTransitioning ? 0.6 : 1,
-                transform: isTransitioning ? "scale(0.95)" : "scale(1)",
-                transition:
-                  "opacity 0.7s ease-in-out, transform 0.7s ease-in-out",
-              }}
-              src={testimonials[activeTestimonial].image || "/placeholder.svg"}
-              alt={testimonials[activeTestimonial].name}
-            />
-            <div className="flex-1 px-6 py-6 shadow-[0px_0px_0px_0.75px_rgba(50,45,43,0.12)] overflow-hidden flex flex-col justify-start items-start gap-6 shadow-none pb-0 pt-0">
-              <div
-                className="self-stretch justify-start flex flex-col text-[#49423D] text-2xl md:text-[32px] font-medium leading-10 md:leading-[42px] font-sans h-[200px] md:h-[210px] overflow-hidden line-clamp-5 transition-all duration-700 ease-in-out tracking-tight"
+          {/* Testimonial Card */}
+          <div className="relative rounded-2xl border bg-card shadow-sm">
+            <div className="flex flex-col md:flex-row gap-8 p-8 md:p-12">
+
+              {/* Avatar */}
+              <img
+                src={testimonials[activeTestimonial].image || "/placeholder.svg"}
+                alt={testimonials[activeTestimonial].name}
+                className="h-24 w-24 rounded-xl object-cover"
                 style={{
-                  filter: isTransitioning ? "blur(4px)" : "blur(0px)",
-                  transition: "filter 0.7s ease-in-out",
+                  opacity: isTransitioning ? 0.6 : 1,
+                  transform: isTransitioning ? "scale(0.96)" : "scale(1)",
+                  transition: "all 0.6s ease",
                 }}
-              >
-                "{testimonials[activeTestimonial].quote}"
-              </div>
-              <div
-                className="self-stretch flex flex-col justify-start items-start gap-1 transition-all duration-700 ease-in-out"
-                style={{
-                  filter: isTransitioning ? "blur(4px)" : "blur(0px)",
-                  transition: "filter 0.7s ease-in-out",
-                }}
-              >
-                <div className="self-stretch justify-center flex flex-col text-[rgba(73,66,61,0.90)] text-lg font-medium leading-[26px] font-sans">
-                  {testimonials[activeTestimonial].name}
-                </div>
-                <div className="self-stretch justify-center flex flex-col text-[rgba(73,66,61,0.70)] text-lg font-medium leading-[26px] font-sans">
-                  {testimonials[activeTestimonial].company}
+              />
+
+              {/* Content */}
+              <div className="flex flex-col gap-6 flex-1">
+                <p
+                  className="text-xl md:text-2xl font-medium leading-relaxed text-foreground"
+                  style={{
+                    filter: isTransitioning ? "blur(3px)" : "blur(0)",
+                    transition: "filter 0.6s ease",
+                  }}
+                >
+                  “{testimonials[activeTestimonial].quote}”
+                </p>
+
+                <div
+                  className="flex flex-col gap-1"
+                  style={{
+                    filter: isTransitioning ? "blur(3px)" : "blur(0)",
+                    transition: "filter 0.6s ease",
+                  }}
+                >
+                  <span className="text-base font-semibold text-foreground">
+                    {testimonials[activeTestimonial].name}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    {testimonials[activeTestimonial].company}
+                  </span>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Navigation Arrows */}
-          <div className="pr-6 justify-start items-start gap-[14px] flex">
-            <button
-              onClick={() =>
-                handleNavigationClick(
-                  (activeTestimonial - 1 + testimonials.length) %
+            {/* Navigation */}
+            <div className="absolute right-6 bottom-6 flex gap-3">
+              <button
+                onClick={() =>
+                  handleNavigationClick(
+                    (activeTestimonial - 1 + testimonials.length) %
                     testimonials.length
-                )
-              }
-              className="w-9 h-9 shadow-[0px_1px_2px_rgba(0,0,0,0.08)] overflow-hidden rounded-full border border-[rgba(0,0,0,0.15)] justify-center items-center gap-2 flex hover:bg-gray-50 transition-colors"
-            >
-              <div className="w-6 h-6 relative overflow-hidden">
+                  )
+                }
+                className="h-9 w-9 rounded-full border bg-background hover:bg-muted flex items-center justify-center transition"
+              >
                 <svg
-                  width="24"
-                  height="24"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
                     d="M15 18L9 12L15 6"
-                    stroke="#46413E"
+                    stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                 </svg>
-              </div>
-            </button>
-            <button
-              onClick={() =>
-                handleNavigationClick(
-                  (activeTestimonial + 1) % testimonials.length
-                )
-              }
-              className="w-9 h-9 shadow-[0px_1px_2px_rgba(0,0,0,0.08)] overflow-hidden rounded-full border border-[rgba(0,0,0,0.15)] justify-center items-center gap-2 flex hover:bg-gray-50 transition-colors"
-            >
-              <div className="w-6 h-6 relative overflow-hidden">
+              </button>
+
+              <button
+                onClick={() =>
+                  handleNavigationClick(
+                    (activeTestimonial + 1) % testimonials.length
+                  )
+                }
+                className="h-9 w-9 rounded-full border bg-background hover:bg-muted flex items-center justify-center transition"
+              >
                 <svg
-                  width="24"
-                  height="24"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
                     d="M9 18L15 12L9 6"
-                    stroke="#46413E"
+                    stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                 </svg>
-              </div>
-            </button>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
   );
 }

@@ -13,6 +13,8 @@ import FooterSection from "../components/footer-section";
 import { ArrowRight } from "lucide-react";
 // import DashboardImage2 from "../assets/image2.png";
 import DashboardImage3 from "../assets/image3.png";
+import ContactForm from "@/components/common/ContactForm";
+import { Link } from "react-router-dom";
 // import DashboardImage4 from "../assets/image4.png";
 function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
@@ -80,7 +82,7 @@ export function HomePage() {
                 <div className="flex justify-center items-center">
                   <div className="flex justify-start items-center">
                     <div className="flex flex-col justify-center text-[#2F3037] text-sm sm:text-base md:text-lg lg:text-xl font-medium leading-5 font-sans">
-                      Home
+                      Kyra
                     </div>
                   </div>
                   <div className="pl-3 sm:pl-4 md:pl-5 lg:pl-5 flex justify-start items-start hidden sm:flex flex-row gap-2 sm:gap-3 md:gap-4 lg:gap-4">
@@ -95,9 +97,9 @@ export function HomePage() {
                       </div>
                     </div>
                     <div className="flex justify-start items-center">
-                      <div className="flex flex-col justify-center text-[rgba(49,45,43,0.80)] text-xs md:text-[13px] font-medium leading-[14px] font-sans">
+                      <Link to="" className="flex flex-col justify-center text-[rgba(49,45,43,0.80)] text-xs md:text-[13px] font-medium leading-[14px] font-sans">
                         Review
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -121,10 +123,10 @@ export function HomePage() {
             <div className="pt-16 sm:pt-20 md:pt-24 lg:pt-[216px] pb-8 sm:pb-12 md:pb-16 flex flex-col justify-start items-center px-2 sm:px-4 md:px-8 lg:px-0 w-full sm:pl-0 sm:pr-0 pl-0 pr-0">
               <div className="w-full max-w-[937px] lg:w-[937px] flex flex-col justify-center items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 ">
                 <div className="self-stretch rounded-[3px] flex flex-col justify-center items-center gap-4 sm:gap-5 md:gap-6 lg:gap-">
-                  <div className="w-full max-w-[748.71px] lg:w-[748.71px] text-center flex justify-center flex-col text-[#37322F] text-[24px] xs:text-[28px] sm:text-[36px] md:text-[52px] lg:text-[80px] font-instrument-serif leading-[1.1] sm:leading-[1.15] md:leading-[1.2] lg:leading-24 px-2 sm:px-4 md:px-0">
+                  <div className="w-full max-w-[748.71px] lg:w-[748.71px] text-center flex justify-center flex-col text-[#37322F] font-medium text-[28px] xs:text-[28px] sm:text-[36px] md:text-[52px] lg:text-[80px] font-instrument-serif leading-[1.1] sm:leading-[1.15] md:leading-[1.2] lg:leading-24 px-2 sm:px-4 md:px-0">
                     Smart Chatbots <br /> Lead Capture & Analysis
                   </div>
-                  <div className="w-full max-w-[506.08px] lg:w-[506.08px] text-center flex justify-center flex-col text-[rgba(55,50,47,0.80)] sm:text-lg md:text-xl leading-[1.4] sm:leading-[1.45] md:leading-[1.5] lg:leading-7  px-2 sm:px-4 md:px-0 lg:text-lg font-medium text-sm">
+                  <div className="w-full max-w-[506.08px] lg:w-[506.08px] text-center flex justify-center flex-col text-[rgba(55,50,47,0.80)] sm:text-lg md:text-xl leading-[1.4] sm:leading-[1.45] md:leading-[1.5] lg:leading-7  px-2 sm:px-4 md:px-0 lg:text-lg ">
                     Build intelligent chatbots that capture leads, qualify users, and convert conversations into revenue — all from one powerful CRM dashboard.
                   </div>
                 </div>
@@ -136,7 +138,7 @@ export function HomePage() {
                     // "https://crm-backend-7lf9.onrender.com/api/auth/google";
                     "http://localhost:3000/api/auth/google";
                 }}
-                className="cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 w-full max-w-[497px] lg:w-[497px] flex flex-col justify-center items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 relative z-10 mt-6 sm:mt-8 md:mt-10 lg:mt-12"
+                className="cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 w-full max-w-[600px] lg:w-[600px] flex flex-col justify-center items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 relative z-10 mt-6 sm:mt-8 md:mt-10 lg:mt-12"
               >
                 <div className="backdrop-blur-[8.25px] flex justify-start items-center gap-4">
                   <div className="h-10 sm:h-11 md:h-12 px-6 sm:px-8 md:px-10 lg:px-12 py-2 sm:py-[6px] relative bg-[#37322F] shadow-[0px_0px_0px_2.5px_rgba(255,255,255,0.08)_inset] overflow-hidden rounded-full flex justify-center items-center">
@@ -146,7 +148,7 @@ export function HomePage() {
                     </div>
                   </div>
                 </div>
-                <p>
+                <p className="text-center px-2 text-[rgba(55,50,47,0.80)] text-sm md:text-lg">
                   No credit card required · Setup in minutes · Built for modern teams
                 </p>
               </div>
@@ -158,7 +160,7 @@ export function HomePage() {
                   </h2>
 
                   <p className="max-w-[720px] text-[rgba(55,50,47,0.8)] text-lg">
-                    Inquiro helps businesses turn website visitors into qualified leads
+                    Kyra CRM helps businesses turn website visitors into qualified leads
                     using smart chatbots, automated workflows, and real-time analytics.
                   </p>
 
@@ -184,7 +186,7 @@ export function HomePage() {
                         <h3 className="text-lg font-medium text-[#37322F]">
                           {item.title}
                         </h3>
-                        <p className="mt-2 text-sm text-[rgba(55,50,47,0.75)]">
+                        <p className="mt-2 text-md text-[rgba(55,50,47,0.75)]">
                           {item.desc}
                         </p>
                       </div>
@@ -204,7 +206,7 @@ export function HomePage() {
                       interface. Perfect for sales, support, and onboarding.
                     </p>
 
-                    <ul className="mt-6 space-y-3 text-sm">
+                    <ul className="mt-6 space-y-3 text-md">
                       {[
                         "Greeting messages & follow-ups",
                         "Name, email & phone capture",
@@ -251,7 +253,7 @@ export function HomePage() {
                       className="bg-white border border-[#E5E3E0] rounded-xl p-6 shadow-sm"
                     >
                       <h3 className="text-lg font-medium">{item.title}</h3>
-                      <p className="mt-2 text-sm text-[rgba(55,50,47,0.75)]">
+                      <p className="mt-2 text-md text-[rgba(55,50,47,0.75)]">
                         {item.desc}
                       </p>
                     </div>
@@ -259,7 +261,7 @@ export function HomePage() {
                 </div>
               </section>
               <section className="w-full bg-white py-20 px-4 border-t border-b border-[#E5E3E0]">
-                <div className="max-w-[1280px] mx-auto px-4 text-center">
+                <div className="max-w-[1280px] mx-auto lg:px-2 text-center">
                   <h2 className="text-[40px] font-semibold text-[#49423D]">
                     Built for Teams & Agencies
                   </h2>
@@ -296,7 +298,7 @@ export function HomePage() {
                           {item.title}
                         </h3>
 
-                        <p className="mt-2 text-sm leading-relaxed text-[rgba(55,50,47,0.75)]">
+                        <p className="mt-2 text-md leading-relaxed text-[rgba(55,50,47,0.75)]">
                           {item.desc}
                         </p>
                       </div>
@@ -316,108 +318,7 @@ export function HomePage() {
                 />
               </div>
 
-              {/* <div className="w-full max-w-[960px] lg:w-[960px] pt-2 sm:pt-4 pb-6 sm:pb-8 md:pb-10 px-2 sm:px-4 md:px-6 lg:px-11 flex flex-col justify-center items-center gap-2 relative z-5 my-8 sm:my-12 md:my-16 lg:my-16 mb-0 lg:pb-0">
-                <div className="w-full max-w-[960px] lg:w-[960px] h-[200px] sm:h-[280px] md:h-[450px] lg:h-[695.55px] bg-white shadow-[0px_0px_0px_0.9056603908538818px_rgba(0,0,0,0.08)] overflow-hidden rounded-[6px] sm:rounded-[8px] lg:rounded-[9.06px] flex flex-col justify-start items-start">
-                  <div className="self-stretch flex-1 flex justify-start items-start">
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="relative w-full h-full overflow-hidden">
-                        <div
-                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
-                            activeCard === 0
-                              ? "opacity-100 scale-100 blur-0"
-                              : "opacity-0 scale-95 blur-sm"
-                          }`}
-                        >
-                          <img
-                            src={DashboardImage3}
-                            alt="Schedules Dashboard - Customer Subscription Management"
-                            className="w-full h-full object-cover object-left-top"
-                          />
-                        </div>
 
-                        <div
-                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
-                            activeCard === 1
-                              ? "opacity-100 scale-100 blur-0"
-                              : "opacity-0 scale-95 blur-sm"
-                          }`}
-                        >
-                          <img
-                            src={DashboardImage2}
-                            alt="Analytics Dashboard"
-                            className="w-full h-full object-cover object-left-top"
-                          />
-                        </div>
-
-                        <div
-                          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
-                            activeCard === 2
-                              ? "opacity-100 scale-100 blur-0"
-                              : "opacity-0 scale-95 blur-sm"
-                          }`}
-                        >
-                          <img
-                            src={DashboardImage4}
-                            alt="Data Visualization Dashboard"
-                            className="w-full h-full object-cover object-left-top" // Changed from object-cover to object-contain to preserve landscape aspect ratio
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
-
-              {/* <div className="self-stretch border-t border-b border-[#E0DEDB] flex justify-center items-start">
-                <div className="w-4 sm:w-6 md:w-8 lg:w-12 self-stretch relative overflow-hidden">
-                  <div className="w-[120px] sm:w-[140px] md:w-[162px] left-[-40px] sm:left-[-50px] md:left-[-58px] top-[-120px] absolute flex flex-col justify-start items-start">
-                    {Array.from({ length: 50 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="self-stretch h-3 sm:h-4 rotate-[-45deg] origin-top-left outline outline-[0.5px] outline-[rgba(3,7,18,0.08)] outline-offset-[-0.25px]"
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex-1 px-0 sm:px-2 md:px-0 flex flex-col md:flex-row justify-center items-stretch gap-0">
-
-                  <FeatureCard
-                    title="Plan your boost"
-                    description="Automate customer flow and boost conversions with smart chatbots"
-                    isActive={activeCard === 0}
-                    progress={activeCard === 0 ? progress : 0}
-                    onClick={() => handleCardClick(0)}
-                  />
-                  <FeatureCard
-                    title="Analytics & insights"
-                    description="Transform your business data into actionable insights with real-time analytics."
-                    isActive={activeCard === 1}
-                    progress={activeCard === 1 ? progress : 0}
-                    onClick={() => handleCardClick(1)}
-                  />
-
-                  <FeatureCard
-                    title="Collaborate seamlessly"
-                    description="Keep your team aligned with shared dashboards and collaborative workflows."
-                    isActive={activeCard === 2}
-                    progress={activeCard === 2 ? progress : 0}
-                    onClick={() => handleCardClick(2)}
-                  />
-                </div>
-
-                <div className="w-4 sm:w-6 md:w-8 lg:w-12 self-stretch relative overflow-hidden">
-                  <div className="w-[120px] sm:w-[140px] md:w-[162px] left-[-40px] sm:left-[-50px] md:left-[-58px] top-[-120px] absolute flex flex-col justify-start items-start">
-                    {Array.from({ length: 50 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="self-stretch h-3 sm:h-4 rotate-[-45deg] origin-top-left outline outline-[0.5px] outline-[rgba(3,7,18,0.08)] outline-offset-[-0.25px]"
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-              </div> */}
-              {/* Documentation Section */}
               <DocumentationSection />
 
 
@@ -807,7 +708,10 @@ export function HomePage() {
 
 
               {/* Testimonials Section */}
-              <TestimonialsSection />
+              <div id="review" className="w-full">
+                <TestimonialsSection />
+
+              </div>
 
               {/* Pricing Section */}
               <PricingSection />
@@ -815,8 +719,11 @@ export function HomePage() {
               {/* FAQ Section */}
               <FAQSection />
 
+
               {/* CTA Section */}
               <CTASection />
+              {/* Contact Section */}
+              <ContactForm />
 
               {/* Footer Section */}
               <FooterSection />

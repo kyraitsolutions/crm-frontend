@@ -204,8 +204,8 @@ export function ChatBotPage() {
     <div className="space-y-6 lg:px-3 px-2 py-2">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-[#37322F]">Chatbot Directory</h1>
-          <p className="mt-1 text-sm text-[#847971]">
+          <h1 className="text-2xl font-medium text-[#37322F]">Chatbot Directory</h1>
+          <p className="mt-2 text-sm text-[#847971]">
             Manage deployment status, monitor engagement, and open detailed user
             insights.
           </p>

@@ -1,3 +1,4 @@
+import { PillFilterDropdown } from "@/components/common/FilterDropdown";
 import { FilterDropdown, type Option } from "@/components/filter-dropdown";
 import Loader from "@/components/Loader";
 import { Pagination } from "@/components/pagination";
@@ -328,125 +329,162 @@ export default function LeadsCentre() {
   // console.log(basicNumber);
   return (
     <div className=" bg-background">
-      <div className="border-b bg-card shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div>
-            <h1 className="text-2xl font-semibold text-foreground">
-              Leads Centre
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Manage and track your leads
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Users className="mr-2 h-4 w-4" />
-                  Audiences
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>All Audiences</DropdownMenuItem>
-                <DropdownMenuItem>Team A</DropdownMenuItem>
-                <DropdownMenuItem>Team B</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button variant="ghost" size="icon">
-              <Download className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Bell className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Settings className="h-4 w-4" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add leads
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>Add single lead</DropdownMenuItem>
-                <DropdownMenuItem>Import leads</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </div>
+      <div className="flex max-sm:flex-col  sm:items-center justify-between px-6 py-6">
+        <div>
+          <h1 className="md:text-2xl font-medium text-[#37322F]">
+            Leads Centre
+          </h1>
+          <p className="text-sm text-[#847971] mt-1">
+            Manage and track your leads
+          </p>
+        </div>
+
+        <div className="flex whitespace-normal items-center gap-6">
+          {/* Audience filter */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="
+                      flex items-center gap-2
+                        rounded-[99px]
+                        px-4 py-2
+                        text-sm font-medium
+                        bg-[#FBFAF9]
+                        text-[#37322F]
+                        shadow-none
+                        transition
+          "
+              >
+                <Users className="h-4 w-4 text-[#847971]" />
+                Audiences
+                <ChevronDown className="h-4 w-4 text-[#847971]" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mt-2
+                    rounded-xl
+                    border-none
+                    bg-[#FBFAF9]
+                    p-1
+                    shadow-lg">
+              <DropdownMenuItem>All Audiences</DropdownMenuItem>
+              <DropdownMenuItem>Team A</DropdownMenuItem>
+              <DropdownMenuItem>Team B</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Icon actions (subtle) */}
+          {/* <button className="text-[#847971] hover:text-[#37322F] transition">
+            <Download className="h-4 w-4" />
+          </button> */}
+          <button className="text-[#847971] hover:text-[#37322F] transition">
+            <Bell className="h-4 w-4" />
+          </button>
+          {/* <button className="text-[#847971] hover:text-[#37322F] transition">
+            <Settings className="h-4 w-4" />
+          </button> */}
+
+          {/* Primary action */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="
+                flex items-center gap-2
+                whitespace-nowrap
+                rounded-[99px]
+                bg-[#37322F]
+                px-4 py-2
+                text-sm font-medium
+                text-[#FBFAF9]
+                shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+                hover:bg-[#2e2a28]
+                transition
+              "
+              >
+                <Plus className="h-4 w-4" />
+                Add leads
+                <ChevronDown className="h-4 w-4 opacity-70" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="rounded-lg">
+              <DropdownMenuItem>Add single lead</DropdownMenuItem>
+              <DropdownMenuItem>Import leads</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Overflow */}
+          {/* <button className="text-[#847971] hover:text-[#37322F] transition">
+            <MoreVertical className="h-4 w-4" />
+          </button> */}
         </div>
       </div>
 
       <div className="px-6 py-6">
-        <div className="mb-6 flex items-center justify-between gap-2">
-          {/*<div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="gap-2">
-              <LayoutList className="h-4 w-4" />
-              Pipeline view
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-2 bg-accent text-accent-foreground"
-            >
-              <Table2 className="h-4 w-4" />
-              Table view
-            </Button>
-          </div>
-          */}
-          {/* <Button variant="outline" size="sm">
-            Add new stage
-          </Button> */}
-
-          {/* <Button variant="outline" size="sm">
-            Bulk edit
-          </Button> */}
-          <InputGroup>
-            <InputGroupInput
-              placeholder="Search leads..."
+        <div className="mb-6 flex items-center justify-between gap-6">
+          {/* Search */}
+          <div className="relative w-full max-w-md">
+            <input
+              type="text"
+              placeholder="Search leads…"
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
+              className="
+                w-full
+                bg-transparent
+                border-b
+                border-[rgba(50,45,43,0.20)]
+                py-2 pr-8
+                text-sm
+                text-[#37322F]
+                placeholder:text-[#847971]
+                focus:outline-none
+                focus:border-[#37322F]
+                transition
+              "
             />
-            <InputGroupAddon align="inline-end">
+
+            {/* Right icon */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2">
               {searchQuery ? (
-                <InputGroupButton
-                  variant="ghost"
-                  size="icon-xs"
+                <button
                   onClick={() => {
                     setSearchQuery("");
                     setCurrentPage(1);
                   }}
+                  className="text-[#847971] hover:text-[#37322F] transition"
                 >
-                  <X className="h-3 w-3" />
-                </InputGroupButton>
+                  <X className="h-4 w-4" />
+                </button>
               ) : (
-                <Search className="h-4 w-4" />
+                <Search className="h-4 w-4 text-[#847971]" />
               )}
-            </InputGroupAddon>
-          </InputGroup>
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2"
+            </div>
+          </div>
+
+          {/* Filters toggle */}
+          <button
             onClick={() => setShowFilters(!showFilters)}
+            className="
+              flex items-center gap-2
+              whitespace-nowrap
+              text-sm font-medium
+              text-[#37322F]
+              hover:text-[#1f1c1a]
+              transition
+            "
           >
-            <Filter className="h-4 w-4" />
+            <Filter className="h-4 w-4 text-[#847971]" />
             {showFilters ? "Hide filters" : "Show filters"}
-          </Button>
+          </button>
         </div>
 
+
         {showFilters && (
-          <div className="mb-6 flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <FilterDropdown
+          <div className="mb-6">
+            <div className="flex flex-wrap items-center gap-3">
+              <PillFilterDropdown
                 label={filters.form.label}
                 options={formOptions}
                 allLabel="All Forms"
@@ -455,7 +493,7 @@ export default function LeadsCentre() {
                 }
               />
 
-              <FilterDropdown
+              <PillFilterDropdown
                 label={filters.date.label}
                 options={dateOptions}
                 allLabel="All Dates"
@@ -464,7 +502,7 @@ export default function LeadsCentre() {
                 }
               />
 
-              <FilterDropdown
+              <PillFilterDropdown
                 label={filters.status.label}
                 options={statusOptions}
                 allLabel="All Status"
@@ -473,7 +511,7 @@ export default function LeadsCentre() {
                 }
               />
 
-              <FilterDropdown
+              <PillFilterDropdown
                 label={filters.source.label}
                 options={sourceOptions}
                 allLabel="All Sources"
@@ -481,7 +519,8 @@ export default function LeadsCentre() {
                   setFilters((prev) => ({ ...prev, source: value }))
                 }
               />
-              <FilterDropdown
+
+              <PillFilterDropdown
                 label={filters.stage.label}
                 options={stageOptions}
                 allLabel="All Stages"
@@ -490,7 +529,7 @@ export default function LeadsCentre() {
                 }
               />
 
-              <FilterDropdown
+              <PillFilterDropdown
                 label={filters.label.label}
                 options={labelOptions}
                 allLabel="All Labels"
@@ -499,6 +538,7 @@ export default function LeadsCentre() {
                 }
               />
 
+              {/* Clear filters */}
               {(filters.form.value ||
                 filters.date.value ||
                 filters.status.value ||
@@ -506,9 +546,7 @@ export default function LeadsCentre() {
                 filters.assignedTo.value ||
                 filters.stage.value ||
                 filters.label.value) && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <button
                     onClick={() =>
                       setFilters({
                         lead: { label: "All Leads", value: null },
@@ -523,59 +561,70 @@ export default function LeadsCentre() {
                         read: { label: "All", value: null },
                       })
                     }
-                    className="text-muted-foreground hover:text-foreground"
+                    className="
+            flex items-center gap-1
+            text-sm font-medium
+            text-[#847971]
+            hover:text-[#37322F]
+            transition
+          "
                   >
-                    <X className="h-4 w-4 mr-1" />
+                    <X className="h-4 w-4" />
                     Clear
-                  </Button>
+                  </button>
                 )}
             </div>
           </div>
         )}
 
-        <div className="mb-6 flex items-center gap-8">
+        <div className="mb-6 flex flex-wrap items-center gap-x-10 gap-y-3 text-sm">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-primary">Intake:</span>
-            <span className="text-muted-foreground">
+            <span className="font-medium text-[#37322F]">Intake</span>
+            <span className="text-[#847971]">
               {basicNumber.intakeLeads}
             </span>
-            <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
-              <Info className="h-3 w-3" />
-            </div>
+            <Info className="h-3.5 w-3.5 text-[#A8A29E] hover:text-[#37322F] transition cursor-help" />
           </div>
+
           <div className="flex items-center gap-2">
-            <span className="font-medium text-primary">Qualified:</span>
-            <span className="text-muted-foreground">
+            <span className="font-medium text-[#37322F]">Qualified</span>
+            <span className="text-[#847971]">
               {basicNumber.qualifiedLeads}
             </span>
-            <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
-              <Info className="h-3 w-3" />
-            </div>
+            <Info className="h-3.5 w-3.5 text-[#A8A29E] hover:text-[#37322F] transition cursor-help" />
           </div>
+
           <div className="flex items-center gap-2">
-            <span className="font-medium text-primary">Converted:</span>
-            <span className="text-muted-foreground">
+            <span className="font-medium text-[#37322F]">Converted</span>
+            <span className="text-[#847971]">
               {basicNumber.convertedLeads}
             </span>
-            <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
-              <Info className="h-3 w-3" />
-            </div>
+            <Info className="h-3.5 w-3.5 text-[#A8A29E] hover:text-[#37322F] transition cursor-help" />
           </div>
+
           <div className="flex items-center gap-2">
-            <span className="font-medium text-primary">Conversion rate:</span>
-            <span className="text-muted-foreground">
+            <span className="font-medium text-[#37322F]">Conversion rate</span>
+            <span className="text-[#847971]">
               {basicNumber.conversionRate}%
             </span>
-            <div className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground hover:bg-accent transition-colors cursor-help">
-              <Info className="h-3 w-3" />
-            </div>
+            <Info className="h-3.5 w-3.5 text-[#A8A29E] hover:text-[#37322F] transition cursor-help" />
           </div>
+
           <div className="ml-auto">
-            <button className="text-sm text-primary hover:underline transition-colors">
+            <button
+              className="
+        text-sm font-medium
+        text-[#37322F]
+        hover:underline
+        underline-offset-4
+        transition
+      "
+            >
               View all
             </button>
           </div>
         </div>
+
 
         {/* {filteredLeads.length > 0 && (
           <div className="mb-4 flex items-center gap-2">
@@ -678,179 +727,158 @@ export default function LeadsCentre() {
             </div>
           </div>
 
-          <Table>
+          <Table className="">
             <TableHeader>
-              <TableRow>
+              <TableRow className="border-b border-border/40">
                 <TableHead className="w-12">
                   <Checkbox />
                 </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 font-medium text-foreground hover:text-primary"
-                  >
-                    Date added
-                    <ArrowUpDown className="ml-2 h-3 w-3" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 font-medium text-foreground hover:text-primary"
-                  >
-                    Name
-                    <ArrowUpDown className="ml-2 h-3 w-3" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 font-medium text-foreground hover:text-primary"
-                  >
-                    Phone
-                    <ArrowUpDown className="ml-2 h-3 w-3" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 font-medium text-foreground hover:text-primary"
-                  >
-                    Email
-                    <ArrowUpDown className="ml-2 h-3 w-3" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 font-medium text-foreground hover:text-primary"
-                  >
-                    Stage
-                    <ArrowUpDown className="ml-2 h-3 w-3" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 font-medium text-foreground hover:text-primary"
-                  >
-                    Source
-                    <ArrowUpDown className="ml-2 h-3 w-3" />
-                  </Button>
-                </TableHead>
-                {/* <TableHead>
-                                    <Button variant="ghost" size="sm" className="h-auto p-0 font-medium text-foreground hover:text-primary">
-                                        Assigned to
-                                        <ArrowUpDown className="ml-2 h-3 w-3" />
-                                    </Button>
-                                </TableHead> */}
-                {/* <TableHead>
-                                    <Button variant="ghost" size="sm" className="h-auto p-0 font-medium text-foreground hover:text-primary">
-                                        Channel
-                                        <ArrowUpDown className="ml-2 h-3 w-3" />
-                                    </Button>
-                                </TableHead> */}
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 font-medium text-foreground hover:text-primary"
-                  >
-                    Status
-                    <ArrowUpDown className="ml-2 h-3 w-3" />
-                  </Button>
-                </TableHead>
-                <TableHead className="text-muted-foreground">
-                  Reminder
-                </TableHead>
+
+                {[
+                  "Date added",
+                  "Name",
+                  "Phone",
+                  "Email",
+                  "Stage",
+                  "Source",
+                  "Status",
+                ].map((label) => (
+                  <TableHead key={label} className="text-sm font-medium text-[#847971]">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="
+                      h-auto p-0
+                      font-medium
+                      text-[#847971]
+                      hover:text-[#37322F]
+                      "
+                    >
+                      {label}
+                      <ArrowUpDown className="ml-1.5 h-3 w-3 opacity-50" />
+                    </Button>
+                  </TableHead>
+                ))}
               </TableRow>
             </TableHeader>
 
             <TableBody>
               {isLoadingLeads ? (
                 <TableSkeleton rows={9} />
-              ) : allLeads && allLeads?.length > 0 ? (
-                allLeads?.map((lead: any) => (
+              ) : allLeads && allLeads.length > 0 ? (
+                allLeads.map((lead: any) => (
                   <TableRow
                     key={lead.id}
-                    className="cursor-pointer hover:bg-accent/50 transition-colors"
                     onClick={() => handleRowClick(lead)}
+                    className="
+                    cursor-pointer
+                    border-b border-border/30
+                    hover:bg-[#FBFAF9]
+                    transition-colors
+                  "
                   >
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       <Checkbox />
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
+
+                    <TableCell className="text-sm text-[#9A948E]">
                       {formatDate(lead.createdAt)}
                     </TableCell>
+
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                        <div
+                          className="
+                          flex h-8 w-8 items-center justify-center
+                          rounded-full
+                          bg-[#37322F]/10
+                          text-xs font-medium
+                          text-[#37322F]
+                        "
+                        >
                           {lead.name.charAt(0).toUpperCase()}
                         </div>
-                        <span className="font-medium text-foreground capitalize">
-                          {lead.name}
+                        <span className="font-medium text-[#37322F] capitalize">
+                          {lead.name.slice(0, 20)}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <span className="font-medium text-foreground capitalize">
-                        {lead.phone}
-                      </span>
+
+                    <TableCell className="text-[#37322F]">
+                      {lead.phone}
                     </TableCell>
-                    <TableCell>
-                      <span className="font-medium text-foreground">
-                        {lead.email}
-                      </span>
+
+                    <TableCell className="text-[#37322F]">
+                      {lead.email}
                     </TableCell>
+
                     <TableCell>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-auto p-0 text-foreground hover:text-primary capitalize"
+                        className="
+                        h-auto p-0
+                        text-[#37322F]
+                        hover:text-[#2e2a28]
+                        capitalize
+                      "
                       >
                         {lead.stage}
-                        <ChevronDown className="ml-1 h-3 w-3" />
+                        <ChevronDown className="ml-1 h-3 w-3 opacity-60" />
                       </Button>
                     </TableCell>
+
                     <TableCell>
                       <Badge
-                        variant="secondary"
-                        className="font-normal capitalize"
+                        className="
+                          rounded-full
+                          bg-[#F4F3F2]
+                          px-3 py-0.5
+                          text-xs
+                          font-normal
+                          text-[#37322F]
+                        "
                       >
                         {lead.source.name}
                       </Badge>
                     </TableCell>
 
                     <TableCell>
-                      <div className="space-y-1.5">
+                      <div className="flex flex-col gap-1">
                         <Badge
-                          variant="secondary"
-                          className="font-normal capitalize"
+                          className="
+                            w-fit rounded-full
+                            bg-[#F4F3F2]
+                            px-3 py-0.5
+                            text-xs
+                            font-normal
+                            text-[#37322F]
+                          "
                         >
                           {lead.status}
                         </Badge>
+
                         <Badge
-                          variant="secondary"
-                          className="block w-fit bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
+                          className="
+                          w-fit rounded-full
+                          bg-green-50
+                          px-3 py-0.5
+                          text-xs
+                          font-normal
+                          text-green-700
+                        "
                         >
                           {lead.formStatus}
                         </Badge>
                       </div>
                     </TableCell>
-                    <TableCell></TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
                   <TableCell
                     colSpan={10}
-                    className="text-center py-8 text-muted-foreground"
+                    className="py-10 text-center text-sm text-muted-foreground"
                   >
                     No leads found
                   </TableCell>
@@ -858,6 +886,7 @@ export default function LeadsCentre() {
               )}
             </TableBody>
           </Table>
+
         </div>
 
         {/* Pagination */}
@@ -868,8 +897,15 @@ export default function LeadsCentre() {
         />
       </div>
 
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="px-6 md:max-w-xl w-full overflow-y-auto bg-gray-100">
+      {/* <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen} >
+        <SheetContent className="
+          w-full md:max-w-xl
+          px-8
+          overflow-y-auto
+          bg-[#FBFAF9]
+        "
+        // className="px-6 md:max-w-xl w-full overflow-y-auto bg-gray-100"
+        >
           <SheetHeader className="pb-4 border-b">
             <SheetTitle className="flex items-center gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-xl font-semibold text-primary">
@@ -881,21 +917,21 @@ export default function LeadsCentre() {
                   {editableLead?.name}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  {/* {editableLead.co || "No company added"} */}
+                  {editableLead?.tags || "No company added"}
                 </p>
               </div>
             </SheetTitle>
           </SheetHeader>
 
           <div className="mt-6 space-y-8">
-            {/* CONTACT INFO */}
+
             <section>
               <h3 className="text-sm font-semibold text-foreground mb-3">
                 Contact Information
               </h3>
 
               <div className="grid grid-cols-1 gap-4 rounded-lg border bg-muted/30 p-4">
-                {/* Email */}
+
                 <div className="flex flex-col gap-1">
                   <label className="text-xs text-muted-foreground font-medium">
                     Email
@@ -921,7 +957,7 @@ export default function LeadsCentre() {
                   )}
                 </div>
 
-                {/* Phone */}
+
                 <div className="flex flex-col gap-1">
                   <label className="text-xs text-muted-foreground font-medium">
                     Phone
@@ -950,14 +986,14 @@ export default function LeadsCentre() {
               </div>
             </section>
 
-            {/* LEAD DETAILS */}
+
             <section>
               <h3 className="text-sm font-semibold text-foreground mb-3">
                 Lead Details
               </h3>
 
               <div className="grid grid-cols-2 gap-4 rounded-lg border bg-muted/30 p-4">
-                {/* Stage */}
+
                 <div className="flex flex-col gap-1">
                   <label className="text-xs text-muted-foreground font-medium">
                     Stage
@@ -988,7 +1024,7 @@ export default function LeadsCentre() {
                   )}
                 </div>
 
-                {/* Status */}
+
                 <div className="flex flex-col gap-1">
                   <label className="text-xs text-muted-foreground font-medium">
                     Status
@@ -1018,7 +1054,6 @@ export default function LeadsCentre() {
                   )}
                 </div>
 
-                {/* Source */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs text-muted-foreground font-medium">
                     Source
@@ -1028,7 +1063,6 @@ export default function LeadsCentre() {
                   </Badge>
                 </div>
 
-                {/* Source URL */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs text-muted-foreground font-medium">
                     Source URL
@@ -1038,7 +1072,7 @@ export default function LeadsCentre() {
                   </Badge>
                 </div>
 
-                {/* Date Added */}
+
                 <div className="flex flex-col gap-1 col-span-2">
                   <label className="text-xs text-muted-foreground font-medium">
                     Date Added
@@ -1050,7 +1084,6 @@ export default function LeadsCentre() {
               </div>
             </section>
 
-            {/* OTHER DETAILS */}
             <section>
               <h3 className="text-sm font-semibold text-foreground mb-3">
                 Other Details
@@ -1098,7 +1131,6 @@ export default function LeadsCentre() {
               </div>
             </section>
 
-            {/* NOTES */}
             <section>
               <h3 className="text-sm font-semibold mb-3 text-foreground">
                 Notes
@@ -1121,15 +1153,9 @@ export default function LeadsCentre() {
                   </textarea>
                 )}
               </div>
-
-              {/* {note && (
-                <Button onClick={handleSave} className="mt-2">
-                  Save
-                </Button>
-              )} */}
             </section>
 
-            {/* ACTION BUTTONS */}
+
             <div className="flex items-center gap-3 pt-2 sticky bottom-0 bg-white pb-4">
               {!isEditing ? (
                 <>
@@ -1163,7 +1189,346 @@ export default function LeadsCentre() {
             </div>
           </div>
         </SheetContent>
+      </Sheet> */}
+
+
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <SheetContent
+          className="
+            w-full md:max-w-xl
+            px-8 pb-2
+            overflow-y-auto
+            bg-[#FBFAF9]
+          "
+        >
+          {/* HEADER */}
+          <SheetHeader className="pb-6 border-b border-[rgba(50,45,43,0.12)]">
+            <SheetTitle className="flex items-center gap-4">
+              <div
+                className="
+                  flex h-14 w-14 items-center justify-center
+                  rounded-full
+                  bg-[#37322F]/10
+                  text-xl font-semibold
+                  text-[#37322F]
+                "
+              >
+                {editableLead?.name?.charAt(0).toUpperCase()}
+              </div>
+
+              <div>
+                <h1 className="text-xl font-medium text-[#37322F] capitalize">
+                  {editableLead?.name.slice(0, 30)}
+                </h1>
+                <p className="text-sm text-[#847971]">
+                  Lead profile
+                </p>
+              </div>
+            </SheetTitle>
+          </SheetHeader>
+
+          <div className="mt-5 space-y-10">
+            {/* CONTACT INFO */}
+            <section>
+              <h3 className="text-sm font-medium text-[#37322F] mb-4">
+                Contact Information
+              </h3>
+
+              <div className="grid gap-6">
+                {/* Email */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
+                    Email
+                  </label>
+
+                  {isEditing ? (
+                    <Input
+                      value={editableLead?.email}
+                      className="
+                  bg-[#F7F6F4]
+                  border-none
+                  rounded-lg
+                  focus-visible:ring-0
+                  text-[#37322F]
+                "
+                      onChange={(e) =>
+                        setEditableLead((prev) =>
+                          prev ? { ...prev, email: e.target.value } : prev
+                        )
+                      }
+                    />
+                  ) : (
+                    <Link
+                      to={`mailto:${editableLead?.email}`}
+                      className="text-sm text-[#37322F]"
+                    >
+                      {editableLead?.email}
+                    </Link>
+                  )}
+                </div>
+
+                {/* Phone */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
+                    Phone
+                  </label>
+
+                  {isEditing ? (
+                    <Input
+                      value={editableLead?.phone}
+                      className="
+                  bg-[#F7F6F4]
+                  border-none
+                  rounded-lg
+                  focus-visible:ring-0
+                  text-[#37322F]
+                "
+                      onChange={(e) =>
+                        setEditableLead((prev) =>
+                          prev ? { ...prev, phone: e.target.value } : prev
+                        )
+                      }
+                    />
+                  ) : (
+                    <Link
+                      target="_blank"
+                      to={`https://wa.me/${editableLead?.phone}?text=hello`}
+                      className="text-sm text-[#37322F]"
+                    >
+                      {editableLead?.phone}
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* LEAD DETAILS */}
+            <section>
+              <h3 className="text-sm font-medium text-[#37322F] mb-4">
+                Lead Details
+              </h3>
+
+              <div className="grid grid-cols-2 gap-6">
+                {/* Stage */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
+                    Stage
+                  </label>
+
+                  {isEditing ? (
+                    <Select
+                      value={editableLead?.stage}
+                      onValueChange={(v) =>
+                        setEditableLead((prev) =>
+                          prev ? { ...prev, stage: v } : prev
+                        )
+                      }
+                    >
+                      <SelectTrigger className="bg-[#F7F6F4] border-none rounded-lg">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="intake">Intake</SelectItem>
+                        <SelectItem value="qualified">Qualified</SelectItem>
+                        <SelectItem value="converted">Converted</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Badge
+                      className="
+                  w-fit rounded-full
+                  bg-[#37322F]/10
+                  text-[#37322F]
+                  capitalize
+                "
+                    >
+                      {editableLead?.stage}
+                    </Badge>
+                  )}
+                </div>
+
+                {/* Status */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
+                    Status
+                  </label>
+
+                  {isEditing ? (
+                    <Select
+                      value={editableLead?.status}
+                      onValueChange={(v) =>
+                        setEditableLead((prev) =>
+                          prev ? { ...prev, status: v } : prev
+                        )
+                      }
+                    >
+                      <SelectTrigger className="bg-[#F7F6F4] border-none rounded-lg">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Badge
+                      className="
+                  w-fit rounded-full
+                  bg-[#37322F]/10
+                  text-[#37322F]
+                  capitalize
+                "
+                    >
+                      {editableLead?.status}
+                    </Badge>
+                  )}
+                </div>
+
+                {/* Source */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
+                    Source
+                  </label>
+                  <p className="text-sm text-[#37322F]">
+                    {editableLead?.source?.name || "-"}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
+                    Source URL
+                  </label>
+                  <p className="text-sm text-[#37322F]">
+                    {editableLead?.source?.name || "-"}
+                  </p>
+                </div>
+
+                {/* Date */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
+                    Date Added
+                  </label>
+                  <p className="text-sm text-[#37322F]">
+                    {formatDate(editableLead?.createdAt || "")}
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* OTHER DETAILS */}
+            <section>
+              <h3 className="text-sm font-medium text-[#37322F] mb-4">
+                Other Details
+              </h3>
+
+              <div className="grid grid-cols-2 gap-6">
+                {editableLead?.customFields &&
+                  Object.keys(editableLead.customFields).length > 0 ? (
+                  Object.entries(editableLead.customFields).map(([key, value]) => (
+                    <div key={key} className="flex flex-col gap-1">
+                      <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
+                        {key}
+                      </label>
+
+                      {isEditing ? (
+                        <Input
+                          value={value as string}
+                          className="
+                      bg-[#F7F6F4]
+                      border-none
+                      rounded-lg
+                      focus-visible:ring-0
+                      text-[#37322F]
+                    "
+                          onChange={(e) =>
+                            setEditableLead((prev) =>
+                              prev
+                                ? {
+                                  ...prev,
+                                  customFields: {
+                                    ...(prev.customFields ?? {}),
+                                    [key]: e.target.value,
+                                  },
+                                }
+                                : prev
+                            )
+                          }
+                        />
+                      ) : (
+                        <p className="text-sm text-[#37322F]">{value}</p>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-[#847971]">
+                    No additional details available.
+                  </p>
+                )}
+              </div>
+            </section>
+
+            {/* NOTES */}
+            <section>
+              <h3 className="text-sm font-medium text-[#37322F] mb-4">
+                Notes
+              </h3>
+
+              <textarea
+                rows={4}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                readOnly={!isEditing}
+                className="
+            w-full
+            bg-[#F7F6F4]
+            rounded-xl
+            p-4
+            text-sm
+            text-[#37322F]
+            resize-none
+            outline-none
+          "
+              />
+            </section>
+
+            {/* ACTIONS */}
+            <div className="flex items-center gap-3">
+              {!isEditing ? (
+                <>
+                  <Button className="flex-1 rounded-[99px] bg-[#37322F] text-[#FBFAF9]">
+                    Assign Lead
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex-1 rounded-[99px]"
+                    onClick={handleEdit}
+                  >
+                    Edit Details
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    disabled={isEditingLoading}
+                    className="flex-1 rounded-[99px] bg-[#37322F] text-[#FBFAF9]"
+                    onClick={handleSave}
+                  >
+                    Save {isEditingLoading && <Loader />}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex-1 rounded-[99px]"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </SheetContent>
       </Sheet>
+
     </div>
   );
 }

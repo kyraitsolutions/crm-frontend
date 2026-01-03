@@ -9,12 +9,12 @@ export default function PricingSection() {
       annually: 0,
     },
     professional: {
-      monthly: 20,
-      annually: 16, // 20% discount for annual
+      monthly: "7,000",
+      annually: "84,000", // 20% discount for annual
     },
     enterprise: {
-      monthly: 200,
-      annually: 160, // 20% discount for annual
+      monthly: "14,000",
+      annually: "168,000", // 20% discount for annual
     },
   }
 
@@ -64,9 +64,8 @@ export default function PricingSection() {
         <div className="p-3 relative bg-[rgba(55,50,47,0.03)] border border-[rgba(55,50,47,0.02)] backdrop-blur-[44px] backdrop-saturate-150 backdrop-brightness-110 flex justify-center items-center rounded-lg z-20 before:absolute before:inset-0 before:bg-white before:opacity-60 before:rounded-lg before:-z-10">
           <div className="p-[2px] bg-[rgba(55,50,47,0.10)] shadow-[0px_1px_0px_white] rounded-[99px] border-[0.5px] border-[rgba(55,50,47,0.08)] flex justify-center items-center gap-[2px] relative">
             <div
-              className={`absolute top-[2px] w-[calc(50%-1px)] h-[calc(100%-4px)] bg-white shadow-[0px_2px_4px_rgba(0,0,0,0.08)] rounded-[99px] transition-all duration-300 ease-in-out ${
-                billingPeriod === "annually" ? "left-[2px]" : "right-[2px]"
-              }`}
+              className={`absolute top-[2px] w-[calc(50%-1px)] h-[calc(100%-4px)] bg-white shadow-[0px_2px_4px_rgba(0,0,0,0.08)] rounded-[99px] transition-all duration-300 ease-in-out ${billingPeriod === "annually" ? "left-[2px]" : "right-[2px]"
+                }`}
             />
 
             <button
@@ -74,9 +73,8 @@ export default function PricingSection() {
               className="px-4 py-1 rounded-[99px] flex justify-center items-center gap-2 transition-colors duration-300 relative z-10 flex-1"
             >
               <div
-                className={`text-[13px] font-medium leading-5 font-sans transition-colors duration-300 ${
-                  billingPeriod === "annually" ? "text-[#37322F]" : "text-[#6B7280]"
-                }`}
+                className={`text-[13px] font-medium leading-5 font-sans transition-colors duration-300 ${billingPeriod === "annually" ? "text-[#37322F]" : "text-[#6B7280]"
+                  }`}
               >
                 Annually
               </div>
@@ -87,9 +85,8 @@ export default function PricingSection() {
               className="px-4 py-1 rounded-[99px] flex justify-center items-center gap-2 transition-colors duration-300 relative z-10 flex-1"
             >
               <div
-                className={`text-[13px] font-medium leading-5 font-sans transition-colors duration-300 ${
-                  billingPeriod === "monthly" ? "text-[#37322F]" : "text-[#6B7280]"
-                }`}
+                className={`text-[13px] font-medium leading-5 font-sans transition-colors duration-300 ${billingPeriod === "monthly" ? "text-[#37322F]" : "text-[#6B7280]"
+                  }`}
               >
                 Monthly
               </div>
@@ -135,7 +132,7 @@ export default function PricingSection() {
                 <div className="self-stretch flex flex-col justify-start items-start gap-2">
                   <div className="flex flex-col justify-start items-start gap-1">
                     <div className="relative h-[60px] flex items-center text-[#37322F] text-5xl font-medium leading-[60px] font-serif">
-                      <span className="invisible">${pricing.starter[billingPeriod]}</span>
+                      <span className="invisible">₹{pricing.starter[billingPeriod]}</span>
                       <span
                         className="absolute inset-0 flex items-center transition-all duration-500"
                         style={{
@@ -145,7 +142,7 @@ export default function PricingSection() {
                         }}
                         aria-hidden={billingPeriod !== "annually"}
                       >
-                        ${pricing.starter.annually}
+                        ₹{pricing.starter.annually}
                       </span>
                       <span
                         className="absolute inset-0 flex items-center transition-all duration-500"
@@ -156,7 +153,7 @@ export default function PricingSection() {
                         }}
                         aria-hidden={billingPeriod !== "monthly"}
                       >
-                        ${pricing.starter.monthly}
+                        ₹{pricing.starter.monthly}
                       </span>
                     </div>
                     <div className="text-[#847971] text-sm font-medium font-sans">
@@ -215,7 +212,7 @@ export default function PricingSection() {
                 <div className="self-stretch flex flex-col justify-start items-start gap-2">
                   <div className="flex flex-col justify-start items-start gap-1">
                     <div className="relative h-[60px] flex items-center text-[#F0EFEE] text-5xl font-medium leading-[60px] font-serif">
-                      <span className="invisible">${pricing.professional[billingPeriod]}</span>
+                      <span className="invisible">₹{pricing.professional[billingPeriod]}</span>
                       <span
                         className="absolute inset-0 flex items-center transition-all duration-500"
                         style={{
@@ -225,7 +222,7 @@ export default function PricingSection() {
                         }}
                         aria-hidden={billingPeriod !== "annually"}
                       >
-                        ${pricing.professional.annually}
+                        ₹{pricing.professional.annually}
                       </span>
                       <span
                         className="absolute inset-0 flex items-center transition-all duration-500"
@@ -236,7 +233,7 @@ export default function PricingSection() {
                         }}
                         aria-hidden={billingPeriod !== "monthly"}
                       >
-                        ${pricing.professional.monthly}
+                        ₹{pricing.professional.monthly}
                       </span>
                     </div>
                     <div className="text-[#D2C6BF] text-sm font-medium font-sans">
@@ -297,7 +294,7 @@ export default function PricingSection() {
                 <div className="self-stretch flex flex-col justify-start items-start gap-2">
                   <div className="flex flex-col justify-start items-start gap-1">
                     <div className="relative h-[60px] flex items-center text-[#37322F] text-5xl font-medium leading-[60px] font-serif">
-                      <span className="invisible">${pricing.enterprise[billingPeriod]}</span>
+                      <span className="invisible">₹{pricing.enterprise[billingPeriod]}</span>
                       <span
                         className="absolute inset-0 flex items-center transition-all duration-500"
                         style={{
@@ -307,7 +304,7 @@ export default function PricingSection() {
                         }}
                         aria-hidden={billingPeriod !== "annually"}
                       >
-                        ${pricing.enterprise.annually}
+                        ₹{pricing.enterprise.annually}
                       </span>
                       <span
                         className="absolute inset-0 flex items-center transition-all duration-500"
@@ -318,7 +315,7 @@ export default function PricingSection() {
                         }}
                         aria-hidden={billingPeriod !== "monthly"}
                       >
-                        ${pricing.enterprise.monthly}
+                        ₹{pricing.enterprise.monthly}
                       </span>
                     </div>
                     <div className="text-[#847971] text-sm font-medium font-sans">
