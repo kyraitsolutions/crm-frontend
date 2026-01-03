@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Activity,
@@ -399,8 +398,8 @@ const DashboardAccount = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="mx-auto max-w-[1600px] space-y-6">
+    <div className="min-h-screen bg-background p-4 md:p-6 border">
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           {/* LEFT: Title */}

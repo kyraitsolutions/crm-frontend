@@ -1,5 +1,5 @@
 import { PillFilterDropdown } from "@/components/common/FilterDropdown";
-import { FilterDropdown, type Option } from "@/components/filter-dropdown";
+import type { Option } from "@/components/filter-dropdown";
 import Loader from "@/components/Loader";
 import { Pagination } from "@/components/pagination";
 import { TableSkeleton } from "@/components/skeltons/TableSkeltons";
@@ -13,12 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@/components/ui/input-group";
 import {
   Select,
   SelectContent,
@@ -63,13 +57,11 @@ import {
   ArrowUpDown,
   Bell,
   ChevronDown,
-  Download,
   Filter,
   Info,
   MoreVertical,
   Plus,
   Search,
-  Settings,
   Users,
   X,
 } from "lucide-react";
@@ -321,10 +313,6 @@ export default function LeadsCentre() {
     };
   }, [allLeads]);
 
-  const inputClean = `
-  outline-none ring-0 focus:ring-0 focus-visible:ring-0 
-  focus:outline-none focus-visible:outline-none 
-  shadow-none focus:border focus-visible:border-gray-300`;
 
   // console.log(basicNumber);
   return (

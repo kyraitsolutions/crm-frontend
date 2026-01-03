@@ -135,8 +135,8 @@ export function HomePage() {
               <div
                 onClick={() => {
                   window.location.href =
-                    // "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                    "http://localhost:3000/api/auth/google";
+                    "https://crm-backend-7lf9.onrender.com/api/auth/google";
+                  // "http://localhost:3000/api/auth/google";
                 }}
                 className="cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 w-full max-w-[600px] lg:w-[600px] flex flex-col justify-center items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 relative z-10 mt-6 sm:mt-8 md:mt-10 lg:mt-12"
               >
