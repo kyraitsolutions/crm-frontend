@@ -71,7 +71,7 @@ export default function ChatBotBuilderInfoTabs({
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         {/* Tabs Header */}
-        <TabsList className="flex border-b border-[#E5E3E0] bg-transparent gap-2">
+        <TabsList className="flex flex-wrap h-auto border-b border-[#E5E3E0] bg-transparent gap-2">
           {tabs.map((tab) => {
             if (tab.label.toLowerCase() === "chatbot flow" && !chatBotId) return null;
             return (
@@ -82,6 +82,7 @@ export default function ChatBotBuilderInfoTabs({
             flex items-center gap-2 px-4 py-2 text-sm font-medium
             rounded-t-md
             transition-colors
+            max-sm:flex-col
             ${activeTab === tab.id ? "bg-[#FBFAF9] text-[#37322F] shadow" : "text-[#847971] hover:bg-[#F7F6F4] hover:text-[#37322F]"}
           `}
                 onClick={() => {

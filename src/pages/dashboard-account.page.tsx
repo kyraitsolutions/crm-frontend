@@ -416,7 +416,7 @@ const DashboardAccount = () => {
           {/* RIGHT: Controls */}
           <div className="flex flex-wrap items-center gap-3">
             {/* Time Range */}
-            <div className="flex items-center gap-1 rounded-full bg-[#F7F6F4] p-1">
+            <div className="flex max-sm:w-full items-center gap-1 rounded-full bg-[#F7F6F4] p-1">
               {(["daily", "weekly", "monthly", "yearly"] as const).map((range) => {
                 const active = timeRange === range;
 
@@ -428,6 +428,7 @@ const DashboardAccount = () => {
               rounded-full
               px-4 py-1.5
               text-xs font-medium
+              max-md:w-full
               transition
               ${active
                         ? "bg-[#37322F] text-[#FBFAF9]"
@@ -995,7 +996,7 @@ const DashboardAccount = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <p className="text-xs font-semibold capitalize">
-                          {lead.name}
+                          {lead.name.slice(0, 30)}
                         </p>
                         <Badge
                           className={`text-[9px] text-white capitalize ${getStatusColor(

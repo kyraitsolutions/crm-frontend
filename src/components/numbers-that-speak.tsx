@@ -26,21 +26,21 @@ const NumbersThatSpeak: React.FC<NumbersThatSpeakProps> = ({
   const themeVars =
     theme === "light"
       ? {
-          "--nts-surface": "#ffffff",
-          "--nts-text-primary": "#2f3037",
-          "--nts-text-secondary": "rgba(47,48,55,0.8)",
-          "--nts-text-muted": "rgba(55,50,47,0.7)",
-          "--nts-border": "rgba(47,48,55,0.12)",
-          "--nts-shadow": "rgba(47,48,55,0.06)",
-        }
+        "--nts-surface": "#ffffff",
+        "--nts-text-primary": "#2f3037",
+        "--nts-text-secondary": "rgba(47,48,55,0.8)",
+        "--nts-text-muted": "rgba(55,50,47,0.7)",
+        "--nts-border": "rgba(47,48,55,0.12)",
+        "--nts-shadow": "rgba(47,48,55,0.06)",
+      }
       : ({
-          "--nts-surface": "#ffffff",
-          "--nts-text-primary": "#2f3037",
-          "--nts-text-secondary": "rgba(47,48,55,0.8)",
-          "--nts-text-muted": "rgba(55,50,47,0.7)",
-          "--nts-border": "rgba(47,48,55,0.12)",
-          "--nts-shadow": "rgba(47,48,55,0.06)",
-        } as React.CSSProperties);
+        "--nts-surface": "#ffffff",
+        "--nts-text-primary": "#2f3037",
+        "--nts-text-secondary": "rgba(47,48,55,0.8)",
+        "--nts-text-muted": "rgba(55,50,47,0.7)",
+        "--nts-border": "rgba(47,48,55,0.12)",
+        "--nts-shadow": "rgba(47,48,55,0.06)",
+      } as React.CSSProperties);
 
   // Figma-exported assets
   const imgSchedule = "/placeholder.svg?height=271&width=431";

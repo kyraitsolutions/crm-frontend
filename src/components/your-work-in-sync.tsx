@@ -26,32 +26,32 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
   const themeVars =
     theme === "light"
       ? {
-          "--yws-surface": "#ffffff",
-          "--yws-text-primary": "#37322f",
-          "--yws-text-secondary": "#6b7280",
-          "--yws-bubble-light": "#e8e5e3",
-          "--yws-bubble-dark": "#37322f",
-          "--yws-bubble-white": "#ffffff",
-          "--yws-border": "rgba(0,0,0,0.08)",
-          "--yws-shadow": "rgba(0,0,0,0.08)",
-        }
+        "--yws-surface": "#ffffff",
+        "--yws-text-primary": "#37322f",
+        "--yws-text-secondary": "#6b7280",
+        "--yws-bubble-light": "#e8e5e3",
+        "--yws-bubble-dark": "#37322f",
+        "--yws-bubble-white": "#ffffff",
+        "--yws-border": "rgba(0,0,0,0.08)",
+        "--yws-shadow": "rgba(0,0,0,0.08)",
+      }
       : ({
-          "--yws-surface": "#1f2937",
-          "--yws-text-primary": "#f9fafb",
-          "--yws-text-secondary": "#d1d5db",
-          "--yws-bubble-light": "#374151",
-          "--yws-bubble-dark": "#111827",
-          "--yws-bubble-white": "#ffffff",
-          "--yws-border": "rgba(255,255,255,0.12)",
-          "--yws-shadow": "rgba(0,0,0,0.24)",
-        } as React.CSSProperties)
+        "--yws-surface": "#1f2937",
+        "--yws-text-primary": "#f9fafb",
+        "--yws-text-secondary": "#d1d5db",
+        "--yws-bubble-light": "#374151",
+        "--yws-bubble-dark": "#111827",
+        "--yws-bubble-white": "#ffffff",
+        "--yws-border": "rgba(255,255,255,0.12)",
+        "--yws-shadow": "rgba(0,0,0,0.24)",
+      } as React.CSSProperties)
 
   // Figma-exported assets
   const imgFrame2147223205 = "/professional-woman-avatar-with-short-brown-hair-an.jpg"
   const imgFrame2147223206 = "/professional-man-avatar-with-beard-and-glasses-loo.jpg"
   const imgFrame2147223207 = "/professional-person-avatar-with-curly-hair-and-war.jpg"
-  const imgArrowUp =
-    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='3' strokeLinecap='round' strokeLinejoin='round'%3E%3Cpath d='m5 12 7-7 7 7'/%3E%3Cpath d='M12 19V5'/%3E%3C/svg%3E"
+  // const imgArrowUp =
+  //   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='3' strokeLinecap='round' strokeLinejoin='round'%3E%3Cpath d='m5 12 7-7 7 7'/%3E%3Cpath d='M12 19V5'/%3E%3C/svg%3E"
 
   return (
     <div
@@ -113,7 +113,8 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
                 background: theme === "light" ? "#e8e5e3" : "var(--yws-bubble-light)",
                 borderRadius: "999px",
                 padding: "0px 12px",
-                height: "36px",
+                // height: "36px",
+
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -124,13 +125,15 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
                   fontFamily: "Inter, sans-serif",
                   fontWeight: 500,
                   fontSize: "13px",
-                  lineHeight: "16px",
+                  padding: "5px",
+                  // lineHeight: "16px",
                   letterSpacing: "-0.4px",
                   color: theme === "light" ? "#37322f" : "var(--yws-text-primary)",
                   whiteSpace: "nowrap",
+                  textAlign: "start"
                 }}
               >
-                Team updates flow seamlessly
+                Hi, Welcome to {"[Business Name]"},<br /> May I knoe you name?
               </span>
             </div>
           </div>
@@ -170,7 +173,7 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
                   whiteSpace: "nowrap",
                 }}
               >
-                Hi everyone
+                John Deo
               </span>
             </div>
             {/* Avatar */}
@@ -237,7 +240,7 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
                   whiteSpace: "nowrap",
                 }}
               >
-                How about this instead?
+                May I know your contact number?
               </span>
             </div>
           </div>
@@ -278,11 +281,11 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
                   whiteSpace: "nowrap",
                 }}
               >
-                Great work, everyone!
+                +91 999 9999 999
               </span>
             </div>
             {/* Send button */}
-            <div
+            {/* <div
               style={{
                 width: "36px",
                 height: "36px",
@@ -305,7 +308,7 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
                   filter: "brightness(0) invert(1)",
                 }}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

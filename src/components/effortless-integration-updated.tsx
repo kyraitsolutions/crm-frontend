@@ -1,4 +1,6 @@
 import type React from "react";
+import ads from "../assets/unnamed.jpg"
+import gmail from "../assets/Gmail_Logo_512px.png"
 
 interface EffortlessIntegrationProps {
   /** Fixed width from Figma: 482px */
@@ -133,7 +135,7 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
             color: "#ffffff",
           }}
         >
-          b
+          K
         </div>
 
         {/* GitHub - 180° (left) */}
@@ -144,7 +146,7 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
             left: `${getPositionOnRing(80, Math.PI).x - 16}px`,
             top: `${getPositionOnRing(80, Math.PI).y - 16}px`,
             position: "absolute",
-            background: "#000000",
+            background: "green",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
             borderRadius: "50%",
             display: "flex",
@@ -153,8 +155,8 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
           }}
         >
           <img
-            src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg"
-            alt="GitHub"
+            src="https://cdn.jsdelivr.net/npm/simple-icons@9.21.0/icons/googlesheets.svg"
+            alt="GoogleSheet"
             style={{
               width: "18px",
               height: "18px",
@@ -171,7 +173,7 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
             left: `${getPositionOnRing(80, 0).x - 16}px`,
             top: `${getPositionOnRing(80, 0).y - 16}px`,
             position: "absolute",
-            background: "#ffffff",
+            background: "white",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
             borderRadius: "50%",
             display: "flex",
@@ -180,8 +182,8 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
           }}
         >
           <img
-            src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/slack.svg"
-            alt="Slack"
+            src={ads}
+            alt="Google Ads"
             style={{
               width: "18px",
               height: "18px",
@@ -197,7 +199,7 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
             left: `${getPositionOnRing(120, -Math.PI / 4).x - 16}px`,
             top: `${getPositionOnRing(120, -Math.PI / 4).y - 16}px`,
             position: "absolute",
-            background: "#EEEFE8",
+            background: "#fff",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
             borderRadius: "50%",
             display: "flex",
@@ -206,7 +208,7 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
           }}
         >
           <img
-            src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/figma.svg"
+            src={gmail}
             alt="Figma"
             style={{
               width: "16px",
@@ -250,7 +252,7 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
             left: `${getPositionOnRing(120, (5 * Math.PI) / 4).x - 16}px`,
             top: `${getPositionOnRing(120, (5 * Math.PI) / 4).y - 16}px`,
             position: "absolute",
-            background: "#ffffff",
+            background: "green",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
             borderRadius: "50%",
             display: "flex",
@@ -259,11 +261,12 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
           }}
         >
           <img
-            src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/notion.svg"
+            src="https://cdn.jsdelivr.net/npm/simple-icons@9.21.0/icons/whatsapp.svg"
             alt="Notion"
             style={{
               width: "18px",
               height: "18px",
+              filter: "brightness(0) invert(1)",
             }}
           />
         </div>
@@ -285,7 +288,7 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
           }}
         >
           <img
-            src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/stripe.svg"
+            src="https://cdn.jsdelivr.net/npm/simple-icons@9.21.0/icons/razorpay.svg"
             alt="Stripe"
             style={{
               width: "18px",
@@ -303,7 +306,7 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
             left: `${getPositionOnRing(160, 0).x - 16}px`,
             top: `${getPositionOnRing(160, 0).y - 16}px`,
             position: "absolute",
-            background: "#000000",
+            background: "#1255d8",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
             borderRadius: "50%",
             display: "flex",
@@ -312,11 +315,11 @@ const EffortlessIntegration: React.FC<EffortlessIntegrationProps> = ({
           }}
         >
           <img
-            src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/framer.svg"
+            src="https://cdn.jsdelivr.net/npm/simple-icons@9.21.0/icons/facebook.svg"
             alt="Framer"
             style={{
-              width: "16px",
-              height: "16px",
+              width: "20px",
+              height: "20px",
               filter: "brightness(0) invert(1)",
             }}
           />

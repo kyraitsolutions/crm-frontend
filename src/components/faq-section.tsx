@@ -104,14 +104,15 @@ export default function FAQSection() {
   return (
     <div className="w-full flex flex-col justify-center items-start bg-white">
 
-      <div className="w-full flex flex-col justify-center items-center gap-4 lg:py-20">
-        <div className="w-full flex justify-center text-[#49423D] font-semibold font-sans text-5xl">
-          Frequently Asked Questions
+      <div className="w-full flex flex-col justify-center items-center gap-4 lg:py-20 py-10">
+        <div className="w-full flex justify-center text-center text-[#49423D] font-semibold font-sans text-5xl">
+          <span className="hidden md:block">Frequently Asked Questions</span>
+          <span className="md:hidden">{"FAQ's"}</span>
         </div>
-        <div className="w-full text-[#605A57] text-center text-base font-normal leading-7 font-sans">
-          Explore your data, build your dashboard,
+        <div className="w-full text-[#605A57] text-center text-lg font-normal leading-7 font-sans">
+          Explore your data,{" "} build your dashboard,
           <br className="hidden md:block" />
-          bring your team together.
+          {" "}bring your team together.
         </div>
       </div>
       <div className="w-full lg:flex-1 flex flex-col justify-center items-center">
@@ -126,7 +127,7 @@ export default function FAQSection() {
                   className="w-full px-5 py-[18px] flex justify-between items-center gap-5 text-left hover:bg-[rgba(73,66,61,0.02)] transition-colors duration-200"
                   aria-expanded={isOpen}
                 >
-                  <div className="flex-1 text-[#49423D] text-base font-medium leading-6 font-sans">
+                  <div className="flex-1 text-[#49423D] text-md font-medium leading-6 font-sans">
                     {item.question}
                   </div>
                   <div className="flex justify-center items-center">
@@ -141,7 +142,7 @@ export default function FAQSection() {
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                     }`}
                 >
-                  <div className="px-5 pb-[18px] text-[#605A57] text-sm font-normal leading-6 font-sans">
+                  <div className="px-5 pb-[18px] text-[#605A57] text-md leading-6 font-sans">
                     {item.answer}
                   </div>
                 </div>

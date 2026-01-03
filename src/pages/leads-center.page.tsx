@@ -329,9 +329,9 @@ export default function LeadsCentre() {
   // console.log(basicNumber);
   return (
     <div className=" bg-background">
-      <div className="flex items-center justify-between px-6 py-6">
+      <div className="flex max-sm:flex-col  sm:items-center justify-between px-6 py-6">
         <div>
-          <h1 className="text-2xl font-medium text-[#37322F]">
+          <h1 className="md:text-2xl font-medium text-[#37322F]">
             Leads Centre
           </h1>
           <p className="text-sm text-[#847971] mt-1">
@@ -339,7 +339,7 @@ export default function LeadsCentre() {
           </p>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex whitespace-normal items-center gap-6">
           {/* Audience filter */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -373,15 +373,15 @@ export default function LeadsCentre() {
           </DropdownMenu>
 
           {/* Icon actions (subtle) */}
-          <button className="text-[#847971] hover:text-[#37322F] transition">
+          {/* <button className="text-[#847971] hover:text-[#37322F] transition">
             <Download className="h-4 w-4" />
-          </button>
+          </button> */}
           <button className="text-[#847971] hover:text-[#37322F] transition">
             <Bell className="h-4 w-4" />
           </button>
-          <button className="text-[#847971] hover:text-[#37322F] transition">
+          {/* <button className="text-[#847971] hover:text-[#37322F] transition">
             <Settings className="h-4 w-4" />
-          </button>
+          </button> */}
 
           {/* Primary action */}
           <DropdownMenu>
@@ -389,6 +389,7 @@ export default function LeadsCentre() {
               <button
                 className="
                 flex items-center gap-2
+                whitespace-nowrap
                 rounded-[99px]
                 bg-[#37322F]
                 px-4 py-2
@@ -411,9 +412,9 @@ export default function LeadsCentre() {
           </DropdownMenu>
 
           {/* Overflow */}
-          <button className="text-[#847971] hover:text-[#37322F] transition">
+          {/* <button className="text-[#847971] hover:text-[#37322F] transition">
             <MoreVertical className="h-4 w-4" />
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -467,6 +468,7 @@ export default function LeadsCentre() {
             onClick={() => setShowFilters(!showFilters)}
             className="
               flex items-center gap-2
+              whitespace-nowrap
               text-sm font-medium
               text-[#37322F]
               hover:text-[#1f1c1a]
