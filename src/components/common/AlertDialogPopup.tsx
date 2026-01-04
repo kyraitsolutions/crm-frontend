@@ -67,13 +67,12 @@ export const AlertDialog: React.FC = () => {
 
   return (
     <div
-      className={`fixed top-0 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-in-out ${
-        isOpen && animate ? "translate-y-0" : "-translate-y-full"
-      }
+      className={`fixed top-0 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-in-out ${isOpen && animate ? "translate-y-0" : "-translate-y-full"
+        }
         ${textColorClass}`}
     >
       <div
-        className={`bg-white rounded-md shadow-xl max-w-md w-full p-6 text-center border
+        className={`bg-white rounded-md shadow-xl w-[350px] md:max-w-md md:w-full p-4 md:p-6 text-center border
      `}
       >
         <div className={`flex justify-center mb-3  `}>
