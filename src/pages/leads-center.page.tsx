@@ -1,6 +1,7 @@
 import { PillFilterDropdown } from "@/components/common/FilterDropdown";
 import type { Option } from "@/components/filter-dropdown";
 import Loader from "@/components/Loader";
+import { AddActivityModal } from "@/components/modal/AddActivityModal";
 import { Pagination } from "@/components/pagination";
 import { TableSkeleton } from "@/components/skeltons/TableSkeltons";
 import { Badge } from "@/components/ui/badge";
@@ -52,21 +53,66 @@ import { LeadService } from "@/services/lead.service";
 import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
 import type { ApiError, BasicNumber, ILead } from "@/types";
 import buildParams from "@/utils/build-params.utils";
-import { formatDate } from "@/utils/date-utils";
+import { formatDate, formatTime } from "@/utils/date-utils";
+
 import {
   ArrowUpDown,
   Bell,
   ChevronDown,
+  FileText,
   Filter,
   Info,
+  MessageCircle,
   MoreVertical,
+  Phone,
   Plus,
   Search,
+  Settings,
+  UserPlus,
   Users,
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+
+export type ActivitySource =
+  | "phone_call"
+  | "message"
+  | "note"
+  | "email"
+  | "system";
+
+export interface TimelineItem {
+  id: string;
+  activitySource: ActivitySource;
+  message: string;
+  attachment: string | null;
+  createdAt: string; // ISO string from server
+  createdBy: string; // userId (string for now)
+}
+
+const timelineConfig = {
+  phone_call: {
+    icon: Phone,
+    bg: "bg-purple-500",
+  },
+  message: {
+    icon: MessageCircle,
+    bg: "bg-fuchsia-500",
+  },
+  note: {
+    icon: FileText,
+    bg: "bg-indigo-500",
+  },
+  system: {
+    icon: Settings,
+    bg: "bg-gray-500",
+  },
+  user: {
+    icon: UserPlus,
+    bg: "bg-gray-600",
+  },
+};
 
 export default function LeadsCentre() {
   // Params
@@ -122,6 +168,9 @@ export default function LeadsCentre() {
     conversionRate: 0,
   });
 
+  // Activity
+  const [isAddActivityOpen, setIsAddActivityOpen] = useState(false);
+
   const calculateBasicNumber = (leads: ILead[]) => {
     const stats = leads.reduce(
       (acc, lead) => {
@@ -165,9 +214,6 @@ export default function LeadsCentre() {
     initialPage: currentPage,
   });
 
-  // Note
-  const [note, setNote] = useState("");
-
   const handleRowClick = (lead: ILead) => {
     setIsEditing(false);
     setSelectedLead(lead);
@@ -181,7 +227,7 @@ export default function LeadsCentre() {
     setIsEditing(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (activity?: Omit<TimelineItem, "id">) => {
     if (!editableLead) return;
 
     setIsEditingLoading(true);
@@ -192,7 +238,7 @@ export default function LeadsCentre() {
     try {
       const payLoad = {
         ...editableLead,
-        ...(note && { notes: [{ message: note, createdAt: new Date() }] }),
+        ...(activity && { notes: [...(editableLead?.notes || []), activity] }),
       };
       leadStoreManager.updateLead(payLoad);
       const response = await leadService.updateLead(accountId!, payLoad!);
@@ -297,12 +343,12 @@ export default function LeadsCentre() {
         // console.log(serverResponse);
         if (serverResponse.data?.lead?.accountId !== accountId) return;
 
-        if (
-          selectedLead &&
-          selectedLead._id === serverResponse.data?.lead?.id
-        ) {
-          setEditableLead(serverResponse.data?.lead);
-          // setSelectedLead(serverResponse.data?.lead);
+        if (selectedLead?._id === serverResponse.data?.lead?._id) {
+          setEditableLead((prev) => ({
+            ...prev,
+            ...serverResponse.data?.lead,
+            email: serverResponse.data?.lead?.email,
+          }));
         }
         leadStoreManager.updateLead(serverResponse.data?.lead);
       }
@@ -311,8 +357,7 @@ export default function LeadsCentre() {
     return () => {
       wsRef.current?.close();
     };
-  }, [allLeads]);
-
+  }, [allLeads, selectedLead]);
 
   // console.log(basicNumber);
   return (
@@ -348,12 +393,14 @@ export default function LeadsCentre() {
                 <ChevronDown className="h-4 w-4 text-[#847971]" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="mt-2
+            <DropdownMenuContent
+              className="mt-2
                     rounded-xl
                     border-none
                     bg-[#FBFAF9]
                     p-1
-                    shadow-lg">
+                    shadow-lg"
+            >
               <DropdownMenuItem>All Audiences</DropdownMenuItem>
               <DropdownMenuItem>Team A</DropdownMenuItem>
               <DropdownMenuItem>Team B</DropdownMenuItem>
@@ -468,7 +515,6 @@ export default function LeadsCentre() {
           </button>
         </div>
 
-
         {showFilters && (
           <div className="mb-6">
             <div className="flex flex-wrap items-center gap-3">
@@ -534,33 +580,33 @@ export default function LeadsCentre() {
                 filters.assignedTo.value ||
                 filters.stage.value ||
                 filters.label.value) && (
-                  <button
-                    onClick={() =>
-                      setFilters({
-                        lead: { label: "All Leads", value: null },
-                        campaign: { label: "All Campaigns", value: null },
-                        form: { label: "All Forms", value: null },
-                        date: { label: "All Dates", value: null },
-                        status: { label: "All Status", value: null },
-                        source: { label: "All Sources", value: null },
-                        assignedTo: { label: "All Users", value: null },
-                        label: { label: "All Labels", value: null },
-                        stage: { label: "All Stages", value: null },
-                        read: { label: "All", value: null },
-                      })
-                    }
-                    className="
+                <button
+                  onClick={() =>
+                    setFilters({
+                      lead: { label: "All Leads", value: null },
+                      campaign: { label: "All Campaigns", value: null },
+                      form: { label: "All Forms", value: null },
+                      date: { label: "All Dates", value: null },
+                      status: { label: "All Status", value: null },
+                      source: { label: "All Sources", value: null },
+                      assignedTo: { label: "All Users", value: null },
+                      label: { label: "All Labels", value: null },
+                      stage: { label: "All Stages", value: null },
+                      read: { label: "All", value: null },
+                    })
+                  }
+                  className="
             flex items-center gap-1
             text-sm font-medium
             text-[#847971]
             hover:text-[#37322F]
             transition
           "
-                  >
-                    <X className="h-4 w-4" />
-                    Clear
-                  </button>
-                )}
+                >
+                  <X className="h-4 w-4" />
+                  Clear
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -568,25 +614,19 @@ export default function LeadsCentre() {
         <div className="mb-6 flex flex-wrap items-center gap-x-10 gap-y-3 text-sm">
           <div className="flex items-center gap-2">
             <span className="font-medium text-[#37322F]">Intake</span>
-            <span className="text-[#847971]">
-              {basicNumber.intakeLeads}
-            </span>
+            <span className="text-[#847971]">{basicNumber.intakeLeads}</span>
             <Info className="h-3.5 w-3.5 text-[#A8A29E] hover:text-[#37322F] transition cursor-help" />
           </div>
 
           <div className="flex items-center gap-2">
             <span className="font-medium text-[#37322F]">Qualified</span>
-            <span className="text-[#847971]">
-              {basicNumber.qualifiedLeads}
-            </span>
+            <span className="text-[#847971]">{basicNumber.qualifiedLeads}</span>
             <Info className="h-3.5 w-3.5 text-[#A8A29E] hover:text-[#37322F] transition cursor-help" />
           </div>
 
           <div className="flex items-center gap-2">
             <span className="font-medium text-[#37322F]">Converted</span>
-            <span className="text-[#847971]">
-              {basicNumber.convertedLeads}
-            </span>
+            <span className="text-[#847971]">{basicNumber.convertedLeads}</span>
             <Info className="h-3.5 w-3.5 text-[#A8A29E] hover:text-[#37322F] transition cursor-help" />
           </div>
 
@@ -612,7 +652,6 @@ export default function LeadsCentre() {
             </button>
           </div>
         </div>
-
 
         {/* {filteredLeads.length > 0 && (
           <div className="mb-4 flex items-center gap-2">
@@ -648,32 +687,32 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedStageFilter.label === "All"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedStageFilter({ label: "All", value: "" })
-            // }
+              // className={
+              //   selectedStageFilter.label === "All"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedStageFilter({ label: "All", value: "" })
+              // }
             >
               All
             </Button>
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedReadFilter.label === "Unread"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedReadFilter(
-            //     selectedReadFilter.label === "Unread"
-            //       ? { label: "All", value: "all" }
-            //       : { label: "Unread", value: "unread" }
-            //   )
-            // }
+              // className={
+              //   selectedReadFilter.label === "Unread"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedReadFilter(
+              //     selectedReadFilter.label === "Unread"
+              //       ? { label: "All", value: "all" }
+              //       : { label: "Unread", value: "unread" }
+              //   )
+              // }
             >
               Unread
             </Button>
@@ -731,7 +770,10 @@ export default function LeadsCentre() {
                   "Source",
                   "Status",
                 ].map((label) => (
-                  <TableHead key={label} className="text-sm font-medium text-[#847971]">
+                  <TableHead
+                    key={label}
+                    className="text-sm font-medium text-[#847971]"
+                  >
                     <Button
                       variant="ghost"
                       size="sm"
@@ -874,7 +916,6 @@ export default function LeadsCentre() {
               )}
             </TableBody>
           </Table>
-
         </div>
 
         {/* Pagination */}
@@ -884,301 +925,6 @@ export default function LeadsCentre() {
           goToPage={goToPage}
         />
       </div>
-
-      {/* <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen} >
-        <SheetContent className="
-          w-full md:max-w-xl
-          px-8
-          overflow-y-auto
-          bg-[#FBFAF9]
-        "
-        // className="px-6 md:max-w-xl w-full overflow-y-auto bg-gray-100"
-        >
-          <SheetHeader className="pb-4 border-b">
-            <SheetTitle className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-xl font-semibold text-primary">
-                {editableLead?.name?.charAt(0).toUpperCase()}
-              </div>
-
-              <div>
-                <h1 className="text-xl font-semibold text-foreground capitalize">
-                  {editableLead?.name}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {editableLead?.tags || "No company added"}
-                </p>
-              </div>
-            </SheetTitle>
-          </SheetHeader>
-
-          <div className="mt-6 space-y-8">
-
-            <section>
-              <h3 className="text-sm font-semibold text-foreground mb-3">
-                Contact Information
-              </h3>
-
-              <div className="grid grid-cols-1 gap-4 rounded-lg border bg-muted/30 p-4">
-
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-muted-foreground font-medium">
-                    Email
-                  </label>
-
-                  {isEditing ? (
-                    <Input
-                      value={editableLead?.email}
-                      className={inputClean}
-                      onChange={(e) =>
-                        setEditableLead((prev) =>
-                          prev ? { ...prev, email: e.target.value } : prev
-                        )
-                      }
-                    />
-                  ) : (
-                    <Link
-                      to={`mailto:${editableLead?.email}`}
-                      className="text-sm text-foreground"
-                    >
-                      {editableLead?.email}
-                    </Link>
-                  )}
-                </div>
-
-
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-muted-foreground font-medium">
-                    Phone
-                  </label>
-
-                  {isEditing ? (
-                    <Input
-                      value={editableLead?.phone}
-                      className={inputClean}
-                      onChange={(e) =>
-                        setEditableLead((prev) =>
-                          prev ? { ...prev, phone: e.target.value } : prev
-                        )
-                      }
-                    />
-                  ) : (
-                    <Link
-                      target="_blank"
-                      to={`https://wa.me/${editableLead?.phone}?text=hello`}
-                      className="text-sm text-foreground"
-                    >
-                      {editableLead?.phone}
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </section>
-
-
-            <section>
-              <h3 className="text-sm font-semibold text-foreground mb-3">
-                Lead Details
-              </h3>
-
-              <div className="grid grid-cols-2 gap-4 rounded-lg border bg-muted/30 p-4">
-
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-muted-foreground font-medium">
-                    Stage
-                  </label>
-
-                  {isEditing ? (
-                    <Select
-                      value={editableLead?.stage}
-                      onValueChange={(v) =>
-                        setEditableLead((prev) =>
-                          prev ? { ...prev, stage: v } : prev
-                        )
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="intake">Intake</SelectItem>
-                        <SelectItem value="qualified">Qualified</SelectItem>
-                        <SelectItem value="converted">Converted</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <Badge variant="outline" className="capitalize">
-                      {editableLead?.stage}
-                    </Badge>
-                  )}
-                </div>
-
-
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-muted-foreground font-medium">
-                    Status
-                  </label>
-
-                  {isEditing ? (
-                    <Select
-                      value={editableLead?.status}
-                      onValueChange={(v) =>
-                        setEditableLead((prev) =>
-                          prev ? { ...prev, status: v } : prev
-                        )
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <Badge variant="secondary" className="capitalize">
-                      {editableLead?.status}
-                    </Badge>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-muted-foreground font-medium">
-                    Source
-                  </label>
-                  <Badge variant="secondary" className="capitalize">
-                    {editableLead?.source?.name}
-                  </Badge>
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-muted-foreground font-medium">
-                    Source URL
-                  </label>
-                  <Badge variant="secondary">
-                    {editableLead?.source?.name || "-"}
-                  </Badge>
-                </div>
-
-
-                <div className="flex flex-col gap-1 col-span-2">
-                  <label className="text-xs text-muted-foreground font-medium">
-                    Date Added
-                  </label>
-                  <p className="text-sm">
-                    {formatDate(editableLead?.createdAt || "")}
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h3 className="text-sm font-semibold text-foreground mb-3">
-                Other Details
-              </h3>
-
-              <div className="space-y-4 rounded-lg border bg-muted/30 p-4 overflow-y-scroll max-h-72 grid grid-cols-2 gap-2">
-                {editableLead?.customFields &&
-                  Object.keys(editableLead.customFields).length > 0 ? (
-                  Object.entries(editableLead.customFields).map(
-                    ([key, value]) => (
-                      <div key={key} className="flex flex-col gap-1">
-                        <label className="text-xs text-muted-foreground font-medium">
-                          {key}
-                        </label>
-
-                        {isEditing ? (
-                          <Input
-                            value={value as string}
-                            className={inputClean}
-                            onChange={(e) =>
-                              setEditableLead((prev) =>
-                                prev
-                                  ? {
-                                    ...prev,
-                                    customFields: {
-                                      ...(prev.customFields ?? {}),
-                                      [key]: e.target.value,
-                                    },
-                                  }
-                                  : prev
-                              )
-                            }
-                          />
-                        ) : (
-                          <p className="text-sm">{value}</p>
-                        )}
-                      </div>
-                    )
-                  )
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    No additional details available.
-                  </p>
-                )}
-              </div>
-            </section>
-
-            <section>
-              <h3 className="text-sm font-semibold mb-3 text-foreground">
-                Notes
-              </h3>
-              <div className="rounded-lg border bg-muted/30">
-                {isEditing ? (
-                  <textarea
-                    className="text-sm text-foreground p-3 w-full bg-transparent border-0 resize-none outline-none"
-                    rows={4}
-                    value={editableLead?.notes || ""}
-                    onChange={(e) => setNote(e.target.value)}
-                  />
-                ) : (
-                  <textarea
-                    rows={4}
-                    readOnly
-                    className="text-sm text-foreground p-3 w-full bg-transparent border-0 resize-none outline-none"
-                  >
-                    {note}
-                  </textarea>
-                )}
-              </div>
-            </section>
-
-
-            <div className="flex items-center gap-3 pt-2 sticky bottom-0 bg-white pb-4">
-              {!isEditing ? (
-                <>
-                  <Button className="flex-1">Assign Lead</Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={handleEdit}
-                  >
-                    Edit Details
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    disabled={isEditingLoading}
-                    className="flex-1"
-                    onClick={handleSave}
-                  >
-                    Save {isEditingLoading && <Loader />}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={handleCancel}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet> */}
-
 
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent
@@ -1208,9 +954,7 @@ export default function LeadsCentre() {
                 <h1 className="text-xl font-medium text-[#37322F] capitalize">
                   {editableLead?.name.slice(0, 30)}
                 </h1>
-                <p className="text-sm text-[#847971]">
-                  Lead profile
-                </p>
+                <p className="text-sm text-[#847971]">Lead profile</p>
               </div>
             </SheetTitle>
           </SheetHeader>
@@ -1411,42 +1155,44 @@ export default function LeadsCentre() {
 
               <div className="grid grid-cols-2 gap-6">
                 {editableLead?.customFields &&
-                  Object.keys(editableLead.customFields).length > 0 ? (
-                  Object.entries(editableLead.customFields).map(([key, value]) => (
-                    <div key={key} className="flex flex-col gap-1">
-                      <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
-                        {key}
-                      </label>
+                Object.keys(editableLead.customFields).length > 0 ? (
+                  Object.entries(editableLead.customFields).map(
+                    ([key, value]) => (
+                      <div key={key} className="flex flex-col gap-1">
+                        <label className="text-xs uppercase tracking-wide text-[#847971] font-medium">
+                          {key}
+                        </label>
 
-                      {isEditing ? (
-                        <Input
-                          value={value as string}
-                          className="
+                        {isEditing ? (
+                          <Input
+                            value={value as string}
+                            className="
                       bg-[#F7F6F4]
                       border-none
                       rounded-lg
                       focus-visible:ring-0
                       text-[#37322F]
                     "
-                          onChange={(e) =>
-                            setEditableLead((prev) =>
-                              prev
-                                ? {
-                                  ...prev,
-                                  customFields: {
-                                    ...(prev.customFields ?? {}),
-                                    [key]: e.target.value,
-                                  },
-                                }
-                                : prev
-                            )
-                          }
-                        />
-                      ) : (
-                        <p className="text-sm text-[#37322F]">{value}</p>
-                      )}
-                    </div>
-                  ))
+                            onChange={(e) =>
+                              setEditableLead((prev) =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      customFields: {
+                                        ...(prev.customFields ?? {}),
+                                        [key]: e.target.value,
+                                      },
+                                    }
+                                  : prev
+                              )
+                            }
+                          />
+                        ) : (
+                          <p className="text-sm text-[#37322F]">{value}</p>
+                        )}
+                      </div>
+                    )
+                  )
                 ) : (
                   <p className="text-sm text-[#847971]">
                     No additional details available.
@@ -1457,26 +1203,49 @@ export default function LeadsCentre() {
 
             {/* NOTES */}
             <section>
-              <h3 className="text-sm font-medium text-[#37322F] mb-4">
-                Notes
-              </h3>
+              <h3 className="text-sm font-medium text-[#37322F] mb-4">Notes</h3>
 
-              <textarea
-                rows={4}
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                readOnly={!isEditing}
-                className="
-            w-full
-            bg-[#F7F6F4]
-            rounded-xl
-            p-4
-            text-sm
-            text-[#37322F]
-            resize-none
-            outline-none
-          "
-              />
+              <div className="max-h-96 border p-4 overflow-auto hide-scrollbar">
+                <div className="relative space-y-6">
+                  {/* add activity button */}
+
+                  <div className="flex items-center gap-3.5">
+                    <Button
+                      variant="outline"
+                      className="rounded-full size-10 border-gray-400"
+                      onClick={() => setIsAddActivityOpen(true)}
+                    >
+                      <span className="text-lg">+</span>
+                    </Button>
+
+                    <p className="text-primary">Add Activity</p>
+                  </div>
+
+                  {/* timeline  */}
+                  <Timeline items={editableLead?.notes || []} />
+
+                  {/* vertical line */}
+                  {editableLead?.notes && editableLead?.notes.length > 0 && (
+                    <div className="absolute top-0 left-[18px] w-0.5 h-[90%] bg-gray-400 -z-10" />
+                  )}
+
+                  <AddActivityModal
+                    open={isAddActivityOpen}
+                    onClose={() => setIsAddActivityOpen(false)}
+                    onSave={(activity) => {
+                      setEditableLead((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              notes: [activity, ...(prev.notes || [])],
+                            }
+                          : prev
+                      );
+                      handleSave(activity);
+                    }}
+                  />
+                </div>
+              </div>
             </section>
 
             {/* ACTIONS */}
@@ -1499,7 +1268,7 @@ export default function LeadsCentre() {
                   <Button
                     disabled={isEditingLoading}
                     className="flex-1 rounded-[99px] bg-[#37322F] text-[#FBFAF9]"
-                    onClick={handleSave}
+                    onClick={() => handleSave()}
                   >
                     Save {isEditingLoading && <Loader />}
                   </Button>
@@ -1516,7 +1285,57 @@ export default function LeadsCentre() {
           </div>
         </SheetContent>
       </Sheet>
-
     </div>
   );
 }
+
+const Timeline = ({ items }: { items: TimelineItem[] }) => {
+  if (items.length === 0)
+    return (
+      <div>
+        <p className="text-gray-500 text-center">No activity found</p>
+      </div>
+    );
+  return (
+    <div className="space-y-8">
+      {items.map((item) => {
+        const Icon =
+          timelineConfig[item.activitySource as keyof typeof timelineConfig]
+            .icon;
+
+        return (
+          <div key={item.id} className="relative flex gap-4">
+            {/* icon */}
+            <div
+              className={`
+                relative z-10
+                flex h-9 w-9 items-center justify-center
+                rounded-full text-white
+                ${
+                  timelineConfig[
+                    item.activitySource as keyof typeof timelineConfig
+                  ]?.bg
+                }
+              `}
+            >
+              <Icon size={16} />
+            </div>
+
+            {/* content */}
+            <div className="flex-1">
+              <p className="text-xs text-[#847971] mb-1">
+                {formatDate(item.createdAt)} {formatTime(item.createdAt)}
+              </p>
+
+              {/* <p className="text-sm font-medium text-[#37322F]">{item.}</p> */}
+
+              {item.message && (
+                <p className="text-sm text-[#847971] mt-1">{item.message}</p>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};

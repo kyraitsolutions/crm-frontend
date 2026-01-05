@@ -5,6 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { DASHBOARD_PATH } from "@/constants";
 import { ToastMessageService } from "@/services";
 import { LeadFormService } from "@/services/leadform.service";
+import { useAuthStore } from "@/stores";
 import { alertManager } from "@/stores/alert.store";
 import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
 import type { ILeadFormListItem } from "@/types/leadform.type";
@@ -16,6 +17,8 @@ import { Link, useParams } from "react-router-dom";
 
 export function LeadFormPage() {
   const { accountId } = useParams();
+
+  const { user } = useAuthStore((state) => state);
   // const navigate = useNavigate();
   const leadFormService = new LeadFormService();
   const leadStoreManager = new LeadsStoreManager();
@@ -56,7 +59,7 @@ export function LeadFormPage() {
           <Switch
             checked={true}
             className="cursor-pointer"
-          // onClick={(e) => handleUpdateStatus(e, row.id)}
+            // onClick={(e) => handleUpdateStatus(e, row.id)}
           />
         </div>
       ),
@@ -223,9 +226,10 @@ export function LeadFormPage() {
         </div>
       ) : (
         /* Empty State */
-        <div className="flex w-full justify-center items-center h-[75vh]">
-          <div
-            className="
+        <div>
+          <div className="flex w-full justify-center items-center h-[75vh]">
+            <div
+              className="
           flex flex-col justify-center items-center
           max-w-xl w-full
           gap-6
@@ -235,28 +239,31 @@ export function LeadFormPage() {
           border border-dashed border-[rgba(50,45,43,0.20)]
           bg-[rgba(255,255,255,0)]
         "
-          >
-            {/* Icon */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
-              <Plus className="h-8 w-8 text-[#37322F]" />
-            </div>
+            >
+              {/* Icon */}
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
+                <Plus className="h-8 w-8 text-[#37322F]" />
+              </div>
 
-            {/* Text */}
-            <div>
-              <h2 className="text-xl font-medium text-[#37322F]">
-                No lead form found
-              </h2>
-              <p className="mt-2 text-sm text-[#847971]">
-                Get started by creating your first Lead form for your website or app.
-              </p>
-            </div>
+              {/* Text */}
+              <div>
+                <h2 className="text-xl font-medium text-[#37322F]">
+                  No lead form found
+                </h2>
+                <p className="mt-2 text-sm text-[#847971]">
+                  Get started by creating your first Lead form for your website
+                  or app.
+                </p>
+              </div>
 
-            {/* CTA */}
-            <Link
-              to={`${DASHBOARD_PATH?.getAccountPath(
-                String(accountId)
-              )}/lead-forms/create`}
-              className="
+              {/* CTA */}
+              {user?.userprofile?.accountType?.toLowerCase() ===
+                "organization" && (
+                <Link
+                  to={`${DASHBOARD_PATH?.getAccountPath(
+                    String(accountId)
+                  )}/lead-forms/create`}
+                  className="
             inline-flex items-center gap-2
             rounded-[99px]
             bg-[#37322F]
@@ -266,13 +273,14 @@ export function LeadFormPage() {
             transition
             hover:opacity-90
           "
-            >
-              Create First Lead Form
-            </Link>
+                >
+                  Create First Lead Form
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       )}
     </div>
-
   );
 }

@@ -34,7 +34,7 @@ export function HomePage() {
   const [activeCard, setActiveCard] = useState(0);
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  console.log(activeCard)
+  console.log(activeCard);
   useEffect(() => {
     // Prevent double interval in Strict Mode
     if (intervalRef.current) return;
@@ -60,7 +60,6 @@ export function HomePage() {
   //   setActiveCard(index);
   //   setProgress(0);
   // };
-
 
   return (
     <div className="w-full min-h-screen relative bg-[#F7F5F3] overflow-x-hidden flex flex-col justify-start items-center">
@@ -97,7 +96,10 @@ export function HomePage() {
                       </div>
                     </div>
                     <div className="flex justify-start items-center">
-                      <Link to="" className="flex flex-col justify-center text-[rgba(49,45,43,0.80)] text-xs md:text-[13px] font-medium leading-[14px] font-sans">
+                      <Link
+                        to=""
+                        className="flex flex-col justify-center text-[rgba(49,45,43,0.80)] text-xs md:text-[13px] font-medium leading-[14px] font-sans"
+                      >
                         Review
                       </Link>
                     </div>
@@ -127,7 +129,9 @@ export function HomePage() {
                     Smart Chatbots <br /> Lead Capture & Analysis
                   </div>
                   <div className="w-full max-w-[506.08px] lg:w-[506.08px] text-center flex justify-center flex-col text-[rgba(55,50,47,0.80)] sm:text-lg md:text-xl leading-[1.4] sm:leading-[1.45] md:leading-[1.5] lg:leading-7  px-2 sm:px-4 md:px-0 lg:text-lg ">
-                    Build intelligent chatbots that capture leads, qualify users, and convert conversations into revenue — all from one powerful CRM dashboard.
+                    Build intelligent chatbots that capture leads, qualify
+                    users, and convert conversations into revenue — all from one
+                    powerful CRM dashboard.
                   </div>
                 </div>
               </div>
@@ -135,8 +139,8 @@ export function HomePage() {
               <div
                 onClick={() => {
                   window.location.href =
-                    "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                  // "http://localhost:3000/api/auth/google";
+                    // "https://crm-backend-7lf9.onrender.com/api/auth/google";
+                    "http://localhost:3000/api/auth/google";
                 }}
                 className="cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 w-full max-w-[600px] lg:w-[600px] flex flex-col justify-center items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 relative z-10 mt-6 sm:mt-8 md:mt-10 lg:mt-12"
               >
@@ -149,7 +153,8 @@ export function HomePage() {
                   </div>
                 </div>
                 <p className="text-center px-2 text-[rgba(55,50,47,0.80)] text-sm md:text-lg">
-                  No credit card required · Setup in minutes · Built for modern teams
+                  No credit card required · Setup in minutes · Built for modern
+                  teams
                 </p>
               </div>
 
@@ -160,8 +165,9 @@ export function HomePage() {
                   </h2>
 
                   <p className="max-w-[720px] text-[rgba(55,50,47,0.8)] text-lg">
-                    Kyra CRM helps businesses turn website visitors into qualified leads
-                    using smart chatbots, automated workflows, and real-time analytics.
+                    Kyra CRM helps businesses turn website visitors into
+                    qualified leads using smart chatbots, automated workflows,
+                    and real-time analytics.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 w-full">
@@ -202,8 +208,9 @@ export function HomePage() {
                     </h2>
 
                     <p className="mt-4 text-[rgba(55,50,47,0.8)] text-lg">
-                      Create intelligent chatbot flows using a simple drag-and-drop
-                      interface. Perfect for sales, support, and onboarding.
+                      Create intelligent chatbot flows using a simple
+                      drag-and-drop interface. Perfect for sales, support, and
+                      onboarding.
                     </p>
 
                     <ul className="mt-6 space-y-3 text-md">
@@ -237,16 +244,25 @@ export function HomePage() {
                   </h2>
 
                   <p className="mt-4 text-[rgba(55,50,47,0.8)] text-lg">
-                    Track every lead from first conversation to final conversion with
-                    clear pipeline stages.
+                    Track every lead from first conversation to final conversion
+                    with clear pipeline stages.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
                   {[
-                    { title: "Intake", desc: "New leads captured via chatbot or forms" },
-                    { title: "Qualified", desc: "High-intent leads ready for action" },
-                    { title: "Converted", desc: "Successfully closed customers" },
+                    {
+                      title: "Intake",
+                      desc: "New leads captured via chatbot or forms",
+                    },
+                    {
+                      title: "Qualified",
+                      desc: "High-intent leads ready for action",
+                    },
+                    {
+                      title: "Converted",
+                      desc: "Successfully closed customers",
+                    },
                   ].map((item, i) => (
                     <div
                       key={i}
@@ -267,8 +283,8 @@ export function HomePage() {
                   </h2>
 
                   <p className="mt-4 max-w-[680px] mx-auto text-[rgba(55,50,47,0.8)] text-lg">
-                    Manage multiple accounts, chatbots, and leads — all from one powerful
-                    CRM dashboard.
+                    Manage multiple accounts, chatbots, and leads — all from one
+                    powerful CRM dashboard.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">
@@ -318,9 +334,7 @@ export function HomePage() {
                 />
               </div>
 
-
               <DocumentationSection />
-
 
               {/* Social Proof Section */}
               <div className="w-full border-b border-[rgba(55,50,47,0.12)] flex flex-col justify-center items-center">
@@ -473,18 +487,21 @@ export function HomePage() {
                             ${index >= 6 ? "border-b" : ""}
                             ${isMobileFirstColumn ? "border-r-[0.5px]" : ""}
                             sm:border-r-[0.5px] sm:border-l-0
-                            ${isDesktopFirstColumn
-                              ? "md:border-l"
-                              : "md:border-l-[0.5px]"
+                            ${
+                              isDesktopFirstColumn
+                                ? "md:border-l"
+                                : "md:border-l-[0.5px]"
                             }
-                            ${isDesktopLastColumn
-                              ? "md:border-r"
-                              : "md:border-r-[0.5px]"
+                            ${
+                              isDesktopLastColumn
+                                ? "md:border-r"
+                                : "md:border-r-[0.5px]"
                             }
                             ${isDesktopTopRow ? "md:border-b-[0.5px]" : ""}
-                            ${isDesktopBottomRow
-                              ? "md:border-t-[0.5px] md:border-b"
-                              : ""
+                            ${
+                              isDesktopBottomRow
+                                ? "md:border-t-[0.5px] md:border-b"
+                                : ""
                             }
                             border-[#E3E2E1]
                           `}
@@ -706,11 +723,9 @@ export function HomePage() {
                 </div>
               </div>
 
-
               {/* Testimonials Section */}
               <div id="review" className="w-full">
                 <TestimonialsSection />
-
               </div>
 
               {/* Pricing Section */}
@@ -718,7 +733,6 @@ export function HomePage() {
 
               {/* FAQ Section */}
               <FAQSection />
-
 
               {/* CTA Section */}
               <CTASection />

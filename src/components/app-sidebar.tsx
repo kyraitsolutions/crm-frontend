@@ -31,6 +31,7 @@ import { COOKIES_STORAGE, DASHBOARD_PATH } from "@/constants";
 import { useAuthStore } from "@/stores";
 import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { House } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user: authUser, accountSelected } = useAuthStore((state) => state);
@@ -53,6 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: DASHBOARD_PATH.getAccountPath(
           String(CookieUtils.getItem(COOKIES_STORAGE.accountId))
         ),
+
         icon: IconDashboard,
       },
 
@@ -182,10 +184,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="/">
+              <Link to="/">
                 <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">Kyra CRM</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

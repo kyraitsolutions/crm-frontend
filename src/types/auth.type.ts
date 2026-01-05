@@ -7,6 +7,7 @@ export interface IUser {
   createdAt: string;
   updatedAt: string;
   isOnboardingCompleted: boolean;
+  roleId: string;
   userprofile: {
     firstName: string;
     lastName: string;

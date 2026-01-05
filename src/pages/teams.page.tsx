@@ -16,9 +16,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { USERROLE } from "@/constants/role.constant";
 import { ToastMessageService } from "@/services";
 import { AccountService } from "@/services/account.service";
 import { TeamService } from "@/services/team.service";
+import { useAuthStore } from "@/stores";
 import { alertManager } from "@/stores/alert.store";
 import { TeamsStoreManager, useTeamsStore } from "@/stores/team.store";
 import type { ApiError } from "@/types";
@@ -31,6 +33,8 @@ export const Teams = () => {
   const toastService = new ToastMessageService();
   const teamService = new TeamService();
   const accountService = new AccountService();
+
+  const { user } = useAuthStore((state) => state);
 
   const teamStoreManager = new TeamsStoreManager();
   const { teams } = useTeamsStore((state) => state);
@@ -100,7 +104,7 @@ export const Teams = () => {
         toastService.success("Account assigned successfully");
       }
     } catch (error) {
-      // console.log("Error", error);
+      console.log("Error", error);
     }
   };
 
@@ -124,7 +128,7 @@ export const Teams = () => {
         toastService.success("Account deleted successfully");
       }
     } catch (error) {
-      // console.log("Error deleting account:", error);
+      console.log("Error deleting account:", error);
       rollback();
     }
   };
@@ -266,15 +270,19 @@ export const Teams = () => {
       cellClassName: "whitespace-nowrap text-gray-700",
       render: (row) => (
         <div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeleteTeamMember(row.userId);
-            }}
-            className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0 cursor-pointer"
-          >
-            <Trash2 size={16} />
-          </button>
+          {user?.roleId !== USERROLE.TEAM_MEMBER ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteTeamMember(row.userId);
+              }}
+              className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0 cursor-pointer"
+            >
+              <Trash2 size={16} />
+            </button>
+          ) : (
+            <span className="text-center inline-block w-full">-</span>
+          )}
         </div>
       ),
     },
@@ -294,14 +302,11 @@ export const Teams = () => {
     );
   }
 
-
   return (
     <div className="p-4">
       {/* Header */}
       <div className="flex justify-between items-center w-full">
-        <h1 className="text-2xl font-medium text-[#37322F]">
-          Teams
-        </h1>
+        <h1 className="text-2xl font-medium text-[#37322F]">Teams</h1>
 
         {teams.length > 0 && (
           <AddNewTeamMemberPopupDialog
@@ -356,7 +361,8 @@ export const Teams = () => {
               <div className="py-4">
                 <MultiSelectDropdown
                   value={
-                    teams.find((team) => team?.id === selectedTeamId)?.accountIds
+                    teams.find((team) => team?.id === selectedTeamId)
+                      ?.accountIds
                   }
                   options={accounts.map((a) => ({
                     id: a.id,
@@ -403,47 +409,54 @@ export const Teams = () => {
         </div>
       ) : (
         /* Empty State */
-        <div className="flex w-full justify-center items-center h-[75vh]">
-          <div
-            className="
+        <div>
+          <div className="flex w-full justify-center items-center h-[75vh]">
+            <div
+              className="
           flex flex-col max-w-xl w-full items-center gap-6
           p-10 text-center
           rounded-2xl
           border border-dashed border-[rgba(50,45,43,0.20)]
           bg-[rgba(255,255,255,0)]
         "
-          >
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
-              <Plus className="h-8 w-8 text-[#37322F]" />
-            </div>
+            >
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
+                <Plus className="h-8 w-8 text-[#37322F]" />
+              </div>
 
-            <div>
-              <h2 className="text-xl font-medium text-[#37322F]">
-                No team member found
-              </h2>
-              <p className="mt-2 text-sm text-[#847971]">
-                Add team member for easy management.
-              </p>
-            </div>
+              <div>
+                <h2 className="text-xl font-medium text-[#37322F]">
+                  No team member found
+                </h2>
+                <p className="mt-2 text-sm text-[#847971]">
+                  Add team member for easy management.
+                </p>
+              </div>
 
-            <AddNewTeamMemberPopupDialog
-              openAddTeamMember={openAddTeamMember}
-              setOpenAddTeamMember={setOpenAddTeamMember}
-              newTeam={newTeam}
-              setNewTeam={setNewTeam}
-              isLoadingAddTeamMember={isLoadingAddTeamMember}
-              handleAddTeamMember={handleAddTeamMember}
-            />
+              {/* <AddNewTeamMemberPopupDialog
+                openAddTeamMember={openAddTeamMember}
+                setOpenAddTeamMember={setOpenAddTeamMember}
+                newTeam={newTeam}
+                setNewTeam={setNewTeam}
+                isLoadingAddTeamMember={isLoadingAddTeamMember}
+                handleAddTeamMember={handleAddTeamMember}
+              /> */}
+            </div>
           </div>
         </div>
       )}
     </div>
-
   );
 };
 
-
-const AddNewTeamMemberPopupDialog = ({ openAddTeamMember, setOpenAddTeamMember, newTeam, setNewTeam, isLoadingAddTeamMember, handleAddTeamMember }: any) => {
+const AddNewTeamMemberPopupDialog = ({
+  openAddTeamMember,
+  setOpenAddTeamMember,
+  newTeam,
+  setNewTeam,
+  isLoadingAddTeamMember,
+  handleAddTeamMember,
+}: any) => {
   return (
     <Dialog
       open={openAddTeamMember}
@@ -482,10 +495,13 @@ const AddNewTeamMemberPopupDialog = ({ openAddTeamMember, setOpenAddTeamMember, 
           </DialogDescription>
         </DialogHeader>
 
-        <form className="flex flex-col gap-6" onSubmit={(e) => {
-          e.preventDefault(); // ✅ prevent page reload
-          handleAddTeamMember();
-        }}>
+        <form
+          className="flex flex-col gap-6"
+          onSubmit={(e) => {
+            e.preventDefault(); // ✅ prevent page reload
+            handleAddTeamMember();
+          }}
+        >
           {/* First Name */}
           <div className="flex flex-col gap-1">
             <Label className="text-sm font-medium text-[#37322F]">
@@ -532,9 +548,7 @@ const AddNewTeamMemberPopupDialog = ({ openAddTeamMember, setOpenAddTeamMember, 
 
           {/* Email */}
           <div className="flex flex-col gap-1">
-            <Label className="text-sm font-medium text-[#37322F]">
-              Email
-            </Label>
+            <Label className="text-sm font-medium text-[#37322F]">Email</Label>
             <Input
               type="email"
               value={newTeam.email}
@@ -589,7 +603,5 @@ const AddNewTeamMemberPopupDialog = ({ openAddTeamMember, setOpenAddTeamMember, 
         </form>
       </DialogContent>
     </Dialog>
-
-
-  )
-}
+  );
+};

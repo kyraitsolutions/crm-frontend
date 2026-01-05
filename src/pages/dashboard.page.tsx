@@ -161,7 +161,8 @@ export const DashboardPage = () => {
           user?.userprofile?.accountType?.toLowerCase() === "individual" &&
           response?.data?.docs?.length === 1
         ) {
-          navigate(DASHBOARD_PATH.getAccountPath(response?.data?.docs[0]?.id));
+          // authManager.setAccountSelected(true);
+          // navigate(DASHBOARD_PATH.getAccountPath(response?.data?.docs[0]?.id));
         }
       }
     } catch (error) {
@@ -190,8 +191,6 @@ export const DashboardPage = () => {
   }
 
   return (
-
-
     <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 px-5 py-5">
       {accounts.map((account, idx) => {
         const initials = account?.accountName
@@ -253,12 +252,13 @@ export const DashboardPage = () => {
               <span
                 className={`
             px-2 py-0.5 rounded-full text-xs font-medium
-            ${account.status === "active"
-                    ? "bg-[rgba(55,50,47,0.08)] text-[#37322F]"
-                    : account.status === "inactive"
-                      ? "bg-[rgba(132,121,113,0.12)] text-[#847971]"
-                      : "bg-[rgba(220,38,38,0.10)] text-red-700"
-                  }
+            ${
+              account.status === "active"
+                ? "bg-[rgba(55,50,47,0.08)] text-[#37322F]"
+                : account.status === "inactive"
+                ? "bg-[rgba(132,121,113,0.12)] text-[#847971]"
+                : "bg-[rgba(220,38,38,0.10)] text-red-700"
+            }
           `}
               >
                 {account.status}
@@ -267,7 +267,6 @@ export const DashboardPage = () => {
           </div>
         );
       })}
-
 
       {/* Add New Account */}
       {user?.userprofile?.accountType === "organization" && (
@@ -394,7 +393,6 @@ export const DashboardPage = () => {
               </DialogFooter>
             </form>
           </DialogContent>
-
         </Dialog>
       )}
 
@@ -402,8 +400,5 @@ export const DashboardPage = () => {
         <PremiumPopup open={openPremium} onOpenChange={setOpenPremium} />
       )}
     </div>
-
   );
 };
-
-
