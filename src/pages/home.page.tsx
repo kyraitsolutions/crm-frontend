@@ -139,8 +139,8 @@ export function HomePage() {
               <div
                 onClick={() => {
                   window.location.href =
-                    // "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                    "http://localhost:3000/api/auth/google";
+                    "https://crm-backend-7lf9.onrender.com/api/auth/google";
+                  // "http://localhost:3000/api/auth/google";
                 }}
                 className="cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 w-full max-w-[600px] lg:w-[600px] flex flex-col justify-center items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 relative z-10 mt-6 sm:mt-8 md:mt-10 lg:mt-12"
               >
@@ -487,21 +487,18 @@ export function HomePage() {
                             ${index >= 6 ? "border-b" : ""}
                             ${isMobileFirstColumn ? "border-r-[0.5px]" : ""}
                             sm:border-r-[0.5px] sm:border-l-0
-                            ${
-                              isDesktopFirstColumn
-                                ? "md:border-l"
-                                : "md:border-l-[0.5px]"
+                            ${isDesktopFirstColumn
+                              ? "md:border-l"
+                              : "md:border-l-[0.5px]"
                             }
-                            ${
-                              isDesktopLastColumn
-                                ? "md:border-r"
-                                : "md:border-r-[0.5px]"
+                            ${isDesktopLastColumn
+                              ? "md:border-r"
+                              : "md:border-r-[0.5px]"
                             }
                             ${isDesktopTopRow ? "md:border-b-[0.5px]" : ""}
-                            ${
-                              isDesktopBottomRow
-                                ? "md:border-t-[0.5px] md:border-b"
-                                : ""
+                            ${isDesktopBottomRow
+                              ? "md:border-t-[0.5px] md:border-b"
+                              : ""
                             }
                             border-[#E3E2E1]
                           `}
