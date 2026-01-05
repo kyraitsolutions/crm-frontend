@@ -16,6 +16,8 @@ const activityOptions = [
   { value: "phone_call", label: "Phone Call", icon: Phone },
   { value: "message", label: "Message", icon: MessageCircle },
   { value: "note", label: "Note", icon: FileText },
+  { value: "email", label: "Email", icon: FileText },
+  { value: "whatsapp", label: "Whatsapp", icon: FileText },
 ] as const;
 
 interface AddActivityModalProps {

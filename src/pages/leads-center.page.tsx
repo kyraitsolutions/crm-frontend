@@ -80,7 +80,7 @@ export type ActivitySource =
   | "message"
   | "note"
   | "email"
-  | "system";
+  | "whatsapp";
 
 export interface TimelineItem {
   id: string;
@@ -104,7 +104,7 @@ const timelineConfig = {
     icon: FileText,
     bg: "bg-indigo-500",
   },
-  system: {
+  whatsapp: {
     icon: Settings,
     bg: "bg-gray-500",
   },
@@ -580,33 +580,33 @@ export default function LeadsCentre() {
                 filters.assignedTo.value ||
                 filters.stage.value ||
                 filters.label.value) && (
-                <button
-                  onClick={() =>
-                    setFilters({
-                      lead: { label: "All Leads", value: null },
-                      campaign: { label: "All Campaigns", value: null },
-                      form: { label: "All Forms", value: null },
-                      date: { label: "All Dates", value: null },
-                      status: { label: "All Status", value: null },
-                      source: { label: "All Sources", value: null },
-                      assignedTo: { label: "All Users", value: null },
-                      label: { label: "All Labels", value: null },
-                      stage: { label: "All Stages", value: null },
-                      read: { label: "All", value: null },
-                    })
-                  }
-                  className="
+                  <button
+                    onClick={() =>
+                      setFilters({
+                        lead: { label: "All Leads", value: null },
+                        campaign: { label: "All Campaigns", value: null },
+                        form: { label: "All Forms", value: null },
+                        date: { label: "All Dates", value: null },
+                        status: { label: "All Status", value: null },
+                        source: { label: "All Sources", value: null },
+                        assignedTo: { label: "All Users", value: null },
+                        label: { label: "All Labels", value: null },
+                        stage: { label: "All Stages", value: null },
+                        read: { label: "All", value: null },
+                      })
+                    }
+                    className="
             flex items-center gap-1
             text-sm font-medium
             text-[#847971]
             hover:text-[#37322F]
             transition
           "
-                >
-                  <X className="h-4 w-4" />
-                  Clear
-                </button>
-              )}
+                  >
+                    <X className="h-4 w-4" />
+                    Clear
+                  </button>
+                )}
             </div>
           </div>
         )}
@@ -687,32 +687,32 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-              // className={
-              //   selectedStageFilter.label === "All"
-              //     ? "bg-accent text-accent-foreground"
-              //     : ""
-              // }
-              // onClick={() =>
-              //   setSelectedStageFilter({ label: "All", value: "" })
-              // }
+            // className={
+            //   selectedStageFilter.label === "All"
+            //     ? "bg-accent text-accent-foreground"
+            //     : ""
+            // }
+            // onClick={() =>
+            //   setSelectedStageFilter({ label: "All", value: "" })
+            // }
             >
               All
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              // className={
-              //   selectedReadFilter.label === "Unread"
-              //     ? "bg-accent text-accent-foreground"
-              //     : ""
-              // }
-              // onClick={() =>
-              //   setSelectedReadFilter(
-              //     selectedReadFilter.label === "Unread"
-              //       ? { label: "All", value: "all" }
-              //       : { label: "Unread", value: "unread" }
-              //   )
-              // }
+            // className={
+            //   selectedReadFilter.label === "Unread"
+            //     ? "bg-accent text-accent-foreground"
+            //     : ""
+            // }
+            // onClick={() =>
+            //   setSelectedReadFilter(
+            //     selectedReadFilter.label === "Unread"
+            //       ? { label: "All", value: "all" }
+            //       : { label: "Unread", value: "unread" }
+            //   )
+            // }
             >
               Unread
             </Button>
@@ -1155,7 +1155,7 @@ export default function LeadsCentre() {
 
               <div className="grid grid-cols-2 gap-6">
                 {editableLead?.customFields &&
-                Object.keys(editableLead.customFields).length > 0 ? (
+                  Object.keys(editableLead.customFields).length > 0 ? (
                   Object.entries(editableLead.customFields).map(
                     ([key, value]) => (
                       <div key={key} className="flex flex-col gap-1">
@@ -1177,12 +1177,12 @@ export default function LeadsCentre() {
                               setEditableLead((prev) =>
                                 prev
                                   ? {
-                                      ...prev,
-                                      customFields: {
-                                        ...(prev.customFields ?? {}),
-                                        [key]: e.target.value,
-                                      },
-                                    }
+                                    ...prev,
+                                    customFields: {
+                                      ...(prev.customFields ?? {}),
+                                      [key]: e.target.value,
+                                    },
+                                  }
                                   : prev
                               )
                             }
@@ -1205,7 +1205,7 @@ export default function LeadsCentre() {
             <section>
               <h3 className="text-sm font-medium text-[#37322F] mb-4">Notes</h3>
 
-              <div className="max-h-96 border p-4 overflow-auto hide-scrollbar">
+              <div className="max-h-96 py-4 overflow-auto hide-scrollbar">
                 <div className="relative space-y-6">
                   {/* add activity button */}
 
@@ -1236,9 +1236,9 @@ export default function LeadsCentre() {
                       setEditableLead((prev) =>
                         prev
                           ? {
-                              ...prev,
-                              notes: [activity, ...(prev.notes || [])],
-                            }
+                            ...prev,
+                            notes: [...(prev.notes || []), activity],
+                          }
                           : prev
                       );
                       handleSave(activity);
@@ -1290,15 +1290,15 @@ export default function LeadsCentre() {
 }
 
 const Timeline = ({ items }: { items: TimelineItem[] }) => {
-  if (items.length === 0)
-    return (
-      <div>
-        <p className="text-gray-500 text-center">No activity found</p>
-      </div>
-    );
+  // if (items.length === 0)
+  //   return (
+  //     <div>
+  //       <p className="text-gray-500 text-center">No activity found</p>
+  //     </div>
+  //   );
   return (
     <div className="space-y-8">
-      {items.map((item) => {
+      {items && items.map((item) => {
         const Icon =
           timelineConfig[item.activitySource as keyof typeof timelineConfig]
             .icon;
@@ -1311,10 +1311,9 @@ const Timeline = ({ items }: { items: TimelineItem[] }) => {
                 relative z-10
                 flex h-9 w-9 items-center justify-center
                 rounded-full text-white
-                ${
-                  timelineConfig[
-                    item.activitySource as keyof typeof timelineConfig
-                  ]?.bg
+                ${timelineConfig[
+                  item.activitySource as keyof typeof timelineConfig
+                ]?.bg
                 }
               `}
             >
@@ -1335,7 +1334,7 @@ const Timeline = ({ items }: { items: TimelineItem[] }) => {
             </div>
           </div>
         );
-      })}
+      }).reverse()}
     </div>
   );
 };
