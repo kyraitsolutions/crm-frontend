@@ -8,9 +8,11 @@ import KyraProductCard from "./components/popup/KyraProductHuntCard.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <KyraProductCard />
+
     <App />
     <SnackbarProvider />
     <AlertDialog />
-    <KyraProductCard />
+
   </StrictMode>
 );
