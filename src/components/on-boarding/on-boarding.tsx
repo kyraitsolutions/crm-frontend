@@ -68,7 +68,7 @@ export function OnBoarding() {
     if (currentQuestion === questions.length - 1) {
       const account = answers.q1;
 
-      console.log(account[0])
+      // console.log(account)
       const apiBody = {
         firstName: answers.q2,
         lastName: answers.q3,
