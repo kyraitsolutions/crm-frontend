@@ -18,9 +18,9 @@ const defaultValues: ChatBotFormData = {
   theme: {
     brandColor: "#3b5d50",
     contrastColor: "#fefefe",
-    backgroundColor: "#ffffff",
-    messageColor: "#f1f5f9",
-    userMessageColor: "#3b5d50",
+    backgroundColor: "#4F46E5",
+    messageColor: "#1F2931",
+    userMessageColor: "#FFFFFF",
     typeface: "Inter",
     fontSize: 14,
     fontWeight: "normal",
@@ -42,12 +42,28 @@ const defaultValues: ChatBotFormData = {
     customCSS: "",
   },
   config: {
-    showTypingIndicator: false,
-    autoOpenAfterSeconds: 5,
+    // core
+    enableWidgetMessage: false,
+    // language & feedback
+    language: "english",
+    enableRantingAndFeedback: false,
+    ratingAndFeedback: {
+      rating: 5,
+      feedback: "",
+    },
+    // behavior
+    chat_transcript: false,
+    enableVoiceNote: false,
+    responseInterval: 0,
+    initiateChatbot: "immediate",
+    // branding
+    showBranding: false,
     enableBrandLabel: false,
     brandLabelText: "Powered by Kyra Solutions",
-    showPoweredBy: false,
-    active: false,
+
+    // UI behavior
+    autoOpenAfterSeconds: 5,
+    showTypingIndicator: false,
   },
 };
 
@@ -75,6 +91,7 @@ export const ChatBotBuilder = () => {
     async (data: any) => {
       try {
         setIsSubmitting(true);
+        console.log(data);
 
         const response = !chatBotId
           ? await chatBotService?.createChatBot(String(accountId), data)
@@ -91,9 +108,11 @@ export const ChatBotBuilder = () => {
 
         if (response.status === 200 || response.status === 201) {
           toastMessageService.apiSuccess(response.message);
-          navigate(
-            `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`
-          );
+
+          if (!chatBotId)
+            navigate(
+              `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`
+            );
         }
       } catch (error) {
         const err = error as ApiError;

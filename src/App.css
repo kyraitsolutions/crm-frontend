@@ -67,3 +67,7 @@ button,a{
     opacity: 0;
   }
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
