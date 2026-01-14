@@ -34,7 +34,7 @@ export function HomePage() {
   const [activeCard, setActiveCard] = useState(0);
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  console.log(activeCard);
+  // console.log(activeCard);
   useEffect(() => {
     // Prevent double interval in Strict Mode
     if (intervalRef.current) return;
