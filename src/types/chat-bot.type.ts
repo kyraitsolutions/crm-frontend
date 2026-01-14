@@ -74,12 +74,27 @@ export const appearanceSchema = z.object({
 });
 
 export const chatBotConfigSchema = z.object({
-  showTypingIndicator: z.boolean().default(false),
-  autoOpenAfterSeconds: z.number().min(0).default(5),
-  enableBrandLabel: z.boolean().default(false),
-  brandLabelText: z.string().default("Powered by Kyra Solutions"),
-  showPoweredBy: z.boolean().default(false),
-  active: z.boolean().default(false),
+  enableWidgetMessage: z.boolean().default(true),
+  language: z.enum(["english", "hindi"]).default("english"),
+  enableRantingAndFeedback: z.boolean().default(true),
+  ratingAndFeedback: z
+    .object({
+      rating: z.number().int().min(1).max(5).default(5),
+      feedback: z.string().default(""),
+    })
+    .default({ rating: 5, feedback: "" }),
+
+  chat_transcript: z.boolean().default(true),
+  enableVoiceNote: z.boolean().default(false),
+  responseInterval: z
+    .union([z.literal(0), z.literal(1), z.literal(2)])
+    .default(0),
+  initiateChatbot: z.enum(["immediate", "action"]).default("immediate"),
+  showBranding: z.boolean().default(true),
+  autoOpenAfterSeconds: z.number().nullable().default(null),
+  brandLabelText: z.string().default(""),
+  enableBrandLabel: z.boolean().default(true),
+  showTypingIndicator: z.boolean().default(true),
 });
 
 export const chatBotSchema = z.object({
@@ -150,7 +165,8 @@ export interface ChatBotListItem {
 
 export interface ChatbotElement {
   id: string;
-  type: "text" | "image" | "video" | "audio";
+  type: "text" | "image" | "video" | "audio" | "email" | "option" | "date";
+  title?: string;
   content: string;
   date?: string;
 }

@@ -7,22 +7,22 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import { v4 as uuid } from "uuid";
 
 import { ChatBotService, ToastMessageService } from "@/services";
 import { useAuthStore } from "@/stores";
+import type { ApiError } from "@/types";
 import {
   ArrowLeft,
   ListChecks,
   Mail,
   MessageSquare,
   Phone,
-  Smile,
   User,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Connection, Edge } from "reactflow";
 import { nodeTypes } from "./nodes";
-import type { ApiError } from "@/types";
 
 export const mandatoryNodes = [
   {
@@ -83,7 +83,7 @@ export const mandatoryNodes = [
           date: "",
         },
       ],
-      value: "text",
+      value: "email",
       label: "Email",
     },
   },
@@ -187,7 +187,18 @@ export default function ChatbotFlowEditor() {
     // const nodeMap = new Map(nodes.map((n) => [n.id, n]));
     // const edgeMap = edges;
 
+    // RULE: Check nodes does not empty content
+    const isNodeWithEmptyContent = nodes.some((n) =>
+      n.data?.elements?.some((el: any) => el.content === "")
+    );
+
+    if (isNodeWithEmptyContent) {
+      toastMessageService.error("All nodes must have content.");
+      return false;
+    }
+
     // 1️⃣ RULE: Check at least one end node exists
+
     const endNodes = nodes.filter((n) => n.data?.label === "End Chat");
     if (endNodes.length === 0) {
       toastMessageService.error("You must create an End Chat node.");
@@ -270,37 +281,114 @@ export default function ChatbotFlowEditor() {
     return true;
   };
 
+  const createInitialElements = (value: string) => {
+    switch (value) {
+      case "text":
+        return [
+          {
+            id: uuid(),
+            type: "text",
+            content: "",
+          },
+        ];
+
+      case "email":
+        return [
+          {
+            id: uuid(),
+            type: "email",
+            content: "",
+          },
+        ];
+
+      case "phone":
+        return [
+          {
+            id: uuid(),
+            type: "phone",
+            content: "",
+          },
+        ];
+
+      case "option":
+        return [
+          {
+            id: uuid(),
+            type: "option",
+            title: "",
+            content: "",
+            choices: [""],
+          },
+        ];
+
+      case "date":
+        return [
+          {
+            id: uuid(),
+            type: "date",
+            content: "",
+          },
+        ];
+
+      default:
+        return [];
+    }
+  };
+
   const addNewNode = (value: string, label: string) => {
     const newNode = {
       id: crypto.randomUUID(),
       type: "chat",
       position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: { elements: [], deleteNode, updateNode, value, label }, // ✅ inject deleteNode here
+      data: {
+        elements: createInitialElements(value),
+        deleteNode,
+        updateNode,
+        updateNodeLabel,
+        value,
+        label,
+      }, // ✅ inject deleteNode here
     };
     setNodes((nds) => [...nds, newNode]);
   };
-
-  const deleteNode = useCallback((id: string) => {
-    setNodes((nds) => nds.filter((n) => n.id !== id));
-    setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
-  }, []);
 
   const updateNode = useCallback((id: string, newElements: any) => {
     setNodes((nds) =>
       nds.map((node) =>
         node.id === id
           ? {
-            ...node,
-            data: {
-              ...node.data,
-              elements: newElements,
-              deleteNode,
-              updateNode,
-            },
-          }
+              ...node,
+              data: {
+                ...node.data,
+                elements: newElements,
+                deleteNode,
+                updateNode,
+              },
+            }
           : node
       )
     );
+  }, []);
+
+  const updateNodeLabel = (id: string, label: string) => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                label,
+              },
+            }
+          : node
+      )
+    );
+  };
+
+  const deleteNode = useCallback((id: string) => {
+    setNodes((nds) => nds.filter((n) => n.id !== id));
+    setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
   }, []);
 
   const onEdgeClick = useCallback((event: any, edge: any) => {
@@ -375,6 +463,7 @@ export default function ChatbotFlowEditor() {
           ...node.data,
           deleteNode,
           updateNode,
+          updateNodeLabel,
         },
       }));
 
@@ -389,18 +478,13 @@ export default function ChatbotFlowEditor() {
 
   const chatbotFields = [
     {
-      label: "Name",
-      value: "text",
-      icon: <User className="w-4 h-4 text-primary" />,
-    },
-    {
       label: "Email",
-      value: "text",
+      value: "email",
       icon: <Mail className="w-4 h-4 text-primary" />,
     },
     {
       label: "Phone",
-      value: "text",
+      value: "phone",
       icon: <Phone className="w-4 h-4 text-primary" />,
     },
     {
@@ -409,14 +493,14 @@ export default function ChatbotFlowEditor() {
       icon: <ListChecks className="w-4 h-4 text-primary" />,
     },
     {
+      label: "Text",
+      value: "text",
+      icon: <User className="w-4 h-4 text-primary" />,
+    },
+    {
       label: "End Chat",
       value: "text",
       icon: <MessageSquare className="w-4 h-4 text-primary" />,
-    },
-    {
-      label: "Greeting Message",
-      value: "text",
-      icon: <Smile className="w-4 h-4 text-primary" />,
     },
 
     // 🔹 Common CRM Chatbot Builder Fields
@@ -467,7 +551,7 @@ export default function ChatbotFlowEditor() {
           flex items-center gap-2
           shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
           hover:bg-[#2e2a28]
-          transition
+          transition cursor-pointer
         "
           >
             Publish
@@ -496,17 +580,17 @@ export default function ChatbotFlowEditor() {
             onEdgesChange={onEdgesChange}
             onEdgeClick={onEdgeClick}
             onConnect={onConnect}
-            fitView
+            defaultChecked
           >
             <Controls
+              showFitView
               className="
-            bg-[#FBFAF9]/70
+            bg-gray-200
             rounded-md
-            p-1
             shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
           "
             />
-            <Background className="bg-[rgba(55,50,47,0.04)]" />
+            <Background className="bg-[#f7f1f1c8]" />
           </ReactFlow>
         </div>
       </div>
@@ -527,7 +611,9 @@ export default function ChatbotFlowEditor() {
             hover:scale-[1.03] hover:shadow-[0px_4px_8px_rgba(55,50,47,0.12)]
           "
             >
-              <p className="text-xs text-[#847971] whitespace-nowrap">{item.label}</p>
+              <p className="text-xs text-[#847971] whitespace-nowrap">
+                {item.label}
+              </p>
               <div
                 className="
               h-20 w-full
@@ -547,6 +633,5 @@ export default function ChatbotFlowEditor() {
         </div>
       </div>
     </div>
-
   );
 }

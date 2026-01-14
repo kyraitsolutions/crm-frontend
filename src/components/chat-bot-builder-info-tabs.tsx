@@ -1,25 +1,28 @@
+import { DASHBOARD_PATH } from "@/constants";
 import type { ChatBotFormData } from "@/types";
-import { ArrowDownRight, Cog, Palette, Settings, Sliders } from "lucide-react";
+import { ArrowDownRight, Cog, Palette, Settings } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
 import ChatBotBuilderAppearance from "./chat-bot-builder-appearance";
 import ChatBotBuilderConfiguration from "./chat-bot-builder-config";
-import ChatBotBuilderCustomization from "./chat-bot-builder-customization";
 import ChatBotBuilderOverview from "./chat-bot-builder-overview";
+import ChatbotIntegration from "./chat-bot-integration";
+import ChatbotPreview from "./chatbot-preview";
 import Loader from "./Loader";
 import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { useNavigate, useParams } from "react-router-dom";
-import { DASHBOARD_PATH } from "@/constants";
-import ChatbotIntegration from "./chat-bot-integration";
+
+const notShowTabs = ["integration", "chatbot flow"];
 
 const tabs = [
   { id: "overview", label: "Overview", icon: Settings },
-  { id: "customization", label: "Customization", icon: Sliders },
+  // { id: "customization", label: "Customization", icon: Sliders },
   { id: "appearance", label: "Appearance", icon: Palette },
   { id: "configration", label: "Configuration", icon: Cog },
   { id: "chatbotFlow", label: "Chatbot Flow", icon: Cog },
-  { id: "integration", label: "Integration", icon: Cog }
+  { id: "chatbot-preview", label: "Preview", icon: Cog },
+  { id: "integration", label: "Integration", icon: Cog },
 ];
 
 export default function ChatBotBuilderInfoTabs({
@@ -29,6 +32,7 @@ export default function ChatBotBuilderInfoTabs({
 }) {
   const { accountId, chatBotId } = useParams();
   const [activeTab, setActiveTab] = useState("overview");
+
   const navigate = useNavigate();
 
   const {
@@ -38,11 +42,11 @@ export default function ChatBotBuilderInfoTabs({
   // tabs maps for each tab
   const tabsMaps: Record<string, React.ReactNode> = {
     overview: <ChatBotBuilderOverview />,
-    customization: <ChatBotBuilderCustomization />,
+    // customization: <ChatBotBuilderCustomization />,
     appearance: <ChatBotBuilderAppearance />,
     configration: <ChatBotBuilderConfiguration />,
+    "chatbot-preview": <ChatbotPreview />,
     integration: <ChatbotIntegration setActiveTab={setActiveTab} />,
-    // chatbotFlow: <ChatbotFlowEditor />,
   };
 
   return (
@@ -71,9 +75,10 @@ export default function ChatBotBuilderInfoTabs({
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         {/* Tabs Header */}
-        <TabsList className="flex flex-wrap h-auto border-b border-[#E5E3E0] bg-transparent gap-2">
+        <TabsList className="flex  flex-wrap h-auto border-b border-[#E5E3E0] bg-transparent gap-2">
           {tabs.map((tab) => {
-            if (tab.label.toLowerCase() === "chatbot flow" && !chatBotId) return null;
+            if (notShowTabs.includes(tab.label.toLowerCase()) && !chatBotId)
+              return null;
             return (
               <TabsTrigger
                 key={tab.id}
@@ -83,7 +88,12 @@ export default function ChatBotBuilderInfoTabs({
             rounded-t-md
             transition-colors
             max-sm:flex-col
-            ${activeTab === tab.id ? "bg-[#FBFAF9] text-[#37322F] shadow" : "text-[#847971] hover:bg-[#F7F6F4] hover:text-[#37322F]"}
+            cursor-pointer
+            ${
+              activeTab === tab.id
+                ? "bg-[#FBFAF9] text-[#37322F] shadow"
+                : "text-[#847971] hover:bg-[#F7F6F4] hover:text-[#37322F]"
+            }
           `}
                 onClick={() => {
                   if (tab?.id === "chatbotFlow") {
@@ -104,13 +114,8 @@ export default function ChatBotBuilderInfoTabs({
         </TabsList>
 
         {/* Tabs Content */}
-        <TabsContent
-          value={activeTab}
-        >
-          {tabsMaps[activeTab]}
-        </TabsContent>
+        <TabsContent value={activeTab}>{tabsMaps[activeTab]}</TabsContent>
       </Tabs>
-
     </div>
   );
 }

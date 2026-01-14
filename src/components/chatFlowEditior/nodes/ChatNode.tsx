@@ -11,7 +11,7 @@ export type BaseElement = {
 
 export type ChatElement = {
   id: string;
-  type: "text" | "option" | "date";
+  type: "text" | "option" | "date" | "email";
   content: string;
   title?: string;
   choices?: string[];
@@ -25,13 +25,15 @@ type ChatNodeData = {
     name?: "date";
     elements: ChatElement[];
     updateNode: (id: string, elements: ChatElement[]) => void;
+    updateNodeLabel: (id: string, label: string) => void;
     deleteNode: (id: string) => void;
   };
 };
 
 export const ChatNode = ({ id, data }: ChatNodeData) => {
+  console.log(data);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
-  const addElement = (type: "text" | "option" | "date") => {
+  const addElement = (type: "text" | "email" | "option" | "date") => {
     const newElementObj = {
       id: uuid(),
       type,
@@ -66,8 +68,6 @@ export const ChatNode = ({ id, data }: ChatNodeData) => {
   };
 
   const addOptionChoice = (elementId: string) => {
-    console.log(elementId);
-    console.log(data);
     const newElements = data.elements.map((el) => {
       if (el.id === elementId && el.type === "option") {
         return { ...el, choices: [...(el.choices as string[]), ""] };
@@ -95,9 +95,16 @@ export const ChatNode = ({ id, data }: ChatNodeData) => {
   return (
     <Fragment>
       <div>
-        <p className="text-xs mb-2 bg-gray-200/40 text-green-600  w-fit rounded-2xl px-4 py-1">
-          {data?.label}
-        </p>
+        <div className="text-xs mb-2 bg-gray-200/40 text-green-600 w-fit rounded-2xl px-4 py-1">
+          <input
+            type="text"
+            value={data?.label}
+            className="w-fit outline-none inline-block"
+            onChange={(e) => {
+              data.updateNodeLabel(id, e.target.value);
+            }}
+          />
+        </div>
         <div className="bg-white border rounded shadow w-64 relative">
           <Handle
             type="target"
@@ -130,12 +137,13 @@ export const ChatNode = ({ id, data }: ChatNodeData) => {
                     onChange={(e) =>
                       updateElement(el.id, "content", e.target.value)
                     }
-                    placeholder="Enter text..."
+                    placeholder="Enter text here..."
                   />
                 ) : (
                   <input
                     type={el.type}
                     className="w-full border-2 rounded px-3 pt-2 pb-4 text-xs"
+                    placeholder="Enter text here..."
                     onChange={(e) =>
                       updateElement(el.id, "content", e.target.value)
                     }
@@ -143,54 +151,17 @@ export const ChatNode = ({ id, data }: ChatNodeData) => {
                   />
                 )}
 
-                {/* {el.type === "option" && (
-              <div className="border rounded p-2 bg-gray-50">
-                <input
-                  className="w-full border-b pb-1 mb-2 text-xs font-medium outline-none"
-                  placeholder="Option title..."
-                  value={el.title}
-                  onChange={(e) => updateElement(el.id, "title", e.target.value)}
-                />
-
-                {el?.choices?.map((choice, i) => (
-                  <div key={i} className="flex items-center gap-1 mb-1">
-                    <input
-                      className="flex-1 border rounded px-2 py-1 text-xs"
-                      value={choice}
-                      onChange={(e) =>
-                        updateOptionChoice(el.id, i, e.target.value)
-                      }
-                      placeholder={`Option ${i + 1}`}
-                    />
-                    <button
-                      onClick={() => removeOptionChoice(el.id, i)}
-                      className="bg-red-400 text-white text-xs px-1 rounded"
-                    >
-                      -
-                    </button>
-                  </div>
-                ))}
-
-                <button
-                  onClick={() => addOptionChoice(el.id)}
-                  className="text-xs bg-blue-500 text-white px-2 py-1 rounded mt-1"
-                >
-                  + Add Choice
-                </button>
-              </div>
-            )} */}
-
                 {el.type === "option" && (
-                  <div className="border rounded p-2 bg-gray-50">
+                  <div className="border rounded p-2 bg-gray-50 mt-2">
                     {/* Title */}
-                    <input
+                    {/* <input
                       className="w-full border-b pb-1 mb-2 text-xs font-medium outline-none"
                       placeholder="Option title..."
                       value={el.title}
                       onChange={(e) =>
                         updateElement(el.id, "title", e.target.value)
                       }
-                    />
+                    /> */}
 
                     {/* Choices */}
                     {el?.choices?.map((choice, i) => (
@@ -234,35 +205,16 @@ export const ChatNode = ({ id, data }: ChatNodeData) => {
                       </div>
                     ))}
 
-                    {/* {el?.choices?.map((choice, i) => (
-                <div key={i} className="flex items-center gap-1 mb-1">
-                  <input
-                    className="flex-1 border rounded px-2 py-1 text-xs"
-                    value={choice}
-                    onChange={(e) =>
-                      updateOptionChoice(el.id, i, e.target.value)
-                    }
-                    placeholder={`Option ${i + 1}`}
-                  />
-
-                  <button
-                    onClick={() => removeOptionChoice(el.id, i)}
-                    className="bg-red-400 text-white text-xs px-1 rounded"
-                  >
-                    -
-                  </button>
-                </div>
-              ))} */}
-
                     {/* Add new choice */}
                     <button
                       onClick={() => addOptionChoice(el.id)}
-                      className="text-xs bg-blue-500 text-white px-2 py-1 rounded mt-1"
+                      className="text-xs bg-blue-500 text-white px-2 py-1 rounded mt-1 cursor-pointer"
                     >
                       + Add Choice
                     </button>
                   </div>
                 )}
+
                 {el.type === "date" && (
                   <div>
                     <input
@@ -289,25 +241,43 @@ export const ChatNode = ({ id, data }: ChatNodeData) => {
             ))}
 
             <div className="flex gap-1 mt-1">
-              {data.value === "text" && (
+              {data?.value?.toLowerCase() === "email" && (
+                <button
+                  className="text-xs bg-blue-500 text-white px-2 py-1 rounded flex-1"
+                  onClick={() => addElement("email")}
+                >
+                  + Add More
+                </button>
+              )}
+
+              {data?.value?.toLowerCase() === "text" && (
                 <button
                   className="text-xs bg-blue-500 text-white px-2 py-1 rounded flex-1"
                   onClick={() => addElement("text")}
                 >
-                  + Text
+                  + Add More
                 </button>
               )}
 
-              {data.value === "option" && (
+              {data?.value?.toLowerCase() === "phone" && (
+                <button
+                  className="text-xs bg-blue-500 text-white px-2 py-1 rounded flex-1"
+                  onClick={() => addElement("text")}
+                >
+                  + Add More
+                </button>
+              )}
+
+              {/* {data?.value?.toLowerCase() === "option" && (
                 <button
                   className="text-xs bg-green-500 text-white px-2 py-1 rounded flex-1"
                   onClick={() => addElement("option")}
                 >
                   + Option
                 </button>
-              )}
+              )} */}
 
-              {data.name === "date" && (
+              {data?.value?.toLowerCase() === "date" && (
                 <button
                   className="text-xs bg-green-500 text-white px-2 py-1 rounded flex-1"
                   onClick={() => addElement("date")}
@@ -318,16 +288,18 @@ export const ChatNode = ({ id, data }: ChatNodeData) => {
             </div>
           </div>
 
-          <Handle
-            type="source"
-            position={Position.Bottom}
-            style={{
-              width: 14, // default is 8
-              height: 14,
-              background: "#56c340", // Tailwind's sky-500 for example
-              border: "2px solid #c9f3d2",
-            }}
-          />
+          {data?.value?.toLowerCase() !== "option" && (
+            <Handle
+              type="source"
+              position={Position.Bottom}
+              style={{
+                width: 14, // default is 8
+                height: 14,
+                background: "#56c340", // Tailwind's sky-500 for example
+                border: "2px solid #c9f3d2",
+              }}
+            />
+          )}
         </div>
       </div>
 
