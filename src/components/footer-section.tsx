@@ -82,10 +82,10 @@ export default function FooterSection() {
 
         {/* Bottom Bar */}
         <div className="mt-16 pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Kyra CRM. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Kyra IT Solutions. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link to="#" className="hover:text-[#16A34A]">Terms</Link>
-            <Link to="#" className="hover:text-[#16A34A]">Privacy</Link>
+            <Link to="/terms" className="hover:text-[#16A34A]">Terms</Link>
+            <Link to="/privacy-policy" className="hover:text-[#16A34A]">Privacy</Link>
           </div>
         </div>
 

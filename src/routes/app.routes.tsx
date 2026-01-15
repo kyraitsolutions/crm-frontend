@@ -12,6 +12,9 @@ import { chatBotRoutes } from "./chat-bot.routes";
 import { dashboardRoutes } from "./dashboard.routes";
 import { formRoutes } from "./form.routes";
 import { leadRoutes } from "./lead.route";
+import TermsPage from "@/pages/terms.page";
+import PrivacyPolicyPage from "@/pages/privacy.page";
+import PricingPage from "@/pages/pricing.page";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -21,6 +24,18 @@ export const appRoutes = createBrowserRouter([
       {
         element: <HomePage />,
         index: true,
+      },
+      {
+        element: <PricingPage />,
+        path: '/pricing',
+      },
+      {
+        element: <TermsPage />,
+        path: '/terms',
+      },
+      {
+        element: <PrivacyPolicyPage />,
+        path: '/privacy-policy',
       },
       {
         element: <AppLayout />,

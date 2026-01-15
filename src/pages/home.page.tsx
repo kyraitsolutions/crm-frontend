@@ -1,21 +1,20 @@
 import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import SmartSimpleBrilliant from "../components/smart-simple-brilliant";
-import YourWorkInSync from "../components/your-work-in-sync";
 import EffortlessIntegration from "../components/effortless-integration-updated";
 import DocumentationSection from "../components/documentation-section";
 import TestimonialsSection from "../components/testimonials-section";
 import FAQSection from "../components/faq-section";
-import PricingSection from "../components/pricing-section";
 import CTASection from "../components/cta-section";
 import FooterSection from "../components/footer-section";
 import { ArrowRight } from "lucide-react";
 // import DashboardImage2 from "../assets/image2.png";
 import DashboardImage3 from "../assets/image3.png";
-import ContactForm from "@/components/common/ContactForm";
-import { Link } from "react-router-dom";
-import { CountUp } from "@/components/common/Number";
 import KyraChatbotPreview from "../components/your-work-in-sync";
+import Header from "@/components/website/Header";
+import ContactForm from "@/components/website/ContactForm";
+import { CountUp } from "@/components/website/Number";
+import PricingSection from "@/components/website/pricing-section";
 // import DashboardImage4 from "../assets/image4.png";
 function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
@@ -66,55 +65,7 @@ export function HomePage() {
     <div className="w-full min-h-screen relative bg-white overflow-x-hidden flex flex-col justify-start items-center">
       <div className="relative flex flex-col justify-start items-center w-full">
         {/* Modern Navigation */}
-        <nav className="w-full border-b border-gray-200 bg-white sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              {/* Logo */}
-              <div className="flex items-center space-x-8">
-                <div className="flex items-center">
-                  <div className="flex flex-col">
-                    <span className="text-gray-800 !text-[#16A34A] text-2xl font-bold">Kyra</span>
-                    <span className="text-gray-800 text-[#16A34A] text-xs whitespace-nowrap">IT Solution</span>
-                  </div>
-                </div>
-                {/* Navigation Links */}
-                <div className="hidden md:flex items-center space-x-6">
-                  <Link to="" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
-                    Product
-                  </Link>
-                  <Link to="" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
-                    Pricing
-                  </Link>
-                  <Link to="#review" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
-                    Review
-                  </Link>
-                </div>
-              </div>
-              {/* CTA Buttons */}
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => {
-                    window.location.href =
-                      // "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                      "http://localhost:3000/api/auth/google";
-                  }}
-                  className="text-gray-700 hover:text-gray-900 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Login →
-                </button>
-                <button
-                  onClick={() => {
-                    window.location.href =
-                      "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                  }}
-                  className="bg-[#16A34A] hover:bg-[#15803D] text-white text-sm font-medium px-6 py-2 rounded-lg transition-colors"
-                >
-                  Start for FREE →
-                </button>
-              </div>
-            </div>
-          </div>
-        </nav>
+        <Header />
 
         {/* Hero Section */}
         <section className="w-full bg-white py-16 sm:py-20 md:py-24 lg:py-32">
@@ -145,11 +96,11 @@ export function HomePage() {
                     window.location.href =
                       "https://crm-backend-7lf9.onrender.com/api/auth/google";
                   }}
-                  className="bg-[#16A34A] hover:bg-[#15803D] text-white font-semibold px-8 py-3 rounded-lg transition-colors flex items-center gap-2"
+                  className="bg-[#16A34A] hover:bg-[#15803D] text-white cursor-pointer font-semibold px-8 py-3 rounded-lg transition-colors flex items-center gap-2"
                 >
                   Try Kyra for FREE <ArrowRight size={18} />
                 </button>
-                <button className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold px-8 py-3 rounded-lg transition-colors">
+                <button className="border-2 border-gray-300 hover:border-gray-400 cursor-pointer text-gray-700 font-semibold px-8 py-2.5 rounded-lg transition-colors">
                   Join Live Demo →
                 </button>
               </div>
@@ -190,7 +141,7 @@ export function HomePage() {
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition"
+                  className="bg-white rounded-2xl border border-[#16A34A]/20 p-8 hover:shadow-md transition"
                 >
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
                     {item.title}
@@ -275,7 +226,7 @@ export function HomePage() {
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition"
+                  className="bg-white rounded-2xl border border-[#16A34A]/20   p-8 hover:shadow-md transition"
                 >
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
                     {item.title}
@@ -321,8 +272,9 @@ export function HomePage() {
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="bg-gray-50 rounded-2xl p-8 hover:bg-white hover:shadow-md transition"
+                  className="relative bg-gray-50 rounded-2xl p-8 border  border-[#16A34A]/20  hover:bg-white hover:shadow-md transition"
                 >
+                  {/* <div className="absolute -top-2 -right-2 w-22 h-22 bg-[#16A34A]/10 rounded-full blur-3xl" /> */}
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
                     {item.title}
                   </h3>
