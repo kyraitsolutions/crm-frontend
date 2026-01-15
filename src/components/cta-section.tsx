@@ -1,47 +1,51 @@
 export default function CTASection() {
   return (
-    <div className="w-full relative overflow-hidden flex flex-col justify-center items-center gap-2">
-      {/* Content */}
-      <div className="self-stretch px-6 md:px-24 py-12 md:py-12 border-t border-b border-[rgba(55,50,47,0.12)] flex justify-center items-center gap-6 relative z-10">
-        <div className="absolute inset-0 w-full h-full overflow-hidden">
-          <div className="w-full h-full relative">
-            {Array.from({ length: 300 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute h-4 w-full rotate-[-45deg] origin-top-left outline outline-[0.5px] outline-[rgba(3,7,18,0.08)] outline-offset-[-0.25px]"
-                style={{
-                  top: `${i * 16 - 120}px`,
-                  left: "-100%",
-                  width: "300%",
-                }}
-              ></div>
-            ))}
-          </div>
-        </div>
+    <section className="w-full bg-gradient-to-b from-white to-gray-50 py-20 sm:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div className="relative overflow-hidden rounded-3xl bg-white shadow-sm border border-gray-200">
+          
+          {/* Soft Glow Accent */}
+          <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#16A34A]/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-[#16A34A]/10 rounded-full blur-3xl" />
 
-        <div className="w-full max-w-[586px] px-0 py-5 md:py-8 overflow-hidden rounded-lg flex flex-col justify-start items-center gap-6 relative z-20">
-          <div className="self-stretch flex flex-col justify-start items-start gap-3">
-            <div className="self-stretch text-center flex justify-center flex-col text-[#49423D] text-3xl md:text-5xl font-semibold leading-tight md:leading-[56px] font-sans tracking-tight">
+          <div className="relative z-10 text-center px-6 sm:px-10 py-14 sm:py-16">
+            
+            {/* Heading */}
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Ready to transform your business?
+            </h2>
+
+            {/* Subheading */}
+            <p className="max-w-2xl mx-auto text-lg text-gray-600 mb-8">
+              Join thousands of businesses capturing leads, automating conversations,
+              and growing revenue with Kyra CRM.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={() => {
+                  window.location.href =
+                    "https://crm-backend-7lf9.onrender.com/api/auth/google";
+                }}
+                className="bg-[#16A34A] hover:bg-[#15803D] text-white font-semibold px-8 py-3 rounded-lg transition-colors flex items-center gap-2"
+              >
+                Start for FREE →
+              </button>
+
+              <button className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold px-8 py-3 rounded-lg transition-colors">
+                Join Live Demo
+              </button>
             </div>
-            <div className="self-stretch text-center text-[#605A57] text-lg leading-7 font-sans font-medium">
-              Join thousands of businesses streamlining their operations,
-              <br />
-              managing schedules, and growing with data-driven insights.
-            </div>
-          </div>
-          <div className="w-full max-w-[497px] flex flex-col justify-center items-center gap-12">
-            <div className="flex justify-start items-center gap-4">
-              <div className="h-10 px-12 py-[6px] relative bg-[#37322F] shadow-[0px_0px_0px_2.5px_rgba(255,255,255,0.08)_inset] overflow-hidden rounded-full flex justify-center items-center cursor-pointer hover:bg-[#2A2520] transition-colors">
-                <div className="w-44 h-[41px] absolute left-0 top-0 bg-gradient-to-b from-[rgba(255,255,255,0)] to-[rgba(0,0,0,0.10)] mix-blend-multiply"></div>
-                <div className="flex flex-col justify-center text-white text-[13px] font-medium leading-5 font-sans">
-                  Start for free
-                </div>
-              </div>
-            </div>
+
+            {/* Trust Line */}
+            <p className="text-sm text-gray-500 mt-6">
+              No credit card required · Setup in minutes
+            </p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

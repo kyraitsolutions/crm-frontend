@@ -14,7 +14,6 @@ interface SmartSimpleBrilliantProps {
 /**
  * Smart · Simple · Brilliant – Calendar cards
  * Generated from Figma via MCP with exact measurements (482×300px)
- * Single-file component following the v0-ready pattern used in this repo.
  */
 const SmartSimpleBrilliant: React.FC<SmartSimpleBrilliantProps> = ({
   width = 482,
@@ -22,25 +21,44 @@ const SmartSimpleBrilliant: React.FC<SmartSimpleBrilliantProps> = ({
   className = "",
   theme = "dark",
 }) => {
-  // Design tokens (derived from Figma local variables)
+  /* =======================
+     THEME TOKENS
+  ======================== */
   const themeVars =
     theme === "light"
       ? {
-          "--ssb-surface": "#ffffff",
-          "--ssb-text": "#1b1919",
-          "--ssb-border": "rgba(0,0,0,0.08)",
-          "--ssb-inner-border": "rgba(0,0,0,0.12)",
-          "--ssb-shadow": "rgba(0,0,0,0.12)",
-        }
+        "--ssb-surface": "#ffffff",
+        "--ssb-text": "#1b1919",
+        "--ssb-border": "rgba(0,0,0,0.08)",
+        "--ssb-inner-border": "rgba(0,0,0,0.12)",
+        "--ssb-shadow": "rgba(0,0,0,0.12)",
+      }
       : ({
-          "--ssb-surface": "#333937",
-          "--ssb-text": "#f8f8f8",
-          "--ssb-border": "rgba(255,255,255,0.16)",
-          "--ssb-inner-border": "rgba(255,255,255,0.12)",
-          "--ssb-shadow": "rgba(0,0,0,0.28)",
-        } as React.CSSProperties)
+        "--ssb-surface": "#333937",
+        "--ssb-text": "#f8f8f8",
+        "--ssb-border": "rgba(255,255,255,0.16)",
+        "--ssb-inner-border": "rgba(255,255,255,0.12)",
+        "--ssb-shadow": "rgba(0,0,0,0.28)",
+      } as React.CSSProperties)
 
-  // Figma-exported SVG assets used for small icons
+  /* =======================
+     SHARED CARD STYLE
+  ======================== */
+  const cardStyle: React.CSSProperties = {
+    width: "155.25px",
+    background: "var(--ssb-surface)",
+    borderRadius: "9px",
+    padding: "6px",
+    color: "var(--ssb-text)",
+    boxShadow: `
+      0px 0px 0px 1px var(--ssb-border),
+      0px 2px 4px var(--ssb-shadow)
+    `,
+  }
+
+  /* =======================
+     ICONS
+  ======================== */
   const img = "http://localhost:3845/assets/1b1e60b441119fb176db990a3c7fe2670a764855.svg"
   const img1 = "http://localhost:3845/assets/a502f04ccfc3811f304b58a3a982a5b6fa070e91.svg"
   const img2 = "http://localhost:3845/assets/9c07375bf3b9f1f1d8a0a24447829eb6f54fa928.svg"
@@ -53,11 +71,10 @@ const SmartSimpleBrilliant: React.FC<SmartSimpleBrilliantProps> = ({
         {
           width,
           height,
-          position: "relative",
-          background: "transparent",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          position: "relative",
           ...themeVars,
         } as React.CSSProperties
       }
@@ -69,265 +86,143 @@ const SmartSimpleBrilliant: React.FC<SmartSimpleBrilliantProps> = ({
           position: "relative",
           width: "295.297px",
           height: "212.272px",
-          transform: "scale(1.2)", // Added 1.2x scale transform
+          transform: "scale(1.2)",
         }}
       >
-        {/* Left tilted card group */}
-        <div style={{ position: "absolute", left: "123.248px", top: "0px", width: 0, height: 0 }}>
-          <div style={{ transform: "rotate(5deg)", transformOrigin: "center" }}>
-            <div
-              style={{
-                width: "155.25px",
-                background: "#ffffff",
-                borderRadius: "9px",
-                padding: "6px",
-                boxShadow: "0px 0px 0px 1px rgba(0,0,0,0.08), 0px 2px 4px rgba(0,0,0,0.07)",
-              }}
-            >
-              {/* Amber event */}
-              <div
-                style={{
-                  width: "100%",
-                  height: "51px",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                  background: "rgba(245,158,11,0.1)",
-                  display: "flex",
-                }}
-              >
-                <div style={{ width: "2.25px", background: "#F59E0B" }} />
-                <div style={{ padding: "4.5px", width: "100%" }}>
-                  <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#92400E" }}
-                    >
-                      2:00
-                    </span>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#92400E" }}
-                    >
-                      PM
-                    </span>
-                    <div style={{ background: "#92400E", padding: "1.5px", borderRadius: "100px" }}>
-                      <div style={{ width: "8px", height: "8px", overflow: "hidden", position: "relative" }}>
-                        <img
-                          src={img || "/placeholder.svg"}
-                          alt="video"
-                          style={{ position: "absolute", inset: "20% 10% 20% 10%" }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "9px", color: "#92400E" }}>
-                    1:1 with Heather
-                  </div>
-                </div>
-              </div>
+        {/* ================= LEFT CARD ================= */}
+        <div style={{ position: "absolute", left: "123.248px", top: 0 }}>
+          <div style={{ transform: "rotate(5deg)" }}>
+            <div style={cardStyle}>
+              {/* Amber */}
+              <Event
+                bg="rgba(245,158,11,0.1)"
+                bar="#F59E0B"
+                text="#92400E"
+                time="2:00 PM"
+                title="1:1 with Heather"
+                icon={img}
+              />
 
-              {/* Sky event */}
-              <div
-                style={{
-                  width: "100%",
-                  height: "79.5px",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                  background: "rgba(14,165,233,0.1)",
-                  marginTop: "3px",
-                  display: "flex",
-                }}
-              >
-                <div style={{ width: "2.25px", background: "#0EA5E9" }} />
-                <div style={{ padding: "4.5px", width: "100%" }}>
-                  <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#0C4A6E" }}
-                    >
-                      2:00
-                    </span>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#0C4A6E" }}
-                    >
-                      PM
-                    </span>
-                    <div style={{ background: "#0C4A6E", padding: "1.5px", borderRadius: "100px" }}>
-                      <div style={{ width: "8px", height: "8px", overflow: "hidden", position: "relative" }}>
-                        <img
-                          src={img1 || "/placeholder.svg"}
-                          alt="video"
-                          style={{ position: "absolute", inset: "20% 10% 20% 10%" }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "9px", color: "#0C4A6E" }}>
-                    Concept Design Review II
-                  </div>
-                </div>
-              </div>
+              {/* Sky */}
+              <Event
+                bg="rgba(14,165,233,0.1)"
+                bar="#0EA5E9"
+                text="#0C4A6E"
+                time="2:00 PM"
+                title="Concept Design Review II"
+                icon={img1}
+                tall
+              />
 
-              {/* Emerald event */}
-              <div
-                style={{
-                  width: "100%",
-                  height: "51px",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                  background: "rgba(16,185,129,0.1)",
-                  marginTop: "3px",
-                  display: "flex",
-                }}
-              >
-                <div style={{ width: "2.25px", background: "#10B981" }} />
-                <div style={{ padding: "4.5px", width: "100%" }}>
-                  <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#064E3B" }}
-                    >
-                      9:00
-                    </span>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#064E3B" }}
-                    >
-                      AM
-                    </span>
-                  </div>
-                  <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "9px", color: "#064E3B" }}>
-                    Webinar: Figma ...
-                  </div>
-                </div>
-              </div>
+              {/* Emerald */}
+              <Event
+                bg="rgba(16,185,129,0.1)"
+                bar="#10B981"
+                text="#064E3B"
+                time="9:00 AM"
+                title="Webinar: Figma ..."
+              />
             </div>
           </div>
         </div>
 
-        {/* Right card */}
-        <div style={{ position: "absolute", left: "0px", top: "6.075px", width: "155.25px" }}>
-          <div style={{ transform: "rotate(-5deg)", transformOrigin: "center" }}>
+        {/* ================= RIGHT CARD ================= */}
+        <div style={{ position: "absolute", left: 0, top: "6.075px" }}>
+          <div style={{ transform: "rotate(-5deg)" }}>
             <div
               style={{
-                width: "155.25px",
-                background: "#ffffff",
-                borderRadius: "9px",
-                padding: "6px",
-                boxShadow:
-                  "-8px 6px 11.3px rgba(0,0,0,0.12), 0px 0px 0px 1px rgba(0,0,0,0.08), 0px 2px 4px rgba(0,0,0,0.06)",
+                ...cardStyle,
+                boxShadow: `
+                  -8px 6px 11.3px var(--ssb-shadow),
+                  0px 0px 0px 1px var(--ssb-border),
+                  0px 2px 4px var(--ssb-shadow)
+                `,
               }}
             >
-              {/* Violet event */}
-              <div
-                style={{
-                  width: "100%",
-                  height: "51px",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                  background: "rgba(139,92,246,0.1)",
-                  display: "flex",
-                }}
-              >
-                <div style={{ width: "2.25px", background: "#8B5CF6" }} />
-                <div style={{ padding: "4.5px", width: "100%" }}>
-                  <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#581C87" }}
-                    >
-                      11:00
-                    </span>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#581C87" }}
-                    >
-                      AM
-                    </span>
-                    <div style={{ background: "#581C87", padding: "1.5px", borderRadius: "100px" }}>
-                      <div style={{ width: "8px", height: "8px", overflow: "hidden", position: "relative" }}>
-                        <img
-                          src={img2 || "/placeholder.svg"}
-                          alt="video"
-                          style={{ position: "absolute", inset: "20% 10% 20% 10%" }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "9px", color: "#581C87" }}>
-                    Onboarding Presentation
-                  </div>
-                </div>
-              </div>
+              <Event
+                bg="rgba(139,92,246,0.1)"
+                bar="#8B5CF6"
+                text="#581C87"
+                time="11:00 AM"
+                title="Onboarding Presentation"
+                icon={img2}
+              />
 
-              {/* Rose event */}
-              <div
-                style={{
-                  width: "100%",
-                  height: "51px",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                  background: "#FFE4E6",
-                  display: "flex",
-                  marginTop: "3px",
-                }}
-              >
-                <div style={{ width: "2.25px", background: "#F43F5E" }} />
-                <div style={{ padding: "4.5px", width: "100%" }}>
-                  <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#BE123C" }}
-                    >
-                      4:00
-                    </span>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#BE123C" }}
-                    >
-                      PM
-                    </span>
-                    <div style={{ background: "#BE123C", padding: "1.5px", borderRadius: "100px" }}>
-                      <div style={{ width: "8px", height: "8px", overflow: "hidden", position: "relative" }}>
-                        <img
-                          src={img3 || "/placeholder.svg"}
-                          alt="video"
-                          style={{ position: "absolute", inset: "20% 10% 20% 10%" }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "9px", color: "#BE123C" }}>
-                    🍷 Happy Hour
-                  </div>
-                </div>
-              </div>
+              <Event
+                bg="#FFE4E6"
+                bar="#F43F5E"
+                text="#BE123C"
+                time="4:00 PM"
+                title="🍷 Happy Hour"
+                icon={img3}
+              />
 
-              {/* Violet tall event */}
-              <div
-                style={{
-                  width: "100%",
-                  height: "79.5px",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                  background: "rgba(139,92,246,0.1)",
-                  display: "flex",
-                  marginTop: "3px",
-                }}
-              >
-                <div style={{ width: "2.25px", background: "#8B5CF6" }} />
-                <div style={{ padding: "4.5px", width: "100%" }}>
-                  <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#581C87" }}
-                    >
-                      11:00
-                    </span>
-                    <span
-                      style={{ fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: "9px", color: "#581C87" }}
-                    >
-                      AM
-                    </span>
-                  </div>
-                  <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "9px", color: "#581C87" }}>
-                    🍔 New Employee Welcome Lunch!
-                  </div>
-                </div>
-              </div>
+              <Event
+                bg="rgba(139,92,246,0.1)"
+                bar="#8B5CF6"
+                text="#581C87"
+                time="11:00 AM"
+                title="🍔 New Employee Welcome Lunch!"
+                tall
+              />
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+/* =======================
+   EVENT ROW COMPONENT
+======================= */
+function Event({
+  bg,
+  bar,
+  text,
+  time,
+  title,
+  icon,
+  tall,
+}: {
+  bg: string
+  bar: string
+  text: string
+  time: string
+  title: string
+  icon?: string
+  tall?: boolean
+}) {
+  const [t, meridiem] = time.split(" ")
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: tall ? "79.5px" : "51px",
+        borderRadius: "4px",
+        overflow: "hidden",
+        background: bg,
+        display: "flex",
+        marginTop: "3px",
+      }}
+    >
+      <div style={{ width: "2.25px", background: bar }} />
+      <div style={{ padding: "4.5px", width: "100%" }}>
+        <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
+          <span style={{ fontSize: "9px", fontWeight: 500, color: text }}>{t}</span>
+          <span style={{ fontSize: "9px", fontWeight: 500, color: text }}>{meridiem}</span>
+
+          {icon && (
+            <div style={{ background: text, padding: "1.5px", borderRadius: "100px" }}>
+              <div style={{ width: "8px", height: "8px", position: "relative" }}>
+                <img src={icon} alt="" style={{ position: "absolute", inset: "20% 10%" }} />
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div style={{ fontSize: "9px", fontWeight: 600, color: text }}>{title}</div>
       </div>
     </div>
   )

@@ -1,148 +1,140 @@
 import { useState } from "react";
 import { Input } from "../ui/input";
-import contactImage from "../../assets/49643.jpg"
+import contactImage from "../../assets/49643.jpg";
 
 export default function ContactForm() {
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        service: "",
-    });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+  });
 
-    const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-    const services = ["Website", "Mobile Apps", "Others"];
+  const services = ["Website", "Mobile Apps", "Others"];
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // You can send formData to backend API here
-        console.log(formData);
-        setSubmitted(true);
-    };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(formData);
+    setSubmitted(true);
+  };
 
-    return (
-        <div className="w-full bg-white border-[rgba(55,50,47,0.12)] grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20 py-20 px-4">
-            {/* Header */}
-            <div className="w-full h-full flex flex-col gap-4">
-                <div className="text-3xl md:text-[48px] font-semibold text-[#49423D] leading-tight tracking-tight font-sans">
-                    Get in Touch
-                </div>
-                <div className="text-base text-[#605A57] leading-7 font-normal font-sans">
-                    Fill out the form below and we’ll get back to you shortly.
-                </div>
+  return (
+    <section className="w-full bg-gray-50 py-20 sm:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-                <div className="flex h-full w-full justify-center items-center">
-                    <img
-                        src={contactImage}
-                        alt="contact png"
-                        className="lg:h-[400px] aspect-square"
-                    />
-                </div>
-            </div>
+          {/* Left Content */}
+          <div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Get in Touch
+            </h2>
+            <p className="text-lg text-gray-600 mb-8 max-w-md">
+              Fill out the form and our team will reach out shortly to help you
+              grow with Kyra CRM.
+            </p>
 
-            {/* Form Card */}
-            <form
-                onSubmit={handleSubmit}
-                className="w-full max-w-3xl rounded-xl p-4 lg:p-8 md:p-12 flex flex-col gap-6 border border-[rgba(2,6,23,0.08)]"
-            >
-                {/* Name */}
-                <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-[#49423D]">Name</label>
-                    <Input
-                        name="name"
-                        value={formData.name}
-                        placeholder="Your full Name"
-                        onChange={handleChange}
-                        className="
-                                mt-2
-                                bg-[#F7F6F4]
-                                border-none
-                                rounded-lg
-                                shadow-none
-                                focus-visible:ring-0
-                                placeholder:text-sm
-                            "
-                    />
+            <img
+              src={contactImage}
+              alt="Contact"
+              className="w-full max-w-md rounded-2xl shadow-sm hidden lg:block"
+            />
+          </div>
 
-                </div>
+          {/* Form Card */}
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white rounded-2xl shadow-md p-6 sm:p-8 lg:p-10 w-full"
+          >
+            <div className="space-y-5">
 
-                {/* Email */}
-                <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-[#49423D]">Email</label>
-                    <Input
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Your email address"
-                        className="
-                                mt-2
-                                bg-[#F7F6F4]
-                                border-none
-                                rounded-lg
-                                shadow-none
-                                focus-visible:ring-0
-                                placeholder:text-sm
-                            "
-                    />
+              {/* Name */}
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Name
+                </label>
+                <Input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your full name"
+                  className="mt-2 bg-gray-100 border-0 rounded-lg focus-visible:ring-[#16A34A]"
+                  required
+                />
+              </div>
 
-                </div>
+              {/* Email */}
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <Input
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="you@example.com"
+                  className="mt-2 bg-gray-100 border-0 rounded-lg focus-visible:ring-[#16A34A]"
+                  required
+                />
+              </div>
 
-                {/* Phone */}
-                <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-[#49423D]">Phone</label>
-                    <Input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="Your phone number"
-                        className="
-                                mt-2
-                                bg-[#F7F6F4]
-                                border-none
-                                rounded-lg
-                                shadow-none
-                                focus-visible:ring-0
-                                placeholder:text-sm
-                            "
-                        required
-                    />
-                </div>
+              {/* Phone */}
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Phone
+                </label>
+                <Input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="+91 98765 43210"
+                  className="mt-2 bg-gray-100 border-0 rounded-lg focus-visible:ring-[#16A34A]"
+                  required
+                />
+              </div>
 
-                {/* Service Option */}
-                <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-[#49423D]">Service Interested In</label>
-                    <select
-                        name="service"
-                        value={formData.service}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 placeholder:text-sm bg-[#F7F6F4] border-0 rounded-lg text-[#37322F] text-sm font-sans focus:outline-none focus:ring-0 transition"
-                        required
-                    >
-                        <option value="" disabled>
-                            Select a service
-                        </option>
-                        {services.map((s) => (
-                            <option key={s} value={s}>
-                                {s}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                {/* Submit Button */}
-                <button
-                    type="submit"
-                    className="mt-4 w-full py-3 rounded-lg bg-[#37322F] text-white font-semibold text-sm md:text-base hover:bg-primary/90 transition"
+              {/* Service */}
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Service Interested In
+                </label>
+                <select
+                  name="service"
+                  value={formData.service}
+                  onChange={handleChange}
+                  required
+                  className="mt-2 w-full px-4 py-3 bg-gray-100 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#16A34A]"
                 >
-                    {submitted ? "Submitted!" : "Submit"}
-                </button>
-            </form>
+                  <option value="" disabled>
+                    Select a service
+                  </option>
+                  {services.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="w-full mt-4 py-3 rounded-lg bg-[#16A34A] hover:bg-[#15803D] text-white font-semibold transition"
+              >
+                {submitted ? "Submitted Successfully!" : "Submit Request"}
+              </button>
+            </div>
+          </form>
         </div>
-    );
+      </div>
+    </section>
+  );
 }

@@ -93,10 +93,9 @@ const KyraProductCard = () => {
                             gap: "4px",
                             marginTop: "12px",
                             padding: "8px 16px",
-                            background: "#ff6154",
+                            background: "#16A34A",
                             color: "#ffffff",
                             textDecoration: "none",
-                            borderRadius: "8px",
                             fontSize: "14px",
                             fontWeight: 600,
                         }}

@@ -78,7 +78,6 @@ const faqData: FAQItem[] = [
   },
 ];
 
-
 function ChevronDownIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -87,9 +86,14 @@ function ChevronDownIcon({ className }: { className?: string }) {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="m6 9 6 6 6-6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   )
 }
@@ -98,60 +102,64 @@ export default function FAQSection() {
   const [openItems, setOpenItems] = useState<number[]>([])
 
   const toggleItem = (index: number) => {
-    setOpenItems((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]))
+    setOpenItems((prev) =>
+      prev.includes(index)
+        ? prev.filter((i) => i !== index)
+        : [...prev, index]
+    )
   }
 
   return (
-    <div className="w-full flex flex-col justify-center items-start bg-white">
+    <section className="w-full bg-gray-50 py-20 sm:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <div className="w-full flex flex-col justify-center items-center gap-4 lg:py-20 py-10">
-        <div className="w-full flex justify-center text-center text-[#49423D] font-semibold font-sans text-5xl">
-          <span className="hidden md:block">Frequently Asked Questions</span>
-          <span className="md:hidden">{"FAQ's"}</span>
+        {/* Heading */}
+        <div className="text-center mb-14">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Frequently Asked Questions
+          </h2>
+          <p className="max-w-2xl mx-auto text-lg text-gray-600">
+            Everything you need to know about Kyra CRM and how it helps you
+            convert conversations into revenue.
+          </p>
         </div>
-        <div className="w-full text-[#605A57] text-center text-lg font-normal leading-7 font-sans">
-          Explore your data,{" "} build your dashboard,
-          <br className="hidden md:block" />
-          {" "}bring your team together.
-        </div>
-      </div>
-      <div className="w-full lg:flex-1 flex flex-col justify-center items-center">
-        <div className="w-full flex flex-col">
+
+        {/* FAQ Card */}
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 divide-y">
           {faqData.map((item, index) => {
             const isOpen = openItems.includes(index)
 
             return (
-              <div key={index} className="w-full border-b border-[rgba(73,66,61,0.16)] overflow-hidden">
+              <div key={index} className="overflow-hidden">
                 <button
                   onClick={() => toggleItem(index)}
-                  className="w-full px-5 py-[18px] flex justify-between items-center gap-5 text-left hover:bg-[rgba(73,66,61,0.02)] transition-colors duration-200"
+                  className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 transition"
                   aria-expanded={isOpen}
                 >
-                  <div className="flex-1 text-[#49423D] text-md font-medium leading-6 font-sans">
+                  <span className="text-base sm:text-lg font-medium text-gray-900">
                     {item.question}
-                  </div>
-                  <div className="flex justify-center items-center">
-                    <ChevronDownIcon
-                      className={`w-6 h-6 text-[rgba(73,66,61,0.60)] transition-transform duration-300 ease-in-out ${isOpen ? "rotate-180" : "rotate-0"
-                        }`}
-                    />
-                  </div>
+                  </span>
+
+                  <ChevronDownIcon
+                    className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isOpen ? "rotate-180 text-[#16A34A]" : ""
+                      }`}
+                  />
                 </button>
 
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                  className={`px-6 transition-all duration-300 ease-in-out ${isOpen ? "max-h-96 pb-6 opacity-100" : "max-h-0 opacity-0"
                     }`}
                 >
-                  <div className="px-5 pb-[18px] text-[#605A57] text-md leading-6 font-sans">
+                  <p className="text-gray-600 leading-relaxed">
                     {item.answer}
-                  </div>
+                  </p>
                 </div>
               </div>
             )
           })}
         </div>
-      </div>
 
-    </div>
+      </div>
+    </section>
   )
 }
