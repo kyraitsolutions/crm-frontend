@@ -31,7 +31,7 @@ function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
 
 export function HomePage() {
   // const [activeCard, setActiveCard] = useState(0);
-  const [activeCard, setActiveCard] = useState(0);
+  // const [setActiveCard] = useState(0);
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   // console.log(activeCard);
@@ -52,7 +52,7 @@ export function HomePage() {
   }, []);
   useEffect(() => {
     if (progress >= 100) {
-      setActiveCard((prev) => (prev + 1) % 3);
+      // setActiveCard((prev) => (prev + 1) % 3);
       setProgress(0);
     }
   }, [progress]);
