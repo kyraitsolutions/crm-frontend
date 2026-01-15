@@ -433,14 +433,14 @@ export const Teams = () => {
                 </p>
               </div>
 
-              {/* <AddNewTeamMemberPopupDialog
+              <AddNewTeamMemberPopupDialog
                 openAddTeamMember={openAddTeamMember}
                 setOpenAddTeamMember={setOpenAddTeamMember}
                 newTeam={newTeam}
                 setNewTeam={setNewTeam}
                 isLoadingAddTeamMember={isLoadingAddTeamMember}
                 handleAddTeamMember={handleAddTeamMember}
-              /> */}
+              />
             </div>
           </div>
         </div>
