@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Users, MessageSquare } from "lucide-react";
+import { ArrowRight, MessageSquare } from "lucide-react";
 
 const AboutCTA = () => {
     return (

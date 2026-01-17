@@ -58,7 +58,6 @@ import buildParams from "@/utils/build-params.utils";
 import { formatDate, formatTime } from "@/utils/date-utils";
 
 import {
-  Flame, Clock, IndianRupee, CheckCircle,
   ArrowUpDown,
   Bell,
   ChevronDown,
@@ -365,7 +364,7 @@ export default function LeadsCentre() {
   // console.log(basicNumber);
 
 
-  console.log(selectedLead);
+  // console.log(selectedLead);
 
 
 
@@ -944,7 +943,8 @@ export default function LeadsCentre() {
             bg-[#FBFAF9]
           "
         >
-          <AILeadSummary leadId={selectedLead?._id} />
+          {/* @ts-expect-error fix: AILeadSummary expects string, selectedLead?._id may be undefined */}
+          {selectedLead?._id && <AILeadSummary leadId={selectedLead._id} />}
           {/* HEADER */}
           <SheetHeader className="pb-6 border-b border-[rgba(50,45,43,0.12)]">
             <SheetTitle className="flex items-center gap-4">

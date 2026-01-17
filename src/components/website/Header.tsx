@@ -32,9 +32,9 @@ const Header = () => {
                             <Link to="/pricing" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
                                 Pricing
                             </Link>
-                            <Link to="#review" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
+                            {/* <Link to="#review" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
                                 Review
-                            </Link>
+                            </Link> */}
 
                         </div>
                     </div>

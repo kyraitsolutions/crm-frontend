@@ -1,17 +1,12 @@
-import type React from "react";
 import { useState, useEffect, useRef } from "react";
-import SmartSimpleBrilliant from "../components/smart-simple-brilliant";
-import EffortlessIntegration from "../components/effortless-integration-updated";
 import TestimonialsSection from "../components/testimonials-section";
 import FAQSection from "../components/faq-section";
 import CTASection from "../components/cta-section";
 import FooterSection from "../components/footer-section";
 import { ArrowRight, MessageSquare, Sparkles, TrendingUp } from "lucide-react";
 // import DashboardImage2 from "../assets/image2.png";
-import KyraChatbotPreview from "../components/your-work-in-sync";
 import Header from "@/components/website/Header";
 import ContactForm from "@/components/website/ContactForm";
-import { CountUp } from "@/components/website/Number";
 import PricingSection from "@/components/website/pricing-section";
 // import DashboardImage4 from "../assets/image4.png";
 import { motion } from "framer-motion";
@@ -22,18 +17,18 @@ import HowItWork from "@/components/website/HowItWork";
 import Problem from "@/components/website/Problem";
 import Solution from "@/components/website/Solutions";
 import ComparisonSection from "@/components/website/ComparisonSection";
-function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
-  return (
-    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full border border-gray-200">
-      <div className="w-3 h-3 flex items-center justify-center text-gray-600">
-        {icon}
-      </div>
-      <span className="text-gray-700 text-xs font-medium">
-        {text}
-      </span>
-    </div>
-  );
-}
+// function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
+//   return (
+//     <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full border border-gray-200">
+//       <div className="w-3 h-3 flex items-center justify-center text-gray-600">
+//         {icon}
+//       </div>
+//       <span className="text-gray-700 text-xs font-medium">
+//         {text}
+//       </span>
+//     </div>
+//   );
+// }
 
 export function HomePage() {
   // const [activeCard, setActiveCard] = useState(0);

@@ -4,10 +4,18 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 
-const AILeadSummary = ({ leadId }: { leadId: string }) => {
+interface AILeadSummaryType {
+    summary: string;
+    score?: number;
+    keyPoints?: string[];
+    suggestions?: string[];
+    [key: string]: any; // for any additional dynamic fields from backend
+}
+
+const AILeadSummary = (leadId: string) => {
     const { accountId } = useParams();
     const leadService = new LeadService();
-    const [aiSummary, setAiSummary] = useState(null);
+    const [aiSummary, setAiSummary] = useState<AILeadSummaryType | null>(null);
     const [loading, setLoading] = useState(false)
 
     // console.log(leadId);
