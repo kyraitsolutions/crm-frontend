@@ -943,7 +943,6 @@ export default function LeadsCentre() {
             bg-[#FBFAF9]
           "
         >
-          {/* @ts-expect-error fix: AILeadSummary expects string, selectedLead?._id may be undefined */}
           {selectedLead?._id && <AILeadSummary leadId={selectedLead._id} />}
           {/* HEADER */}
           <SheetHeader className="pb-6 border-b border-[rgba(50,45,43,0.12)]">
