@@ -58,7 +58,7 @@ export default function FooterSection() {
                 Company
               </h4>
               <ul className="space-y-3 text-sm text-gray-600">
-                <li><Link to="#" className="hover:text-[#16A34A]">About</Link></li>
+                <li><Link to="/about" className="hover:text-[#16A34A]">About</Link></li>
                 <li><Link to="#" className="hover:text-[#16A34A]">Team</Link></li>
                 <li><Link to="#" className="hover:text-[#16A34A]">Careers</Link></li>
                 <li><Link to="#" className="hover:text-[#16A34A]">Contact</Link></li>

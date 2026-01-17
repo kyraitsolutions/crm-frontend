@@ -4,8 +4,8 @@ import { Target, Eye, Sparkles } from "lucide-react";
 const MissionVision = () => {
     return (
         <section className="py-20 bg-background">
-            <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="max-w-[1480px] mx-auto px-4 md:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Mission */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}

@@ -27,7 +27,7 @@ const AboutHero = () => {
                         className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6"
                     >
                         We're Building the Future of{" "}
-                        <span className="gradient-text">Lead Intelligence</span>
+                        <span className="text-primary">Lead Intelligence</span>
                     </motion.h1>
 
                     <motion.p
