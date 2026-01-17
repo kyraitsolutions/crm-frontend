@@ -1,3 +1,4 @@
+import AILeadSummary from "@/components/common/AILeadSummary";
 import { PillFilterDropdown } from "@/components/common/FilterDropdown";
 import type { Option } from "@/components/filter-dropdown";
 import Loader from "@/components/Loader";
@@ -7,6 +8,7 @@ import { TableSkeleton } from "@/components/skeltons/TableSkeltons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,6 +58,7 @@ import buildParams from "@/utils/build-params.utils";
 import { formatDate, formatTime } from "@/utils/date-utils";
 
 import {
+  Flame, Clock, IndianRupee, CheckCircle,
   ArrowUpDown,
   Bell,
   ChevronDown,
@@ -360,6 +363,12 @@ export default function LeadsCentre() {
   }, [allLeads, selectedLead]);
 
   // console.log(basicNumber);
+
+
+  console.log(selectedLead);
+
+
+
   return (
     <div className=" bg-background">
       <div className="flex max-sm:flex-col  sm:items-center justify-between px-6 py-6">
@@ -935,6 +944,7 @@ export default function LeadsCentre() {
             bg-[#FBFAF9]
           "
         >
+          <AILeadSummary leadId={selectedLead?._id} />
           {/* HEADER */}
           <SheetHeader className="pb-6 border-b border-[rgba(50,45,43,0.12)]">
             <SheetTitle className="flex items-center gap-4">
@@ -1338,3 +1348,7 @@ const Timeline = ({ items }: { items: TimelineItem[] }) => {
     </div>
   );
 };
+
+
+
+

@@ -111,7 +111,7 @@ export default function FAQSection() {
 
   return (
     <section className="w-full bg-gray-50 py-20 sm:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Heading */}
         <div className="text-center mb-14">
@@ -136,7 +136,7 @@ export default function FAQSection() {
                   className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 transition"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-base sm:text-lg font-medium text-gray-900">
+                  <span className="text-base sm:text-md font-medium text-gray-900">
                     {item.question}
                   </span>
 
@@ -150,7 +150,7 @@ export default function FAQSection() {
                   className={`px-6 transition-all duration-300 ease-in-out ${isOpen ? "max-h-96 pb-6 opacity-100" : "max-h-0 opacity-0"
                     }`}
                 >
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-600 leading-relaxed text-md">
                     {item.answer}
                   </p>
                 </div>

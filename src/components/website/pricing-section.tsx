@@ -24,11 +24,11 @@ export default function PricingSection() {
           </span>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Simple pricing that grows with you
+            Pay for growth, not software
           </h2>
 
           <p className="max-w-2xl mx-auto text-lg text-gray-600">
-            Start free. Upgrade only when you need more power.
+            Start free and upgrade as your revenue grows
           </p>
         </div>
 

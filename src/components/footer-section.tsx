@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function FooterSection() {
   return (
     <footer className="w-full bg-white border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
         {/* Top Section */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
@@ -20,13 +20,14 @@ export default function FooterSection() {
             {/* Social Icons */}
             <div className="flex items-center gap-4 pt-2">
               {[
-                { href: "#", label: "X", icon: "X" },
-                { href: "#", label: "LinkedIn", icon: "in" },
-                { href: "#", label: "GitHub", icon: "GH" },
+                { href: "https://www.instagram.com/kyraitsolutions", label: "Instagram", icon: "IG" },
+                { href: "https://www.linkedin.com/company/kyraitsolutions/", label: "LinkedIn", icon: "LI" },
+                // { href: "#", label: "GitHub", icon: "GH" },
               ].map((item, i) => (
                 <a
                   key={i}
                   href={item.href}
+                  target="_blank"
                   className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:border-[#16A34A] hover:text-[#16A34A] transition"
                 >
                   {item.icon}

@@ -15,6 +15,8 @@ import { leadRoutes } from "./lead.route";
 import TermsPage from "@/pages/terms.page";
 import PrivacyPolicyPage from "@/pages/privacy.page";
 import PricingPage from "@/pages/pricing.page";
+import ProductPage from "@/pages/product.page";
+import About from "@/pages/about.page";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -24,6 +26,14 @@ export const appRoutes = createBrowserRouter([
       {
         element: <HomePage />,
         index: true,
+      },
+      {
+        element: <ProductPage />,
+        path: '/product',
+      },
+      {
+        element: <About />,
+        path: '/about',
       },
       {
         element: <PricingPage />,
