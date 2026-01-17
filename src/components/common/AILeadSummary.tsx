@@ -12,27 +12,29 @@ interface AILeadSummaryType {
     [key: string]: any; // for any additional dynamic fields from backend
 }
 
-const AILeadSummary = (leadId: string) => {
+interface AILeadSummaryProps {
+    leadId: string;
+}
+
+const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
+    // console.log("here is the id", leadId);
     const { accountId } = useParams();
     const leadService = new LeadService();
     const [aiSummary, setAiSummary] = useState<AILeadSummaryType | null>(null);
     const [loading, setLoading] = useState(false)
 
-    // console.log(leadId);
 
     const generateLeadSummary = async (leadId: string) => {
+        console.log(leadId)
         try {
             setLoading(true)
-            console.log("Call");
             const res = await leadService.getLeadSummary(String(accountId), leadId)
-            console.log(res.data);
             setAiSummary(res.data.data);
         } catch (error) {
             console.log(error);
         } finally {
             setLoading(false)
         }
-
     };
 
 

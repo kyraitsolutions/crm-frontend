@@ -22,7 +22,8 @@ export class LeadService extends ApiService {
     return await this.put(`account/${accountId}/lead/${lead._id}/update`, lead);
   }
 
-  async getLeadSummary(accountId:string,leadId:string):Promise<ApiResponse<any>>{
+  async getLeadSummary(accountId: string, leadId: string): Promise<ApiResponse<any>> {
+    console.log("jhjghfg", leadId)
     return await this.get(`account/${accountId}/lead/${leadId}/ai-summary`)
   }
 }
