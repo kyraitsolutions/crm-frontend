@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 export default function PricingSection() {
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annually">("annually")
+  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annually">("monthly")
 
   const pricing = {
     starter: { monthly: 0, annually: 0 },
@@ -35,7 +35,7 @@ export default function PricingSection() {
         {/* Billing Toggle */}
         <div className="flex justify-center mb-14">
           <div className="flex items-center gap-2 p-1 bg-white rounded-full shadow-sm border">
-            {["annually", "monthly"].map((type) => (
+            {["monthly", "annually"].map((type) => (
               <button
                 key={type}
                 onClick={() => setBillingPeriod(type as any)}

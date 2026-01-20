@@ -2,7 +2,7 @@ import FooterSection from "@/components/footer-section";
 import TestimonialsSection from "@/components/testimonials-section";
 import AboutCTA from "@/components/website/AboutCTA";
 import AboutHero from "@/components/website/AboutHero";
-import CompanyJourney from "@/components/website/CompanyJourney";
+// import CompanyJourney from "@/components/website/CompanyJourney";
 import ContactForm from "@/components/website/ContactForm";
 import Header from "@/components/website/Header";
 import MissionVision from "@/components/website/MissionVision";
@@ -23,8 +23,8 @@ const About = () => {
             <ProductPrinciples />
             <WhyChooseUs />
             <UseCasesSection />
-            <CompanyJourney />
-            <TestimonialsSection />
+            {/* <CompanyJourney /> */}
+            {/* <TestimonialsSection /> */}
             <AboutCTA />
             <ContactForm />
             <FooterSection />

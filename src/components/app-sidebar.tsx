@@ -176,7 +176,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} side="left">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -185,8 +185,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link to="/">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Kyra CRM</span>
+                <IconInnerShadowTop className="!size-5 text-primary" />
+                <span className="text-base font-semibold">Kyra AI CRM</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

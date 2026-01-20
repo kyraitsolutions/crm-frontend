@@ -120,8 +120,8 @@ export function HomePage() {
                   <button
                     onClick={() => {
                       window.location.href =
-                        "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                      // "http://localhost:3000/api/auth/google";
+                        // "https://crm-backend-7lf9.onrender.com/api/auth/google";
+                      "http://localhost:3000/api/auth/google";
                     }}
                     className="bg-[#16A34A] hover:bg-[#15803D] text-white cursor-pointer font-semibold px-8 py-3 rounded-lg transition-colors flex items-center gap-2"
                   >
@@ -324,9 +324,9 @@ export function HomePage() {
         </section> */}
 
         {/* Testimonials Section */}
-        <div id="review" className="w-full">
+        {/* <div id="review" className="w-full">
           <TestimonialsSection />
-        </div>
+        </div> */}
 
         {/* Pricing Section */}
         <PricingSection />
