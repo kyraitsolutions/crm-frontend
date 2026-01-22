@@ -22,9 +22,9 @@ export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
             <Crown className="size-7 text-yellow-600" />
           </div>
 
-          <DialogTitle className="text-xl mt-4">Upgrade to Premium</DialogTitle>
+          <DialogTitle className="text-xl mt-4 text-foreground">Upgrade to Premium</DialogTitle>
 
-          <DialogDescription className="text-sm text-gray-500">
+          <DialogDescription className="text-sm text-muted-foreground">
             You’ve reached the maximum number of accounts allowed on your
             current plan.
           </DialogDescription>
@@ -34,7 +34,7 @@ export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
           Redirecting you to subscription page…
         </div> */}
 
-        <Link to={"/dashboard/subscription"} className="mt-6 w-full p-2  rounded-full   bg-[#37322F] text-white hover:bg-[#37322F]/90">Upgrade Now</Link>
+        <Link to={"/dashboard/subscription"} className="mt-6 w-full p-2  rounded-full   bg-primary text-white hover:bg-primary/90">Upgrade Now</Link>
       </DialogContent>
     </Dialog>
   );

@@ -27,12 +27,13 @@ export function NavMain({
   const visibleItems = items.filter((item) => {
     return show
       ? [
-          "Home",
-          "Dashboard",
-          "Chat bot",
-          "Lead Forms",
-          "Leads Centre",
-        ].includes(item.title)
+        "Home",
+        "Dashboard",
+        "Chat bot",
+        "Lead Forms",
+        "Leads Centre",
+        "Email Campaigns",
+      ].includes(item.title)
       : ["Home", "Accounts", "Team", "Settings"].includes(item.title);
   });
 
@@ -73,14 +74,13 @@ export function NavMain({
             };
 
             return (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton tooltip={item.title} asChild>
+              <SidebarMenuItem key={item.title} >
+                <SidebarMenuButton tooltip={item.title} asChild >
                   <Link
                     to={item.url}
                     onClick={handleClick}
-                    className={`transition-colors ${
-                      isActive ? "bg-accent text-accent-foreground" : ""
-                    }`}
+                    className={`transition-colors hover:bg-red-900 ${isActive ? "bg-primary/10 text-primary" : ""
+                      }`}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>

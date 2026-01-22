@@ -1,3 +1,4 @@
+import { Star } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function TestimonialsSection() {
@@ -6,32 +7,36 @@ export default function TestimonialsSection() {
 
   const testimonials = [
     {
-      quote:
-        "Kyra helped us turn website conversations into real leads almost instantly. Setup was quick, and everything flows directly into the CRM.",
-      name: "Amit Verma",
-      company: "Founder, SaaS Startup",
-      image: "https://avatars.githubusercontent.com/u/1?v=4",
+      name: "Sarah Chen",
+      role: "VP of Sales",
+      company: "TechScale Inc.",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
+      quote: "Kyra AI CRM transformed our lead qualification process. We went from spending 10 hours a week on manual data entry to having AI-qualified leads ready for our sales team every morning.",
+      rating: 5,
     },
     {
-      quote:
-        "The no-code chatbot builder is extremely intuitive. We launched multiple chatbot flows without any developer support.",
-      name: "Priya Sharma",
-      company: "Marketing Manager",
-      image: "https://avatars.githubusercontent.com/u/2?v=4",
+      name: "Marcus Johnson",
+      role: "Founder & CEO",
+      company: "GrowthHub",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+      quote: "The AI summaries are a game-changer. My team can now see intent, budget, and timeline at a glance. We've closed 40% more deals since switching to Kyra.",
+      rating: 5,
     },
     {
-      quote:
-        "What stands out is the CRM-first approach. Every conversation automatically becomes a lead, making our sales pipeline crystal clear.",
-      name: "Rahul Mehta",
-      company: "Head of Sales, GrowthCo",
-      image: "https://avatars.githubusercontent.com/u/3?v=4",
+      name: "Emily Rodriguez",
+      role: "Marketing Director",
+      company: "Scale Agency",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+      quote: "Managing lead capture for 12 clients used to be chaos. Now with multi-account support, I can see all campaigns in one dashboard. The ROI is incredible.",
+      rating: 5,
     },
     {
-      quote:
-        "Managing multiple clients is effortless with Kyra. Separate workspaces, shared analytics, and clean lead tracking make it perfect for agencies.",
-      name: "Sneha Patel",
-      company: "Agency Owner, DigitalCraft",
-      image: "https://avatars.githubusercontent.com/u/4?v=4",
+      name: "David Park",
+      role: "Head of Growth",
+      company: "Nexus Startups",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+      quote: "We tried HubSpot, Salesforce, even Pipedrive. Nothing came close to how fast we got set up with Kyra AI CRM. Literally 5 minutes and we were capturing leads.",
+      rating: 5,
     },
   ];
 
@@ -74,7 +79,7 @@ export default function TestimonialsSection() {
           <div className="flex flex-col md:flex-row gap-8 p-8 md:p-12 items-start">
 
             {/* Avatar */}
-            <img
+            {/* <img
               src={testimonials[activeTestimonial].image}
               alt={testimonials[activeTestimonial].name}
               className="h-24 w-24 rounded-xl object-cover border border-gray-200"
@@ -83,10 +88,15 @@ export default function TestimonialsSection() {
                 transform: isTransitioning ? "scale(0.96)" : "scale(1)",
                 transition: "all 0.6s ease",
               }}
-            />
+            /> */}
 
             {/* Content */}
             <div className="flex flex-col gap-6 flex-1">
+              <div className="flex gap-1 mb-4">
+                {[...Array(testimonials[activeTestimonial].rating)]?.map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                ))}
+              </div>
               <p
                 className="text-xl md:text-2xl font-medium leading-relaxed text-gray-900"
                 style={{
@@ -108,7 +118,7 @@ export default function TestimonialsSection() {
                   {testimonials[activeTestimonial].name}
                 </span>
                 <span className="text-sm text-gray-500">
-                  {testimonials[activeTestimonial].company}
+                  {testimonials[activeTestimonial].role}, {testimonials[activeTestimonial].company}
                 </span>
               </div>
             </div>

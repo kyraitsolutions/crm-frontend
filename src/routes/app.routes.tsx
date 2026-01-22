@@ -15,6 +15,9 @@ import { leadRoutes } from "./lead.route";
 import TermsPage from "@/pages/terms.page";
 import PrivacyPolicyPage from "@/pages/privacy.page";
 import PricingPage from "@/pages/pricing.page";
+// import ProductPage from "@/pages/product.page";
+// import About from "@/pages/about.page";
+import { emailMarketingRoutes } from "./emailMarketing.routes";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -25,6 +28,14 @@ export const appRoutes = createBrowserRouter([
         element: <HomePage />,
         index: true,
       },
+      // {
+      //   element: <ProductPage />,
+      //   path: '/product',
+      // },
+      // {
+      //   element: <About />,
+      //   path: '/about',
+      // },
       {
         element: <PricingPage />,
         path: '/pricing',
@@ -45,6 +56,7 @@ export const appRoutes = createBrowserRouter([
           ...chatBotRoutes,
           ...formRoutes,
           ...leadRoutes,
+          ...emailMarketingRoutes,
           {
             path: "/on-boarding",
             element: <OnBoardingPage />,

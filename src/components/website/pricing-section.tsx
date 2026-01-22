@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 export default function PricingSection() {
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annually">("annually")
+  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annually">("monthly")
 
   const pricing = {
     starter: { monthly: 0, annually: 0 },
@@ -24,18 +24,18 @@ export default function PricingSection() {
           </span>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Simple pricing that grows with you
+            Pay for growth, not software
           </h2>
 
           <p className="max-w-2xl mx-auto text-lg text-gray-600">
-            Start free. Upgrade only when you need more power.
+            Start free and upgrade as your revenue grows
           </p>
         </div>
 
         {/* Billing Toggle */}
         <div className="flex justify-center mb-14">
           <div className="flex items-center gap-2 p-1 bg-white rounded-full shadow-sm border">
-            {["annually", "monthly"].map((type) => (
+            {["monthly", "annually"].map((type) => (
               <button
                 key={type}
                 onClick={() => setBillingPeriod(type as any)}

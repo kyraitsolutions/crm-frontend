@@ -208,24 +208,25 @@ export const DashboardPage = () => {
             className={`
         relative flex flex-col justify-between gap-4
         px-4 py-3
+        border hover:shadow-sm ${account.status === "active" ? "border-primary/30 " : "border-destructive/30"} rounded-2xl
         cursor-pointer
         transition-all duration-200
         ${isActive ? "ring-1 ring-[#37322F]" : ""}
-        hover:bg-[rgba(55,50,47,0.04)]
+        
       `}
           >
             {/* Header */}
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="h-9 w-9 rounded-full bg-[#37322F] text-[#FBFAF9] flex items-center justify-center text-xs font-medium">
+                <div className={`h-9 w-9 rounded-full  ${account.status === "active" ? "text-primary bg-primary/10" : "text-destructive bg-destructive/10"} flex items-center justify-center text-xs font-medium`}>
                   {initials}
                 </div>
 
                 <div className="min-w-0 flex flex-col">
-                  <h3 className="text-md font-medium capitalize text-[#37322F] truncate">
+                  <h3 className="text-md font-medium capitalize text-foreground truncate">
                     {account.accountName}
                   </h3>
-                  <p className="text-sm text-[#847971] truncate">
+                  <p className="text-sm text-muted-foreground truncate">
                     {account.email}
                   </p>
                 </div>
@@ -237,7 +238,7 @@ export const DashboardPage = () => {
                   e.stopPropagation();
                   handleDeleAccountClick(account.id);
                 }}
-                className="p-1 rounded-md text-[#847971] hover:text-red-600 transition"
+                className="p-2 rounded-md bg-destructive/10 text-destructive hover:text-red-600 transition"
               >
                 <Trash2 size={16} />
               </button>
@@ -245,20 +246,19 @@ export const DashboardPage = () => {
 
             {/* Footer */}
             <div className="flex justify-between items-center text-xs font-medium">
-              <span className="text-[#847971]">
+              <span className="text-foreground">
                 Created: {formatDate(account.createdAt)}
               </span>
 
               <span
                 className={`
-            px-2 py-0.5 rounded-full text-xs font-medium
-            ${
-              account.status === "active"
-                ? "bg-[rgba(55,50,47,0.08)] text-[#37322F]"
-                : account.status === "inactive"
-                ? "bg-[rgba(132,121,113,0.12)] text-[#847971]"
-                : "bg-[rgba(220,38,38,0.10)] text-red-700"
-            }
+            px-2 py-0.5 rounded-full capitalize text-xs font-medium
+            ${account.status === "active"
+                    ? "bg-primary/10 text-primary"
+                    : account.status === "inactive"
+                      ? "bg-destructive/10 text-destructive"
+                      : "bg-primary/10 text-primary"
+                  }
           `}
               >
                 {account.status}
@@ -276,15 +276,15 @@ export const DashboardPage = () => {
               className="
             flex flex-col justify-center items-center gap-2
             px-6 py-5
-            border-2 border-dashed border-[rgba(50,45,43,0.20)]
-            rounded-xl
+            border-2 border-dashed border-primary/30
+            rounded-2xl
             cursor-pointer
             transition-all
-            hover:bg-[rgba(55,50,47,0.04)]
+            hover:shadow-sm
           "
             >
-              <IconCirclePlusFilled className="size-10 text-[#37322F]" />
-              <span className="text-sm font-medium text-[#37322F]">
+              <IconCirclePlusFilled className="size-10 text-primary" />
+              <span className="text-sm font-medium text-foreground">
                 Add New Account
               </span>
             </div>
@@ -295,7 +295,6 @@ export const DashboardPage = () => {
             className="
     sm:max-w-[420px]
     rounded-2xl
-    border border-[rgba(50,45,43,0.12)]
     p-6
     shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
   "
@@ -306,10 +305,10 @@ export const DashboardPage = () => {
             >
               {/* Header */}
               <DialogHeader className="gap-2">
-                <DialogTitle className="text-xl font-medium text-[#37322F]">
+                <DialogTitle className="text-xl font-medium text-foreground">
                   Create New Account
                 </DialogTitle>
-                <DialogDescription className="text-sm text-[#847971]">
+                <DialogDescription className="text-sm text-muted-foreground">
                   Set up a new account to manage your workspace.
                 </DialogDescription>
               </DialogHeader>
@@ -317,7 +316,7 @@ export const DashboardPage = () => {
               {/* Fields */}
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
-                  <Label className="text-sm font-medium text-[#37322F]">
+                  <Label className="text-sm font-medium text-foreground">
                     Account Name
                   </Label>
                   <Input
@@ -332,13 +331,13 @@ export const DashboardPage = () => {
                 border-none
                 rounded-lg
                 focus-visible:ring-0
-                text-[#37322F]
+                text-foreground
           "
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <Label className="text-sm font-medium text-[#37322F]">
+                  <Label className="text-sm font-medium text-foreground">
                     Email
                   </Label>
                   <Input
@@ -353,7 +352,7 @@ export const DashboardPage = () => {
                 border-none
                 rounded-lg
                 focus-visible:ring-0
-                text-[#37322F]
+                text-foreground
           "
                   />
                 </div>
@@ -367,7 +366,7 @@ export const DashboardPage = () => {
                     className="
               px-4 py-2 rounded-[99px]
               border border-[rgba(50,45,43,0.20)]
-              text-sm font-medium text-[#37322F]
+              text-sm font-medium text-foreground
               hover:bg-[rgba(55,50,47,0.05)]
               transition
           "
@@ -381,7 +380,7 @@ export const DashboardPage = () => {
                   disabled={loading}
                   className="
             relative px-5 py-2 flex items-center gap-2 rounded-[99px]
-            bg-[#37322F]
+            bg-primary
             text-sm font-medium text-[#FBFAF9]
             shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
             disabled:opacity-60

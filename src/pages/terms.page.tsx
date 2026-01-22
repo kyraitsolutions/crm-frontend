@@ -8,7 +8,7 @@ const TermsPage = () => {
 
             {/* Content */}
             <main className="flex-1">
-                <section className="max-w-7xl mx-auto px-8 py-14">
+                <section className="max-w-[1480px] mx-auto px-8 py-14">
                     {/* Title */}
                     <h1 className="text-4xl font-bold mb-3">
                         Terms & Conditions
