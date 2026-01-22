@@ -13,7 +13,7 @@ export default function ContactForm() {
 
   const [submitted, setSubmitted] = useState(false);
 
-  const services = ["Website", "Mobile Apps", "Others"];
+  const services = ["Website", "Mobile Apps", "AI Chatbot", "CRM Solution", "Email Campaign", "Other"];
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -77,7 +77,7 @@ export default function ContactForm() {
                     <div className="text-xs text-muted-foreground mb-1">AI Processing...</div>
                     <div className="flex gap-2">
                       <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">High Intent</span>
-                      <span className="px-2 py-1 bg-amber-500/10 text-amber-600 text-xs rounded-full">Budget: $5k-10k</span>
+                      <span className="px-2 py-1 bg-amber-500/10 text-amber-600 text-xs rounded-full">Budget: ₹25k-60k</span>
                     </div>
                   </motion.div>
 

@@ -2,16 +2,16 @@ import { motion } from "framer-motion";
 import { Check, X, Minus } from "lucide-react";
 
 const features = [
-    { feature: "AI-Powered Lead Qualification", kyra: true, hubspot: "partial", salesforce: "partial", zoho: false },
-    { feature: "No-Code Chatbot Builder", kyra: true, hubspot: false, salesforce: false, zoho: false },
-    { feature: "AI Lead Summaries", kyra: true, hubspot: false, salesforce: false, zoho: false },
-    { feature: "Real-Time Conversation Analytics", kyra: true, hubspot: true, salesforce: true, zoho: "partial" },
-    { feature: "5-Minute Setup", kyra: true, hubspot: false, salesforce: false, zoho: false },
-    { feature: "On-Demand AI (Cost Control)", kyra: true, hubspot: false, salesforce: false, zoho: false },
-    { feature: "Multi-Account Support", kyra: true, hubspot: true, salesforce: true, zoho: true },
-    { feature: "Team Collaboration", kyra: true, hubspot: true, salesforce: true, zoho: true },
-    { feature: "Free Tier Available", kyra: true, hubspot: true, salesforce: false, zoho: true },
-    { feature: "Transparent Pricing", kyra: true, hubspot: false, salesforce: false, zoho: "partial" },
+    { feature: "AI-Powered Lead Qualification", kyra: true, others: "partial", salesforce: "partial", zoho: false },
+    { feature: "No-Code Chatbot Builder", kyra: true, others: false, salesforce: false, zoho: false },
+    { feature: "AI Lead Summaries", kyra: true, others: false, salesforce: false, zoho: false },
+    { feature: "Real-Time Conversation Analytics", kyra: true, others: true, salesforce: true, zoho: "partial" },
+    { feature: "5-Minute Setup", kyra: true, others: false, salesforce: false, zoho: false },
+    { feature: "On-Demand AI (Cost Control)", kyra: true, others: false, salesforce: false, zoho: false },
+    { feature: "Multi-Account Support", kyra: true, others: true, salesforce: true, zoho: true },
+    { feature: "Team Collaboration", kyra: true, others: true, salesforce: true, zoho: true },
+    { feature: "Free Tier Available", kyra: true, others: true, salesforce: false, zoho: true },
+    { feature: "Transparent Pricing", kyra: true, others: false, salesforce: false, zoho: "partial" },
 ];
 
 const renderStatus = (status: boolean | string) => {
@@ -58,20 +58,20 @@ const ComparisonSection = () => {
                             <thead>
                                 <tr className="border-b border-border">
                                     <th className="text-left p-4 font-semibold text-foreground">Feature</th>
-                                    <th className="p-4 text-center">
+                                    <th className="p-4 text-center bg-primary/5">
                                         {/* <div className="inline-flex flex-col items-center"> */}
-                                        <span className="font-bold text-primary text-lg">Kyra </span>
+                                        <span className="font-bold text-primary text-lg">Kyra AI CRM</span>
                                         {/* </div> */}
                                     </th>
                                     <th className="p-4 text-center">
-                                        <span className="font-semibold text-muted-foreground">HubSpot</span>
+                                        <span className="font-semibold text-muted-foreground">Others CRM</span>
                                     </th>
-                                    <th className="p-4 text-center">
+                                    {/* <th className="p-4 text-center">
                                         <span className="font-semibold text-muted-foreground">Salesforce</span>
                                     </th>
                                     <th className="p-4 text-center">
                                         <span className="font-semibold text-muted-foreground">Zoho</span>
-                                    </th>
+                                    </th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,14 +89,14 @@ const ComparisonSection = () => {
                                             <div className="flex justify-center">{renderStatus(row.kyra)}</div>
                                         </td>
                                         <td className="p-4 text-center">
-                                            <div className="flex justify-center">{renderStatus(row.hubspot)}</div>
+                                            <div className="flex justify-center">{renderStatus(row.others)}</div>
                                         </td>
-                                        <td className="p-4 text-center">
+                                        {/* <td className="p-4 text-center">
                                             <div className="flex justify-center">{renderStatus(row.salesforce)}</div>
                                         </td>
                                         <td className="p-4 text-center">
                                             <div className="flex justify-center">{renderStatus(row.zoho)}</div>
-                                        </td>
+                                        </td> */}
                                     </motion.tr>
                                 ))}
                             </tbody>

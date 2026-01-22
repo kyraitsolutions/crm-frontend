@@ -5,9 +5,9 @@ import {
     Kanban,
     Users,
     Bell,
-    DollarSign,
     Building2,
-    Shield
+    Shield,
+    IndianRupee
 } from "lucide-react";
 
 const features = [
@@ -25,7 +25,7 @@ const features = [
     },
     {
         icon: Kanban,
-        title: "Pipeline & Timeline View",
+        title: "Timeline View",
         description: "Visual pipeline shows every lead's status. Timeline view tracks every interaction. Never lose context on where a deal stands.",
         highlight: "Full visibility",
     },
@@ -48,7 +48,7 @@ const features = [
         highlight: "Real-time alerts",
     },
     {
-        icon: DollarSign,
+        icon: IndianRupee,
         title: "Cost-Controlled AI",
         description: "AI summaries run on-demand, not automatically. You control when AI is used—and how much you spend.",
         highlight: "Predictable costs",

@@ -79,11 +79,11 @@ const WhyChooseUs = () => {
                                 <div className="p-4 border-b border-r border-border bg-muted/30">
                                     <span className="text-sm font-medium text-muted-foreground">Feature</span>
                                 </div>
-                                <div className="p-4 border-b border-r border-border bg-muted/30">
-                                    <span className="text-sm font-medium text-muted-foreground">Traditional CRM</span>
-                                </div>
-                                <div className="p-4 border-b border-border bg-primary/5">
+                                <div className="p-4 border-b border-r border-border  bg-primary/5" >
                                     <span className="text-sm font-semibold text-primary">Kyra AI CRM</span>
+                                </div>
+                                <div className="p-4 border-b border-border bg-muted/30">
+                                    <span className="text-sm font-medium text-muted-foreground">Traditional CRM</span>
                                 </div>
 
                                 {[
@@ -95,8 +95,8 @@ const WhyChooseUs = () => {
                                 ].map(([feature, traditional, ours], i) => (
                                     <>
                                         <div key={`f-${i}`} className="p-4 border-b border-r border-border text-sm text-foreground">{feature}</div>
-                                        <div key={`t-${i}`} className="p-4 border-b border-r border-border text-sm text-muted-foreground">{traditional}</div>
                                         <div key={`o-${i}`} className="p-4 border-b border-border text-sm font-medium text-primary bg-primary/5">{ours}</div>
+                                        <div key={`t-${i}`} className="p-4 border-b border-r border-border text-sm text-muted-foreground">{traditional}</div>
                                     </>
                                 ))}
                             </div>

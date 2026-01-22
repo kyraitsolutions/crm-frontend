@@ -369,7 +369,7 @@ export default function LeadsCentre() {
 
 
   return (
-    <div className=" bg-background">
+    <div className="bg-background">
       <div className="flex max-sm:flex-col  sm:items-center justify-between px-6 py-6">
         <div>
           <h1 className="md:text-2xl font-medium text-[#37322F]">

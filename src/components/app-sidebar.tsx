@@ -84,6 +84,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         )}/lead-forms`,
         icon: IconFileText,
       },
+      {
+        title: "Email Campaigns",
+        url: `${DASHBOARD_PATH.getAccountPath(
+          String(CookieUtils.getItem(COOKIES_STORAGE.accountId))
+        )}/email-campaigns`,
+        icon: IconFileText,
+      },
 
       {
         title: "Team",

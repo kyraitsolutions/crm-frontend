@@ -23,12 +23,12 @@ const Header = () => {
                         {/* Navigation Links */}
                         <div className="hidden md:flex items-center space-x-6">
 
-                            <Link to="/about" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
+                            {/* <Link to="/about" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
                                 About
                             </Link>
                             <Link to="/product" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
                                 Product
-                            </Link>
+                            </Link> */}
                             <Link to="/pricing" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
                                 Pricing
                             </Link>

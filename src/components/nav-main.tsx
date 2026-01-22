@@ -32,6 +32,7 @@ export function NavMain({
         "Chat bot",
         "Lead Forms",
         "Leads Centre",
+        "Email Campaigns",
       ].includes(item.title)
       : ["Home", "Accounts", "Team", "Settings"].includes(item.title);
   });
