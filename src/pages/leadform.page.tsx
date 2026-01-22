@@ -8,11 +8,12 @@ import { LeadFormService } from "@/services/leadform.service";
 import { useAuthStore } from "@/stores";
 import { alertManager } from "@/stores/alert.store";
 import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
+import type { ApiError } from "@/types";
 import type { ILeadFormListItem } from "@/types/leadform.type";
 // import   LeadFormListItem } from "@/types/leadform.type";
-import { Plus, Trash2 } from "lucide-react";
+import { Edit, Eye, Plus, Trash2 } from "lucide-react";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 export function LeadFormPage() {
@@ -27,91 +28,87 @@ export function LeadFormPage() {
   const [loading, setLoading] = useState(false);
   // const [forms, setLeadForms] = useState<[]>([]);
 
-  const columns: Column<ILeadFormListItem>[] = [
-    //   // {
-    //   //   key: "id",
-    //   //   header: "Id",
-    //   //   className: "min-w-[200px]",
-    //   //   render: (row) => (
-    //   //     <div>
-    //   //       <div className="font-medium text-gray-900">{row.id}</div>
-    //   //     </div>
-    //   //   ),
-    //   // },
-    {
-      key: "name",
-      header: "Form Title",
-      className: "min-w-[200px]",
-
-      render: (row) => (
-        <div>
-          <div className="font-medium text-gray-900">{row.formTitle}</div>
-          <div className="text-sm text-gray-500">{row.formDescription}</div>
-        </div>
-      ),
-    },
-    {
-      key: "status",
-      header: "Status",
-      cellClassName: "whitespace-nowrap text-gray-700",
-      render: () => (
-        <div>
+  const columns = useMemo<Column<ILeadFormListItem>[]>(
+    () => [
+      {
+        key: "name",
+        header: "Form Title",
+        className: "min-w-[200px]",
+        render: (row) => (
+          <div>
+            <div className="font-medium text-gray-900">{row.formTitle}</div>
+            <div className="text-sm text-gray-500">{row.formDescription}</div>
+          </div>
+        ),
+      },
+      {
+        key: "status",
+        header: "Status",
+        render: (row) => (
           <Switch
-            checked={true}
             className="cursor-pointer"
-            // onClick={(e) => handleUpdateStatus(e, row.id)}
+            checked={row.status}
+            onCheckedChange={(val) => handleUpdateStatus(val, row.id)}
           />
-        </div>
-      ),
-    },
-    {
-      key: "createdDisplay",
-      header: "Created",
-      cellClassName: "whitespace-nowrap text-gray-700",
-      render: (row) => (
-        <div>
-          <div className="font-medium text-gray-900">
-            {moment(row.createdAt).format("DD-MM-YYYY")}
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "lastActivity",
-      header: "Last Activity",
-      cellClassName: "whitespace-nowrap text-gray-700",
-      render: (row) => (
-        <div>
-          <div className="font-medium capitalize text-gray-900">
-            {moment(row.updatedAt).fromNow()}
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "action",
-      header: "Action",
-      cellClassName: "whitespace-nowrap text-gray-700",
-      render: (row) => (
-        <div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeleteForm(row.id);
-            }}
-            className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0 cursor-pointer"
-          >
-            <Trash2 size={16} />
-          </button>
-        </div>
-      ),
-    },
-  ];
+        ),
+      },
+      {
+        key: "createdDisplay",
+        header: "Created",
+        render: (row) => moment(row.createdAt).format("DD-MM-YYYY"),
+      },
+      {
+        key: "lastActivity",
+        header: "Last Activity",
+        render: (row) => moment(row.updatedAt).fromNow(),
+      },
+      {
+        key: "action",
+        header: "Action",
+        render: (row) => <Actions row={row} accountId={accountId!} />,
+      },
+    ],
+    [accountId],
+  );
+
+  const Actions = React.memo(
+    ({ row, accountId }: { row: ILeadFormListItem; accountId: string }) => (
+      <div className="flex gap-1.5">
+        <Link
+          className="rounded-xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-[#166534]
+                transition-all
+                hover:bg-[#16A34A]/10
+                hover:border-[#16A34A]/50"
+          to={`${DASHBOARD_PATH.getAccountPath(accountId)}/lead-forms/${row.id}/view`}
+        >
+          <Eye size={16} />
+        </Link>
+        <Link
+          className="rounded-xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-[#166534]
+                transition-all
+                hover:bg-[#16A34A]/10
+                hover:border-[#16A34A]/50"
+          to={`${DASHBOARD_PATH.getAccountPath(accountId)}/lead-forms/${row.id}/update`}
+        >
+          <Edit size={16} />
+        </Link>
+        <button
+          className="rounded-xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-red-400
+                transition-all
+                hover:bg-[#16A34A]/10
+                hover:border-[#16A34A]/50 cursor-pointer"
+          onClick={() => handleDeleteForm(row.id)}
+        >
+          <Trash2 size={16} />
+        </button>
+      </div>
+    ),
+  );
   const getLeadFormList = async () => {
     try {
       setLoading(true);
       const response = await leadFormService.getLeadFromsList(
-        String(accountId)
+        String(accountId),
       );
       if (response?.status === 200) {
         leadStoreManager.setLeadForm(response?.data?.docs || []);
@@ -139,7 +136,7 @@ export function LeadFormPage() {
     try {
       const response = await leadFormService.deleteFormById(
         String(accountId),
-        formId
+        formId,
       );
 
       if (response.status === 200) {
@@ -148,6 +145,29 @@ export function LeadFormPage() {
       }
     } catch (error) {
       toastMessageService.apiError(error as any);
+      rollback();
+    }
+  };
+
+  const handleUpdateStatus = async (value: boolean, id: string) => {
+    const rollback = leadStoreManager.updateFormStatusOptimistic(id, value);
+    try {
+      const payload = {
+        status: value,
+      };
+      const response = await leadFormService.updateLeadFormById(
+        String(accountId),
+        id,
+        payload,
+      );
+      if (response?.status === 200) {
+        toastMessageService.success("Status Updated Successfully");
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastMessageService.apiError(err.message);
+      }
       rollback();
     }
   };
@@ -187,7 +207,7 @@ export function LeadFormPage() {
         {leadForms.length > 0 && (
           <Link
             to={`${DASHBOARD_PATH?.getAccountPath(
-              String(accountId)
+              String(accountId),
             )}/lead-forms/create`}
             className="
           inline-flex items-center gap-2
@@ -206,7 +226,7 @@ export function LeadFormPage() {
         )}
       </div>
 
-      {leadForms.length > 0 ? (
+      {leadForms?.length > 0 ? (
         <div>
           <DataTable<ILeadFormListItem>
             data={leadForms}
@@ -261,7 +281,7 @@ export function LeadFormPage() {
                 "organization" && (
                 <Link
                   to={`${DASHBOARD_PATH?.getAccountPath(
-                    String(accountId)
+                    String(accountId),
                   )}/lead-forms/create`}
                   className="
             inline-flex items-center gap-2

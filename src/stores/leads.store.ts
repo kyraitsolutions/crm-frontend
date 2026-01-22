@@ -14,7 +14,7 @@ export const useLeadsStore = create<ILeadsStoreState>()(
     leads: [],
     leadForms: [],
     totalLeads: null,
-  }))
+  })),
 );
 
 export class LeadsStoreManager {
@@ -41,7 +41,7 @@ export class LeadsStoreManager {
   updateLead(updatedLead: ILead) {
     this.store.setState((state) => {
       const index = state.leads.findIndex(
-        (lead) => lead._id === updatedLead._id
+        (lead) => lead._id === updatedLead._id,
       );
       if (index !== -1) {
         state.leads[index] = updatedLead;
@@ -95,6 +95,32 @@ export class LeadsStoreManager {
     this.store.setState((state) => ({
       leadForm: [lead, ...state.leadForms],
     }));
+  }
+
+  updateLeadFormStatus(formId: string, newStatus: boolean) {
+    this.store.setState((state) => {
+      state.leadForms = state.leadForms.map((leadForm) => {
+        if (leadForm.id === formId) {
+          return { ...leadForm, status: newStatus };
+        }
+        return leadForm;
+      });
+    });
+  }
+
+  updateFormStatusOptimistic(formId: string, newStatus: boolean) {
+    // Save previous state in case rollback is needed
+    const prevLeadForms = this.store.getState().leadForms;
+
+    // Update lead immediately
+    this.updateLeadFormStatus(formId, newStatus);
+
+    // Return rollback function
+    return () => {
+      this.store.setState(() => ({
+        leadForms: prevLeadForms,
+      }));
+    };
   }
 
   deleteLeadFormOptimistic(leadFormId: string) {

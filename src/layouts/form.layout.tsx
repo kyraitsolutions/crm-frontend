@@ -14,7 +14,7 @@ const FormLayout = () => {
       }
     >
       <AppSidebar variant="sidebar" />
-      <SidebarInset className="flex flex-col h-screen">
+      <SidebarInset className="flex flex-col">
         <SiteHeader />
         <main className="flex-1 overflow-auto">
           <Outlet />

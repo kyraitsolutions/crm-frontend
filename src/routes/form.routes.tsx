@@ -16,6 +16,14 @@ export const formRoutes: RouteObject[] = [
         element: <LeadFormNew />,
         path: "create",
       },
+      {
+        element: <LeadFormNew />,
+        path: ":formId/view",
+      },
+      {
+        element: <LeadFormNew />,
+        path: ":formId/update",
+      },
     ],
   },
 ];
