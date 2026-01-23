@@ -204,10 +204,13 @@ export default function LeadFormNew() {
         <LeadFormSkeleton />
       ) : (
         <div>
-          <div className="flex justify-end py-2 px-6 sticky top-0">
-            <Link
-              to={`${DASHBOARD_PATH.getAccountPath(accountId!)}/lead-forms/${formId}/update`}
-              className="
+          {
+            isView && (
+
+              <div className="flex justify-end py-2 px-6 sticky top-0">
+                <Link
+                  to={`${DASHBOARD_PATH.getAccountPath(accountId!)}/lead-forms/${formId}/update`}
+                  className="
                 sticky top-44
                 z-50
                 inline-flex items-center gap-2
@@ -219,11 +222,13 @@ export default function LeadFormNew() {
                 hover:border-[#16A34A]/50
                 focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30
               "
-            >
-              <Edit size={14} />
-              Edit
-            </Link>
-          </div>
+                >
+                  <Edit size={14} />
+                  Edit
+                </Link>
+              </div>)
+          }
+
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 px-6">
             {/* LEFT: Builder */}
@@ -525,7 +530,7 @@ export default function LeadFormNew() {
             </div>
 
             {/* RIGHT: Preview */}
-            <div className="py-8 border">
+            <div className="py-8">
               <Card className="border-none shadow-none bg-[#FBFAF9] rounded-2xl">
                 <CardContent className="">
                   <div className="grid gap-4">
