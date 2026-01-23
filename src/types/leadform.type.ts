@@ -68,6 +68,7 @@ export const LeadFormListItem = z.object({
   formDescription: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
+  status: z.boolean().optional(),
 });
 
 export type ILeadFormListItem = z.infer<typeof LeadFormListItem>;
