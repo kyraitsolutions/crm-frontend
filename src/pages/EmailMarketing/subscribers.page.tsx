@@ -1,91 +1,30 @@
 import { Button } from "@/components/ui/button";
+import { EmailService } from "@/services/email.service";
+import { formatDate } from "@/utils/date-utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { ChevronDown, Plus } from "lucide-react";
+import { ChevronDown, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Subscribers = () => {
-    const subscribers = [
-        {
-            id: 1,
-            name: "Abhijeet",
-            email: "abhijeet@gmail.com",
-            status: "subscribed",
-            source: "Chatbot",
-            tags: ["Hotel", "Warm"],
-            lastActivity: "2 days ago",
-        },
-        {
-            id: 1,
-            name: "Abhijeet",
-            email: "abhijeet@gmail.com",
-            status: "subscribed",
-            source: "Chatbot",
-            tags: ["Hotel", "Warm"],
-            lastActivity: "2 days ago",
-        },
-        {
-            id: 1,
-            name: "Abhijeet",
-            email: "abhijeet@gmail.com",
-            status: "subscribed",
-            source: "Chatbot",
-            tags: ["Hotel", "Warm"],
-            lastActivity: "2 days ago",
-        },
-        {
-            id: 1,
-            name: "Abhijeet",
-            email: "abhijeet@gmail.com",
-            status: "subscribed",
-            source: "Chatbot",
-            tags: ["Hotel", "Warm"],
-            lastActivity: "2 days ago",
-        },
-        {
-            id: 1,
-            name: "Abhijeet",
-            email: "abhijeet@gmail.com",
-            status: "subscribed",
-            source: "Chatbot",
-            tags: ["Hotel", "Warm"],
-            lastActivity: "2 days ago",
-        },
-        {
-            id: 1,
-            name: "Abhijeet",
-            email: "abhijeet@gmail.com",
-            status: "subscribed",
-            source: "Chatbot",
-            tags: ["Hotel", "Warm"],
-            lastActivity: "2 days ago",
-        },
-        {
-            id: 1,
-            name: "Abhijeet",
-            email: "abhijeet@gmail.com",
-            status: "subscribed",
-            source: "Chatbot",
-            tags: ["Hotel", "Warm"],
-            lastActivity: "2 days ago",
-        },
-        {
-            id: 1,
-            name: "Abhijeet",
-            email: "abhijeet@gmail.com",
-            status: "subscribed",
-            source: "Chatbot",
-            tags: ["Hotel", "Warm"],
-            lastActivity: "2 days ago",
-        },
-        {
-            id: 1,
-            name: "Abhijeet",
-            email: "abhijeet@gmail.com",
-            status: "subscribed",
-            source: "Chatbot",
-            tags: ["Hotel", "Warm"],
-            lastActivity: "2 days ago",
-        },
-    ];
+    const { accountId } = useParams();
+    const emailService = new EmailService();
+
+    const [subscribers, setSubscribers] = useState<any[]>([]);
+
+    const fetchSubscribers = async () => {
+        try {
+            const response = await emailService.getSubscribers(String(accountId))
+            setSubscribers(response.data?.data);
+
+        } catch (error) {
+            console.log("Error fetching subscribers");
+        }
+    }
+
+    useEffect(() => {
+        fetchSubscribers()
+    }, [])
 
     const statusColor = {
         subscribed: "bg-green-100 text-green-700",
@@ -131,17 +70,17 @@ const Subscribers = () => {
                             <th className="p-3 text-left">Tags</th>
                             <th className="p-3 text-left">Source</th>
                             <th className="p-3 text-left">Last Activity</th>
-                            {/* <th className="p-3 text-right">Actions</th> */}
+                            <th className="p-3  flex justify-center">Actions</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {subscribers.map((sub) => (
-                            <tr key={sub.id} className="border-t">
+                        {subscribers?.map((sub) => (
+                            <tr key={sub._id} className="border-t capitalize">
                                 <td className="p-3">
                                     <input type="checkbox" />
                                 </td>
-                                <td className="p-3 font-medium">{sub.name}</td>
+                                <td className="p-3 font-medium capitalize">{sub.name}</td>
                                 <td className="p-3">{sub.email}</td>
                                 <td className="p-3">
                                     <span
@@ -152,7 +91,7 @@ const Subscribers = () => {
                                 </td>
                                 <td className="p-3">
                                     <div className="flex gap-1 flex-wrap">
-                                        {sub.tags.map((tag) => (
+                                        {sub.tags?.map((tag: any) => (
                                             <span
                                                 key={tag}
                                                 className="bg-muted px-2 py-0.5 rounded text-xs"
@@ -164,11 +103,19 @@ const Subscribers = () => {
                                 </td>
                                 <td className="p-3">{sub.source}</td>
                                 <td className="p-3 text-muted-foreground">
-                                    {sub.lastActivity}
+                                    {formatDate(sub.lastActivity)}
                                 </td>
-                                {/* <td className="p-3 text-right">
-                                    <button className="text-primary text-sm">View</button>
-                                </td> */}
+                                <td className="p-3 text-right flex justify-center">
+                                    <button
+                                        className="rounded-xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-red-400
+                                            transition-all
+                                            hover:bg-[#16A34A]/10
+                                            hover:border-[#16A34A]/50 cursor-pointer"
+                                    // onClick={() => handleDeleteForm(row.id)}
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
