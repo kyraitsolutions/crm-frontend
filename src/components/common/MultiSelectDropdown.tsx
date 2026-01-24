@@ -20,12 +20,14 @@ interface MultiSelectDropdownProps {
   value?: string[];
   placeholder?: string;
   onChange: (selected: string[]) => void;
+  isSelectable?: boolean;
 }
 
 export const MultiSelectDropdown = ({
   options,
   value = [],
   placeholder = "Select options",
+  isSelectable,
   onChange,
 }: MultiSelectDropdownProps) => {
   const [selected, setSelected] = useState<string[]>(value);
@@ -62,7 +64,7 @@ export const MultiSelectDropdown = ({
           <DropdownMenuCheckboxItem
             key={opt.id}
             checked={selected.includes(opt.id)}
-            onClick={() => toggleSelection(opt.id)}
+            onClick={() => isSelectable && toggleSelection(opt.id)}
             onSelect={(e) => e.preventDefault()}
           >
             {opt.label}

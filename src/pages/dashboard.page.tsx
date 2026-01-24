@@ -31,6 +31,7 @@ import { formatDate } from "@/utils/date-utils";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { hasPermission, PERMISSION } from "@/rbac";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -110,6 +111,7 @@ export const DashboardPage = () => {
     if (authUser) {
       authManager?.setUser({
         ...authUser,
+
         account: {
           ...accounts[index],
           selectedAccount: accounts[index]?.accountName,
@@ -118,9 +120,11 @@ export const DashboardPage = () => {
       });
 
       authManager.setAccountSelected(true);
+      authManager.setAccountName(accounts[index]?.accountName);
     }
 
     CookieUtils.setItem(COOKIES_STORAGE.accountId, accounts[index]?.id);
+
     navigate(DASHBOARD_PATH.getAccountPath(accounts[index]?.id));
   };
 
@@ -192,81 +196,87 @@ export const DashboardPage = () => {
 
   return (
     <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 px-5 py-5">
-      {accounts.map((account, idx) => {
-        const initials = account?.accountName
-          ?.split(" ")
-          .map((n: string) => n[0])
-          .join("")
-          .toUpperCase();
+      {accounts &&
+        accounts.length > 0 &&
+        accounts?.map((account, idx) => {
+          const initials = account?.accountName
+            ?.split(" ")
+            .map((n: string) => n[0])
+            .join("")
+            .toUpperCase();
 
-        const isActive = currentSelectedAccountIndex === idx;
+          const isActive = currentSelectedAccountIndex === idx;
 
-        return (
-          <div
-            key={account.id}
-            onClick={() => handleProfileClick(idx)}
-            className={`
-        relative flex flex-col justify-between gap-4
-        px-4 py-3
-        border hover:shadow-sm ${account.status === "active" ? "border-primary/30 " : "border-destructive/30"} rounded-2xl
-        cursor-pointer
-        transition-all duration-200
-        ${isActive ? "ring-1 ring-[#37322F]" : ""}
-        
-      `}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className={`h-9 w-9 rounded-full  ${account.status === "active" ? "text-primary bg-primary/10" : "text-destructive bg-destructive/10"} flex items-center justify-center text-xs font-medium`}>
-                  {initials}
+          return (
+            <div
+              key={account.id}
+              onClick={() => handleProfileClick(idx)}
+              className={`
+                  relative flex flex-col justify-between gap-4
+                  px-4 py-3
+                  border hover:shadow-sm ${account.status === "active" ? "border-primary/30 " : "border-destructive/30"} rounded-2xl
+                  cursor-pointer
+                  transition-all duration-200
+                  ${isActive ? "ring-1 ring-[#37322F]" : ""}
+            `}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div
+                    className={`h-9 w-9 rounded-full  ${account.status === "active" ? "text-primary bg-primary/10" : "text-destructive bg-destructive/10"} flex items-center justify-center text-xs font-medium`}
+                  >
+                    {initials}
+                  </div>
+
+                  <div className="min-w-0 flex flex-col">
+                    <h3 className="text-md font-medium capitalize text-foreground truncate">
+                      {account.accountName}
+                    </h3>
+                    <p className="text-sm text-muted-foreground truncate">
+                      {account.email}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="min-w-0 flex flex-col">
-                  <h3 className="text-md font-medium capitalize text-foreground truncate">
-                    {account.accountName}
-                  </h3>
-                  <p className="text-sm text-muted-foreground truncate">
-                    {account.email}
-                  </p>
-                </div>
+                {/* Delete Button */}
+                {hasPermission(user?.roleId, PERMISSION?.ACCOUNT_DELETE) && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleAccountClick(account.id);
+                    }}
+                    className="actions-btn text-red-400!"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
               </div>
 
-              {/* Delete Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleAccountClick(account.id);
-                }}
-                className="p-2 rounded-md bg-destructive/10 text-destructive hover:text-red-600 transition"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
+              {/* Footer */}
+              <div className="flex justify-between items-center text-xs font-medium">
+                <span className="text-foreground">
+                  Created: {formatDate(account.createdAt)}
+                </span>
 
-            {/* Footer */}
-            <div className="flex justify-between items-center text-xs font-medium">
-              <span className="text-foreground">
-                Created: {formatDate(account.createdAt)}
-              </span>
-
-              <span
-                className={`
+                <span
+                  className={`
             px-2 py-0.5 rounded-full capitalize text-xs font-medium
-            ${account.status === "active"
-                    ? "bg-primary/10 text-primary"
-                    : account.status === "inactive"
-                      ? "bg-destructive/10 text-destructive"
-                      : "bg-primary/10 text-primary"
-                  }
+            ${
+              account.status === "active"
+                ? "bg-primary/10 text-primary"
+                : account.status === "inactive"
+                  ? "bg-destructive/10 text-destructive"
+                  : "bg-primary/10 text-primary"
+            }
           `}
-              >
-                {account.status}
-              </span>
+                >
+                  {account.status}
+                </span>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
 
       {/* Add New Account */}
       {user?.userprofile?.accountType === "organization" && (

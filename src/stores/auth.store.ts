@@ -7,6 +7,7 @@ import { immer } from "zustand/middleware/immer";
 interface IAuthStoreState {
   user: IUser | null;
   accountSelected: boolean;
+  accountName: string | null;
 }
 
 export const useAuthStore = create<IAuthStoreState>()(
@@ -14,7 +15,8 @@ export const useAuthStore = create<IAuthStoreState>()(
     user: null,
     accountSelected:
       CookieUtils.getItem(COOKIES_STORAGE.accountSelected) || false,
-  }))
+    accountName: CookieUtils.getItem(COOKIES_STORAGE.accountName) || null,
+  })),
 );
 
 export class AuthStoreManager {
@@ -30,5 +32,10 @@ export class AuthStoreManager {
   setAccountSelected(accountSelected: boolean) {
     this.store.setState({ accountSelected });
     CookieUtils.setItem(COOKIES_STORAGE.accountSelected, accountSelected);
+  }
+
+  setAccountName(accountName: string | null) {
+    this.store.setState({ accountName });
+    CookieUtils.setItem(COOKIES_STORAGE.accountName, accountName);
   }
 }

@@ -1,6 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { RouterProvider } from "react-router-dom";
 import { appRoutes } from "@/routes";
+// import "./App.css";
 
 export default function App() {
   return (

@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { USERROLE } from "@/constants/role.constant";
+import { isAdmin } from "@/rbac";
 import { ToastMessageService } from "@/services";
 import { AccountService } from "@/services/account.service";
 import { TeamService } from "@/services/team.service";
@@ -56,6 +56,8 @@ export const Teams = () => {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [selectedAccounts, setSelectedAccounts] = useState<string[] | []>([]);
 
+  const is_Admin = isAdmin(user?.roleId);
+
   const handleAddTeamMember = async () => {
     setIsLoadingAddTeamMember(true);
     try {
@@ -91,7 +93,7 @@ export const Teams = () => {
 
   const handleAssignAccount = async (
     memberId: string,
-    accountIds: string[]
+    accountIds: string[],
   ) => {
     try {
       const response = await teamService.assignAccountToTeamMember({
@@ -146,14 +148,6 @@ export const Teams = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    getTeams();
-  }, []);
-
-  useEffect(() => {
-    fetchAccounts();
-  }, []);
 
   const columns: Column<ITeam>[] = [
     {
@@ -264,29 +258,37 @@ export const Teams = () => {
         </div>
       ),
     },
-    {
-      key: "action",
-      header: "Action",
-      cellClassName: "whitespace-nowrap text-gray-700",
-      render: (row) => (
-        <div>
-          {user?.roleId !== USERROLE.TEAM_MEMBER ? (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDeleteTeamMember(row.userId);
-              }}
-              className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0 cursor-pointer"
-            >
-              <Trash2 size={16} />
-            </button>
-          ) : (
-            <span className="text-center inline-block w-full">-</span>
-          )}
-        </div>
-      ),
-    },
+    ...(is_Admin
+      ? [
+          {
+            key: "action",
+            header: "Action",
+            cellClassName: "whitespace-nowrap text-gray-700",
+            render: (row: ITeam) => (
+              <div className="flex justify-center">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteTeamMember(row.userId);
+                  }}
+                  className="actions-btn text-red-400!"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            ),
+          },
+        ]
+      : []),
   ];
+
+  useEffect(() => {
+    getTeams();
+  }, []);
+
+  useEffect(() => {
+    fetchAccounts();
+  }, []);
 
   if (loading) {
     return (
@@ -308,7 +310,7 @@ export const Teams = () => {
       <div className="flex justify-between items-center w-full">
         <h1 className="text-2xl font-medium text-[#37322F]">Teams</h1>
 
-        {teams.length > 0 && (
+        {teams.length > 0 && is_Admin && (
           <AddNewTeamMemberPopupDialog
             openAddTeamMember={openAddTeamMember}
             setOpenAddTeamMember={setOpenAddTeamMember}
@@ -360,6 +362,7 @@ export const Teams = () => {
 
               <div className="py-4">
                 <MultiSelectDropdown
+                  isSelectable={is_Admin}
                   value={
                     teams.find((team) => team?.id === selectedTeamId)
                       ?.accountIds
@@ -373,37 +376,39 @@ export const Teams = () => {
                 />
               </div>
 
-              <DialogFooter className="gap-3">
-                <Button
-                  variant="outline"
-                  className="
+              {is_Admin && (
+                <DialogFooter className="gap-3">
+                  <Button
+                    variant="outline"
+                    className="
                 rounded-[99px]
                 border-[rgba(50,45,43,0.20)]
                 text-[#37322F]
               "
-                  onClick={() => setOpenAssign(false)}
-                >
-                  Cancel
-                </Button>
+                    onClick={() => setOpenAssign(false)}
+                  >
+                    Cancel
+                  </Button>
 
-                <Button
-                  className="
+                  <Button
+                    className="
                 rounded-[99px]
                 bg-[#37322F]
                 text-[#FBFAF9]
                 shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
               "
-                  onClick={() => {
-                    handleAssignAccount(
-                      selectedTeamId as string,
-                      selectedAccounts
-                    );
-                    setOpenAssign(false);
-                  }}
-                >
-                  Save
-                </Button>
-              </DialogFooter>
+                    onClick={() => {
+                      handleAssignAccount(
+                        selectedTeamId as string,
+                        selectedAccounts,
+                      );
+                      setOpenAssign(false);
+                    }}
+                  >
+                    Save
+                  </Button>
+                </DialogFooter>
+              )}
             </DialogContent>
           </Dialog>
         </div>
@@ -467,11 +472,11 @@ const AddNewTeamMemberPopupDialog = ({
           onClick={() => setOpenAddTeamMember(true)}
           className="
         rounded-[99px]
-        bg-[#37322F]
+        bg-primary
         text-[#FBFAF9]
         px-5 py-2
         shadow-[0px_2px_4px_rgba(55,50,47,0.08)]
-        hover:bg-[#2e2a28]
+        hover:bg-primary/90
         transition
       "
         >

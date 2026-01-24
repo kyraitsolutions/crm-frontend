@@ -1,22 +1,22 @@
-import { useState, useEffect, useRef } from "react";
-import TestimonialsSection from "../components/testimonials-section";
-import FAQSection from "../components/faq-section";
-import CTASection from "../components/cta-section";
-import FooterSection from "../components/footer-section";
 import { ArrowRight, MessageSquare, Sparkles, TrendingUp } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import CTASection from "../components/cta-section";
+import FAQSection from "../components/faq-section";
+import FooterSection from "../components/footer-section";
 // import DashboardImage2 from "../assets/image2.png";
-import Header from "@/components/website/Header";
 import ContactForm from "@/components/website/ContactForm";
+import Header from "@/components/website/Header";
 import PricingSection from "@/components/website/pricing-section";
 // import DashboardImage4 from "../assets/image4.png";
-import { motion } from "framer-motion";
+import ComparisonSection from "@/components/website/ComparisonSection";
 import FeaturesSection from "@/components/website/Features";
-import UseCasesSection from "@/components/website/UseCasesSection";
-import WhyChooseUs from "@/components/website/WhyChooseUs";
 import HowItWork from "@/components/website/HowItWork";
 import Problem from "@/components/website/Problem";
 import Solution from "@/components/website/Solutions";
-import ComparisonSection from "@/components/website/ComparisonSection";
+import UseCasesSection from "@/components/website/UseCasesSection";
+import WhyChooseUs from "@/components/website/WhyChooseUs";
+import { motion } from "framer-motion";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
 // function Badge({ icon, text }: { icon: React.ReactNode; text: string }) {
 //   return (
 //     <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full border border-gray-200">
@@ -71,8 +71,6 @@ export function HomePage() {
 
         <section className="w-full bg-[linear-gradient(180deg,hsl(142_30%_97%)_0%,hsl(0_0%_100%)_100%)]">
           <div className="max-w-[1480px] mx-auto w-full py-16 sm:py-20 md:py-24 lg:py-24   overflow-hidden relative">
-
-
             <div className="flex justify-center">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -81,7 +79,9 @@ export function HomePage() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#15803D]/20 border border-border mb-8"
               >
                 <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-foreground">AI-Powered Lead Intelligence</span>
+                <span className="text-sm font-medium text-foreground">
+                  AI-Powered Lead Intelligence
+                </span>
               </motion.div>
             </div>
 
@@ -97,31 +97,44 @@ export function HomePage() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-                  <span className="text-[#16A34A]">3X Your Revenue</span>
+                  transition={{ duration: 0.5 }}
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+                >
+                  <span className="text-primary">3X Your Revenue</span>
                   <br />
-                  <span className="text-gray-900"> Convert up to 30% more leads automatically with <span className="text-[#16A34A]">AI chatbots</span></span>
+                  <span className="text-gray-900">
+                    {" "}
+                    Convert up to 30% more leads automatically with{" "}
+                    <span className="text-primary">AI chatbots</span>
+                  </span>
                 </motion.div>
-
 
                 {/* Subheading */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }} className="max-w-3xl mx-auto text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed">
-                  Build intelligent chatbots that capture leads, qualify prospects, and turn conversations into revenue — all from one powerful CRM dashboard. <br />Powered by AI ✨
+                  transition={{ duration: 0.5 }}
+                  className="max-w-3xl mx-auto text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed"
+                >
+                  Build intelligent chatbots that capture leads, qualify
+                  prospects, and turn conversations into revenue — all from one
+                  powerful CRM dashboard. <br />
+                  Powered by AI ✨
                 </motion.div>
 
                 {/* CTA Buttons */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+                  transition={{ duration: 0.5 }}
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6"
+                >
                   <button
                     onClick={() => {
+                      CookieUtils.clear();
                       window.location.href =
                         // "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                      "http://localhost:3000/api/auth/google";
+                        "http://localhost:3000/api/auth/google";
                     }}
                     className="bg-[#16A34A] hover:bg-[#15803D] text-white cursor-pointer font-semibold px-8 py-3 rounded-lg transition-colors flex items-center gap-2"
                   >
@@ -135,8 +148,11 @@ export function HomePage() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }} className="text-sm text-gray-500">
-                  No credit card required · Setup in minutes · Built for modern teams
+                  transition={{ duration: 0.5 }}
+                  className="text-sm text-gray-500"
+                >
+                  No credit card required · Setup in minutes · Built for modern
+                  teams
                 </motion.div>
               </div>
 
@@ -152,8 +168,12 @@ export function HomePage() {
                   { value: "5min", label: "Setup Time" },
                 ].map((stat, index) => (
                   <div key={index} className="text-center">
-                    <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">
+                      {stat.value}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {stat.label}
+                    </div>
                   </div>
                 ))}
               </motion.div>
@@ -170,8 +190,12 @@ export function HomePage() {
                     <MessageSquare className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-foreground">New Lead</div>
-                    <div className="text-xs text-muted-foreground">High intent detected</div>
+                    <div className="text-sm font-medium text-foreground">
+                      New Lead
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      High intent detected
+                    </div>
                   </div>
                 </div>
               </div>
@@ -183,14 +207,21 @@ export function HomePage() {
               transition={{ duration: 0.6, delay: 0.7 }}
               className="hidden lg:block absolute bottom-100 right-8 xl:right-20"
             >
-              <div className="bg-card rounded-xl p-4 shadow-lg border border-border animate-float" style={{ animationDelay: "1s" }}>
+              <div
+                className="bg-card rounded-xl p-4 shadow-lg border border-border animate-float"
+                style={{ animationDelay: "1s" }}
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <TrendingUp className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-foreground">AI Summary</div>
-                    <div className="text-xs text-muted-foreground">Ready for follow-up</div>
+                    <div className="text-sm font-medium text-foreground">
+                      AI Summary
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Ready for follow-up
+                    </div>
                   </div>
                 </div>
               </div>
@@ -201,14 +232,21 @@ export function HomePage() {
               transition={{ duration: 0.6, delay: 0.7 }}
               className="hidden lg:block absolute bottom-80 left-30 w-max xl:right-20"
             >
-              <div className="bg-card rounded-xl p-4 shadow-lg border border-border animate-float" style={{ animationDelay: "1s" }}>
+              <div
+                className="bg-card rounded-xl p-4 shadow-lg border border-border animate-float"
+                style={{ animationDelay: "1s" }}
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <TrendingUp className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-foreground">AI Summary</div>
-                    <div className="text-xs text-muted-foreground">Ready for follow-up</div>
+                    <div className="text-sm font-medium text-foreground">
+                      AI Summary
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Ready for follow-up
+                    </div>
                   </div>
                 </div>
               </div>
