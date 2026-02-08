@@ -1,18 +1,23 @@
 import { SubscriptionService } from "@/services/subscription.service";
 import { useAuthStore } from "@/stores";
+import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export interface SubscriptionPlan {
   _id: string;
   name: string;
+  accounts: string;
   maxAccounts: number;
   maxChatbots: number;
   maxWebforms: number;
+
   description: string;
-  price: string; // or number if backend sends number
-  accounts: string;
+  price: { monthly: number; annually: number }; // or number if backend sends number
+  period: string;
+  button: string;
+  featured: boolean;
   features: string[];
-  highlight?: boolean;
+  addons?: string[];
 }
 
 export const SubscriptionPage = () => {
@@ -24,47 +29,12 @@ export const SubscriptionPage = () => {
 
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annually">("monthly")
 
-  const [pricing, setpricing] = useState<{
-    starter: { monthly: number; annually: number };
-    professional: { monthly: number; annually: number };
-    enterprise: { monthly: number; annually: number };
-  }>({
-    starter: {
-      monthly: 0,
-      annually: 0,
-    },
-    professional: {
-      monthly: 20,
-      annually: 16, // 20% discount for annual
-    },
-    enterprise: {
-      monthly: 200,
-      annually: 160, // 20% discount for annual
-    },
-  })
-
-  const ANNUAL_DISCOUNT = 0.8;
-
-  const buildPricingFromPlans = (plans: any[]) => {
-    const pricing: any = {};
-
-    plans.forEach((plan) => {
-      pricing[plan.name] = {
-        monthly: plan.price,
-        annually: Math.round(plan.price * 12 * ANNUAL_DISCOUNT),
-      };
-    });
-
-    return pricing;
-  };
 
 
   const getSubscription = async () => {
     try {
-      const reponse = await subscriptionService.getAllSubscription();
-      setPlans(reponse.data.docs);
-      const computedPricing = buildPricingFromPlans(reponse.data.docs);
-      setpricing(computedPricing);
+      const response = await subscriptionService.getAllSubscription();
+      setPlans(response.data.docs);
 
     } catch (error) {
       console.log("Error", error);
@@ -81,14 +51,6 @@ export const SubscriptionPage = () => {
     getSubscription();
   }, []);
 
-
-  const formatPrice = (amount: number) =>
-    new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(amount);
-
   return (
     <div className="pb-24">
       <div className="w-full flex flex-col justify-center items-center gap-2">
@@ -96,7 +58,7 @@ export const SubscriptionPage = () => {
         <div className="self-stretch px-6 md:px-24 pt-12 md:pt-16  flex justify-center items-center gap-6">
           <div className="w-full max-w-5xl px-6 py-5 overflow-hidden rounded-lg flex flex-col justify-start items-center gap-4 shadow-none">
             {/* Pricing Badge */}
-            <div className="px-[14px] py-[6px] bg-white shadow-[0px_0px_0px_4px_rgba(55,50,47,0.05)] overflow-hidden rounded-[90px] flex justify-start items-center gap-[8px] border border-[rgba(2,6,23,0.08)] shadow-xs">
+            <div className="px-[14px] py-[6px] bg-white  overflow-hidden rounded-[90px] flex justify-start items-center gap-[8px] border border-[rgba(2,6,23,0.08)] shadow-xs">
               <div className="w-[14px] h-[14px] relative overflow-hidden flex items-center justify-center">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -118,7 +80,6 @@ export const SubscriptionPage = () => {
               Choose the perfect plan for your business
             </div>
 
-            {/* Description */}
             <div className="self-stretch text-center text-[#605A57] text-base font-normal leading-7 font-sans">
               Scale your operations with flexible pricing that grows with your team.
               <br />
@@ -127,190 +88,146 @@ export const SubscriptionPage = () => {
           </div>
         </div>
 
-        {/* Billing Toggle Section */}
         <div className="self-stretch px-6 md:px-16 py-9 relative flex justify-center items-center gap-4">
-          {/* Horizontal line */}
-          {/* <div className="w-full max-w-[1060px] h-0 absolute left-1/2 transform -translate-x-1/2 top-[63px] border-t border-[rgba(55,50,47,0.12)] z-0"></div> */}
 
-          {/* Toggle Container */}
-          <div className="p-3 relative backdrop-blur-[44px] backdrop-saturate-150 backdrop-brightness-110 flex justify-center items-center rounded-lg z-20 before:absolute before:inset-0 before:bg-white before:opacity-60 before:rounded-lg before:-z-10">
+          <div >
             <div className="p-[2px] bg-[#ffffff] shadow-[0px_1px_0px_white] rounded-[99px] border-[0.5px] border-[rgba(55,50,47,0.08)] flex justify-center items-center gap-[2px] relative">
-              <div
-                className={`absolute top-[2px] w-[calc(50%-1px)] h-[calc(100%-4px)] bg-[#16A34A] shadow-[0px_2px_4px_rgba(0,0,0,0.08)] rounded-[99px] transition-all duration-300 ease-in-out ${billingPeriod === "annually" ? "left-[2px]" : "right-[2px]"
-                  }`}
-              />
 
-              <button
-                onClick={() => setBillingPeriod("annually")}
-                className="px-4 py-1 rounded-[99px] flex justify-center items-center gap-2 transition-colors duration-300 relative z-10 flex-1"
-              >
-                <div
-                  className={`text-[13px] font-medium leading-5 font-sans transition-colors duration-300 ${billingPeriod === "annually" ? "text-[#ffffff]" : "text-[#605A57]"
-                    }`}
-                >
-                  Annually (Save 20%)
-                </div>
-              </button>
 
               <button
                 onClick={() => setBillingPeriod("monthly")}
-                className="px-4 py-1 rounded-[99px] flex justify-center items-center gap-2 transition-colors duration-300 relative z-10 flex-1"
+                className={`px-4 py-1 rounded-[99px] whitespace-nowrap flex justify-center items-center gap-2 transition-colors duration-300 relative z-10 flex-1 ${billingPeriod === "monthly" ? "text-white bg-primary" : "text-gray-600"}`}
               >
-                <div
-                  className={`text-[13px] font-medium leading-5 font-sans transition-colors duration-300 ${billingPeriod === "monthly" ? "text-[#ffffff]" : "text-[#605A57]"
-                    }`}
-                >
-                  Monthly
-                </div>
+
+                Monthly
               </button>
+              <button
+                onClick={() => setBillingPeriod("annually")}
+                className={`px-4 py-1 rounded-[99px] whitespace-nowrap flex justify-center items-center gap-2 transition-colors duration-300 relative z-10 flex-1 ${billingPeriod === "annually" ? "text-white bg-primary" : "text-gray-600"}`}
+              >
+
+                Annually (Save 30%)
+              </button>
+
+
             </div>
 
-            {/* Decorative dots */}
-            <div className="w-[3px] h-[3px] absolute left-[5px] top-[5.25px] bg-[rgba(55,50,47,0.10)] shadow-[0px_0px_0.5px_rgba(0,0,0,0.12)] rounded-[99px]"></div>
-            <div className="w-[3px] h-[3px] absolute right-[5px] top-[5.25px] bg-[rgba(55,50,47,0.10)] shadow-[0px_0px_0.5px_rgba(0,0,0,0.12)] rounded-[99px]"></div>
-            <div className="w-[3px] h-[3px] absolute left-[5px] bottom-[5.25px] bg-[rgba(55,50,47,0.10)] shadow-[0px_0px_0.5px_rgba(0,0,0,0.12)] rounded-[99px]"></div>
-            <div className="w-[3px] h-[3px] absolute right-[5px] bottom-[5.25px] bg-[rgba(55,50,47,0.10)] shadow-[0px_0px_0.5px_rgba(0,0,0,0.12)] rounded-[99px]"></div>
           </div>
         </div>
 
-        {/* Pricing Cards Section */}
-        <div className="self-stretch  flex justify-center items-center">
-          <div className="flex justify-center items-start w-full">
-            {/* Left Decorative Pattern */}
-            {/* <div className="w-12 xl:w-52 self-stretch relative overflow-hidden hidden md:block">
-              <div className="w-[162px] lg:w-[360px] left-[-58px] top-[-120px] absolute flex flex-col justify-start items-start">
-                {Array.from({ length: 200 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="self-stretch h-4 rotate-[-45deg] origin-top-left outline outline-[0.5px] outline-[rgba(3,7,18,0.08)] outline-offset-[-0.25px]"
-                  ></div>
-                ))}
-              </div>
-            </div> */}
 
-            {/* Pricing Cards Container */}
 
-            <div className="flex-1 flex max-w-6xl flex-col md:flex-row justify-center items-center gap-6 py-12 md:py-0">
-              {/* Starter Plan */}
-              {plans.map((plan) => (
-                <div key={plan._id} className={` relative  flex-1 ${plan.name === "professional" ? "bg-[#16A34A]" : "bg-[#ffffff]"} max-w-full md:max-w-none self-stretch px-6 py-5 border rounded-2xl border-[rgba(50,45,43,0.12)] flex flex-col justify-start items-start gap-12`}>
-
-                  {/* Current Plan tag */}
-                  {plan._id === authUser?.usersubscription.planId && <span className="absolute -top-4.5 left-[30%] transform translate-0 bg-[#16A34A] text-white text-xs py-2 px-3 rounded-full font-medium ">Current Active Plan</span>}
-                  {/* Plan Header */}
-                  <div className="self-stretch flex flex-col justify-start items-center gap-9" >
-                    <div className="self-stretch flex flex-col justify-start items-start gap-2">
-                      <div className={`${plan.name === "professional" ? "text-[#FBFAF9]" : "text-[rgba(55,50,47,0.90)]"} text-lg font-medium leading-7 font-sans capitalize`}>{plan.name}</div>
-                      <div className={`w-full max-w-[242px] ${plan.name === "professional" ? "text-[#ffffff]" : "text-[rgba(55,50,47,0.90)]"} text-sm font-normal leading-5 font-sans`}>
-                        Perfect for individuals and small teams getting started.
-                      </div>
-                    </div>
-
-                    <div className="self-stretch flex flex-col justify-start items-start gap-2" >
-                      <div className="flex flex-col w-full justify-start items-start gap-1">
-                        <div className={`${plan.name === "professional" ? "text-[#FBFAF9]" : "text-[rgba(55,50,47,0.90)]"} relative w-full flex items-center text-4xl font-medium font-serif`}>
-                          <span className="invisible">{formatPrice(Number(plan.price))}</span>
-                          <span
-                            className="absolute inset-0  flex items-center gap-2 transition-all duration-500"
-                            style={{
-                              opacity: billingPeriod === "annually" ? 1 : 0,
-                              transform: `scale(${billingPeriod === "annually" ? 1 : 0.8})`,
-                              filter: `blur(${billingPeriod === "annually" ? 0 : 4}px)`,
-                            }}
-                            aria-hidden={billingPeriod !== "annually"}
-                          >
-                            {formatPrice(pricing[plan.name as keyof typeof pricing][billingPeriod])}
-                          </span>
-                          <span
-                            className="absolute inset-0 flex items-center transition-all duration-500"
-                            style={{
-                              opacity: billingPeriod === "monthly" ? 1 : 0,
-                              transform: `scale(${billingPeriod === "monthly" ? 1 : 0.8})`,
-                              filter: `blur(${billingPeriod === "monthly" ? 0 : 4}px)`,
-                            }}
-                            aria-hidden={billingPeriod !== "monthly"}
-                          >
-                            {formatPrice(pricing[plan.name as keyof typeof pricing].monthly)}
-                          </span>
-                        </div>
-                        <div className={` ${plan.name === "professional" ? "text-[#ffffff]" : "text-[#847971]"} text-sm font-medium font-sans`}>
-                          Per {billingPeriod === "monthly" ? "month" : "year"}, {plan.maxAccounts === 0 ? "Base" : plan.maxAccounts} Account.
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="relative group self-stretch">
-                      <button
-                        // onClick={() => plan._id !== authUser?.usersubscription.planId && handleChoosePlan(authUser?.id)}
-                        disabled={plan._id === authUser?.usersubscription.planId}
-                        className={`relative flex w-full items-center justify-center rounded-[99px] overflow-hidden px-4 py-[10px]
-                        shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
-                        ${plan.name === "professional" ? "bg-[#FBFAF9]" : "bg-[#16A34A]"}
-                        ${plan._id === authUser?.usersubscription.planId ? "cursor-help" : "cursor-pointer"}
-                      `}
-                      >
-                        {/* Gradient overlay */}
-                        {/* <div className="pointer-events-none absolute left-0 top-[-0.5px] h-[41px] w-full bg-gradient-to-b from-[#16A34A] to-[rgba(0,16A34A,0,0.10)] mix-blend-multiply" /> */}
-
-                        {/* Button text */}
-                        <span
-                          className={`relative z-10 text-[13px] font-medium leading-5 ${plan.name === "professional" ? "text-[#16A34A]" : "text-[#FBFAF9]"}`}
-                        >
-                          {plan.name === "starter"
-                            ? "Start for free"
-                            : plan.name === "professional"
-                              ? "Get started"
-                              : "Contact sales"}
-                        </span>
-                      </button>
-
-                      {/* Tooltip */}
-                      {plan._id === authUser?.usersubscription.planId && <HelpPopup />}
-                    </div>
-                  </div>
-
-                  <div className="self-stretch flex flex-col justify-start items-start gap-2">
-                    {plan.features.map((feature, index) => (
-                      <div key={index} className="self-stretch flex justify-start items-center gap-[13px]">
-                        <div className="w-4 h-4 relative flex items-center justify-center">
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                              d="M10 3L4.5 8.5L2 6"
-                              stroke={`${plan.name === "professional" ? "#ffffff" : "#9CA3AF"}`}
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </div>
-                        <div className={`${plan.name === "professional" ? "text-[#ffffff]" : "text-[rgba(55,50,47,0.80)]"} flex-1  text-[12.5px] font-normal leading-5 font-sans`}>
-                          {feature}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+        <div className="max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-8">
+          {plans.map((plan) => (
+            <div key={plan._id} >
+              <PricingCard
+                id={plan._id}
+                featured={plan.featured}
+                title={plan.name === "starter" ? "Free Forever" : plan.name === "professional" ? "Professional" : "Enterprise"}
+                desc={plan.description}
+                price={plan?.price[billingPeriod as keyof typeof plan.price]}
+                period={plan.period}
+                button={plan.button}
+                features={plan.features}
+                addons={plan.addons}
+                authUser={authUser}
+              />
             </div>
+          ))}
 
-            {/* Right Decorative Pattern */}
-            {/* <div className="w-12 xl:w-52 self-stretch relative overflow-hidden hidden md:block">
-              <div className="w-[162px] lg:w-[360px] left-[-58px] top-[-120px] absolute flex flex-col justify-start items-start">
-                {Array.from({ length: 200 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="self-stretch h-4 rotate-[-45deg] origin-top-left outline outline-[0.5px] outline-[rgba(3,7,18,0.08)] outline-offset-[-0.25px]"
-                  ></div>
-                ))}
-              </div>
-            </div> */}
-          </div>
         </div>
+
+
+
+
       </div>
 
     </div>
   );
 };
+
+
+
+
+function PricingCard({
+  id,
+  title,
+  desc,
+  price,
+  period,
+  authUser,
+  button,
+  features,
+  featured = false,
+  addons,
+}: any) {
+
+
+  console.log(authUser);
+  return (
+    <div
+      className={`rounded-[10px] h-full p-8 flex flex-col border border-gray-300 justify-between shadow-sm transition
+        ${featured === true
+          ? "bg-white scale-[1.02]"
+          : "bg-white"
+        }`}
+    >
+      <div>
+        <h3 className="text-xl font-semibold mb-2">{title}</h3>
+        <p className={`mb-6 text-gray-600`}>
+          {desc}
+        </p>
+
+        <div className="mb-6">
+          <span className="text-4xl font-bold">
+            ₹{price}
+          </span>
+          <span className={`ml-1 text-sm text-gray-500`}>
+            {period}
+            {/* {billingPeriod === "monthly" ? "month" : "year"} */}
+          </span>
+        </div>
+
+        <button
+          className={`w-full py-3 mb-8 rounded-[10px] font-semibold transition
+            
+          ${featured === true
+              ? "bg-[#16A34A] text-white hover:bg-[#15803D] cursor-pointer"
+              : id === authUser?.usersubscription?.planId ? "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md disabled:" : "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md cursor-pointer"
+            }
+              `}
+        >
+          {id === authUser?.usersubscription?.planId ? "Current Plan" : button}
+        </button>
+
+        <ul className="space-y-3 ">
+          {features.map((f: string, i: number) => (
+            <li key={i} className="flex items-center gap-3">
+              <Check className={`w-4 h-4 text-[#16A34A]`} />
+              {/* <span className={`w-2 h-2 rounded-full ${featured ? "bg-white" : "bg-[#16A34A]"}`} /> */}
+              <span className="text-gray-700">
+                {f}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div>
+          <p className="font-medium mt-4 mb-2">Paid Add-ons</p>
+          <ul className="space-y-3 mb-8 text-gray-600">
+            {addons?.map((addon: string) => (
+              <li key={addon} className="flex items-center gap-3">
+                <Check className={`w-4 h-4 text-[#16A34A]`} />
+                <span className="text-gray-700">{addon}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+
+    </div>
+  )
+}
 
 
 const HelpPopup = () => {

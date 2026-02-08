@@ -28,7 +28,10 @@ export const EmailTrendsChart = () => {
                 <div className="h-[280px]">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={data} barCategoryGap="20%">
-                            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                            <CartesianGrid
+                                strokeDasharray="3 3"
+                                // stroke="hsl(var(--border))"
+                                vertical={false} />
                             <XAxis
                                 dataKey="date"
                                 axisLine={false}
@@ -42,7 +45,7 @@ export const EmailTrendsChart = () => {
                             />
                             <Tooltip
                                 contentStyle={{
-                                    backgroundColor: "hsl(var(--card))",
+                                    // backgroundColor: "hsl(var(--card))",
                                     border: "1px solid hsl(var(--border))",
                                     borderRadius: "8px",
                                     fontSize: "12px"

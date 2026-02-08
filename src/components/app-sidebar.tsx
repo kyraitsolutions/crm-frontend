@@ -14,6 +14,8 @@ import { House } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { NavMain } from "./nav-main";
+import { SidebarFooter } from "./ui/sidebar";
+import { NavUser } from "./nav-user";
 
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -88,11 +90,11 @@ export function AppSidebar() {
       {/* Logo */}
       <div className="flex items-center justify-between px-4 h-16 border-b">
         {!collapsed && (
-          <span
+          <Link to="/"
             className={`font-semibold  text-lg text-[#16A34A] whitespace-nowrap overflow-x-hidden`}
           >
             Kyra AI CRM
-          </span>
+          </Link>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
@@ -129,8 +131,8 @@ export function AppSidebar() {
       </div>
 
       {/* User */}
-      <div className="border-t px-3 py-4 flex items-center gap-3">
-        <img
+      <div className="border-t py-0 flex items-center">
+        {/* <img
           src={authUser?.profilePicture || "/avatar.png"}
           className="w-9 h-9 rounded-full object-cover"
         />
@@ -139,7 +141,16 @@ export function AppSidebar() {
             <p className="font-medium">{authUser?.firstName}</p>
             <p className="text-gray-500 text-xs">{authUser?.email}</p>
           </div>
-        )}
+        )} */}
+        <SidebarFooter>
+        <NavUser
+          user={{
+            avatar: authUser?.profilePicture || "",
+            name: authUser?.firstName || "",
+            email: authUser?.email || "",
+          }}
+        />
+      </SidebarFooter>
       </div>
     </aside>
   );
@@ -351,15 +362,7 @@ export function AppSidebar() {
 //         {/* <NavDocuments items={data.documents} /> */}
 //         <NavSecondary items={data.navSecondary} className="mt-auto" />
 //       </SidebarContent>
-//       <SidebarFooter>
-//         <NavUser
-//           user={{
-//             avatar: authUser?.profilePicture || "",
-//             name: authUser?.firstName || "",
-//             email: authUser?.email || "",
-//           }}
-//         />
-//       </SidebarFooter>
+      
 //     </Sidebar>
 //   );
 // }

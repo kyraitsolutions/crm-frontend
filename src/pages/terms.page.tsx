@@ -15,7 +15,7 @@ const TermsPage = () => {
                     </h1>
 
                     <p className="text-sm text-muted-foreground mb-10">
-                        Last updated: 27 August, 2024
+                        Last updated: 27 January, 2024
                     </p>
 
                     {/* Intro */}
@@ -51,7 +51,7 @@ const TermsPage = () => {
                             </h2>
                             <p className="text-muted-foreground leading-relaxed">
                                 The Services and their original content, features, and functionality are
-                                and will remain the exclusive property of AiSensy Communications Private Limited
+                                and will remain the exclusive property of Kyra IT Solutions Communications Private Limited
                                 and its licensors.
                             </p>
                         </section>
@@ -81,7 +81,7 @@ const TermsPage = () => {
                                 5. Limitation of Liability
                             </h2>
                             <p className="text-muted-foreground leading-relaxed">
-                                In no event shall AiSensy, nor its directors, employees, or partners, be
+                                In no event shall Kyra IT Solutions, nor its directors, employees, or partners, be
                                 liable for any indirect, incidental, special, consequential, or punitive
                                 damages.
                             </p>
@@ -104,10 +104,10 @@ const TermsPage = () => {
                             <p className="text-muted-foreground leading-relaxed">
                                 If you have any questions about these Terms, please contact us at{" "}
                                 <a
-                                    href="mailto:support@aisensy.com"
+                                    href="mailto:kyraitsolutions@gmail.com"
                                     className="text-primary underline underline-offset-4"
                                 >
-                                    support@kyraitsolutions.com
+                                    kyraitsolutions@gmail.com
                                 </a>.
                             </p>
                         </section>

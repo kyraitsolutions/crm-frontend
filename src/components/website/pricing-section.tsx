@@ -1,12 +1,13 @@
+import { Check } from "lucide-react"
 import { useState } from "react"
 
 export default function PricingSection() {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annually">("monthly")
 
   const pricing = {
-    starter: { monthly: 0, annually: 0 },
-    professional: { monthly: "7,000", annually: "84,000" },
-    enterprise: { monthly: "14,000", annually: "168,000" },
+    starter: { monthly: "0", annually: "0" },
+    professional: { monthly: "999", annually: "699" },
+    enterprise: { monthly: "1,999", annually: "1,499" },
   }
 
   return (
@@ -45,7 +46,7 @@ export default function PricingSection() {
                     : "text-gray-600 hover:text-gray-900"
                   }`}
               >
-                {type === "annually" ? "Annually (Save 20%)" : "Monthly"}
+                {type === "annually" ? "Annually ( Save 30% )" : "Monthly"}
               </button>
             ))}
           </div>
@@ -56,51 +57,77 @@ export default function PricingSection() {
 
           {/* Starter */}
           <PricingCard
-            title="Starter"
-            desc="For individuals getting started"
+            title="Free Forever"
+            period="Forever"
+            desc="Best to get started with CRM Chatbot"
             price={pricing.starter[billingPeriod]}
             billingPeriod={billingPeriod}
             button="Start for free"
             features={[
-              "Up to 3 chatbots",
-              "Basic lead capture",
-              "Community support",
-              "Standard analytics",
+              "1 Account",
+              "3 Chatbot",
+              "Basic CRM & Contacts",
+              "Limited Chatbot Automation",
+              "Manual Campaigns",
+              "Basic Dashboard"
             ]}
+            addons={
+              ["Email Marketing (Pay per email)"]
+            }
           />
 
           {/* Professional (Featured) */}
           <PricingCard
             featured
             title="Professional"
-            desc="Best for growing teams"
+            desc="Perfect for growing teams & agencies"
             price={pricing.professional[billingPeriod]}
+            period="/month"
             billingPeriod={billingPeriod}
             button="Get started"
             features={[
-              "Unlimited chatbots",
-              "Advanced lead qualification",
-              "CRM pipeline",
-              "Team collaboration",
-              "Priority support",
-              "API access",
+              "3 Account",
+              "3 Chatbot per account",
+              "Advanced CRM",
+              "Full Chatbot Automation",
+              "Campaign Scheduler",
+              "Team Access",
+              "Analytics Dashboard",
+              "AI Lead Summary"
             ]}
+            addons={
+              ["Email Marketing (Pay per email)"]
+            }
           />
 
           {/* Enterprise */}
           <PricingCard
             title="Enterprise"
-            desc="For large organizations"
+            desc="Built for brands & high-volume businesses"
             price={pricing.enterprise[billingPeriod]}
             billingPeriod={billingPeriod}
+            period="/month"
             button="Contact sales"
             features={[
-              "Everything in Professional",
-              "Dedicated account manager",
-              "Custom integrations",
-              "SSO & security controls",
-              "White-labeling",
+              "Unlimited Account",
+              "3 Chatbot per account",
+              "Advanced CRM",
+              "Campaign Scheduler",
+              "Team Access",
+              "Analytics Dashboard",
+              "Unlimited Automation",
+              "Monthly Auto Reports",
+              "Revenue & Data Reports via Email",
+              "Priority Support",
+              "Dedicated Account Manager",
+              "AI Lead Summary",
+              "AI Summary Reports"
             ]}
+            addons={
+              [
+                "Email Marketing (Pay per email)",
+              ]
+            }
           />
 
         </div>
@@ -119,18 +146,19 @@ function PricingCard({
   button,
   features,
   featured = false,
+  addons,
 }: any) {
   return (
     <div
-      className={`rounded-2xl p-8 flex flex-col justify-between shadow-sm transition
+      className={`rounded-[10px] p-8 flex flex-col border border-gray-300 justify-between shadow-sm transition
         ${featured
-          ? "bg-[#16A34A] text-white scale-[1.02]"
+          ? "bg-white scale-[1.02]"
           : "bg-white"
         }`}
     >
       <div>
         <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className={`mb-6 ${featured ? "text-green-100" : "text-gray-600"}`}>
+        <p className={`mb-6 text-gray-600`}>
           {desc}
         </p>
 
@@ -138,32 +166,47 @@ function PricingCard({
           <span className="text-4xl font-bold">
             ₹{price}
           </span>
-          <span className={`ml-1 text-sm ${featured ? "text-green-100" : "text-gray-500"}`}>
-            /{billingPeriod === "monthly" ? "month" : "year"}
+          <span className={`ml-1 text-sm text-gray-500`}>
+            /month
+            {/* {billingPeriod === "monthly" ? "month" : "year"} */}
           </span>
         </div>
 
-        <ul className="space-y-3 mb-8">
+        <button
+          className={`w-full py-3 mb-8 rounded-[10px] font-semibold transition
+          ${featured
+              ? "bg-[#16A34A] text-white hover:bg-[#15803D] cursor-pointer"
+              : "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md cursor-pointer"
+            }`}
+        >
+          {button}
+        </button>
+
+        <ul className="space-y-3 ">
           {features.map((f: string, i: number) => (
             <li key={i} className="flex items-center gap-3">
-              <span className={`w-2 h-2 rounded-full ${featured ? "bg-white" : "bg-[#16A34A]"}`} />
-              <span className={`${featured ? "text-green-50" : "text-gray-700"}`}>
+              <Check className={`w-4 h-4 text-[#16A34A]`} />
+              {/* <span className={`w-2 h-2 rounded-full ${featured ? "bg-white" : "bg-[#16A34A]"}`} /> */}
+              <span className="text-gray-700">
                 {f}
               </span>
             </li>
           ))}
         </ul>
+        <div>
+          <p className="font-medium mt-4 mb-2">Paid Add-ons</p>
+          <ul className="space-y-3 mb-8 text-gray-600">
+            {addons?.map((addon: string) => (
+              <li key={addon} className="flex items-center gap-3">
+                <Check className={`w-4 h-4 text-[#16A34A]`} />
+                <span className="text-gray-700">{addon}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
-      <button
-        className={`w-full py-3 rounded-lg font-semibold transition
-          ${featured
-            ? "bg-white text-[#16A34A] hover:bg-green-50"
-            : "bg-[#16A34A] text-white hover:bg-[#15803D]"
-          }`}
-      >
-        {button}
-      </button>
+
     </div>
   )
 }

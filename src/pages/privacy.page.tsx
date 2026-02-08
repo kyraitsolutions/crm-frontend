@@ -59,7 +59,7 @@ const privacyPolicyContent = {
         {
             question: "How can you contact us?",
             answer:
-                "If you have questions or comments about this policy, you may email us at support@kyraitsolutions.com.",
+                "If you have questions or comments about this policy, you may email us at kyraitsolutions@gmail.com.",
         },
     ],
 }
@@ -113,6 +113,7 @@ const PrivacyPolicyPage = () => {
                                     </h3>
                                     <p className="text-muted-foreground leading-relaxed">
                                         {section.answer}
+
                                     </p>
                                 </div>
                             ))}
