@@ -230,38 +230,37 @@ function PricingCard({
 }
 
 
-const HelpPopup = () => {
-  return (
-    <div
-      className="
-    pointer-events-none
-    absolute bottom-full left-1/2 mb-3 -translate-x-1/2
-    hidden group-hover:block
-    z-50
-    w-[220px]
-    rounded-xl
-    border border-gray-200
-    bg-white
-    px-4 py-3
-    text-left
-    text-xs
-    text-gray-700
-    shadow-xl
-  "
-    >
-      {/* Arrow
-      <div className="absolute left-1/2 top-full -translate-x-1/2">
-        <div className="h-2 w-2 rotate-45 border-b border-r border-gray-200 bg-white" />
-      </div> */}
+// const HelpPopup = () => {
+//   return (
+//     <div
+//       className="
+//     pointer-events-none
+//     absolute bottom-full left-1/2 mb-3 -translate-x-1/2
+//     hidden group-hover:block
+//     z-50
+//     w-[220px]
+//     rounded-xl
+//     border border-gray-200
+//     bg-white
+//     px-4 py-3
+//     text-left
+//     text-xs
+//     text-gray-700
+//     shadow-xl
+//   "
+//     >
+//       Arrow
+//       <div className="absolute left-1/2 top-full -translate-x-1/2">
+//         <div className="h-2 w-2 rotate-45 border-b border-r border-gray-200 bg-white" />
+//       </div>
 
-      {/* Content */}
-      <p className="font-semibold text-gray-900">
-        Current Plan
-      </p>
-      <p className="mt-1 text-gray-600 leading-relaxed">
-        This plan is already active on your account. You can upgrade anytime.
-      </p>
-    </div>
+//       <p className="font-semibold text-gray-900">
+//         Current Plan
+//       </p>
+//       <p className="mt-1 text-gray-600 leading-relaxed">
+//         This plan is already active on your account. You can upgrade anytime.
+//       </p>
+//     </div>
 
-  )
-}
+//   )
+// }

@@ -32,7 +32,7 @@ const AddAccountPopup = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/account", {
+      const response = await fetch("https://crm-backend-7lf9.onrender.com/api/account", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

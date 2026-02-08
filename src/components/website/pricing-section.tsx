@@ -61,7 +61,6 @@ export default function PricingSection() {
             period="Forever"
             desc="Best to get started with CRM Chatbot"
             price={pricing.starter[billingPeriod]}
-            billingPeriod={billingPeriod}
             button="Start for free"
             features={[
               "1 Account",
@@ -83,7 +82,6 @@ export default function PricingSection() {
             desc="Perfect for growing teams & agencies"
             price={pricing.professional[billingPeriod]}
             period="/month"
-            billingPeriod={billingPeriod}
             button="Get started"
             features={[
               "3 Account",
@@ -105,7 +103,6 @@ export default function PricingSection() {
             title="Enterprise"
             desc="Built for brands & high-volume businesses"
             price={pricing.enterprise[billingPeriod]}
-            billingPeriod={billingPeriod}
             period="/month"
             button="Contact sales"
             features={[
@@ -142,7 +139,6 @@ function PricingCard({
   title,
   desc,
   price,
-  billingPeriod,
   button,
   features,
   featured = false,

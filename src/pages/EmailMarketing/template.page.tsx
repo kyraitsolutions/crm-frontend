@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import { Edit3, Plus, Sparkles } from "lucide-react"
@@ -40,7 +38,9 @@ export default function Templates() {
     const { accountId } = useParams();
     const emailService = new EmailService();
     const [open, setOpen] = useState(false);
-    const [templateData, setTemplateData] = useState<any>({
+    const [templateData,
+        // setTemplateData
+    ] = useState<any>({
         name: "New Template",
         subject: "Welcome to our service",
         content: "<h1>Hello {{name}}</h1>"

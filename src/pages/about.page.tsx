@@ -1,5 +1,4 @@
 import FooterSection from "@/components/footer-section";
-import TestimonialsSection from "@/components/testimonials-section";
 import AboutCTA from "@/components/website/AboutCTA";
 import AboutHero from "@/components/website/AboutHero";
 // import CompanyJourney from "@/components/website/CompanyJourney";
