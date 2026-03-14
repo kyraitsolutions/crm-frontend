@@ -212,7 +212,7 @@ export function LeadFormPage() {
             className="
           inline-flex items-center gap-2
           rounded-[99px]
-          bg-[#37322F]
+          bg-primary
           px-4 py-2
           text-sm font-medium text-[#FBFAF9]
           shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
@@ -261,7 +261,7 @@ export function LeadFormPage() {
         "
             >
               {/* Icon */}
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary">
                 <Plus className="h-8 w-8 text-[#37322F]" />
               </div>
 
@@ -286,7 +286,7 @@ export function LeadFormPage() {
                   className="
             inline-flex items-center gap-2
             rounded-[99px]
-            bg-[#37322F]
+            bg-primary
             px-5 py-2
             text-sm font-medium text-[#FBFAF9]
             shadow-[0px_2px_4px_rgba(55,50,47,0.12)]

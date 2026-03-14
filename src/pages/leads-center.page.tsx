@@ -434,12 +434,12 @@ export default function LeadsCentre() {
                 flex items-center gap-2
                 whitespace-nowrap
                 rounded-[99px]
-                bg-[#37322F]
+                bg-primary
                 px-4 py-2
                 text-sm font-medium
                 text-[#FBFAF9]
                 shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
-                hover:bg-[#2e2a28]
+                hover:bg-primary
                 transition
               "
               >
@@ -819,7 +819,7 @@ export default function LeadsCentre() {
                       <Checkbox />
                     </TableCell>
 
-                    <TableCell className="text-sm text-[#9A948E]">
+                    <TableCell className="text-sm ">
                       {formatDate(lead.createdAt)}
                     </TableCell>
 
@@ -829,9 +829,9 @@ export default function LeadsCentre() {
                           className="
                           flex h-8 w-8 items-center justify-center
                           rounded-full
-                          bg-[#37322F]/10
+                          bg-primary
                           text-xs font-medium
-                          text-[#37322F]
+                          text-white
                         "
                         >
                           {lead.name.charAt(0).toUpperCase()}
@@ -872,7 +872,8 @@ export default function LeadsCentre() {
                           rounded-full
                           bg-[#F4F3F2]
                           px-3 py-0.5
-                          text-xs
+                          text-[12px]
+                          capitalize
                           font-normal
                           text-[#37322F]
                         "
@@ -888,7 +889,8 @@ export default function LeadsCentre() {
                             w-fit rounded-full
                             bg-[#F4F3F2]
                             px-3 py-0.5
-                            text-xs
+                            text-[12px]
+                            capitalize
                             font-normal
                             text-[#37322F]
                           "
@@ -951,7 +953,7 @@ export default function LeadsCentre() {
                 className="
                   flex h-14 w-14 items-center justify-center
                   rounded-full
-                  bg-[#37322F]/10
+                  bg-primary/10
                   text-xl font-semibold
                   text-[#37322F]
                 "
@@ -1078,7 +1080,7 @@ export default function LeadsCentre() {
                     <Badge
                       className="
                   w-fit rounded-full
-                  bg-[#37322F]/10
+                  bg-primary/10
                   text-[#37322F]
                   capitalize
                 "
@@ -1115,7 +1117,7 @@ export default function LeadsCentre() {
                     <Badge
                       className="
                   w-fit rounded-full
-                  bg-[#37322F]/10
+                  bg-primary/10
                   text-[#37322F]
                   capitalize
                 "
@@ -1212,7 +1214,7 @@ export default function LeadsCentre() {
 
             {/* NOTES */}
             <section>
-              <h3 className="text-sm font-medium text-[#37322F] mb-4">Notes</h3>
+              <h3 className="text-sm font-medium text-[#37322F] mb-4">Timeline</h3>
 
               <div className="max-h-96 py-4 overflow-auto hide-scrollbar">
                 <div className="relative space-y-6">
@@ -1221,10 +1223,10 @@ export default function LeadsCentre() {
                   <div className="flex items-center gap-3.5">
                     <Button
                       variant="outline"
-                      className="rounded-full size-10 border-gray-400"
+                      className="rounded-full size-10 border-primary"
                       onClick={() => setIsAddActivityOpen(true)}
                     >
-                      <span className="text-lg">+</span>
+                      <span className="text-lg text-primary">+</span>
                     </Button>
 
                     <p className="text-primary">Add Activity</p>
@@ -1261,7 +1263,7 @@ export default function LeadsCentre() {
             <div className="flex items-center gap-3">
               {!isEditing ? (
                 <>
-                  <Button className="flex-1 rounded-[99px] bg-[#37322F] text-[#FBFAF9]">
+                  <Button className="flex-1 rounded-[99px] bg-primary text-[#FBFAF9]">
                     Assign Lead
                   </Button>
                   <Button
@@ -1276,7 +1278,7 @@ export default function LeadsCentre() {
                 <>
                   <Button
                     disabled={isEditingLoading}
-                    className="flex-1 rounded-[99px] bg-[#37322F] text-[#FBFAF9]"
+                    className="flex-1 rounded-[99px] bg-primary text-[#FBFAF9]"
                     onClick={() => handleSave()}
                   >
                     Save {isEditingLoading && <Loader />}

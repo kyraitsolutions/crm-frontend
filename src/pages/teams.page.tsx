@@ -393,7 +393,7 @@ export const Teams = () => {
                   <Button
                     className="
                 rounded-[99px]
-                bg-[#37322F]
+                bg-primary
                 text-[#FBFAF9]
                 shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
               "
@@ -426,7 +426,7 @@ export const Teams = () => {
         "
             >
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
-                <Plus className="h-8 w-8 text-[#37322F]" />
+                <Plus className="h-8 w-8 text-primary" />
               </div>
 
               <div>
@@ -593,11 +593,10 @@ const AddNewTeamMemberPopupDialog = ({
               disabled={isLoadingAddTeamMember}
               className="
               rounded-[99px]
-              bg-[#37322F]
+              bg-primary
               text-[#FBFAF9]
               px-5 py-2
               shadow-[0px_2px_4px_rgba(55,50,47,0.08)]
-              hover:bg-[#2e2a28]
               disabled:opacity-60
               transition
           "

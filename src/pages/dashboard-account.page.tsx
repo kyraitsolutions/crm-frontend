@@ -46,6 +46,7 @@ import {
 import { useParams } from "react-router-dom";
 import type { DateRange } from "react-day-picker";
 import { toast } from "sonner";
+import { StatCard } from "@/components/email/StatCard";
 
 interface AnalyticsData {
   totalLeads: number;
@@ -353,8 +354,8 @@ const DashboardAccount = () => {
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case "new":
-        return "bg-[#0D587A] text-[#0D587A]-foreground";
+      case "intake":
+        return "bg-[#3B82F6] text-white";
       case "contacted":
         return "bg-[#80540A] text-[#80540A]-foreground";
       case "qualified":
@@ -430,7 +431,7 @@ const DashboardAccount = () => {
               max-md:w-full
               transition
               ${active
-                        ? "bg-[#37322F] text-[#FBFAF9]"
+                        ? "bg-primary text-[#FBFAF9]"
                         : "text-[#37322F] hover:bg-[#EFEDEB]"
                       }
             `}
@@ -452,7 +453,7 @@ const DashboardAccount = () => {
         text-xs font-medium
         transition
         ${comparisonMode
-                  ? "bg-[#37322F] text-[#FBFAF9]"
+                  ? "bg-primary text-[#FBFAF9]"
                   : "bg-[#F7F6F4] text-[#37322F] hover:bg-[#EFEDEB]"
                 }
         disabled:opacity-50
@@ -502,7 +503,7 @@ const DashboardAccount = () => {
 
         {/* Key Metrics */}
         {comparisonMode && previousPeriodData ? (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-6">
             <ComparisonMetricCard
               title="Total Leads"
               icon={Users}
@@ -555,7 +556,7 @@ const DashboardAccount = () => {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-6">
             {[
               {
                 label: "Total Leads",
@@ -606,34 +607,9 @@ const DashboardAccount = () => {
                 icon: Zap,
               },
             ].map(({ label, value, meta, icon: Icon }) => (
-              <div
-                key={label}
-                className="
-                  rounded-xl
-                  bg-[#F7F6F4]
-                  px-5 py-4
-                  transition
-                  hover:bg-[#EFEDEB]
-                "
-              >
-                {/* Header */}
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-sm font-medium text-[#37322F]">
-                    {label}
-                  </p>
-                  <Icon className="h-4 w-4 text-[#847971]" />
-                </div>
 
-                {/* Value */}
-                <div className="text-2xl font-medium text-[#37322F]">
-                  {value}
-                </div>
+              <StatCard title={label} value={value.toString()} subtitle={meta} icon={Icon} />
 
-                {/* Meta */}
-                <p className="mt-1 text-xs text-[#847971]">
-                  {meta}
-                </p>
-              </div>
             ))}
           </div>
 
@@ -663,80 +639,74 @@ const DashboardAccount = () => {
         {/* Charts Row - Wrapped for PDF export */}
         <div id="charts-for-export" className="grid gap-6 lg:grid-cols-3">
           {/* Leads Over Time */}
-          <Card className="lg:col-span-2 rounded-xl
-        bg-[#F7F6F4]
-        border-0
-        shadow-none
-        px-0 py-4
-        transition
-        hover:bg-[#EFEDEB]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">
+          <Card className="border-border lg:col-span-2">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-semibold">
                 Lead Generation Trends
               </CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">
+              <p className="text-sm text-muted-foreground">
                 Daily lead acquisition by source
               </p>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={data?.leadsOverTime}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                  // stroke="hsl(var(--border))"
-                  />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 10 }}
-                    // stroke="hsl(var(--[#D3DEF5]-foreground)) "
-                    tickFormatter={(value) => {
-                      const date = new Date(value);
-                      return `${date.getMonth() + 1}/${date.getDate()}`;
-                    }}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10 }}
-                  // stroke="hsl(var(--[#D3DEF5]-foreground))"
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      fontSize: "12px",
-                      backgroundColor: "white",
-                      border: "1px solid gray",
-                      borderRadius: "6px",
-                    }}
-                  />
-                  <Legend wrapperStyle={{ fontSize: "11px" }} />
-                  <Bar dataKey="chatbot" stackId="a" fill="#3B82F6" />
-                  <Bar dataKey="website" stackId="a" fill="#10B981" />
-                  <Bar dataKey="googleAds" stackId="a" fill="#F59E0B" />
-                  <Bar dataKey="whatsapp" stackId="a" fill="#22C55E" />
-                  <Bar dataKey="facebook" stackId="a" fill="#3B5998" />
-                  <Bar dataKey="instagram" stackId="a" fill="#E4405F" />
-                  <Bar dataKey="webform" stackId="a" fill="#8B5CF6" />
-                  <Bar dataKey="manual" stackId="a" fill="#F59E83" />
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="h-[280px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={data?.leadsOverTime}>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                    />
+                    <XAxis
+                      dataKey="date"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                      tickFormatter={(value) => {
+                        const date = new Date(value);
+                        return `${date.getMonth() + 1}/${date.getDate()}`;
+                      }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                                    // backgroundColor: "hsl(var(--card))",
+                                    border: "1px solid hsl(var(--border))",
+                                    borderRadius: "8px",
+                                    fontSize: "12px"
+                                }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: "12px",textTransform:"capitalize" }} />
+                    <Bar dataKey="chatbot" stackId="a" fill="#3B82F6" />
+                    <Bar dataKey="website" stackId="a" fill="#10B981" />
+                    <Bar dataKey="googleAds" stackId="a" fill="#F59E0B" />
+                    <Bar dataKey="whatsapp" stackId="a" fill="#22C55E" />
+                    <Bar dataKey="facebook" stackId="a" fill="#3B5998" />
+                    <Bar dataKey="instagram" stackId="a" fill="#E4405F" />
+                    <Bar dataKey="webform" stackId="a" fill="#8B5CF6" />
+                    <Bar dataKey="manual" stackId="a" fill="#F59E83" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
 
           {/* Lead Status Distribution */}
-          <Card className="  bg-[#F7F6F4]
-        border-0
-        shadow-none
-        px-0 py-4
-        transition
-        hover:bg-[#EFEDEB]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">
+          <Card className=" border-border">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-semibold">
                 Lead Pipeline Status
               </CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">
+              <p className="text-sm text-muted-foreground">
                 Distribution by stage
               </p>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={250}>
+              <div className="h-[280px]">
+                
+              <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={data?.leadsByStatus}
@@ -762,11 +732,13 @@ const DashboardAccount = () => {
                       fontSize: "12px",
                       backgroundColor: "white",
                       border: "1px solid  gray",
-                      borderRadius: "6px",
+                      borderRadius: "8px",
                     }}
                   />
                 </PieChart>
               </ResponsiveContainer>
+              </div>
+
             </CardContent>
           </Card>
         </div>
@@ -774,17 +746,12 @@ const DashboardAccount = () => {
         {/* Source Performance & Monthly Trends */}
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Lead Sources */}
-          <Card className="  bg-[#F7F6F4]
-        border-0
-        shadow-none
-        px-0 py-4
-        transition
-        hover:bg-[#EFEDEB]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">
+          <Card className="border-border">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-semibold">
                 Lead Sources Performance
               </CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">
+              <p className="text-sm text-muted-foreground">
                 Ranked by volume with trends
               </p>
             </CardHeader>
@@ -797,7 +764,7 @@ const DashboardAccount = () => {
                         className="h-2 w-2 rounded-full"
                         style={{ backgroundColor: source.color }}
                       />
-                      <span className="text-xs font-medium">
+                      <span className="text-xs font-medium capitalize">
                         {source.source}
                       </span>
                     </div>
@@ -811,7 +778,7 @@ const DashboardAccount = () => {
                         }}
                       />
                     </div>
-                    <div className="flex min-w-[80px] items-center gap-2 text-xs">
+                    <div className="flex min-w-[80px] items-center gap-2 text-sm">
                       <span className="font-semibold">{source.count}</span>
                       <span
                         className={`flex items-center gap-0.5 ${source.trend >= 0
@@ -834,17 +801,12 @@ const DashboardAccount = () => {
           </Card>
 
           {/* Monthly Engagement */}
-          <Card className="  bg-[#F7F6F4]
-        border-0
-        shadow-none
-        px-0 py-4
-        transition
-        hover:bg-[#EFEDEB]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">
+          <Card className=" border-border">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-semibold">
                 Monthly Performance
               </CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">
+              <p className="text-xs text-muted-foreground">
                 Leads vs Conversions trend
               </p>
             </CardHeader>
@@ -857,13 +819,10 @@ const DashboardAccount = () => {
                   />
                   <XAxis
                     dataKey="month"
-                    tick={{ fontSize: 10 }}
-
-                  // stroke="hsl(var(--[#D3DEF5]-foreground))"
+                    tick={{ fontSize: 12,fill: "hsl(var(--muted-foreground))" }}
                   />
                   <YAxis
-                    tick={{ fontSize: 10 }}
-                    // stroke="hsl(var(--[#D3DEF5]-foreground))"
+                    tick={{ fontSize: 12,fill: "hsl(var(--muted-foreground))" }}
                     className="capitalize"
                   />
                   <Tooltip
@@ -871,11 +830,11 @@ const DashboardAccount = () => {
                       fontSize: "12px",
                       backgroundColor: "white",
                       border: "1px solid  grey",
-                      borderRadius: "6px",
+                      borderRadius: "8px",
                       textDecoration: "capitalize",
                     }}
                   />
-                  <Legend wrapperStyle={{ fontSize: "11px" }} />
+                  <Legend wrapperStyle={{ fontSize: "12px", textTransform:"capitalize" }} />
                   <Line
                     type="monotone"
                     dataKey="leads"
@@ -899,17 +858,12 @@ const DashboardAccount = () => {
         {/* Bottom Section */}
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Channel Performance Table */}
-          <Card className="lg:col-span-2   bg-[#F7F6F4]
-        border-0
-        shadow-none
-        px-0 py-4
-        transition
-        hover:bg-[#EFEDEB]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">
+          <Card className="lg:col-span-2 border">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-semibold">
                 Channel Performance Metrics
               </CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">
+              <p className="text-sm text-muted-foreground">
                 Detailed conversion analytics by source
               </p>
             </CardHeader>
@@ -921,10 +875,10 @@ const DashboardAccount = () => {
                       <th className="pb-2 text-left font-semibold text-[#D3DEF5]-foreground">
                         Channel
                       </th>
-                      <th className="pb-2 text-right font-semibold text-[#D3DEF5]-foreground">
+                      <th className="pb-2 text-center font-semibold text-[#D3DEF5]-foreground">
                         Leads
                       </th>
-                      <th className="pb-2 text-right font-semibold text-[#D3DEF5]-foreground">
+                      <th className="pb-2 text-center font-semibold text-[#D3DEF5]-foreground">
                         Conversions
                       </th>
                       <th className="pb-2 text-right font-semibold text-[#D3DEF5]-foreground">
@@ -945,17 +899,17 @@ const DashboardAccount = () => {
                           {getChannelIcon(channel.channel)}
                           {channel.channel}
                         </td>
-                        <td className="py-2.5 text-right">{channel.leads}</td>
-                        <td className="py-2.5 text-right font-semibold text-[#21733F]">
+                        <td className="py-2.5 text-center">{channel.leads}</td>
+                        <td className="py-2.5 text-center font-semibold text-[#21733F]">
                           {channel.conversions}
                         </td>
                         <td className="py-2.5 text-right font-semibold">
                           {channel.conversionRate}%
                         </td>
                         <td className="py-2.5 text-center">
-                          <Badge variant="outline" className="text-[10px]">
+                          <Badge variant="outline" className="text-[10px] capitalize">
                             {channel.status === "active" ? (
-                              <CheckCircle className="mr-1 h-2.5 w-2.5 text-[#21733F]" />
+                              <CheckCircle className="mr-1 h-2.5 w-2.5 text-[#21733F] " />
                             ) : (
                               <XCircle className="mr-1 h-2.5 w-2.5 text-destructive" />
                             )}
@@ -971,17 +925,12 @@ const DashboardAccount = () => {
           </Card>
 
           {/* Recent Leads */}
-          <Card className="  bg-[#F7F6F4]
-        border-0
-        shadow-none
-        px-0 py-4
-        transition
-        hover:bg-[#EFEDEB]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">
+          <Card className=" border-border">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-semibold">
                 Recent Leads
               </CardTitle>
-              <p className="text-xs text-[#D3DEF5]-foreground">
+              <p className="text-sm text-muted-foreground">
                 Latest incoming leads
               </p>
             </CardHeader>
@@ -994,29 +943,29 @@ const DashboardAccount = () => {
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-xs font-semibold capitalize">
+                        <p className="text-sm font-semibold capitalize">
                           {lead.name.slice(0, 30)}
                         </p>
                         <Badge
-                          className={`text-[9px] text-white capitalize ${getStatusColor(
+                          className={`text-[10px] text-white capitalize ${getStatusColor(
                             lead.status
                           )}`}
                         >
                           {lead.status}
                         </Badge>
                       </div>
-                      <p className="mt-0.5 text-[10px] text-[#D3DEF5]-foreground">
+                      <p className="mt-0.5 text-[12px] capitalize text-[#D3DEF5]-foreground">
                         {lead.source}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-medium">
+                      <p className="text-[12px] font-medium">
                         {new Date(lead.date).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
                         })}
                       </p>
-                      <p className="text-[10px] text-[#D3DEF5]-foreground">
+                      <p className="text-[12px] text-[#D3DEF5]-foreground">
                         {lead.time}
                       </p>
                     </div>

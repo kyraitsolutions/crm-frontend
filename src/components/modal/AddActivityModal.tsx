@@ -127,7 +127,7 @@ export const AddActivityModal = ({
               text-sm
               resize-none
               outline-none
-              focus:ring-2 focus:ring-purple-300
+              focus:ring-2 focus:ring-primary-300
             "
           />
 
@@ -149,7 +149,7 @@ export const AddActivityModal = ({
         {/* Footer */}
         <div className="px-6 pb-6">
           <Button
-            className="w-full bg-teal-600 hover:bg-teal-700"
+            className="w-full bg-primary/90 hover:bg-primary"
             onClick={handleSave}
             disabled={!message.trim()}
           >

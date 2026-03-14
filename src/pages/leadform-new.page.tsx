@@ -513,7 +513,7 @@ export default function LeadFormNew() {
                           disabled={isLoading}
                           className="
                 rounded-[99px]
-                bg-[#37322F]
+                bg-primary
                 text-[#FBFAF9]
                 px-6
                 shadow-[0px_2px_6px_rgba(55,50,47,0.15)]
@@ -590,7 +590,7 @@ export default function LeadFormNew() {
                       className="
                 mt-4
                 rounded-[99px]
-                bg-[#37322F]
+                bg-primary
                 text-[#FBFAF9]
               "
                     >

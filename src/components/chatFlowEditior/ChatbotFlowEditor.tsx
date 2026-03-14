@@ -520,7 +520,7 @@ export default function ChatbotFlowEditor() {
   ];
 
   return (
-    <div className="w-full grid grid-cols-8 gap-6">
+    <div className="w-full grid grid-cols-8 gap-4 p-4">
       {/* LEFT: Flow Builder */}
       <div className="col-span-6 flex flex-col gap-3">
         {/* Header Buttons */}
@@ -544,13 +544,13 @@ export default function ChatbotFlowEditor() {
           <button
             onClick={publishChanges}
             className="
-          bg-[#37322F]
+          bg-primary
           text-[#FBFAF9]
           px-4 py-1
           rounded-[99px]
           flex items-center gap-2
           shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
-          hover:bg-[#2e2a28]
+          hover:bg-primary
           transition cursor-pointer
         "
           >
@@ -568,7 +568,6 @@ export default function ChatbotFlowEditor() {
         rounded-xl
         border border-[rgba(50,45,43,0.12)]
         bg-[#FBFAF9]
-        shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
         overflow-hidden
       "
         >
@@ -585,9 +584,8 @@ export default function ChatbotFlowEditor() {
             <Controls
               showFitView
               className="
-            bg-gray-200
+            bg-gray-100!
             rounded-md
-            shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
           "
             />
             <Background className="bg-[#f7f1f1c8]" />
@@ -597,7 +595,7 @@ export default function ChatbotFlowEditor() {
 
       {/* RIGHT: Predefined Fields */}
       <div className="col-span-2 flex flex-col gap-4">
-        <p className="text-sm font-medium text-[#37322F]">Predefined Fields</p>
+        <p className="text-sm font-medium text-[#37322F]">Avaliable Fields</p>
 
         <div className="grid grid-cols-4 gap-4">
           {chatbotFields.map((item, index) => (
@@ -608,7 +606,7 @@ export default function ChatbotFlowEditor() {
             flex flex-col items-center
             cursor-pointer
             transition
-            hover:scale-[1.03] hover:shadow-[0px_4px_8px_rgba(55,50,47,0.12)]
+            hover:scale-[1.03] 
           "
             >
               <p className="text-xs text-[#847971] whitespace-nowrap">

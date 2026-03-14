@@ -215,7 +215,7 @@ export function ChatBotPage() {
             to={`${DASHBOARD_PATH?.getAccountPath(
               String(accountId)
             )}/chatbot/create`}
-            className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            className="inline-flex items-center gap-1 rounded-md  bg-primary/90 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary transition-colors duration-200 focus:outline-none"
           >
             <Plus size={18} />
             Create Chatbot
@@ -280,7 +280,7 @@ export function ChatBotPage() {
               className="
             inline-flex items-center gap-2
             rounded-[99px]
-            bg-[#37322F]
+            bg-primary
             px-5 py-2
             text-sm font-medium text-[#FBFAF9]
             shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
