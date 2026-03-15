@@ -52,7 +52,7 @@ export default function ChatBotBuilderInfoTabs({
   return (
     <div className="mt-4">
       {isDirty && (
-        <div className="flex justify-end">
+        <div className="flex justify-end px-4">
           <Button
             type="submit"
             disabled={isFormSubmitting}
@@ -100,8 +100,8 @@ export default function ChatBotBuilderInfoTabs({
                     navigate(
                       `${DASHBOARD_PATH?.getAccountPathChatbot(
                         String(accountId),
-                        chatBotId
-                      )}${DASHBOARD_PATH?.CHATBOT_BUILDER_FLOW}`
+                        chatBotId,
+                      )}${DASHBOARD_PATH?.CHATBOT_BUILDER_FLOW}`,
                     );
                   }
                 }}

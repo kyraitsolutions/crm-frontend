@@ -8,6 +8,7 @@ interface IAuthStoreState {
   user: IUser | null;
   accountSelected: boolean;
   accountName: string | null;
+  accountId?: string | null;
 }
 
 export const useAuthStore = create<IAuthStoreState>()(
@@ -15,7 +16,9 @@ export const useAuthStore = create<IAuthStoreState>()(
     user: null,
     accountSelected:
       CookieUtils.getItem(COOKIES_STORAGE.accountSelected) || false,
+
     accountName: CookieUtils.getItem(COOKIES_STORAGE.accountName) || null,
+    accountId: CookieUtils.getItem(COOKIES_STORAGE.accountId) || null,
   })),
 );
 
@@ -37,5 +40,10 @@ export class AuthStoreManager {
   setAccountName(accountName: string | null) {
     this.store.setState({ accountName });
     CookieUtils.setItem(COOKIES_STORAGE.accountName, accountName);
+  }
+
+  setAccountId(accountId: string | null) {
+    this.store.setState({ accountId });
+    CookieUtils.setItem(COOKIES_STORAGE.accountId, accountId);
   }
 }

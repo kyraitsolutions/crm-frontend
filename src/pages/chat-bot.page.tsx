@@ -24,7 +24,6 @@ export function ChatBotPage() {
   const chatBotLists = useChatBotStore((state) => state.chatBotsList);
   const [loading, setLoading] = useState(false);
 
-
   const columns: Column<ChatBotListItem>[] = [
     {
       key: "name",
@@ -111,7 +110,7 @@ export function ChatBotPage() {
 
   const handleUpdateStatus = async (
     e: React.MouseEvent<HTMLButtonElement>,
-    chatbotId: string
+    chatbotId: string,
   ) => {
     e.stopPropagation();
 
@@ -130,7 +129,7 @@ export function ChatBotPage() {
       const response = await chatBotService.updateChatBot(
         String(accountId),
         chatbotId,
-        updatedData
+        updatedData,
       );
 
       if (response.status === 200) {
@@ -154,7 +153,7 @@ export function ChatBotPage() {
     try {
       const response = await chatBotService.deleteChatBot(
         String(accountId),
-        chatbotId
+        chatbotId,
       );
 
       if (response.status === 200) {
@@ -185,7 +184,6 @@ export function ChatBotPage() {
     getChatBotsList();
   }, []);
 
-
   if (loading) {
     return (
       <div className="space-y-4">
@@ -204,46 +202,51 @@ export function ChatBotPage() {
     <div className="space-y-6 lg:px-3 px-2 py-2">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-medium text-[#37322F]">Chatbot Directory</h1>
+          <h1 className="text-2xl font-medium text-[#37322F]">
+            Chatbot Directory
+          </h1>
           <p className="mt-2 text-sm text-[#847971]">
             Manage deployment status, monitor engagement, and open detailed user
             insights.
           </p>
         </div>
-        {chatBotLists.length > 0 && <div className="flex justify-end">
-          <Link
-            to={`${DASHBOARD_PATH?.getAccountPath(
-              String(accountId)
-            )}/chatbot/create`}
-            className="inline-flex items-center gap-1 rounded-md  bg-primary/90 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary transition-colors duration-200 focus:outline-none"
-          >
-            <Plus size={18} />
-            Create Chatbot
-          </Link>
-        </div>
-        }
+        {chatBotLists.length > 0 && (
+          <div className="flex justify-end">
+            <Link
+              to={`${DASHBOARD_PATH?.getAccountPath(
+                String(accountId),
+              )}/chatbot/create`}
+              className="inline-flex items-center gap-1 rounded-md  bg-primary/90 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary transition-colors duration-200 focus:outline-none"
+            >
+              <Plus size={18} />
+              Create Chatbot
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* <div className="grid grid-cols-[2fr_1fr]"> */}
 
-      {chatBotLists.length > 0 ? <div className="">
-        <DataTable<ChatBotListItem>
-          data={chatBotLists}
-          columns={columns}
-          pageSize={20}
-          onRowClick={(row) => {
-            navigate(
-              `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${row.id
-              }/builder`
-            );
-          }}
-          sortable={true}
-          paginated={true}
-          tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
-          loading={loading}
-        />
-      </div>
-        :
+      {chatBotLists.length > 0 ? (
+        <div className="">
+          <DataTable<ChatBotListItem>
+            data={chatBotLists}
+            columns={columns}
+            pageSize={20}
+            onRowClick={(row) => {
+              navigate(
+                `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${
+                  row.id
+                }/builder`,
+              );
+            }}
+            sortable={true}
+            paginated={true}
+            tableContainerClassName="max-h-[calc(100vh-270px)] sm:max-h-[calc(100vh-220px)] shadow-none"
+            loading={loading}
+          />
+        </div>
+      ) : (
         <div className="flex w-full justify-center items-center h-[75vh]">
           <div
             className="
@@ -258,8 +261,8 @@ export function ChatBotPage() {
         "
           >
             {/* Icon */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(55,50,47,0.08)]">
-              <Plus className="h-8 w-8 text-[#37322F]" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full  bg-primary text-white border-2 border-dotted">
+              <Plus className="h-8 w-8]" />
             </div>
 
             {/* Text */}
@@ -268,14 +271,15 @@ export function ChatBotPage() {
                 No Chatbot found
               </h2>
               <p className="mt-2 text-sm text-[#847971]">
-                Get started by creating your first chatbot for your website or app.
+                Get started by creating your first chatbot for your website or
+                app.
               </p>
             </div>
 
             {/* CTA */}
             <Link
               to={`${DASHBOARD_PATH?.getAccountPath(
-                String(accountId)
+                String(accountId),
               )}/chatbot/create`}
               className="
             inline-flex items-center gap-2
@@ -288,11 +292,11 @@ export function ChatBotPage() {
             hover:opacity-90
           "
             >
-              Create First Chatbot
+              + Create First Chatbot
             </Link>
           </div>
         </div>
-      }
+      )}
     </div>
   );
 }

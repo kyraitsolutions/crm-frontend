@@ -58,52 +58,106 @@ export const AlertDialog: React.FC = () => {
 
   // if (!isOpen && !animate) return null; // Keep mounted during exit animation
 
-  const textColorClass = {
-    success: "text-green-600",
-    warning: "text-yellow-600",
-    error: "text-red-600",
-    info: "text-blue-600",
-  }[type ?? "info"];
+  // const textColorClass = {
+  //   success: "text-green-600",
+  //   warning: "text-yellow-600",
+  //   error: "text-red-600",
+  //   info: "text-blue-600",
+  // }[type ?? "info"];
 
   return (
     <div
-      className={`fixed top-0 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-in-out ${isOpen && animate ? "translate-y-0" : "-translate-y-full"
-        }
-        ${textColorClass}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${
+        isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+      }`}
     >
+      {/* Backdrop */}
       <div
-        className={`bg-white rounded-md shadow-xl w-[350px] md:max-w-md md:w-full p-4 md:p-6 text-center border
-     `}
-      >
-        <div className={`flex justify-center mb-3  `}>
-          <Icon className="w-10 h-10" />
-        </div>
-        <h2 className={`text-xl font-semibold mb-2 `}>{title}</h2>
-        <p className="text-gray-600 mb-6">{message}</p>
+        className="absolute inset-0 bg-black/40 backdrop-blur-xs"
+        onClick={closeAlert}
+      />
 
-        <div className="grid grid-cols-2 max-w-50 mx-auto justify-center gap-4">
-          <Button
-            variant="destructive"
-            onClick={() => {
-              onConfirm?.();
-              closeAlert();
-            }}
-            className="rounded-md shadow-2xl"
-          >
-            {confirmText}
-          </Button>
+      {/* Modal */}
+      <div
+        className={`relative rounded-md bg-white rounded-xl shadow-2xl w-[90%] max-w-md p-6 transform transition-all duration-300 ${
+          isOpen ? "scale-100 opacity-100" : "scale-90 opacity-0"
+        }`}
+      >
+        {/* Icon */}
+        <div className="flex justify-center mb-4">
+          <div className="p-3 rounded-full bg-red-100">
+            <Icon className="w-6 h-6 text-red-600" />
+          </div>
+        </div>
+
+        <h2 className="text-xl font-semibold text-center mb-2">{title}</h2>
+
+        <p className="text-gray-500 text-center mb-6">{message}</p>
+
+        <div className="flex justify-end gap-3">
           <Button
             variant="outline"
             onClick={() => {
               onCancel?.();
               closeAlert();
             }}
-            className="rounded-md shadow-2xl"
           >
             {cancelText}
+          </Button>
+
+          <Button
+            variant="destructive"
+            onClick={() => {
+              onConfirm?.();
+              closeAlert();
+            }}
+          >
+            {confirmText}
           </Button>
         </div>
       </div>
     </div>
+    // <div
+    //   className={`fixed inset-0 flex justify-center z-50 transition-all duration-300 ease-in-out ${
+    //     isOpen && animate ? "translate-y-0" : "-translate-y-full"
+    //   }
+    //     ${textColorClass}`}
+    // >
+    //   <div className="bg-black w-full h-full">
+    //     <div
+    //       className={`h-fit bg-white rounded-md shadow-xl w-[350px] md:max-w-md md:w-full p-4 md:p-6 text-center border
+    //  `}
+    //     >
+    //       <div className={`flex justify-center mb-3  `}>
+    //         <Icon className="w-10 h-10" />
+    //       </div>
+    //       <h2 className={`text-xl font-semibold mb-2 `}>{title}</h2>
+    //       <p className="text-gray-600 mb-6">{message}</p>
+
+    //       <div className="flex justify-end items-center gap-4">
+    //         <Button
+    //           variant="destructive"
+    //           onClick={() => {
+    //             onConfirm?.();
+    //             closeAlert();
+    //           }}
+    //           className="rounded-md shadow-2xl"
+    //         >
+    //           {confirmText}
+    //         </Button>
+    //         <Button
+    //           variant="outline"
+    //           onClick={() => {
+    //             onCancel?.();
+    //             closeAlert();
+    //           }}
+    //           className="rounded-md shadow-2xl"
+    //         >
+    //           {cancelText}
+    //         </Button>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
   );
 };

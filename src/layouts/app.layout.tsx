@@ -13,6 +13,7 @@ export function AppLayout() {
   const navigate = useNavigate();
 
   const getProfile = async () => {
+    setIsLoading(true);
     try {
       const response: any = await authService.getProfile();
       const user = response.data?.docs;
@@ -27,7 +28,7 @@ export function AppLayout() {
         // User completed onboarding → block onboarding page
         if (isOnBoardingPage) navigate("/dashboard");
       }
-      toastService.apiSuccess(response.message);
+      // toastService.apiSuccess(response.message);
     } catch (error: any) {
       toastService.apiError(error);
     } finally {

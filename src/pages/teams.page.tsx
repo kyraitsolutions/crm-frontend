@@ -480,7 +480,7 @@ const AddNewTeamMemberPopupDialog = ({
         transition
       "
         >
-          Add New Team Member
+          + Add New Team Member
         </Button>
       </DialogTrigger>
 

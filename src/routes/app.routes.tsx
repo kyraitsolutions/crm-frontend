@@ -39,15 +39,15 @@ export const appRoutes = createBrowserRouter([
       // },
       {
         element: <PricingPage />,
-        path: '/pricing',
+        path: "/pricing",
       },
       {
         element: <TermsPage />,
-        path: '/terms',
+        path: "/terms",
       },
       {
         element: <PrivacyPolicyPage />,
-        path: '/privacy-policy',
+        path: "/privacy-policy",
       },
       {
         element: <AppLayout />,
