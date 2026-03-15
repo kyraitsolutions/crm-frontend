@@ -70,6 +70,7 @@ import {
   Plus,
   Search,
   Settings,
+  Trash2,
   UserPlus,
   Users,
   X,
@@ -122,7 +123,6 @@ export default function LeadsCentre() {
 
   // Websocket ref
   const wsRef = useRef<WebSocketClient | null>(null);
-
   const toastMessageService = new ToastMessageService();
 
   // Stores for leads
@@ -136,6 +136,8 @@ export default function LeadsCentre() {
   const [selectedLead, setSelectedLead] = useState<ILead | null>(null);
   const [editableLead, setEditableLead] = useState<ILead | null>(null);
   const [isEditingLoading, setIsEditingLoading] = useState(false);
+
+  const [selectedLeadsId, setSelectedLeadsId] = useState<string[]>([]);
 
   const isSkeletonShow = useRef(true);
 
@@ -152,6 +154,7 @@ export default function LeadsCentre() {
     stage: { label: "All Stages", value: null },
     read: { label: "All", value: null },
   });
+
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
@@ -191,7 +194,7 @@ export default function LeadsCentre() {
         convertedLeads: 0,
         qualifiedLeads: 0,
         conversionRate: 0,
-      }
+      },
     );
 
     // calculate conversion rate
@@ -249,7 +252,7 @@ export default function LeadsCentre() {
         setIsEditing(false);
 
         toastMessageService.success(
-          response.message || "Your request was processed successfully"
+          response.message || "Your request was processed successfully",
         );
       }
     } catch (error) {
@@ -317,6 +320,26 @@ export default function LeadsCentre() {
     }
   };
 
+  const handleLeadSelection = (leadId: string) => {
+    if (selectedLeadsId.includes(leadId)) {
+      setSelectedLeadsId(selectedLeadsId.filter((id) => id !== leadId));
+    } else {
+      setSelectedLeadsId([...selectedLeadsId, leadId]);
+    }
+  };
+
+  const handleAllLeadSelection = () => {
+    if (selectedLeadsId.length === allLeads?.length) {
+      setSelectedLeadsId([]);
+    } else {
+      setSelectedLeadsId(allLeads.map((lead) => lead._id));
+    }
+  };
+
+  const handleDeleteLeadsByIds = () => {
+    console.log(selectedLeadsId);
+  };
+
   // Auto refresh on filter change
   useEffect(() => {
     getLeads();
@@ -326,7 +349,7 @@ export default function LeadsCentre() {
   // Websocket connection
   useEffect(() => {
     wsRef.current = new WebSocketClient(
-      `${WEBSOCKET_URL}?accountId=${accountId}`
+      `${WEBSOCKET_URL}?accountId=${accountId}`,
     );
 
     wsRef.current.connect((serverResponse) => {
@@ -363,10 +386,7 @@ export default function LeadsCentre() {
 
   // console.log(basicNumber);
 
-
   // console.log(selectedLead);
-
-
 
   return (
     <div className="min-h-screen bg-background">
@@ -588,33 +608,33 @@ export default function LeadsCentre() {
                 filters.assignedTo.value ||
                 filters.stage.value ||
                 filters.label.value) && (
-                  <button
-                    onClick={() =>
-                      setFilters({
-                        lead: { label: "All Leads", value: null },
-                        campaign: { label: "All Campaigns", value: null },
-                        form: { label: "All Forms", value: null },
-                        date: { label: "All Dates", value: null },
-                        status: { label: "All Status", value: null },
-                        source: { label: "All Sources", value: null },
-                        assignedTo: { label: "All Users", value: null },
-                        label: { label: "All Labels", value: null },
-                        stage: { label: "All Stages", value: null },
-                        read: { label: "All", value: null },
-                      })
-                    }
-                    className="
+                <button
+                  onClick={() =>
+                    setFilters({
+                      lead: { label: "All Leads", value: null },
+                      campaign: { label: "All Campaigns", value: null },
+                      form: { label: "All Forms", value: null },
+                      date: { label: "All Dates", value: null },
+                      status: { label: "All Status", value: null },
+                      source: { label: "All Sources", value: null },
+                      assignedTo: { label: "All Users", value: null },
+                      label: { label: "All Labels", value: null },
+                      stage: { label: "All Stages", value: null },
+                      read: { label: "All", value: null },
+                    })
+                  }
+                  className="
             flex items-center gap-1
             text-sm font-medium
             text-[#847971]
             hover:text-[#37322F]
             transition
           "
-                  >
-                    <X className="h-4 w-4" />
-                    Clear
-                  </button>
-                )}
+                >
+                  <X className="h-4 w-4" />
+                  Clear
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -692,69 +712,51 @@ export default function LeadsCentre() {
 
         <div className="rounded-lg border bg-card shadow-sm">
           <div className="flex items-center gap-4 border-b bg-muted/30 px-4 py-3">
+            {selectedLeadsId?.length > 0 && (
+              <div>
+                <Button
+                  className="bg-red-500 rounded-xl px-2! hover:bg-red-600"
+                  onClick={handleDeleteLeadsByIds}
+                >
+                  <Trash2 />
+                </Button>
+              </div>
+            )}
+
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedStageFilter.label === "All"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedStageFilter({ label: "All", value: "" })
-            // }
+              // className={
+              //   selectedStageFilter.label === "All"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedStageFilter({ label: "All", value: "" })
+              // }
             >
               All
             </Button>
+
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedReadFilter.label === "Unread"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedReadFilter(
-            //     selectedReadFilter.label === "Unread"
-            //       ? { label: "All", value: "all" }
-            //       : { label: "Unread", value: "unread" }
-            //   )
-            // }
+              // className={
+              //   selectedReadFilter.label === "Unread"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedReadFilter(
+              //     selectedReadFilter.label === "Unread"
+              //       ? { label: "All", value: "all" }
+              //       : { label: "Unread", value: "unread" }
+              //   )
+              // }
             >
               Unread
             </Button>
-            {/* {uniqueStages.map((stage) => {
-              const count = filteredLeads.filter(
-                (l) => l.stage === stage
-              ).length;
-              return (
-                <div key={stage} className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={
-                      selectedStageFilter === stage
-                        ? "bg-accent text-accent-foreground"
-                        : ""
-                    }
-                    onClick={() =>
-                      setSelectedStageFilter(
-                        selectedStageFilter === stage ? "All" : stage
-                      )
-                    }
-                  >
-                    {stage}
-                  </Button>
-                  <Badge variant="secondary" className="font-medium">
-                    {count}
-                  </Badge>
-                  {stage !== "Converted" && (
-                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </div>
-              );
-            })} */}
+
             <div className="ml-auto">
               <Button variant="ghost" size="icon">
                 <MoreVertical className="h-4 w-4" />
@@ -766,7 +768,10 @@ export default function LeadsCentre() {
             <TableHeader>
               <TableRow className="border-b border-border/40">
                 <TableHead className="w-12">
-                  <Checkbox />
+                  <Checkbox
+                    checked={selectedLeadsId?.length === allLeads?.length}
+                    onCheckedChange={handleAllLeadSelection}
+                  />
                 </TableHead>
 
                 {[
@@ -816,7 +821,12 @@ export default function LeadsCentre() {
                   "
                   >
                     <TableCell onClick={(e) => e.stopPropagation()}>
-                      <Checkbox />
+                      <Checkbox
+                        checked={selectedLeadsId?.includes(lead._id)}
+                        onCheckedChange={() => {
+                          handleLeadSelection(lead._id);
+                        }}
+                      />
                     </TableCell>
 
                     <TableCell className="text-sm ">
@@ -996,7 +1006,7 @@ export default function LeadsCentre() {
                 "
                       onChange={(e) =>
                         setEditableLead((prev) =>
-                          prev ? { ...prev, email: e.target.value } : prev
+                          prev ? { ...prev, email: e.target.value } : prev,
                         )
                       }
                     />
@@ -1028,7 +1038,7 @@ export default function LeadsCentre() {
                 "
                       onChange={(e) =>
                         setEditableLead((prev) =>
-                          prev ? { ...prev, phone: e.target.value } : prev
+                          prev ? { ...prev, phone: e.target.value } : prev,
                         )
                       }
                     />
@@ -1063,7 +1073,7 @@ export default function LeadsCentre() {
                       value={editableLead?.stage}
                       onValueChange={(v) =>
                         setEditableLead((prev) =>
-                          prev ? { ...prev, stage: v } : prev
+                          prev ? { ...prev, stage: v } : prev,
                         )
                       }
                     >
@@ -1101,7 +1111,7 @@ export default function LeadsCentre() {
                       value={editableLead?.status}
                       onValueChange={(v) =>
                         setEditableLead((prev) =>
-                          prev ? { ...prev, status: v } : prev
+                          prev ? { ...prev, status: v } : prev,
                         )
                       }
                     >
@@ -1166,7 +1176,7 @@ export default function LeadsCentre() {
 
               <div className="grid grid-cols-2 gap-6">
                 {editableLead?.customFields &&
-                  Object.keys(editableLead.customFields).length > 0 ? (
+                Object.keys(editableLead.customFields).length > 0 ? (
                   Object.entries(editableLead.customFields).map(
                     ([key, value]) => (
                       <div key={key} className="flex flex-col gap-1">
@@ -1188,13 +1198,13 @@ export default function LeadsCentre() {
                               setEditableLead((prev) =>
                                 prev
                                   ? {
-                                    ...prev,
-                                    customFields: {
-                                      ...(prev.customFields ?? {}),
-                                      [key]: e.target.value,
-                                    },
-                                  }
-                                  : prev
+                                      ...prev,
+                                      customFields: {
+                                        ...(prev.customFields ?? {}),
+                                        [key]: e.target.value,
+                                      },
+                                    }
+                                  : prev,
                               )
                             }
                           />
@@ -1202,7 +1212,7 @@ export default function LeadsCentre() {
                           <p className="text-sm text-[#37322F]">{value}</p>
                         )}
                       </div>
-                    )
+                    ),
                   )
                 ) : (
                   <p className="text-sm text-[#847971]">
@@ -1214,7 +1224,9 @@ export default function LeadsCentre() {
 
             {/* NOTES */}
             <section>
-              <h3 className="text-sm font-medium text-[#37322F] mb-4">Timeline</h3>
+              <h3 className="text-sm font-medium text-[#37322F] mb-4">
+                Timeline
+              </h3>
 
               <div className="max-h-96 py-4 overflow-auto hide-scrollbar">
                 <div className="relative space-y-6">
@@ -1247,10 +1259,10 @@ export default function LeadsCentre() {
                       setEditableLead((prev) =>
                         prev
                           ? {
-                            ...prev,
-                            notes: [...(prev.notes || []), activity],
-                          }
-                          : prev
+                              ...prev,
+                              notes: [...(prev.notes || []), activity],
+                            }
+                          : prev,
                       );
                       handleSave(activity);
                     }}
@@ -1309,47 +1321,49 @@ const Timeline = ({ items }: { items: TimelineItem[] }) => {
   //   );
   return (
     <div className="space-y-8">
-      {items && items.map((item) => {
-        const Icon =
-          timelineConfig[item.activitySource as keyof typeof timelineConfig]
-            .icon;
+      {items &&
+        items
+          .map((item) => {
+            const Icon =
+              timelineConfig[item.activitySource as keyof typeof timelineConfig]
+                .icon;
 
-        return (
-          <div key={item.id} className="relative flex gap-4">
-            {/* icon */}
-            <div
-              className={`
+            return (
+              <div key={item.id} className="relative flex gap-4">
+                {/* icon */}
+                <div
+                  className={`
                 relative z-10
                 flex h-9 w-9 items-center justify-center
                 rounded-full text-white
-                ${timelineConfig[
-                  item.activitySource as keyof typeof timelineConfig
-                ]?.bg
+                ${
+                  timelineConfig[
+                    item.activitySource as keyof typeof timelineConfig
+                  ]?.bg
                 }
               `}
-            >
-              <Icon size={16} />
-            </div>
+                >
+                  <Icon size={16} />
+                </div>
 
-            {/* content */}
-            <div className="flex-1">
-              <p className="text-xs text-[#847971] mb-1">
-                {formatDate(item.createdAt)} {formatTime(item.createdAt)}
-              </p>
+                {/* content */}
+                <div className="flex-1">
+                  <p className="text-xs text-[#847971] mb-1">
+                    {formatDate(item.createdAt)} {formatTime(item.createdAt)}
+                  </p>
 
-              {/* <p className="text-sm font-medium text-[#37322F]">{item.}</p> */}
+                  {/* <p className="text-sm font-medium text-[#37322F]">{item.}</p> */}
 
-              {item.message && (
-                <p className="text-sm text-[#847971] mt-1">{item.message}</p>
-              )}
-            </div>
-          </div>
-        );
-      }).reverse()}
+                  {item.message && (
+                    <p className="text-sm text-[#847971] mt-1">
+                      {item.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })
+          .reverse()}
     </div>
   );
 };
-
-
-
-

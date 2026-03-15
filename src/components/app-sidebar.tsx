@@ -14,12 +14,16 @@ import { House } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { NavMain } from "./nav-main";
-import { SidebarFooter } from "./ui/sidebar";
 import { NavUser } from "./nav-user";
+import { SidebarFooter } from "./ui/sidebar";
 
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
-  const { user: authUser, accountSelected } = useAuthStore((state) => state);
+  const {
+    user: authUser,
+    accountSelected,
+    accountId,
+  } = useAuthStore((state) => state);
 
   const data = {
     navMain: [
@@ -31,9 +35,7 @@ export function AppSidebar() {
 
       {
         title: "Dashboard",
-        url: DASHBOARD_PATH.getAccountPath(
-          String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
-        ),
+        url: DASHBOARD_PATH.getAccountPath(String(accountId)),
 
         icon: IconDashboard,
       },
@@ -45,16 +47,12 @@ export function AppSidebar() {
       // },
       {
         title: "Leads Centre",
-        url: `${DASHBOARD_PATH.getAccountPath(
-          String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
-        )}/leads`,
+        url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/leads`,
         icon: IconUsers,
       },
       {
         title: "Chat bot",
-        url: `${DASHBOARD_PATH.getAccountPath(
-          String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
-        )}/chatbot`,
+        url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`,
         icon: IconMessageCircle,
       },
       {
@@ -67,7 +65,7 @@ export function AppSidebar() {
       {
         title: "Email Campaigns",
         url: `${DASHBOARD_PATH.getAccountPath(
-          String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
+          String(accountId),
         )}/email-campaigns`,
         icon: IconFileText,
       },
@@ -90,7 +88,8 @@ export function AppSidebar() {
       {/* Logo */}
       <div className="flex items-center justify-between px-4 h-16 border-b">
         {!collapsed && (
-          <Link to="/"
+          <Link
+            to="/"
             className={`font-semibold  text-lg text-[#16A34A] whitespace-nowrap overflow-x-hidden`}
           >
             Kyra AI CRM
@@ -143,14 +142,14 @@ export function AppSidebar() {
           </div>
         )} */}
         <SidebarFooter>
-        <NavUser
-          user={{
-            avatar: authUser?.profilePicture || "",
-            name: authUser?.firstName || "",
-            email: authUser?.email || "",
-          }}
-        />
-      </SidebarFooter>
+          <NavUser
+            user={{
+              avatar: authUser?.profilePicture || "",
+              name: authUser?.firstName || "",
+              email: authUser?.email || "",
+            }}
+          />
+        </SidebarFooter>
       </div>
     </aside>
   );
@@ -362,7 +361,7 @@ export function AppSidebar() {
 //         {/* <NavDocuments items={data.documents} /> */}
 //         <NavSecondary items={data.navSecondary} className="mt-auto" />
 //       </SidebarContent>
-      
+
 //     </Sidebar>
 //   );
 // }

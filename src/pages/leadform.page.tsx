@@ -261,8 +261,8 @@ export function LeadFormPage() {
         "
             >
               {/* Icon */}
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary">
-                <Plus className="h-8 w-8 text-[#37322F]" />
+              <div className="flex h-16 w-16 border-2 border-dotted items-center justify-center rounded-full bg-primary">
+                <Plus className="h-8 w-8 text-white" />
               </div>
 
               {/* Text */}
@@ -283,18 +283,17 @@ export function LeadFormPage() {
                   to={`${DASHBOARD_PATH?.getAccountPath(
                     String(accountId),
                   )}/lead-forms/create`}
-                  className="
-            inline-flex items-center gap-2
-            rounded-[99px]
-            bg-primary
-            px-5 py-2
-            text-sm font-medium text-[#FBFAF9]
-            shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
-            transition
-            hover:opacity-90
-          "
+                  className="inline-flex items-center gap-2
+                              rounded-[99px]
+                              bg-primary
+                              px-5 py-2
+                              text-sm font-medium text-[#FBFAF9]
+                              shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
+                              transition
+                              hover:opacity-90
+                            "
                 >
-                  Create First Lead Form
+                  + Create First Lead Form
                 </Link>
               )}
             </div>

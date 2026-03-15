@@ -121,6 +121,7 @@ export const DashboardPage = () => {
 
       authManager.setAccountSelected(true);
       authManager.setAccountName(accounts[index]?.accountName);
+      authManager.setAccountId(accounts[index]?.id);
     }
 
     CookieUtils.setItem(COOKIES_STORAGE.accountId, accounts[index]?.id);
