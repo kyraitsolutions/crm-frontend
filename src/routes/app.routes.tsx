@@ -17,7 +17,8 @@ import PrivacyPolicyPage from "@/pages/privacy.page";
 import PricingPage from "@/pages/pricing.page";
 // import ProductPage from "@/pages/product.page";
 // import About from "@/pages/about.page";
-import { emailMarketingRoutes } from "./emailMarketing.routes";
+import { broadcastRoutes } from "./broadcast.routes";
+import { contactRoutes } from "./contact.routes";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -56,7 +57,8 @@ export const appRoutes = createBrowserRouter([
           ...chatBotRoutes,
           ...formRoutes,
           ...leadRoutes,
-          ...emailMarketingRoutes,
+          ...broadcastRoutes,
+          ...contactRoutes,
           {
             path: "/on-boarding",
             element: <OnBoardingPage />,

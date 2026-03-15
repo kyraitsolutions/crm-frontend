@@ -6,6 +6,7 @@ import { useState } from "react"
 import { Edit3, Plus, Sparkles } from "lucide-react"
 import { useParams } from "react-router-dom"
 import { EmailService } from "@/services/email.service"
+import { Method, TemplateCategory, type EmailTemplateData } from "@/types/email.type"
 
 const templates = [
     {
@@ -34,21 +35,28 @@ const templates = [
     },
 ]
 
+
 export default function Templates() {
     const { accountId } = useParams();
     const emailService = new EmailService();
     const [open, setOpen] = useState(false);
+    const [mode, setMode] = useState<Method|null>(null)
     const [templateData,
-        // setTemplateData
-    ] = useState<any>({
+        setTemplateData
+    ] = useState<EmailTemplateData>({
         name: "New Template",
         subject: "Welcome to our service",
-        content: "<h1>Hello {{name}}</h1>"
+        html: "<h1>Hello {{name}}</h1>",
+        variables:["name"],
+        category:TemplateCategory.NOTIFICATION,
     });
 
     const createTemplate = async () => {
+
+        console.log("Mode", mode);
+        const payload={...templateData,generatedBy:mode??undefined}
         try {
-            const response = await emailService.createTemplate(String(accountId), templateData);
+            const response = await emailService.createTemplate(String(accountId), payload);
             console.log("Template created:", response);
         } catch (error) {
             console.log("Error creating template:", error);
@@ -82,14 +90,39 @@ export default function Templates() {
                 ))}
             </div>
 
-            <CreateTemplate open={open} createTemplate={() => createTemplate()} onClose={() => setOpen(false)} />
+            <CreateTemplate open={open} createTemplate={() => createTemplate()} onClose={() => setOpen(false)} mode={mode} setMode={setMode} setTemplateData={setTemplateData} />
         </div>
     )
 }
 
-function CreateTemplate({ open, createTemplate, onClose }: any) {
-    const [mode, setMode] = useState<"ai" | "manual" | null>(null)
+function CreateTemplate({ open, createTemplate, onClose, mode,setMode,setTemplateData }: any) {
+     const [aiPrompt, setAiPrompt] = useState("");
+    const handleManualChange = (field: string, value: any) => {
+        setTemplateData((prev: any) => ({
+            ...prev,
+            [field]: value
+        }));
+    };
 
+    const handleGenerate = () => {
+        console.log("AI Prompt",aiPrompt);
+        // setTemplateData((prev: any) => ({
+        //     ...prev,
+        //     generatedBy: Method.AI,
+        //     aiPrompt: aiPrompt
+        // }));
+
+        // createTemplate();
+    };
+
+    const handleSaveManual = () => {
+        setTemplateData((prev: any) => ({
+            ...prev,
+            generatedBy: Method.USER
+        }));
+
+        createTemplate();
+    };
     return (
         <Dialog open={open} onOpenChange={() => { setMode(null); onClose() }}>
             <DialogContent className="max-w-xl rounded-md">
@@ -102,7 +135,7 @@ function CreateTemplate({ open, createTemplate, onClose }: any) {
                 {!mode && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
                         <Card
-                            onClick={() => setMode("ai")}
+                            onClick={() => setMode(Method.AI)}
                             className="cursor-pointer hover:shadow-lg transition border-dashed"
                         >
                             <CardContent className="p-6 text-center space-y-3">
@@ -115,7 +148,7 @@ function CreateTemplate({ open, createTemplate, onClose }: any) {
                         </Card>
 
                         <Card
-                            onClick={() => setMode("manual")}
+                            onClick={() => setMode(Method.USER)}
                             className="cursor-pointer hover:shadow-lg transition"
                         >
                             <CardContent className="p-6 text-center space-y-3">
@@ -129,10 +162,12 @@ function CreateTemplate({ open, createTemplate, onClose }: any) {
                     </div>
                 )}
 
-                {mode === "ai" && (
+                {mode === Method.AI && (
                     <div className="mt-6 space-y-4">
                         <h3 className="font-medium">Describe your email</h3>
                         <textarea
+                            value={aiPrompt}
+                            onChange={(e) => setAiPrompt(e.target.value)}
                             placeholder="Write a follow-up email for hotel website leads..."
                             className="w-full h-32 rounded-md border p-3 text-sm"
                         />
@@ -140,33 +175,52 @@ function CreateTemplate({ open, createTemplate, onClose }: any) {
                             <Button variant="outline" onClick={() => setMode(null)}>
                                 Back
                             </Button>
-                            <Button>
+                            <Button  onClick={handleGenerate}>
                                 Generate Template
                             </Button>
                         </div>
                     </div>
                 )}
 
-                {mode === "manual" && (
+                {mode === Method.USER && (
                     <div className="mt-6 space-y-4">
                         <h3 className="font-medium">Manual Template</h3>
                         <input
                             placeholder="Template name"
                             className="w-full rounded-md border p-2 text-sm"
+                            onChange={(e) => handleManualChange("name", e.target.value)}
                         />
+
                         <input
                             placeholder="Email subject"
                             className="w-full rounded-md border p-2 text-sm"
+                            onChange={(e) => handleManualChange("subject", e.target.value)}
                         />
+
                         <textarea
                             placeholder="Write your email content here"
                             className="w-full h-32 rounded-md border p-3 text-sm"
+                            onChange={(e) => handleManualChange("html", e.target.value)}
                         />
+
+                        {/* Category Dropdown */}
+                        <select
+                            className="w-full rounded-md border p-2 text-sm"
+                            onChange={(e) => handleManualChange("category", e.target.value)}
+                        >
+                            <option value="">Select Category</option>
+                            {Object.values(TemplateCategory).map((cat) => (
+                                <option key={cat} value={cat} className="capitalize">
+                                    {cat}
+                                </option>
+                            ))}
+                        </select>
+
                         <div className="flex justify-end gap-2">
                             <Button variant="outline" onClick={() => setMode(null)}>
                                 Back
                             </Button>
-                            <Button onClick={createTemplate}>
+                            <Button onClick={handleSaveManual}>
                                 Save Template
                             </Button>
                         </div>

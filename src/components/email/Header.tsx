@@ -1,15 +1,21 @@
 import { NavLink } from "react-router-dom";
 
-import { Plus } from "lucide-react";
+import { Icon, Plus } from "lucide-react";
 import { Button } from "../ui/button";
+import { MdCollections, MdContacts, MdInsights, MdOutlineCampaign, MdWbAuto } from "react-icons/md";
+
+interface NavItem{
+    label:string,
+    path:string,
+    icon:React.ElementType
+}
 const Header = () => {
 
-    const NAV_ITEMS = [
-        { label: "Dashboard", path: "" },
-        { label: "Subscribers", path: "subscribers" },
-        { label: "Campaigns", path: "campaigns" },
-        { label: "Templates", path: "templates" },
-        { label: "Automations", path: "automations" },
+    const NAV_ITEMS:NavItem[] = [
+        { label: "Insights", path: "",icon:MdInsights },
+        { label: "Campaigns", path: "campaigns",icon:MdOutlineCampaign },
+        { label: "Templates", path: "templates",icon:MdCollections },
+        { label: "Automations", path: "automations",icon:MdWbAuto },
     ];
 
     return (
@@ -17,26 +23,28 @@ const Header = () => {
             <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
 
                 <div className="flex items-center gap-5">
-                    {NAV_ITEMS.map((item) => (
+                    {NAV_ITEMS.map((item) => {
+                        const Icon=item.icon
+                        return(
                         <NavLink
                             key={item.path}
                             to={item.path}
                             className={({ isActive }) =>
-                                `text-sm font-medium transition-colors 
+                                `text-sm font-medium  flex  items-center gap-1 transition-colors 
                             ${isActive
                                     ? "text-primary border-b-2 border-primary"
-                                    : "text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-border"}`
+                                    : "text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-trasparent"}`
                             }
                         >
-                            {item.label}
+                            <Icon/>{item.label}
                         </NavLink>
-                    ))}
+                    )})}
                 </div>
 
 
-                <div className="ml-auto flex items-center gap-2">
+                {/* <div className="ml-auto flex items-center gap-2">
                     <Button className=""><Plus size={20} color="#ffffff" /> Create New Campaign</Button>
-                </div>
+                </div> */}
             </div>
         </header>
     )

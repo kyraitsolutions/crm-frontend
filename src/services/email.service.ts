@@ -1,5 +1,6 @@
 import type { ApiResponse } from "@/types";
 import { ApiService } from "./api.service";
+import type { EmailTemplateData } from "@/types/email.type";
 
 interface CreateAccountPayload {
     accountName: string;
@@ -37,7 +38,8 @@ export class EmailService extends ApiService {
         return await this.delete(`/account/${accountId}/email/subscriber/${subscriberId}`);
     }
 
-    async createTemplate(accountId:string,templateData:any):Promise<any|null>{
+    async createTemplate(accountId:string,templateData:EmailTemplateData):Promise<any|null>{
+        console.log("Template data",templateData);
         return await this.post(`/account/${accountId}/email/template`, templateData);
     }
 }

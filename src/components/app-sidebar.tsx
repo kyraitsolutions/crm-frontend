@@ -16,11 +16,13 @@ import { Link } from "react-router-dom";
 import { NavMain } from "./nav-main";
 import { SidebarFooter } from "./ui/sidebar";
 import { NavUser } from "./nav-user";
+import { MdContacts, MdEmail, MdOutlineCampaign, MdOutlineContacts, MdWhatsapp } from "react-icons/md";
 
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const { user: authUser, accountSelected } = useAuthStore((state) => state);
 
+  const accountId = String(CookieUtils.getItem(COOKIES_STORAGE.accountId));
   const data = {
     navMain: [
       {
@@ -65,13 +67,29 @@ export function AppSidebar() {
         icon: IconFileText,
       },
       {
-        title: "Email Campaigns",
+        title: "Broadcast",
         url: `${DASHBOARD_PATH.getAccountPath(
           String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
-        )}/email-campaigns`,
-        icon: IconFileText,
+        )}/broadcast`,
+        icon: MdOutlineCampaign,
+        children: [
+        {
+          title: "Email",
+          url: `${DASHBOARD_PATH.getAccountPath(accountId)}/broadcast/email`,
+          icon:MdEmail
+        },
+        // {
+        //   title: "WhatsApp",
+        //   url: `${DASHBOARD_PATH.getAccountPath(accountId)}/broadcast/whatsapp`,
+        //   icon:MdWhatsapp
+        // },
+      ],
       },
-
+      {
+        title: "Contacts",
+        url: `${DASHBOARD_PATH.getAccountPath(accountId)}/contacts`,
+        icon: MdOutlineContacts,
+      },
       {
         title: "Team",
         url: "/dashboard/teams",

@@ -1,11 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { AuthStoreManager, useAuthStore } from "@/stores";
+import { useState } from "react";
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
 
 interface NavItem {
   title: string;
   url: string;
   icon: React.ElementType;
+  children?:{
+    title:string,
+    url:string,
+    icon:React.ElementType
+  }[]
 }
 
 interface NavMainProps {
@@ -18,6 +25,7 @@ export function NavMain({ items, show, collapsed = false }: NavMainProps) {
   const { pathname } = useLocation();
   const { user: authUser } = useAuthStore((state) => state);
   const authManager = new AuthStoreManager();
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
   const filteredItems = items.filter((item) => {
     if (show) {
@@ -27,17 +35,26 @@ export function NavMain({ items, show, collapsed = false }: NavMainProps) {
         "Chat bot",
         "Lead Forms",
         "Leads Centre",
-        "Email Campaigns",
+        "Broadcast",
+        "Contacts"
       ].includes(item.title);
     }
 
     return ["Home", "Accounts", "Team", "Settings"].includes(item.title);
   });
 
+  const toggleMenu = (title: string) => {
+  setOpenMenus((prev) => ({
+    ...prev,
+    [title]: !prev[title],
+  }));
+};
+
   return (
     <nav className="flex-1 px-2 py-4 space-y-1">
       {filteredItems.map((item) => {
         const Icon = item.icon;
+        const isOpen = openMenus[item.title];
 
         const active =
           pathname.split("/").slice(-1)[0] ===
@@ -60,6 +77,24 @@ export function NavMain({ items, show, collapsed = false }: NavMainProps) {
         };
 
         return (
+          <>
+          {item.children ? (
+          <button
+            onClick={() => toggleMenu(item.title)}
+            className={` w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100`}
+          >
+            <div className="flex items-center gap-3">
+              {Icon && <Icon size={20} />}
+              {!collapsed && <span>{item.title}</span>}
+            </div>
+
+            {!collapsed && (
+              <span className="text-md">
+                {isOpen ? <MdOutlineKeyboardArrowUp/> : <MdOutlineKeyboardArrowDown/> }
+              </span>
+            )}
+          </button>
+        ):
           <Link
             key={item.title}
             to={item.url}
@@ -71,7 +106,7 @@ export function NavMain({ items, show, collapsed = false }: NavMainProps) {
                 : "text-gray-600 hover:bg-gray-100",
             )}
           >
-            <Icon size={20} />
+            <Icon size={16} />
 
             {!collapsed && (
               <span className="inline-block whitespace-nowrap overflow-x-hidden">
@@ -83,8 +118,36 @@ export function NavMain({ items, show, collapsed = false }: NavMainProps) {
               <span className="absolute right-2 w-1.5 h-6 rounded-full bg-[#16A34A]" />
             )}
           </Link>
+      }
+          {item.children &&  isOpen && !collapsed && (
+          <div className="ml-8 mt-1 space-y-1">
+            {item.children.map((child) => {
+              const childActive = pathname === child.url;
+              const ChildIcon=child.icon
+
+              return (
+                <Link
+                  key={child.title}
+                  to={child.url}
+                  className={cn(
+                    "block px-3 py-2 text-sm items-center rounded-lg gap-1",
+                    childActive
+                      ? "bg-[#16A34A]/10 flex text-[#16A34A]"
+                      : "text-gray-600 flex hover:bg-gray-100"
+                  )}
+                >
+                  <ChildIcon size={16} />{child.title}
+                </Link>
+              );
+            })}
+          </div>
+        )}
+          
+          </>
+
         );
       })}
+      
     </nav>
   );
 }
