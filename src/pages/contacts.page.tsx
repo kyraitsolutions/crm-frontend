@@ -7,7 +7,7 @@ import { formatDate } from "@/utils/date-utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ChevronDown, Filter, Plus, Search, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const Contacts = () => {
     const { accountId } = useParams();
@@ -39,6 +39,18 @@ const Contacts = () => {
         }
     }
 
+    const handleConnectGmail = () => {
+        const clientId = "YOUR_GOOGLE_CLIENT_ID";
+        const redirectUri = "http://localhost:5000/auth/google/callback";
+
+        const scope = encodeURIComponent(
+            "https://www.googleapis.com/auth/gmail.readonly"
+        );
+
+        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+
+        window.location.href = url;
+    };
     useEffect(() => {
         fetchSubscribers()
     }, [])
@@ -50,6 +62,9 @@ const Contacts = () => {
     } as const;
     return (
         <div className="p-6">
+
+            <Link to="http://localhost:3000/api/auth/google/email">Connect with google</Link>
+
             <div className="flex justify-between items-center mb-3">
                 <h2 className="text-xl font-semibold">Contacts</h2>
 

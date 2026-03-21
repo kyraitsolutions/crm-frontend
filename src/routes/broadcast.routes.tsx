@@ -4,10 +4,11 @@ import EmailMarketing from "@/pages/EmailMarketing";
 import WhatsappMarketing from "@/pages/WhatsappMarketing"
 import Automations from "@/pages/EmailMarketing/automations.page";
 import Campaign from "@/pages/EmailMarketing/campaign.page";
-import Templates from "@/pages/EmailMarketing/template.page";
+import Templates from "@/pages/MessageTemplates";
 import { type RouteObject } from "react-router-dom";
 import { EmailMarketingLayout } from "@/layouts/emailMarketing.layout";
 import { WhatsappMarketingLayout } from "@/layouts/whatsappMarketing.layout";
+import { TemplateLayout } from "@/layouts/templates.layout";
 export const broadcastRoutes: RouteObject[] = [
     {
         path: `${DASHBOARD_PATH.ROOT}/account/:accountId/broadcast`,
@@ -20,7 +21,6 @@ export const broadcastRoutes: RouteObject[] = [
       children: [
         { index: true, element: <EmailMarketing /> },
         { path: "campaigns", element: <Campaign /> },
-        { path: "templates", element: <Templates /> },
         { path: "automations", element: <Automations /> },
       ]
     },
@@ -31,8 +31,15 @@ export const broadcastRoutes: RouteObject[] = [
       children: [
         { index: true, element: <WhatsappMarketing /> },
         { path: "campaigns", element: <Campaign /> },
-        { path: "templates", element: <Templates /> },
         { path: "automations", element: <Automations /> },
+      ]
+    },
+    {
+      path: "templates",
+      element: <TemplateLayout />,
+      children: [
+        { index: true, element: <Templates /> },
+        { path: "mytemplates", element: <Templates /> },
       ]
     }
 

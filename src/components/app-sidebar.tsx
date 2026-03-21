@@ -10,7 +10,7 @@ import {
   IconMessageCircle,
   IconUsers,
 } from "@tabler/icons-react";
-import { House } from "lucide-react";
+import { BookTemplateIcon, House } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { NavMain } from "./nav-main";
@@ -75,11 +75,16 @@ export function AppSidebar() {
           url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/email`,
           icon:MdEmail
         },
-        // {
-        //   title: "WhatsApp",
-        //   url: `${DASHBOARD_PATH.getAccountPath(accountId)}/broadcast/whatsapp`,
-        //   icon:MdWhatsapp
-        // },
+        {
+          title: "WhatsApp",
+          url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/whatsapp`,
+          icon:MdWhatsapp
+        },
+        {
+          title: "Templates",
+          url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/templates`,
+          icon:BookTemplateIcon
+        },
       ],
       },
       {

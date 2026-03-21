@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import ReactFlow, {
   addEdge,
   Background,
+  BackgroundVariant,
   Controls,
   useEdgesState,
   useNodesState,
@@ -14,15 +15,29 @@ import { useAuthStore } from "@/stores";
 import type { ApiError } from "@/types";
 import {
   ArrowLeft,
+  // BarChart3,
+  // Bot,
+  // ClipboardCheck,
+  // Clock,
+  // Database,
+  // FileText,
+  // Filter,
+  // Link,
   ListChecks,
   Mail,
+  // MessageCircle,
   MessageSquare,
   Phone,
+  // Send,
+  // Settings,
+  // Tags,
   User,
+  // Zap,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Connection, Edge } from "reactflow";
 import { nodeTypes } from "./nodes";
+import { MdAdd, MdClose } from "react-icons/md";
 
 export const mandatoryNodes = [
   {
@@ -175,6 +190,8 @@ export default function ChatbotFlowEditor() {
   const authUser = useAuthStore((state) => state.user);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  const [fieldOpen, setFieldOpen] = useState(false);
 
   const [publishLoading, setPublishLoading] = useState(false);
 
@@ -357,14 +374,14 @@ export default function ChatbotFlowEditor() {
       nds.map((node) =>
         node.id === id
           ? {
-              ...node,
-              data: {
-                ...node.data,
-                elements: newElements,
-                deleteNode,
-                updateNode,
-              },
-            }
+            ...node,
+            data: {
+              ...node.data,
+              elements: newElements,
+              deleteNode,
+              updateNode,
+            },
+          }
           : node
       )
     );
@@ -375,12 +392,12 @@ export default function ChatbotFlowEditor() {
       nodes.map((node) =>
         node.id === id
           ? {
-              ...node,
-              data: {
-                ...node.data,
-                label,
-              },
-            }
+            ...node,
+            data: {
+              ...node.data,
+              label,
+            },
+          }
           : node
       )
     );
@@ -504,72 +521,33 @@ export default function ChatbotFlowEditor() {
     },
 
     // 🔹 Common CRM Chatbot Builder Fields
-    // { name: "Bot Personality", icon: <Bot className="w-4 h-4 text-primary" /> },
-    // { name: "Integrations", icon: <Link className="w-4 h-4 text-primary" /> },
-    // { name: "Knowledge Base", icon: <Database className="w-4 h-4 text-primary" /> },
-    // { name: "Automation Flow", icon: <Zap className="w-4 h-4 text-primary" /> },
-    // { name: "Follow-up Reminder", icon: <Clock className="w-4 h-4 text-primary" /> },
-    // { name: "Custom Forms", icon: <FileText className="w-4 h-4 text-primary" /> },
-    // { name: "Lead Tagging", icon: <Tags className="w-4 h-4 text-primary" /> },
-    // { name: "Qualification Questions", icon: <ClipboardCheck className="w-4 h-4 text-primary" /> },
-    // { name: "Bot Settings", icon: <Settings className="w-4 h-4 text-primary" /> },
-    // { name: "Conditional Logic", icon: <Filter className="w-4 h-4 text-primary" /> },
-    // { name: "Analytics & Reports", icon: <BarChart3 className="w-4 h-4 text-primary" /> },
-    // { name: "Live Chat Handoff", icon: <MessageCircle className="w-4 h-4 text-primary" /> },
-    // { name: "Auto Reply Templates", icon: <Send className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Bot Personality", icon: <Bot className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Integrations", icon: <Link className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Knowledge Base", icon: <Database className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Automation Flow", icon: <Zap className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Follow-up Reminder", icon: <Clock className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Custom Forms", icon: <FileText className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Lead Tagging", icon: <Tags className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Qualification Questions", icon: <ClipboardCheck className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Bot Settings", icon: <Settings className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Conditional Logic", icon: <Filter className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Analytics & Reports", icon: <BarChart3 className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Live Chat Handoff", icon: <MessageCircle className="w-4 h-4 text-primary" /> },
+    // { value: "text", label: "Auto Reply Templates", icon: <Send className="w-4 h-4 text-primary" /> },
   ];
 
   return (
-    <div className="w-full grid grid-cols-8 gap-4 p-4">
-      {/* LEFT: Flow Builder */}
-      <div className="col-span-6 flex flex-col gap-3">
-        {/* Header Buttons */}
-        <div className="flex justify-between items-center mb-2">
-          <button
-            onClick={() => navigate(-1)}
-            className="
-          bg-[rgba(55,50,47,0.08)]
-          text-[#37322F]
-          flex justify-center items-center
-          h-8 w-10
-          rounded-md
-          shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
-          hover:bg-[rgba(55,50,47,0.12)]
-          transition
-        "
-          >
-            <ArrowLeft size={16} />
-          </button>
-
-          <button
-            onClick={publishChanges}
-            className="
-          bg-primary
-          text-[#FBFAF9]
-          px-4 py-1
-          rounded-[99px]
-          flex items-center gap-2
-          shadow-[0px_2px_4px_rgba(55,50,47,0.12)]
-          hover:bg-primary
-          transition cursor-pointer
-        "
-          >
-            Publish
-            {publishLoading && (
-              <div className="h-4 w-4 border-t-2 border-t-white rounded-full animate-spin" />
-            )}
-          </button>
-        </div>
+    <div className="w-full relative gap-4 p-4">
 
         {/* React Flow Area */}
         <div
           className="
-        h-[80vh]
-        rounded-xl
-        border border-[rgba(50,45,43,0.12)]
-        bg-[#FBFAF9]
-        overflow-hidden
-      "
+              h-[93dvh]
+              
+              absolute top-0 left-0 w-full
+              bg-[#FBFAF9]
+              overflow-hidden
+            "
         >
           <ReactFlow
             nodes={nodes}
@@ -584,52 +562,97 @@ export default function ChatbotFlowEditor() {
             <Controls
               showFitView
               className="
-            bg-gray-100!
-            rounded-md
-          "
+              bg-gray-100!
+              rounded-md
+            "
             />
-            <Background className="bg-[#f7f1f1c8]" />
+            <Background variant={BackgroundVariant.Lines} gap={100} size={2} className="bg-[#e2e2e2]" />
+            <div className="flex z-50 w-full h-10 justify-between! items-center px-5 bg-gray-100! absolute">
+              <button
+                onClick={() => navigate(-1)}
+                className="
+                  cursor-pointer
+                      text-[#37322F]
+                      flex justify-center items-center
+                      rounded-md
+                      gap-1
+                      transition
+                    "
+              >
+                <ArrowLeft size={16} /> <span className="text-sm">Back</span>
+              </button>
+              <div className="flex items-center gap-4">
+
+                <button
+                  onClick={publishChanges}
+                  className="
+                bg-primary
+                text-[#FBFAF9]
+                px-4 py-1
+                text-sm
+                rounded-[99px]
+                flex items-center gap-2
+                hover:bg-primary
+                transition cursor-pointer
+              "
+                >
+                  Publish
+                  {publishLoading && (
+                    <div className="h-4 w-4 border-t-2 border-t-white rounded-full animate-spin" />
+                  )}
+                </button>
+                {!fieldOpen?<button onClick={() => setFieldOpen(!fieldOpen)} className="flex cursor-pointer bg-primary  p-2 rounded-full justify-end text-muted-foreground">
+                  <MdAdd size={20}/>
+                </button>
+              :<button onClick={() => setFieldOpen(!fieldOpen)} className="flex cursor-pointer bg-primary  p-2 rounded-full justify-end text-muted-foreground">
+                  <MdClose size={20}/>
+                </button>
+}
+              </div>
+            </div>
+
+
           </ReactFlow>
         </div>
-      </div>
 
       {/* RIGHT: Predefined Fields */}
-      <div className="col-span-2 flex flex-col gap-4">
+      {fieldOpen && <div className="z-10 absolute right-5 bg-white mt-10 shadow-md p-2 max-h-[85dvh] col-span-2 flex flex-col gap-4 rounded">
         <p className="text-sm font-medium text-[#37322F]">Avaliable Fields</p>
 
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 max-w-[160px] gap-4 overflow-auto hide-scrollbar">
           {chatbotFields.map((item, index) => (
             <div
               key={index}
               onClick={() => addNewNode(item.value, item.label)}
               className="
-            flex flex-col items-center
-            cursor-pointer
-            transition
-            hover:scale-[1.03] 
-          "
+                flex flex-col items-center
+                cursor-pointer
+                transition
+                hover:scale-[1.03] 
+              "
             >
-              <p className="text-xs text-[#847971] whitespace-nowrap">
-                {item.label}
-              </p>
+             
               <div
                 className="
-              h-20 w-full
-              rounded-xl
-              border border-[rgba(50,45,43,0.12)]
-              flex items-center justify-center
-              text-[#847971]
-              bg-[rgba(55,50,47,0.04)]
-              hover:bg-[rgba(55,50,47,0.08)]
-              transition
-            "
+                h-12 w-12! border 
+                rounded-xl
+                border-[rgba(50,45,43,0.12)]
+                flex items-center justify-center
+                text-[#847971]
+                bg-[rgba(55,50,47,0.04)]
+                hover:bg-[rgba(55,50,47,0.08)]
+                transition
+              "
               >
                 {item.icon}
               </div>
+               <p className="text-[10px]  text-center text-[#847971]">
+                {item.label}
+              </p>
             </div>
           ))}
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

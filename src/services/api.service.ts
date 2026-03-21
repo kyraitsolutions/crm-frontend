@@ -54,6 +54,9 @@ class ApiService {
     config: InternalAxiosRequestConfig
   ): InternalAxiosRequestConfig {
     const token = LocalStorageUtils.getItem("token");
+
+    console.log("TOKEN FROM LS:", token); // 👈 ADD THIS
+    
     if (token && this.requiresAuth(config)) {
       config.headers.Authorization = `Bearer ${token}`;
     }

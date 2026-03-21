@@ -40,6 +40,9 @@ export class EmailService extends ApiService {
 
     async createTemplate(accountId:string,templateData:EmailTemplateData):Promise<any|null>{
         console.log("Template data",templateData);
-        return await this.post(`/account/${accountId}/email/template`, templateData);
+        return await this.post(`/account/${accountId}/template`, templateData);
+    }
+    async getTemplates(accountId:string):Promise<any|null>{
+        return await this.get(`/account/${accountId}/templates`);
     }
 }

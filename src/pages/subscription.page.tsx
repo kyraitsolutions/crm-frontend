@@ -1,8 +1,16 @@
+import { PaymentService } from "@/services/payment.service";
 import { SubscriptionService } from "@/services/subscription.service";
 import { useAuthStore } from "@/stores";
+import axios from "axios";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 export interface SubscriptionPlan {
   _id: string;
   name: string;
@@ -24,6 +32,7 @@ export const SubscriptionPage = () => {
 
 
   const subscriptionService = new SubscriptionService();
+  const paymentService = new PaymentService();
   const { user: authUser } = useAuthStore((state) => state);
   const [plans, setPlans] = useState<SubscriptionPlan[] | []>([]);
 
@@ -42,9 +51,48 @@ export const SubscriptionPage = () => {
   };
 
 
-  // const handleChoosePlan = (id:) => {
-  //   alert(id)
-  // }
+  const handleChoosePlan = async (id: string) => {
+    await handlePayment(id);
+  }
+
+  const handlePayment = async (id: string) => {
+    console.log("Id:", id);
+    // 1. Create order from backend
+    const amount = 799;
+    const data = await paymentService.createOrder(amount);
+    const result=data.data.docs
+    console.log("Data", data.data);
+    if (!window.Razorpay) {
+      alert("Razorpay SDK not loaded");
+      return;
+    }
+
+    const options = {
+      key: "rzp_test_xxxxx", // test key
+      amount: result.amount,
+      currency: "INR",
+      name: "Your Company",
+      description: "Starter Plan",
+      order_id: result.id,
+
+      handler: function (response:any) {
+        console.log("Payment Success:", response);
+      },
+
+      prefill: {
+        name: "User Name",
+        email: "user@example.com",
+        contact: "9999999999",
+      },
+
+      theme: {
+        color: "#4f46e5",
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
 
 
   useEffect(() => {
@@ -130,6 +178,7 @@ export const SubscriptionPage = () => {
                 button={plan.button}
                 features={plan.features}
                 addons={plan.addons}
+                handleChoosePlan={handleChoosePlan}
                 authUser={authUser}
               />
             </div>
@@ -160,6 +209,7 @@ function PricingCard({
   features,
   featured = false,
   addons,
+  handleChoosePlan
 }: any) {
 
 
@@ -189,6 +239,7 @@ function PricingCard({
         </div>
 
         <button
+          onClick={() => handleChoosePlan(id)}
           className={`w-full py-3 mb-8 rounded-[10px] font-semibold transition
             
           ${featured === true
