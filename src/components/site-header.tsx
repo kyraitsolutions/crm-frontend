@@ -1,7 +1,18 @@
 import { useAuthStore } from "@/stores";
+import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { getFirstWordOfSentence } from "@/utils/typography.utils";
+import { DASHBOARD_PATH } from "@/constants";
 
 export function SiteHeader() {
-  const { accountName } = useAuthStore((state) => state);
+  const { accountName, accountId, user } = useAuthStore((state) => state);
+  const organizationName = user?.userprofile?.organizationName;
+
+  const profileLink = accountName
+    ? `${DASHBOARD_PATH.ROOT}/account/${accountId}/profile`
+    : `${DASHBOARD_PATH.ROOT}/org/${user?.id}/profile`;
+
+  console.log(accountName);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -25,7 +36,15 @@ export function SiteHeader() {
           <span className="font-bold tracking-wider">Account</span> {">"}{" "}
           {accountName || ""}
         </h1> */}
-        <div className="ml-auto flex items-center gap-2"></div>
+        <div className="ml-auto flex items-center gap-2">
+          <Link to={profileLink}>
+            <Avatar className="border-2 border-slate-300 size-10">
+              <AvatarFallback className="text-red-500 text-sm font-medium">
+                {getFirstWordOfSentence(accountName || organizationName || "")}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
+        </div>
       </div>
     </header>
   );

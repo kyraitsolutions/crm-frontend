@@ -3,6 +3,10 @@ import { ProtectedLayout } from "./index";
 import { AuthStoreManager } from "@/stores";
 import { useEffect, useState } from "react";
 import { AuthService, ToastMessageService } from "@/services";
+import { COOKIES_STORAGE, DASHBOARD_PATH } from "@/constants";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
+import { AccountService } from "@/services/account.service";
+import { AccountsStoreManager } from "@/stores/accounts.store";
 
 export function AppLayout() {
   const authService = new AuthService();
@@ -36,8 +40,35 @@ export function AppLayout() {
     }
   };
 
+  const accountStoreManager = new AccountsStoreManager();
+  const accountService = new AccountService();
+
+  const fetchAccounts = async () => {
+    try {
+      const response = await accountService.getAccounts();
+
+      if (response.status === 200) {
+        accountStoreManager.setAccounts(response?.data?.docs);
+        const accountId = CookieUtils.getItem(COOKIES_STORAGE.accountId);
+
+        if (!accountId) {
+          authManager.setAccountId(response?.data?.docs[0]?.id);
+          navigate(
+            DASHBOARD_PATH.getAccountPath(
+              accountId || response?.data?.docs[0]?.id,
+            ),
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+    }
+  };
+
   useEffect(() => {
+    console.log("window.location", window.location);
     getProfile();
+    fetchAccounts();
   }, []);
 
   return (

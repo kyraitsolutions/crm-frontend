@@ -31,7 +31,7 @@ import { formatDate } from "@/utils/date-utils";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { hasPermission, PERMISSION } from "@/rbac";
+import { hasPermission, isAdmin, PERMISSION } from "@/rbac";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -161,14 +161,9 @@ export const DashboardPage = () => {
     try {
       const response = await accountService.getAccounts();
       if (response.status === 200) {
+        console.log(response);
         accountStoreManager.setAccounts(response?.data?.docs);
-        if (
-          user?.userprofile?.accountType?.toLowerCase() === "individual" &&
-          response?.data?.docs?.length === 1
-        ) {
-          // authManager.setAccountSelected(true);
-          // navigate(DASHBOARD_PATH.getAccountPath(response?.data?.docs[0]?.id));
-        }
+        // navigate(DASHBOARD_PATH.getAccountPath(response?.data?.docs[0]?.id));
       }
     } catch (error) {
       console.error("Error fetching accounts:", error);
@@ -194,6 +189,8 @@ export const DashboardPage = () => {
       </div>
     );
   }
+
+  console.log(user);
 
   return (
     <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 px-5 py-5">
@@ -280,7 +277,7 @@ export const DashboardPage = () => {
         })}
 
       {/* Add New Account */}
-      {user?.userprofile?.accountType === "organization" && (
+      {isAdmin(user?.roleId) && (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <div

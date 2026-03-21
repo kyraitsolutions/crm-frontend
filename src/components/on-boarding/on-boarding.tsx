@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { EOnBoardingQuestionType } from "@/enums";
 import type { OnBoardingQuestion } from "@/types";
 import { UserprofileService } from "@/services/userprofile.service";
+import { UserService } from "@/services";
 
 const defaultAnswers: Record<string, any> = {
   [EOnBoardingQuestionType.MULTI_SELECT]: [],
@@ -20,18 +21,7 @@ export const questions: OnBoardingQuestion[] = [
       { id: "individual", label: "Individual" },
     ],
   },
-  // {
-  //   id: "q2",
-  //   type: EOnBoardingQuestionType.MULTI_SELECT,
-  //   title: "What is your team size?",
-  //   options: [
-  //     { id: "0 - 10", label: "0 - 10" },
-  //     { id: "10 - 50", label: "10 - 50" },
-  //     { id: "50 - 500", label: "50 - 500" },
-  //     { id: "500 - 1k", label: "500 - 1k" },
-  //     { id: "1k - 100k", label: "1k - 100k" },
-  //   ],
-  // },
+
   {
     id: "q2",
     type: EOnBoardingQuestionType.TEXT,
@@ -59,6 +49,7 @@ export const questions: OnBoardingQuestion[] = [
 export function OnBoarding() {
   const navigate = useNavigate();
   const userprofileService = new UserprofileService();
+  const userService = new UserService();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const handleAnswerChange = (id: string, value: any) => {
@@ -76,8 +67,8 @@ export function OnBoarding() {
         accountType: account[0],
       };
 
-      console.log(apiBody)
-      const response = await userprofileService.createUserProfile(apiBody);
+      console.log(apiBody);
+      const response = await userService.createOnboarding(apiBody);
       const data = response?.data?.docs;
       if (data) {
         navigate("/dashboard");
@@ -87,7 +78,7 @@ export function OnBoarding() {
     }
     setCurrentQuestion((prev) => prev + 1);
   };
-  console.log(answers)
+  console.log(answers);
   const QUESTION_COMPONENTS = {
     [EOnBoardingQuestionType.MULTI_SELECT]: MultiSelectQuestion,
     [EOnBoardingQuestionType.TEXT]: OpenEndedQuestion,
