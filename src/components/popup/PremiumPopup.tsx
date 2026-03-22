@@ -5,6 +5,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { DASHBOARD_PATH } from "@/constants";
+import { useAuthStore } from "@/stores";
 import { Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -14,6 +16,17 @@ interface PremiumPopupProps {
 }
 
 export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
+  const { accountName, accountId, user } = useAuthStore((state) => state);
+  //   const organizationName = user?.userprofile?.organizationName;
+
+  const baseUrl = accountName
+    ? `${DASHBOARD_PATH.ROOT}/account/${accountId}/setting`
+    : `${DASHBOARD_PATH.ROOT}/org/${user?.id}/setting`;
+
+  //   const profileLink = `${baseUrl}/setting/profile`;
+  //   const settingLink = `${baseUrl}/setting`;
+
+  console.log(accountName);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md text-center rounded-2xl">
@@ -34,7 +47,7 @@ export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
           Redirecting you to subscription page…
         </div> */}
 
-        <Link to={"/dashboard/subscription"} className="mt-6 w-full p-2  rounded-full   bg-primary text-white hover:bg-primary/90">Upgrade Now</Link>
+        <Link to={`${baseUrl}/subscription`} className="mt-6 w-full p-2  rounded-full   bg-primary text-white hover:bg-primary/90">Upgrade Now</Link>
       </DialogContent>
     </Dialog>
   );

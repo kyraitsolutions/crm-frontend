@@ -1,7 +1,7 @@
-import { COOKIES_STORAGE, DASHBOARD_PATH } from "@/constants";
+import { DASHBOARD_PATH } from "@/constants";
 import { cn } from "@/lib/utils";
-import { useAuthStore } from "@/stores";
-import { CookieUtils } from "@/utils/cookie-storage.utils";
+import { AuthStoreManager, useAuthStore } from "@/stores";
+import { useAccountsStore } from "@/stores/accounts.store";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -10,29 +10,38 @@ import {
   IconMessageCircle,
   IconUsers,
 } from "@tabler/icons-react";
-import { BookTemplateIcon, House } from "lucide-react";
+import { BookTemplateIcon } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { MdEmail, MdOutlineCampaign, MdOutlineContacts, MdWhatsapp } from "react-icons/md";
+import { Link, useNavigate } from "react-router-dom";
+import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
-import { MdEmail, MdOutlineCampaign, MdOutlineContacts, MdWhatsapp } from "react-icons/md";
 import { SidebarFooter } from "./ui/sidebar";
 
 export function AppSidebar() {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    user: authUser,
-    accountSelected,
-    accountId,
-  } = useAuthStore((state) => state);
+  const { accounts } = useAccountsStore((state) => state);
+  const authManager = new AuthStoreManager();
+
+  const { user: authUser, accountId } = useAuthStore((state) => state);
+
+  const handleAccountSwitch = (accountId: string) => {
+    const pathName = window.location.pathname;
+
+    authManager.setLastSlugPath(pathName);
+    authManager.setAccountId(accountId);
+    navigate(DASHBOARD_PATH.getAccountPath(accountId));
+  };
 
   const data = {
     navMain: [
-      {
-        title: "Home",
-        url: DASHBOARD_PATH.ROOT,
-        icon: House,
-      },
+      // {
+      //   title: "Home",
+      //   url: DASHBOARD_PATH.ROOT,
+      //   icon: House,
+      // },
 
       {
         title: "Dashboard",
@@ -41,11 +50,6 @@ export function AppSidebar() {
         icon: IconDashboard,
       },
 
-      // {
-      //   title: "Builder",
-      //   url: "/builder",
-      //   icon: IconCode,
-      // },
       {
         title: "Leads Centre",
         url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/leads`,
@@ -58,44 +62,35 @@ export function AppSidebar() {
       },
       {
         title: "Lead Forms",
-        url: `${DASHBOARD_PATH.getAccountPath(
-          String(accountId),
-        )}/lead-forms`,
+        url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/lead-forms`,
         icon: IconFileText,
       },
       {
         title: "Broadcast",
-        url: `${DASHBOARD_PATH.getAccountPath(
-          String(accountId),
-        )}/broadcast`,
+        url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast`,
         icon: MdOutlineCampaign,
         children: [
-        {
-          title: "Email",
-          url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/email`,
-          icon:MdEmail
-        },
-        {
-          title: "WhatsApp",
-          url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/whatsapp`,
-          icon:MdWhatsapp
-        },
-        {
-          title: "Templates",
-          url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/templates`,
-          icon:BookTemplateIcon
-        },
-      ],
+          {
+            title: "Email",
+            url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/email`,
+            icon: MdEmail
+          },
+          {
+            title: "WhatsApp",
+            url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/whatsapp`,
+            icon: MdWhatsapp
+          },
+          {
+            title: "Templates",
+            url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/templates`,
+            icon: BookTemplateIcon
+          },
+        ],
       },
       {
         title: "Contacts",
         url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/contacts`,
         icon: MdOutlineContacts,
-      },
-      {
-        title: "Team",
-        url: "/dashboard/teams",
-        icon: IconUsers,
       },
     ],
   };
@@ -104,7 +99,7 @@ export function AppSidebar() {
     <aside
       className={cn(
         "h-screen bg-gray-50 border-r flex flex-col transition-all duration-300",
-        collapsed ? "w-[72px]" : "w-[280px]",
+        collapsed ? "w-18" : "w-90",
       )}
     >
       {/* Logo */}
@@ -112,11 +107,12 @@ export function AppSidebar() {
         {!collapsed && (
           <Link
             to="/"
-            className={`font-semibold  text-lg text-[#16A34A] whitespace-nowrap overflow-x-hidden`}
+            className={`font-semibold  text-lg text-primary whitespace-nowrap overflow-x-hidden`}
           >
             Kyra AI CRM
           </Link>
         )}
+
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="p-2 rounded-lg bg-gray-100 cursor-pointer "
@@ -129,18 +125,25 @@ export function AppSidebar() {
         </button>
       </div>
 
+      <div>
+        <AccountSwitcher
+          accounts={accounts}
+          selectedAccountId={accountId || accounts[0]?.id}
+          collapsed={collapsed}
+          onSwitch={(accountId) => {
+            handleAccountSwitch(accountId);
+          }}
+        />
+      </div>
+
       {/* ✅ SAME API AS BEFORE */}
-      <NavMain
-        items={data.navMain as any}
-        show={accountSelected}
-        collapsed={collapsed}
-      />
+      <NavMain items={data.navMain as any} collapsed={collapsed} />
 
       {/* Upgrade */}
-      <div className="px-3 py-3">
+      {/* <div className="px-3 py-3">
         <Link
           to="/dashboard/subscription"
-          className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-white bg-[#16A34A] hover:bg-[#15803D] "
+          className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-white bg-primary hover:bg-primary/90 transition"
         >
           <span className="text-lg">⚡</span>
           {!collapsed && (
@@ -149,7 +152,7 @@ export function AppSidebar() {
             </span>
           )}
         </Link>
-      </div>
+      </div> */}
 
       {/* User */}
       <div className="border-t py-0 flex items-center">

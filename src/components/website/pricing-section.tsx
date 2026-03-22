@@ -20,7 +20,7 @@ export default function PricingSection() {
             icon={<span className="w-2 h-2 bg-[#16A34A] rounded-full inline-block" />}
             text="Social Proof"
           /> */}
-          <span className="inline-block mb-4 px-4 py-1 text-sm font-medium text-[#16A34A] bg-green-100 rounded-full">
+          <span className="inline-block mb-4 px-4 py-1 text-sm font-medium text-primary bg-primary/20 rounded-full">
             Plans & Pricing
           </span>
 
@@ -42,7 +42,7 @@ export default function PricingSection() {
                 onClick={() => setBillingPeriod(type as any)}
                 className={`px-6 py-2 text-sm font-semibold rounded-full transition
                   ${billingPeriod === type
-                    ? "bg-[#16A34A] text-white"
+                    ? "bg-primary text-white"
                     : "text-gray-600 hover:text-gray-900"
                   }`}
               >
@@ -171,7 +171,7 @@ function PricingCard({
         <button
           className={`w-full py-3 mb-8 rounded-[10px] font-semibold transition
           ${featured
-              ? "bg-[#16A34A] text-white hover:bg-[#15803D] cursor-pointer"
+              ? "bg-primary text-white hover:bg-[#15803D] cursor-pointer"
               : "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md cursor-pointer"
             }`}
         >
@@ -181,7 +181,7 @@ function PricingCard({
         <ul className="space-y-3 ">
           {features.map((f: string, i: number) => (
             <li key={i} className="flex items-center gap-3">
-              <Check className={`w-4 h-4 text-[#16A34A]`} />
+              <Check className={`w-4 h-4 text-primary`} />
               {/* <span className={`w-2 h-2 rounded-full ${featured ? "bg-white" : "bg-[#16A34A]"}`} /> */}
               <span className="text-gray-700">
                 {f}
@@ -194,7 +194,7 @@ function PricingCard({
           <ul className="space-y-3 mb-8 text-gray-600">
             {addons?.map((addon: string) => (
               <li key={addon} className="flex items-center gap-3">
-                <Check className={`w-4 h-4 text-[#16A34A]`} />
+                <Check className={`w-4 h-4 text-primary`} />
                 <span className="text-gray-700">{addon}</span>
               </li>
             ))}

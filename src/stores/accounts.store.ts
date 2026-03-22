@@ -11,7 +11,7 @@ export const useAccountsStore = create<IAccountsStoreState>()(
   immer<IAccountsStoreState>(() => ({
     accounts: [],
     totalAccounts: null,
-  }))
+  })),
 );
 
 export class AccountsStoreManager {

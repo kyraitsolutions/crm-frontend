@@ -19,6 +19,8 @@ import PricingPage from "@/pages/pricing.page";
 // import About from "@/pages/about.page";
 import { broadcastRoutes } from "./broadcast.routes";
 import { contactRoutes } from "./contact.routes";
+import { profileRoutes } from "./profile.routes";
+import { settingRoutes } from "./setting.routes";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -59,6 +61,7 @@ export const appRoutes = createBrowserRouter([
           ...leadRoutes,
           ...broadcastRoutes,
           ...contactRoutes,
+          ...settingRoutes,
           {
             path: "/on-boarding",
             element: <OnBoardingPage />,

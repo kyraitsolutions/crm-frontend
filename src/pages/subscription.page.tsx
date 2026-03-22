@@ -1,7 +1,6 @@
 import { PaymentService } from "@/services/payment.service";
 import { SubscriptionService } from "@/services/subscription.service";
 import { useAuthStore } from "@/stores";
-import axios from "axios";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -60,7 +59,7 @@ export const SubscriptionPage = () => {
     // 1. Create order from backend
     const amount = 799;
     const data = await paymentService.createOrder(amount);
-    const result=data.data.docs
+    const result = data.data.docs
     console.log("Data", data.data);
     if (!window.Razorpay) {
       alert("Razorpay SDK not loaded");
@@ -75,7 +74,7 @@ export const SubscriptionPage = () => {
       description: "Starter Plan",
       order_id: result.id,
 
-      handler: function (response:any) {
+      handler: function (response: any) {
         console.log("Payment Success:", response);
       },
 
@@ -106,8 +105,8 @@ export const SubscriptionPage = () => {
         <div className="self-stretch px-6 md:px-24 pt-12 md:pt-16  flex justify-center items-center gap-6">
           <div className="w-full max-w-5xl px-6 py-5 overflow-hidden rounded-lg flex flex-col justify-start items-center gap-4 shadow-none">
             {/* Pricing Badge */}
-            <div className="px-[14px] py-[6px] bg-white  overflow-hidden rounded-[90px] flex justify-start items-center gap-[8px] border border-[rgba(2,6,23,0.08)] shadow-xs">
-              <div className="w-[14px] h-[14px] relative overflow-hidden flex items-center justify-center">
+            <div className="px-3.5 py-1.5 bg-white  overflow-hidden rounded-[90px] flex justify-start items-center gap-2 border border-[rgba(2,6,23,0.08)] shadow-xs">
+              <div className="w-3.5 h-3.5 relative overflow-hidden flex items-center justify-center">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M6 1V11M8.5 3H4.75C4.28587 3 3.84075 3.18437 3.51256 3.51256C3.18437 3.84075 3 4.28587 3 4.75C3 5.21413 3.18437 5.65925 3.51256 5.98744C3.84075 6.31563 4.28587 6.5 4.75 6.5H7.25C7.71413 6.5 8.15925 6.68437 8.48744 7.01256C8.81563 7.34075 9 7.78587 9 8.25C9 8.71413 8.81563 9.15925 8.48744 9.48744C8.15925 9.81563 7.71413 10 7.25 10H3.5"
@@ -118,13 +117,13 @@ export const SubscriptionPage = () => {
                   />
                 </svg>
               </div>
-              <div className="text-center flex justify-center flex-col text-[#16A34A] text-xs font-medium leading-3 font-sans">
+              <div className="text-center flex justify-center flex-col text-primary text-xs font-medium leading-3 font-sans">
                 Plans & Pricing
               </div>
             </div>
 
             {/* Title */}
-            <div className="self-stretch text-center flex justify-center flex-col text-gray-900 text-3xl md:text-6xl font-semibold leading-tight md:leading-[60px] font-sans tracking-tight">
+            <div className="self-stretch text-center flex justify-center flex-col text-gray-900 text-3xl md:text-6xl font-semibold leading-tight md:leading-15 font-sans tracking-tight">
               Choose the perfect plan for your business
             </div>
 
@@ -139,7 +138,7 @@ export const SubscriptionPage = () => {
         <div className="self-stretch px-6 md:px-16 py-9 relative flex justify-center items-center gap-4">
 
           <div >
-            <div className="p-[2px] bg-[#ffffff] shadow-[0px_1px_0px_white] rounded-[99px] border-[0.5px] border-[rgba(55,50,47,0.08)] flex justify-center items-center gap-[2px] relative">
+            <div className="p-0.5 bg-[#ffffff] shadow-[0px_1px_0px_white] rounded-[99px] border-[0.5px] border-[rgba(55,50,47,0.08)] flex justify-center items-center gap-0.5 relative">
 
 
               <button
@@ -243,7 +242,7 @@ function PricingCard({
           className={`w-full py-3 mb-8 rounded-[10px] font-semibold transition
             
           ${featured === true
-              ? "bg-[#16A34A] text-white hover:bg-[#15803D] cursor-pointer"
+              ? "bg-primary text-white hover:bg-primary/90 cursor-pointer"
               : id === authUser?.usersubscription?.planId ? "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md disabled:" : "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md cursor-pointer"
             }
               `}
@@ -254,7 +253,7 @@ function PricingCard({
         <ul className="space-y-3 ">
           {features.map((f: string, i: number) => (
             <li key={i} className="flex items-center gap-3">
-              <Check className={`w-4 h-4 text-[#16A34A]`} />
+              <Check className={`w-4 h-4 text-primary`} />
               {/* <span className={`w-2 h-2 rounded-full ${featured ? "bg-white" : "bg-[#16A34A]"}`} /> */}
               <span className="text-gray-700">
                 {f}
@@ -267,7 +266,7 @@ function PricingCard({
           <ul className="space-y-3 mb-8 text-gray-600">
             {addons?.map((addon: string) => (
               <li key={addon} className="flex items-center gap-3">
-                <Check className={`w-4 h-4 text-[#16A34A]`} />
+                <Check className={`w-4 h-4 text-primary`} />
                 <span className="text-gray-700">{addon}</span>
               </li>
             ))}

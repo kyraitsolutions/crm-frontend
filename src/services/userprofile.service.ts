@@ -6,4 +6,8 @@ export class UserprofileService extends ApiService {
   async createUserProfile(data: createUserprofile): Promise<ApiResponse<any>> {
     return await this.post("/user/profile", data);
   }
+
+  async getUserProfileById(id: string): Promise<ApiResponse<any>> {
+    return await this.get("/user/profile");
+  }
 }

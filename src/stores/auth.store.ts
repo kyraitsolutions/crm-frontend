@@ -1,24 +1,23 @@
 import { COOKIES_STORAGE } from "@/constants";
 import type { IUser } from "@/types";
 import { CookieUtils } from "@/utils/cookie-storage.utils";
+import { getLastSlugFromPath } from "@/utils/typography.utils";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 interface IAuthStoreState {
   user: IUser | null;
-  accountSelected: boolean;
   accountName: string | null;
   accountId?: string | null;
+  lastSlug: string | null;
 }
 
 export const useAuthStore = create<IAuthStoreState>()(
   immer((_) => ({
     user: null,
-    accountSelected:
-      CookieUtils.getItem(COOKIES_STORAGE.accountSelected) || false,
-
     accountName: CookieUtils.getItem(COOKIES_STORAGE.accountName) || null,
     accountId: CookieUtils.getItem(COOKIES_STORAGE.accountId) || null,
+    lastSlug: CookieUtils.getItem(COOKIES_STORAGE.lastSlug) || null,
   })),
 );
 
@@ -32,11 +31,6 @@ export class AuthStoreManager {
     this.store.setState({ user });
   }
 
-  setAccountSelected(accountSelected: boolean) {
-    this.store.setState({ accountSelected });
-    CookieUtils.setItem(COOKIES_STORAGE.accountSelected, accountSelected);
-  }
-
   setAccountName(accountName: string | null) {
     this.store.setState({ accountName });
     CookieUtils.setItem(COOKIES_STORAGE.accountName, accountName);
@@ -45,5 +39,12 @@ export class AuthStoreManager {
   setAccountId(accountId: string | null) {
     this.store.setState({ accountId });
     CookieUtils.setItem(COOKIES_STORAGE.accountId, accountId);
+  }
+
+  setLastSlugPath(slug: string | null) {
+    const lastSlug = getLastSlugFromPath(slug as string);
+    this.store.setState({ lastSlug });
+
+    CookieUtils.setItem(COOKIES_STORAGE.lastSlug, lastSlug);
   }
 }

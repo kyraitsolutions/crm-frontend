@@ -15,6 +15,10 @@ export class AccountService extends ApiService {
     return await this.get("/account");
   }
 
+  async getAccountById(id: string): Promise<ApiResponse<any>> {
+    return await this.get(`/account/${id}`);
+  }
+
   async deleteAccount(id: string): Promise<ApiResponse<any>> {
     return await this.delete(`/account/${id}`);
   }

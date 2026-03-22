@@ -69,17 +69,17 @@ export function HomePage() {
       <div className="relative flex flex-col justify-start items-center w-full">
         {/* Hero Section */}
 
-        <section className="w-full bg-[linear-gradient(180deg,hsl(142_30%_97%)_0%,hsl(0_0%_100%)_100%)]">
-          <div className="max-w-[1480px] mx-auto w-full py-16 sm:py-20 md:py-24 lg:py-24   overflow-hidden relative">
+        <section className="w-full bg-primary">
+          <div className="max-w-370 mx-auto w-full py-16 sm:py-20 md:py-24 lg:py-24   overflow-hidden relative">
             <div className="flex justify-center">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#15803D]/20 border border-border mb-8"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border mb-8"
               >
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-foreground">
+                <Sparkles className="w-4 h-4 text-" />
+                <span className="text-sm font-medium text-primary">
                   AI-Powered Lead Intelligence
                 </span>
               </motion.div>
@@ -100,12 +100,12 @@ export function HomePage() {
                   transition={{ duration: 0.5 }}
                   className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
                 >
-                  <span className="text-primary">3X Your Revenue</span>
+                  <span className="text-white">3X Your Revenue</span>
                   <br />
-                  <span className="text-gray-900">
+                  <span className="text-white ">
                     {" "}
                     Convert up to 30% more leads automatically with{" "}
-                    <span className="text-primary">AI chatbots</span>
+                    <span className="">AI chatbots</span>
                   </span>
                 </motion.div>
 
@@ -114,7 +114,7 @@ export function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="max-w-3xl mx-auto text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed"
+                  className="max-w-3xl mx-auto text-lg sm:text-xl text-gray-200 mb-8 leading-relaxed"
                 >
                   Build intelligent chatbots that capture leads, qualify
                   prospects, and turn conversations into revenue — all from one
@@ -134,13 +134,13 @@ export function HomePage() {
                       CookieUtils.clear();
                       window.location.href =
                         // "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                      "http://localhost:3000/api/auth/google";
+                        "http://localhost:3000/api/auth/google";
                     }}
-                    className="bg-[#16A34A] hover:bg-[#15803D] text-white cursor-pointer font-semibold px-8 py-3 rounded-lg transition-colors flex items-center gap-2"
+                    className="bg-white hover:bg-white/90 text-primary cursor-pointer font-semibold px-8 py-3 rounded-lg transition-colors flex items-center gap-2"
                   >
                     Try Kyra for FREE <ArrowRight size={18} />
                   </button>
-                  <button className="border-2 border-gray-300 hover:border-gray-400 cursor-pointer text-gray-700 font-semibold px-8 py-2.5 rounded-lg transition-colors">
+                  <button className="border-2 border-gray-300 hover:border-gray-400 cursor-pointer text-gray-200 font-semibold px-8 py-2.5 rounded-lg transition-colors">
                     Join Live Demo →
                   </button>
                 </motion.div>
@@ -149,7 +149,7 @@ export function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="text-sm text-gray-500"
+                  className="text-sm text-gray-200"
                 >
                   No credit card required · Setup in minutes · Built for modern
                   teams
@@ -168,10 +168,10 @@ export function HomePage() {
                   { value: "5min", label: "Setup Time" },
                 ].map((stat, index) => (
                   <div key={index} className="text-center">
-                    <div className="text-3xl font-bold text-gray-900 mb-1">
+                    <div className="text-3xl font-bold text-white mb-1">
                       {stat.value}
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-gray-200">
                       {stat.label}
                     </div>
                   </div>

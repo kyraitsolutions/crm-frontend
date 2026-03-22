@@ -6,8 +6,8 @@ export default function CTASection() {
         <div className="relative overflow-hidden rounded-3xl bg-white border border-gray-200">
 
           {/* Soft Glow Accent */}
-          <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#16A34A]/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-[#16A34A]/10 rounded-full blur-3xl" />
+          <div className="absolute -top-24 -right-24 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
 
           <div className="relative z-10 text-center px-6 sm:px-10 py-14 sm:py-16">
 
@@ -29,7 +29,7 @@ export default function CTASection() {
                   window.location.href =
                     "https://crm-backend-7lf9.onrender.com/api/auth/google";
                 }}
-                className="bg-[#16A34A] hover:bg-[#15803D] text-white font-semibold px-8 py-3 rounded-lg transition-colors flex items-center gap-2"
+                className="bg-primary hover:bg-primary/80 text-white font-semibold px-8 py-3 rounded-lg transition-colors flex items-center gap-2"
               >
                 Start for FREE →
               </button>

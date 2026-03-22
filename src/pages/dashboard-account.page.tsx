@@ -132,7 +132,7 @@ const DashboardAccount = () => {
   const [dateRange] = useState<DateRange | undefined>(undefined);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [fullAnalytics, setFullAnalytics] = useState<AnalyticsData | null>(
-    null
+    null,
   );
 
   // Full dataset
@@ -243,18 +243,18 @@ const DashboardAccount = () => {
 
     // Filter leads over time
     const filteredLeadsOverTime = fullAnalytics?.leadsOverTime.filter((item) =>
-      filterByDateRange(item.date)
+      filterByDateRange(item.date),
     );
 
     // Filter recent leads
     const filteredRecentLeads = fullAnalytics?.recentLeads.filter((lead) =>
-      filterByDateRange(lead.date)
+      filterByDateRange(lead.date),
     );
 
     // Recalculate totals based on filtered data
     const totalFromFiltered = filteredLeadsOverTime?.reduce(
       (sum, item) => sum + item.total,
-      0
+      0,
     );
 
     const todayFromFiltered =
@@ -301,12 +301,12 @@ const DashboardAccount = () => {
     };
 
     const filteredLeadsOverTime = fullAnalytics?.leadsOverTime.filter((item) =>
-      filterByPreviousPeriod(item.date)
+      filterByPreviousPeriod(item.date),
     );
 
     const totalFromFiltered = filteredLeadsOverTime?.reduce(
       (sum, item) => sum + item.total,
-      0
+      0,
     );
 
     return {
@@ -405,9 +405,7 @@ const DashboardAccount = () => {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           {/* LEFT: Title */}
           <div>
-            <h1 className="text-2xl font-medium text-[#37322F]">
-              Analytics
-            </h1>
+            <h1 className="text-2xl font-medium text-[#37322F]">Analytics</h1>
             <p className="mt-1 text-sm text-[#847971]">
               Track leads, conversions, and channel performance
             </p>
@@ -417,29 +415,31 @@ const DashboardAccount = () => {
           <div className="flex flex-wrap items-center gap-3">
             {/* Time Range */}
             <div className="flex max-sm:w-full items-center gap-1 rounded-full bg-[#F7F6F4] p-1">
-              {(["daily", "weekly", "monthly", "yearly"] as const).map((range) => {
-                const active = timeRange === range;
+              {(["daily", "weekly", "monthly", "yearly"] as const).map(
+                (range) => {
+                  const active = timeRange === range;
 
-                return (
-                  <button
-                    key={range}
-                    onClick={() => setTimeRange(range)}
-                    className={`
+                  return (
+                    <button
+                      key={range}
+                      onClick={() => setTimeRange(range)}
+                      className={`
               rounded-full
               px-4 py-1.5
               text-xs font-medium
               max-md:w-full
               transition
               ${active
-                        ? "bg-primary text-[#FBFAF9]"
-                        : "text-[#37322F] hover:bg-[#EFEDEB]"
-                      }
+                          ? "bg-primary text-[#FBFAF9]"
+                          : "text-[#37322F] hover:bg-[#EFEDEB]"
+                        }
             `}
-                  >
-                    {range.charAt(0).toUpperCase() + range.slice(1)}
-                  </button>
-                );
-              })}
+                    >
+                      {range.charAt(0).toUpperCase() + range.slice(1)}
+                    </button>
+                  );
+                },
+              )}
             </div>
 
             {/* Compare */}
@@ -499,7 +499,6 @@ const DashboardAccount = () => {
             </div>
           </div>
         </div>
-
 
         {/* Key Metrics */}
         {comparisonMode && previousPeriodData ? (
@@ -607,12 +606,14 @@ const DashboardAccount = () => {
                 icon: Zap,
               },
             ].map(({ label, value, meta, icon: Icon }) => (
-
-              <StatCard title={label} value={value.toString()} subtitle={meta} icon={Icon} />
-
+              <StatCard
+                title={label}
+                value={value.toString()}
+                subtitle={meta}
+                icon={Icon}
+              />
             ))}
           </div>
-
         )}
 
         {/* Comparison Info Banner */}
@@ -649,17 +650,18 @@ const DashboardAccount = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="h-[280px]">
+              <div className="h-70">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={data?.leadsOverTime}>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                    />
+                    <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="date"
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                      tick={{
+                        fontSize: 12,
+                        fill: "hsl(var(--muted-foreground))",
+                      }}
                       tickFormatter={(value) => {
                         const date = new Date(value);
                         return `${date.getMonth() + 1}/${date.getDate()}`;
@@ -668,17 +670,25 @@ const DashboardAccount = () => {
                     <YAxis
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                      tick={{
+                        fontSize: 12,
+                        fill: "hsl(var(--muted-foreground))",
+                      }}
                     />
                     <Tooltip
                       contentStyle={{
-                                    // backgroundColor: "hsl(var(--card))",
-                                    border: "1px solid hsl(var(--border))",
-                                    borderRadius: "8px",
-                                    fontSize: "12px"
-                                }}
+                        // backgroundColor: "hsl(var(--card))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: "8px",
+                        fontSize: "12px",
+                      }}
                     />
-                    <Legend wrapperStyle={{ fontSize: "12px",textTransform:"capitalize" }} />
+                    <Legend
+                      wrapperStyle={{
+                        fontSize: "12px",
+                        textTransform: "capitalize",
+                      }}
+                    />
                     <Bar dataKey="chatbot" stackId="a" fill="#3B82F6" />
                     <Bar dataKey="website" stackId="a" fill="#10B981" />
                     <Bar dataKey="googleAds" stackId="a" fill="#F59E0B" />
@@ -704,41 +714,39 @@ const DashboardAccount = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="h-[280px]">
-                
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={data?.leadsByStatus}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ status, percentage }) =>
-                      `${status}: ${percentage}%`
-                    }
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="count"
-                  >
-                    {data?.leadsByStatus?.map((_, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      fontSize: "12px",
-                      backgroundColor: "white",
-                      border: "1px solid  gray",
-                      borderRadius: "8px",
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              <div className="h-70">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={data?.leadsByStatus}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ status, percentage }) =>
+                        `${status}: ${percentage}%`
+                      }
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="count"
+                    >
+                      {data?.leadsByStatus?.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        fontSize: "12px",
+                        backgroundColor: "white",
+                        border: "1px solid  gray",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-
             </CardContent>
           </Card>
         </div>
@@ -759,7 +767,7 @@ const DashboardAccount = () => {
               <div className="space-y-3">
                 {data?.leadsBySource?.map((source) => (
                   <div key={source.source} className="flex items-center gap-2">
-                    <div className="flex min-w-[90px] items-center gap-2">
+                    <div className="flex min-w-22.5 items-center gap-2">
                       <div
                         className="h-2 w-2 rounded-full"
                         style={{ backgroundColor: source.color }}
@@ -778,12 +786,12 @@ const DashboardAccount = () => {
                         }}
                       />
                     </div>
-                    <div className="flex min-w-[80px] items-center gap-2 text-sm">
+                    <div className="flex min-w-20 items-center gap-2 text-sm">
                       <span className="font-semibold">{source.count}</span>
                       <span
                         className={`flex items-center gap-0.5 ${source.trend >= 0
-                          ? "text-[#21733F]"
-                          : "text-destructive"
+                            ? "text-[#21733F]"
+                            : "text-destructive"
                           }`}
                       >
                         {source.trend >= 0 ? (
@@ -819,10 +827,16 @@ const DashboardAccount = () => {
                   />
                   <XAxis
                     dataKey="month"
-                    tick={{ fontSize: 12,fill: "hsl(var(--muted-foreground))" }}
+                    tick={{
+                      fontSize: 12,
+                      fill: "hsl(var(--muted-foreground))",
+                    }}
                   />
                   <YAxis
-                    tick={{ fontSize: 12,fill: "hsl(var(--muted-foreground))" }}
+                    tick={{
+                      fontSize: 12,
+                      fill: "hsl(var(--muted-foreground))",
+                    }}
                     className="capitalize"
                   />
                   <Tooltip
@@ -834,7 +848,12 @@ const DashboardAccount = () => {
                       textDecoration: "capitalize",
                     }}
                   />
-                  <Legend wrapperStyle={{ fontSize: "12px", textTransform:"capitalize" }} />
+                  <Legend
+                    wrapperStyle={{
+                      fontSize: "12px",
+                      textTransform: "capitalize",
+                    }}
+                  />
                   <Line
                     type="monotone"
                     dataKey="leads"
@@ -907,7 +926,10 @@ const DashboardAccount = () => {
                           {channel.conversionRate}%
                         </td>
                         <td className="py-2.5 text-center">
-                          <Badge variant="outline" className="text-[10px] capitalize">
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] capitalize"
+                          >
                             {channel.status === "active" ? (
                               <CheckCircle className="mr-1 h-2.5 w-2.5 text-[#21733F] " />
                             ) : (
@@ -948,7 +970,7 @@ const DashboardAccount = () => {
                         </p>
                         <Badge
                           className={`text-[10px] text-white capitalize ${getStatusColor(
-                            lead.status
+                            lead.status,
                           )}`}
                         >
                           {lead.status}

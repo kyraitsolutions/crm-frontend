@@ -608,33 +608,33 @@ export default function LeadsCentre() {
                 filters.assignedTo.value ||
                 filters.stage.value ||
                 filters.label.value) && (
-                <button
-                  onClick={() =>
-                    setFilters({
-                      lead: { label: "All Leads", value: null },
-                      campaign: { label: "All Campaigns", value: null },
-                      form: { label: "All Forms", value: null },
-                      date: { label: "All Dates", value: null },
-                      status: { label: "All Status", value: null },
-                      source: { label: "All Sources", value: null },
-                      assignedTo: { label: "All Users", value: null },
-                      label: { label: "All Labels", value: null },
-                      stage: { label: "All Stages", value: null },
-                      read: { label: "All", value: null },
-                    })
-                  }
-                  className="
+                  <button
+                    onClick={() =>
+                      setFilters({
+                        lead: { label: "All Leads", value: null },
+                        campaign: { label: "All Campaigns", value: null },
+                        form: { label: "All Forms", value: null },
+                        date: { label: "All Dates", value: null },
+                        status: { label: "All Status", value: null },
+                        source: { label: "All Sources", value: null },
+                        assignedTo: { label: "All Users", value: null },
+                        label: { label: "All Labels", value: null },
+                        stage: { label: "All Stages", value: null },
+                        read: { label: "All", value: null },
+                      })
+                    }
+                    className="
             flex items-center gap-1
             text-sm font-medium
             text-[#847971]
             hover:text-[#37322F]
             transition
           "
-                >
-                  <X className="h-4 w-4" />
-                  Clear
-                </button>
-              )}
+                  >
+                    <X className="h-4 w-4" />
+                    Clear
+                  </button>
+                )}
             </div>
           </div>
         )}
@@ -726,14 +726,14 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-              // className={
-              //   selectedStageFilter.label === "All"
-              //     ? "bg-accent text-accent-foreground"
-              //     : ""
-              // }
-              // onClick={() =>
-              //   setSelectedStageFilter({ label: "All", value: "" })
-              // }
+            // className={
+            //   selectedStageFilter.label === "All"
+            //     ? "bg-accent text-accent-foreground"
+            //     : ""
+            // }
+            // onClick={() =>
+            //   setSelectedStageFilter({ label: "All", value: "" })
+            // }
             >
               All
             </Button>
@@ -741,18 +741,18 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-              // className={
-              //   selectedReadFilter.label === "Unread"
-              //     ? "bg-accent text-accent-foreground"
-              //     : ""
-              // }
-              // onClick={() =>
-              //   setSelectedReadFilter(
-              //     selectedReadFilter.label === "Unread"
-              //       ? { label: "All", value: "all" }
-              //       : { label: "Unread", value: "unread" }
-              //   )
-              // }
+            // className={
+            //   selectedReadFilter.label === "Unread"
+            //     ? "bg-accent text-accent-foreground"
+            //     : ""
+            // }
+            // onClick={() =>
+            //   setSelectedReadFilter(
+            //     selectedReadFilter.label === "Unread"
+            //       ? { label: "All", value: "all" }
+            //       : { label: "Unread", value: "unread" }
+            //   )
+            // }
             >
               Unread
             </Button>
@@ -1176,7 +1176,7 @@ export default function LeadsCentre() {
 
               <div className="grid grid-cols-2 gap-6">
                 {editableLead?.customFields &&
-                Object.keys(editableLead.customFields).length > 0 ? (
+                  Object.keys(editableLead.customFields).length > 0 ? (
                   Object.entries(editableLead.customFields).map(
                     ([key, value]) => (
                       <div key={key} className="flex flex-col gap-1">
@@ -1198,12 +1198,12 @@ export default function LeadsCentre() {
                               setEditableLead((prev) =>
                                 prev
                                   ? {
-                                      ...prev,
-                                      customFields: {
-                                        ...(prev.customFields ?? {}),
-                                        [key]: e.target.value,
-                                      },
-                                    }
+                                    ...prev,
+                                    customFields: {
+                                      ...(prev.customFields ?? {}),
+                                      [key]: e.target.value,
+                                    },
+                                  }
                                   : prev,
                               )
                             }
@@ -1249,7 +1249,7 @@ export default function LeadsCentre() {
 
                   {/* vertical line */}
                   {editableLead?.notes && editableLead?.notes.length > 0 && (
-                    <div className="absolute top-0 left-[18px] w-0.5 h-[90%] bg-gray-400 -z-10" />
+                    <div className="absolute top-0 left-4.5 w-0.5 h-[90%] bg-gray-400 -z-10" />
                   )}
 
                   <AddActivityModal
@@ -1259,9 +1259,9 @@ export default function LeadsCentre() {
                       setEditableLead((prev) =>
                         prev
                           ? {
-                              ...prev,
-                              notes: [...(prev.notes || []), activity],
-                            }
+                            ...prev,
+                            notes: [...(prev.notes || []), activity],
+                          }
                           : prev,
                       );
                       handleSave(activity);
@@ -1336,11 +1336,10 @@ const Timeline = ({ items }: { items: TimelineItem[] }) => {
                 relative z-10
                 flex h-9 w-9 items-center justify-center
                 rounded-full text-white
-                ${
-                  timelineConfig[
-                    item.activitySource as keyof typeof timelineConfig
-                  ]?.bg
-                }
+                ${timelineConfig[
+                      item.activitySource as keyof typeof timelineConfig
+                    ]?.bg
+                    }
               `}
                 >
                   <Icon size={16} />

@@ -31,7 +31,7 @@ import { formatDate } from "@/utils/date-utils";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { hasPermission, PERMISSION } from "@/rbac";
+import { hasPermission, isAdmin, PERMISSION } from "@/rbac";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -119,7 +119,7 @@ export const DashboardPage = () => {
         },
       });
 
-      authManager.setAccountSelected(true);
+      // authManager.setAccountSelected(true);
       authManager.setAccountName(accounts[index]?.accountName);
       authManager.setAccountId(accounts[index]?.id);
     }
@@ -161,14 +161,9 @@ export const DashboardPage = () => {
     try {
       const response = await accountService.getAccounts();
       if (response.status === 200) {
+        console.log(response);
         accountStoreManager.setAccounts(response?.data?.docs);
-        if (
-          user?.userprofile?.accountType?.toLowerCase() === "individual" &&
-          response?.data?.docs?.length === 1
-        ) {
-          // authManager.setAccountSelected(true);
-          // navigate(DASHBOARD_PATH.getAccountPath(response?.data?.docs[0]?.id));
-        }
+        // navigate(DASHBOARD_PATH.getAccountPath(response?.data?.docs[0]?.id));
       }
     } catch (error) {
       console.error("Error fetching accounts:", error);
@@ -183,7 +178,7 @@ export const DashboardPage = () => {
 
   if (loading) {
     return (
-      <div className="p-5 space-y-4 w-[300px]">
+      <div className="p-5 space-y-4 w-75">
         <Card className="p-2">
           <div className="space-y-2">
             {[...Array(4)].map((_, i) => (
@@ -194,6 +189,8 @@ export const DashboardPage = () => {
       </div>
     );
   }
+
+  console.log(user);
 
   return (
     <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 px-5 py-5">
@@ -263,13 +260,12 @@ export const DashboardPage = () => {
                 <span
                   className={`
             px-2 py-0.5 rounded-full capitalize text-xs font-medium
-            ${
-              account.status === "active"
-                ? "bg-primary/10 text-primary"
-                : account.status === "inactive"
-                  ? "bg-destructive/10 text-destructive"
-                  : "bg-primary/10 text-primary"
-            }
+            ${account.status === "active"
+                      ? "bg-primary/10 text-primary"
+                      : account.status === "inactive"
+                        ? "bg-destructive/10 text-destructive"
+                        : "bg-primary/10 text-primary"
+                    }
           `}
                 >
                   {account.status}
@@ -280,7 +276,7 @@ export const DashboardPage = () => {
         })}
 
       {/* Add New Account */}
-      {user?.userprofile?.accountType === "organization" && (
+      {isAdmin(user?.roleId) && (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <div
@@ -304,11 +300,11 @@ export const DashboardPage = () => {
           {/* Dialog stays unchanged */}
           <DialogContent
             className="
-    sm:max-w-[420px]
-    rounded-2xl
-    p-6
-    shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
-  "
+            sm:max-w-105
+            rounded-2xl
+            p-6
+            shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
+          "
           >
             <form
               className="flex flex-col gap-6"

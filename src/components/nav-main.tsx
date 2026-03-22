@@ -1,58 +1,59 @@
-import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { AuthStoreManager, useAuthStore } from "@/stores";
+import { AuthStoreManager } from "@/stores";
 import { useState } from "react";
-import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
+import {
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
+import { Link, useLocation } from "react-router-dom";
 
 interface NavItem {
   title: string;
   url: string;
   icon: React.ElementType;
-  children?:{
-    title:string,
-    url:string,
-    icon:React.ElementType
-  }[]
+  children?: {
+    title: string;
+    url: string;
+    icon: React.ElementType;
+  }[];
 }
 
 interface NavMainProps {
   items: NavItem[];
-  show: boolean;
   collapsed?: boolean;
 }
 
-export function NavMain({ items, show, collapsed = false }: NavMainProps) {
+export function NavMain({ items, collapsed = false }: NavMainProps) {
   const { pathname } = useLocation();
-  const { user: authUser } = useAuthStore((state) => state);
   const authManager = new AuthStoreManager();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
-  const filteredItems = items.filter((item) => {
-    if (show) {
-      return [
-        "Home",
-        "Dashboard",
-        "Chat bot",
-        "Lead Forms",
-        "Leads Centre",
-        "Broadcast",
-        "Contacts"
-      ].includes(item.title);
-    }
+  // const filteredItems = items.filter((item) => {
+  //   if (show) {
+  //     return [
+  //       "Home",
+  //       "Dashboard",
+  //       "Chat bot",
+  //       "Lead Forms",
+  //       "Leads Centre",
+  //       "Broadcast",
+  //       "Contacts",
+  //     ].includes(item.title);
+  //   }
 
-    return ["Home", "Accounts", "Team", "Settings"].includes(item.title);
-  });
+  //   return ["Home", "Accounts", "Team", "Settings"].includes(item.title);
+  // });
 
   const toggleMenu = (title: string) => {
-  setOpenMenus((prev) => ({
-    ...prev,
-    [title]: !prev[title],
-  }));
-};
+    setOpenMenus((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
 
   return (
     <nav className="flex-1 px-2 py-4 space-y-1">
-      {filteredItems.map((item) => {
+      {items.map((item) => {
         const Icon = item.icon;
         const isOpen = openMenus[item.title];
 
@@ -61,93 +62,86 @@ export function NavMain({ items, show, collapsed = false }: NavMainProps) {
           item.url?.split("/").slice(-1)[0];
 
         const handleClick = () => {
-          if (item.title === "Home" && authUser) {
-            authManager.setUser({
-              ...authUser,
-              account: {
-                ...authUser.account,
-                selectedAccount: null,
-                isAccountSelected: false,
-              },
-            });
-
-            authManager.setAccountSelected(false);
-            authManager.setAccountName(null);
+          if (item.title.toLowerCase() === "dashboard") {
+            authManager.setLastSlugPath(item.url);
           }
         };
 
         return (
           <>
-          {item.children ? (
-          <button
-            onClick={() => toggleMenu(item.title)}
-            className={` w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100`}
-          >
-            <div className="flex items-center gap-3">
-              {Icon && <Icon size={20} />}
-              {!collapsed && <span>{item.title}</span>}
-            </div>
+            {item.children ? (
+              <button
+                onClick={() => toggleMenu(item.title)}
+                className={` w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100`}
+              >
+                <div className={`flex  ${collapsed ? "justify-center" : "justify-end"} items-center gap-3`}>
+                  {Icon && <Icon size={22} />}
+                  {!collapsed && <span>{item.title}</span>}
+                </div>
 
-            {!collapsed && (
-              <span className="text-md">
-                {isOpen ? <MdOutlineKeyboardArrowUp/> : <MdOutlineKeyboardArrowDown/> }
-              </span>
-            )}
-          </button>
-        ):
-          <Link
-            key={item.title}
-            to={item.url}
-            onClick={handleClick}
-            className={cn(
-              "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
-              active
-                ? "bg-[#16A34A]/10 text-[#16A34A]"
-                : "text-gray-600 hover:bg-gray-100",
-            )}
-          >
-            <Icon size={16} />
+                {!collapsed && (
+                  <span className="text-md">
+                    {isOpen ? (
+                      <MdOutlineKeyboardArrowUp />
+                    ) : (
+                      <MdOutlineKeyboardArrowDown />
+                    )}
+                  </span>
+                )}
+              </button>
+            ) : (
+              <Link
+                key={item.title}
+                to={item.url}
+                onClick={handleClick}
+                className={cn(
+                  `group relative flex ${collapsed ? "justify-center" : ""} items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all`,
+                  active
+                    ? "bg-primary/10 text-primary"
+                    : "text-gray-600 hover:bg-gray-100",
+                )}
+              >
+                <Icon size={20} />
 
-            {!collapsed && (
-              <span className="inline-block whitespace-nowrap overflow-x-hidden">
-                {item.title}
-              </span>
+                {!collapsed && (
+                  <span className="inline-block whitespace-nowrap overflow-x-hidden">
+                    {item.title}
+                  </span>
+                )}
+
+                {active && (
+                  <span className="absolute right-2 w-1.5 h-6 rounded-full bg-primary" />
+                )}
+              </Link>
             )}
 
-            {active && (
-              <span className="absolute right-2 w-1.5 h-6 rounded-full bg-[#16A34A]" />
-            )}
-          </Link>
-      }
-          {item.children &&  isOpen && !collapsed && (
-          <div className="ml-8 mt-1 space-y-1">
-            {item.children.map((child) => {
-              const childActive = pathname === child.url;
-              const ChildIcon=child.icon
+            {item.children && isOpen && !collapsed && (
+              <div className="ml-8 mt-1 space-y-1">
+                {item.children.map((child) => {
+                  const childActive = pathname === child.url;
+                  const ChildIcon = child.icon;
 
-              return (
-                <Link
-                  key={child.title}
-                  to={child.url}
-                  className={cn(
-                    "block px-3 py-2 text-sm items-center rounded-lg gap-1",
-                    childActive
-                      ? "bg-[#16A34A]/10 flex text-[#16A34A]"
-                      : "text-gray-600 flex hover:bg-gray-100"
-                  )}
-                >
-                  <ChildIcon size={16} />{child.title}
-                </Link>
-              );
-            })}
-          </div>
-        )}
-          
+                  return (
+                    <Link
+                      key={child.title}
+                      to={child.url}
+                      className={cn(
+                        "block px-3 py-2 text-sm items-center rounded-lg gap-1",
+                        childActive
+                          ? "bg-primary/10 flex text-primary"
+                          : "text-gray-600 flex hover:bg-gray-100",
+                      )}
+                    >
+                      <ChildIcon size={18} />
+                      {child.title}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </>
-
         );
       })}
-      
     </nav>
   );
 }
