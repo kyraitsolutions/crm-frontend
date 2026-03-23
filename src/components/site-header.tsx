@@ -8,9 +8,11 @@ export function SiteHeader() {
   const { accountName, accountId, user } = useAuthStore((state) => state);
   const organizationName = user?.userprofile?.organizationName;
 
-  const profileLink = accountName
-    ? `${DASHBOARD_PATH.ROOT}/account/${accountId}/profile`
-    : `${DASHBOARD_PATH.ROOT}/org/${user?.id}/profile`;
+  // const profileLink = accountName
+  //   ? `${DASHBOARD_PATH.ROOT}/account/${accountId}/profile`
+  //   : `${DASHBOARD_PATH.ROOT}/org/${user?.id}/profile`;
+
+  const profileLink = `${DASHBOARD_PATH.ROOT}/account/${accountId}/profile`;
 
   console.log(accountName);
 

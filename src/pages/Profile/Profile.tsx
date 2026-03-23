@@ -30,8 +30,6 @@ export default function ProfilePage() {
   const { user } = useAuthStore((state) => state);
   const accountService = new AccountService();
 
-  console.log(user);
-
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
@@ -108,6 +106,7 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
+    fetchProfile();
     if (params?.accountId && params?.account_type === "account") {
       fetchProfile();
     } else {

@@ -13,11 +13,10 @@ export const AuthCallbackPage = () => {
         return;
       }
       LocalStorageUtils.setItem("token", token);
-      const data = { "id": 213123, "onboarding": true }
+      const data = { id: 213123, onboarding: true };
       if (data.onboarding) {
         navigate("/dashboard");
-      }
-      else {
+      } else {
         navigate("/on-boarding");
       }
     };

@@ -19,10 +19,10 @@ export const dashboardRoutes: RouteObject[] = [
         path: DASHBOARD_PATH.ACCOUNT,
         element: <DashboardAccount />,
       },
-      {
-        path: "teams",
-        element: <Teams />,
-      },
+      // {
+      //   path: "teams",
+      //   element: <Teams />,
+      // },
       {
         path: "settings",
         element: <SettingsPage />,

@@ -20,6 +20,7 @@ import PricingPage from "@/pages/pricing.page";
 import { broadcastRoutes } from "./broadcast.routes";
 import { contactRoutes } from "./contact.routes";
 import { profileRoutes } from "./profile.routes";
+import { Teams } from "@/pages/teams.page";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ export const appRoutes = createBrowserRouter([
           {
             path: "/on-boarding",
             element: <OnBoardingPage />,
+          },
+          {
+            path: "/teams",
+            element: <Teams />,
           },
         ],
       },

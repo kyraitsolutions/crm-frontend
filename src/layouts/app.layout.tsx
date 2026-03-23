@@ -19,7 +19,7 @@ export function AppLayout() {
   const getProfile = async () => {
     setIsLoading(true);
     try {
-      const response: any = await authService.getProfile();
+      const response: any = await authService.getMe();
       const user = response.data?.docs;
       authManager.setUser(user);
 
