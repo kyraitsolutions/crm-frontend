@@ -98,7 +98,7 @@ export const ChatBotBuilder = () => {
           : await chatBotService.updateChatBot(
               String(accountId),
               String(chatBotId),
-              data
+              data,
             );
 
         if (!chatBotId) {
@@ -111,7 +111,7 @@ export const ChatBotBuilder = () => {
 
           if (!chatBotId)
             navigate(
-              `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`
+              `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`,
             );
         }
       } catch (error) {
@@ -121,7 +121,7 @@ export const ChatBotBuilder = () => {
         setIsSubmitting(false);
       }
     },
-    [form.getValues()]
+    [form.getValues()],
   );
 
   const createChatbotWithMandatoryNodes = async (chatbotId: string) => {
@@ -133,7 +133,7 @@ export const ChatBotBuilder = () => {
       await chatbot.createChatBotFlow(
         String(accountId),
         String(chatbotId),
-        payloadData
+        payloadData,
       );
     } catch (error) {
       console.log(error);
@@ -144,7 +144,7 @@ export const ChatBotBuilder = () => {
     try {
       const response = await chatBotService.getChatBotById(
         String(accountId),
-        String(chatBotId)
+        String(chatBotId),
       );
 
       if (response.status === 200 || response.status === 201) {

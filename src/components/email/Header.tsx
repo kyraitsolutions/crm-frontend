@@ -1,8 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-import { Icon, Plus } from "lucide-react";
-import { Button } from "../ui/button";
-import { MdCollections, MdContacts, MdInsights, MdOutlineCampaign, MdWbAuto } from "react-icons/md";
+import { MdCollections, MdInsights, MdOutlineCampaign, MdWbAuto } from "react-icons/md";
 
 interface NavItem{
     label:string,
@@ -14,7 +12,6 @@ const Header = () => {
     const NAV_ITEMS:NavItem[] = [
         { label: "Insights", path: "",icon:MdInsights },
         { label: "Campaigns", path: "campaigns",icon:MdOutlineCampaign },
-        { label: "Templates", path: "templates",icon:MdCollections },
         { label: "Automations", path: "automations",icon:MdWbAuto },
     ];
 

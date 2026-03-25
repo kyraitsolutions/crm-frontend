@@ -151,7 +151,7 @@ export default function ContactForm() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Your full name"
-                    className="mt-2 bg-gray-100 border-0 rounded-lg focus-visible:ring-[#16A34A]"
+                    className="mt-2 bg-gray-100 border-0 rounded-lg focus-visible:ring-primary"
                     required
                   />
                 </div>
@@ -166,7 +166,7 @@ export default function ContactForm() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="name@gmail.com, you@example.com"
-                    className="mt-2 bg-gray-100 border-0 rounded-lg focus-visible:ring-[#16A34A]"
+                    className="mt-2 bg-gray-100 border-0 rounded-lg focus-visible:ring-primary"
                     required
                   />
                 </div>
@@ -182,7 +182,7 @@ export default function ContactForm() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="+91 XXXXXXXXXX"
-                    className="mt-2 bg-gray-100 border-0 rounded-lg focus-visible:ring-[#16A34A]"
+                    className="mt-2 bg-gray-100 border-0 rounded-lg focus-visible:ring-primary"
                     required
                   />
                 </div>
@@ -197,7 +197,7 @@ export default function ContactForm() {
                     value={formData.service}
                     onChange={handleChange}
                     required
-                    className="mt-2 w-full px-4 py-3 bg-gray-100 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#16A34A]"
+                    className="mt-2 w-full px-4 py-3 bg-gray-100 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="" disabled>
                       Select a service
@@ -213,7 +213,7 @@ export default function ContactForm() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  className="w-full mt-4 py-3 rounded-lg bg-[#16A34A] hover:bg-[#15803D] text-white font-semibold transition"
+                  className="w-full mt-4 py-3 rounded-lg bg-primary hover:bg-primary/80 text-white font-semibold transition"
                 >
                   {submitted ? "Submitted Successfully!" : "Submit Request"}
                 </button>

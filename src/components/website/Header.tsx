@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 const Header = () => {
     return (
         <nav className="w-full border-b-2 border-gray-200 bg-white sticky top-0 z-50">
-            <div className="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-370 mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <div className="flex items-center space-x-8">
                         <div className="flex items-center">
                             <Link to="/" className="flex items-center gap-1">
                                 <div>
-                                    <span className=" !text-[#16A34A]/90 text-5xl font-bold">K</span>
+                                    <span className=" text-primary/90! text-5xl font-bold">K</span>
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-gray-800  text-xl font-bold">Kyra</span>
@@ -23,16 +23,16 @@ const Header = () => {
                         {/* Navigation Links */}
                         <div className="hidden md:flex items-center space-x-6">
 
-                            {/* <Link to="/about" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
+                            {/* <Link to="/about" className="text-gray-700 hover:text-primary text-sm font-medium transition-colors">
                                 About
                             </Link>
-                            <Link to="/product" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
+                            <Link to="/product" className="text-gray-700 hover:text-primary text-sm font-medium transition-colors">
                                 Product
                             </Link> */}
-                            <Link to="/pricing" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
+                            <Link to="/pricing" className="text-gray-700 hover:text-primary text-sm font-medium transition-colors">
                                 Pricing
                             </Link>
-                            {/* <Link to="#review" className="text-gray-700 hover:text-[#16A34A] text-sm font-medium transition-colors">
+                            {/* <Link to="#review" className="text-gray-700 hover:text-primary text-sm font-medium transition-colors">
                                 Review
                             </Link> */}
 
@@ -55,7 +55,7 @@ const Header = () => {
                                 window.location.href =
                                     "https://crm-backend-7lf9.onrender.com/api/auth/google";
                             }}
-                            className="bg-[#16A34A] hidden md:block  whitespace-nowrap hover:bg-[#15803D] text-white text-sm font-medium px-6 py-2 rounded-lg transition-colors"
+                            className="bg-primary hidden md:block  whitespace-nowrap hover:bg-primary/80 text-white text-sm font-medium px-6 py-2 rounded-lg transition-colors"
                         >
                             Start for FREE →
                         </button>

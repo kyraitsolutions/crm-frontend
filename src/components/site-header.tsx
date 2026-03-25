@@ -3,18 +3,19 @@ import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
 import { DASHBOARD_PATH } from "@/constants";
+import { Bell, Plus, Search, Settings } from "lucide-react";
+import { IconQuestionMark } from "@tabler/icons-react";
 
 export function SiteHeader() {
   const { accountName, accountId, user } = useAuthStore((state) => state);
   const organizationName = user?.userprofile?.organizationName;
 
-  // const profileLink = accountName
-  //   ? `${DASHBOARD_PATH.ROOT}/account/${accountId}/profile`
-  //   : `${DASHBOARD_PATH.ROOT}/org/${user?.id}/profile`;
+  const baseUrl = accountName
+    ? `${DASHBOARD_PATH.ROOT}/account/${accountId}`
+    : `${DASHBOARD_PATH.ROOT}`;
 
-  const profileLink = `${DASHBOARD_PATH.ROOT}/account/${accountId}/profile`;
-
-  console.log(accountName);
+  const profileLink = `${baseUrl}/settings/profile`;
+  const settingLink = `${baseUrl}/settings`;
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -25,7 +26,7 @@ export function SiteHeader() {
 
             <span className="text-gray-400">/</span>
 
-            <span className="font-semibold text-[#16A34A] truncate max-w-[200px]">
+            <span className="font-semibold text-primary truncate max-w-50">
               {accountName || "—"}
             </span>
           </h2>
@@ -39,9 +40,43 @@ export function SiteHeader() {
           {accountName || ""}
         </h1> */}
         <div className="ml-auto flex items-center gap-2">
+          <div className="flex items-center gap-4">
+            {/* Trial Text */}
+            <span className="text-md text-primary font-medium">
+              Trial expires in 14 days
+            </span>
+
+            {/* Upgrade Button */}
+            <button className="bg-primary hover:bg-primary/80 text-white text-sm px-4 py-1.5 rounded font-medium transition">
+              Upgrade
+            </button>
+
+            {/* Add Button */}
+
+            <button className="p-1.5 flex items-center justify-center bg-primary hover:bg-primary/80 text-white rounded">
+              <Plus size={20} />
+            </button>
+            <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
+              <Search size={20} />
+            </button>
+            <button className="p-1.5 flex items-center justify-center hover:bg-primary/20 hover:text-primary rounded">
+              <Bell size={20} />
+            </button>
+            <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
+              <IconQuestionMark size={20} />
+            </button>
+            <Link
+              to={settingLink}
+              className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded"
+            >
+              <Settings size={18} />
+            </Link>
+            <div className="h-5 w-0.5 bg-gray-300"></div>
+          </div>
+
           <Link to={profileLink}>
-            <Avatar className="border-2 border-slate-300 size-10">
-              <AvatarFallback className="text-red-500 text-sm font-medium">
+            <Avatar className="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full font-medium">
+              <AvatarFallback className="w-8 h-8 flex text-sm items-center justify-center bg-primary text-white rounded-full font-medium">
                 {getFirstWordOfSentence(accountName || organizationName || "")}
               </AvatarFallback>
             </Avatar>

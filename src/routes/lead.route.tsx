@@ -5,7 +5,7 @@ import { type RouteObject } from "react-router-dom";
 export const leadRoutes: RouteObject[] = [
   {
     path: `${DASHBOARD_PATH.ROOT}/account/:accountId/leads`,
-    element: <FormLayout />,
+    // element: <FormLayout />,
     children: [
       {
         element: <LeadsCentre />,

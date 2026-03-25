@@ -6,21 +6,23 @@ import {
   OnBoardingPage,
   RegisterPage,
 } from "@/pages";
+import PricingPage from "@/pages/pricing.page";
+import PrivacyPolicyPage from "@/pages/privacy.page";
+import TermsPage from "@/pages/terms.page";
 import { createBrowserRouter } from "react-router-dom";
 import { builderRoutes } from "./builder.routes";
 import { chatBotRoutes } from "./chat-bot.routes";
 import { dashboardRoutes } from "./dashboard.routes";
 import { formRoutes } from "./form.routes";
 import { leadRoutes } from "./lead.route";
-import TermsPage from "@/pages/terms.page";
-import PrivacyPolicyPage from "@/pages/privacy.page";
-import PricingPage from "@/pages/pricing.page";
 // import ProductPage from "@/pages/product.page";
 // import About from "@/pages/about.page";
+import { Teams } from "@/pages/UsersAndControl/teams.page";
 import { broadcastRoutes } from "./broadcast.routes";
 import { contactRoutes } from "./contact.routes";
-import { profileRoutes } from "./profile.routes";
-import { Teams } from "@/pages/teams.page";
+import { settingRoutes } from "./setting.routes";
+import { PublicOnly } from "./route-access/PublicOnly";
+import { ProtectedOnly } from "./route-access/ProtectedOnly";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -31,14 +33,6 @@ export const appRoutes = createBrowserRouter([
         element: <HomePage />,
         index: true,
       },
-      // {
-      //   element: <ProductPage />,
-      //   path: '/product',
-      // },
-      // {
-      //   element: <About />,
-      //   path: '/about',
-      // },
       {
         element: <PricingPage />,
         path: "/pricing",
@@ -51,39 +45,48 @@ export const appRoutes = createBrowserRouter([
         element: <PrivacyPolicyPage />,
         path: "/privacy-policy",
       },
+
+      // Auth PUBLIC ONLY (not logged in)
       {
-        element: <AppLayout />,
+        element: <PublicOnly />,
         children: [
-          ...dashboardRoutes,
-          ...builderRoutes,
-          ...chatBotRoutes,
-          ...formRoutes,
-          ...leadRoutes,
-          ...broadcastRoutes,
-          ...contactRoutes,
-          ...profileRoutes,
+          { path: "/login", element: <LoginPage /> },
+          { path: "/register", element: <RegisterPage /> },
+        ],
+      },
+
+      //PROTECTED (logged in)
+      {
+        element: <ProtectedOnly />,
+        children: [
+          {
+            element: <AppLayout />,
+            children: [
+              ...dashboardRoutes,
+              ...builderRoutes,
+              ...chatBotRoutes,
+              ...formRoutes,
+              ...leadRoutes,
+              ...broadcastRoutes,
+              ...contactRoutes,
+              ...settingRoutes,
+
+              {
+                path: "/teams",
+                element: <Teams />,
+              },
+            ],
+          },
           {
             path: "/on-boarding",
             element: <OnBoardingPage />,
           },
-          {
-            path: "/teams",
-            element: <Teams />,
-          },
         ],
       },
+      {
+        path: "/auth/callback",
+        element: <AuthCallbackPage />,
+      },
     ],
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-  {
-    path: "/auth/callback",
-    element: <AuthCallbackPage />,
-  },
-  {
-    path: "/register",
-    element: <RegisterPage />,
   },
 ]);

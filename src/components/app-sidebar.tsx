@@ -10,8 +10,9 @@ import {
   IconMessageCircle,
   IconUsers,
 } from "@tabler/icons-react";
+import { BookTemplateIcon } from "lucide-react";
 import { useState } from "react";
-import { MdEmail, MdOutlineCampaign, MdOutlineContacts } from "react-icons/md";
+import { MdEmail, MdOutlineCampaign, MdOutlineContacts, MdWhatsapp } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
@@ -72,24 +73,24 @@ export function AppSidebar() {
           {
             title: "Email",
             url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/email`,
-            icon: MdEmail,
+            icon: MdEmail
           },
-          // {
-          //   title: "WhatsApp",
-          //   url: `${DASHBOARD_PATH.getAccountPath(accountId)}/broadcast/whatsapp`,
-          //   icon:MdWhatsapp
-          // },
+          {
+            title: "WhatsApp",
+            url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/whatsapp`,
+            icon: MdWhatsapp
+          },
+          {
+            title: "Templates",
+            url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/templates`,
+            icon: BookTemplateIcon
+          },
         ],
       },
       {
         title: "Contacts",
         url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/contacts`,
         icon: MdOutlineContacts,
-      },
-      {
-        title: "Team",
-        url: "/dashboard/teams",
-        icon: IconUsers,
       },
     ],
   };
@@ -98,7 +99,7 @@ export function AppSidebar() {
     <aside
       className={cn(
         "h-screen bg-gray-50 border-r flex flex-col transition-all duration-300",
-        collapsed ? "w-[72px]" : "w-90",
+        collapsed ? "w-18" : "w-90",
       )}
     >
       {/* Logo */}
@@ -106,7 +107,7 @@ export function AppSidebar() {
         {!collapsed && (
           <Link
             to="/"
-            className={`font-semibold  text-lg text-[#16A34A] whitespace-nowrap overflow-x-hidden`}
+            className={`font-semibold  text-lg text-primary whitespace-nowrap overflow-x-hidden`}
           >
             Kyra AI CRM
           </Link>
@@ -139,10 +140,10 @@ export function AppSidebar() {
       <NavMain items={data.navMain as any} collapsed={collapsed} />
 
       {/* Upgrade */}
-      <div className="px-3 py-3">
+      {/* <div className="px-3 py-3">
         <Link
           to="/dashboard/subscription"
-          className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-white bg-[#16A34A] hover:bg-[#15803D] "
+          className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-white bg-primary hover:bg-primary/90 transition"
         >
           <span className="text-lg">⚡</span>
           {!collapsed && (
@@ -151,7 +152,7 @@ export function AppSidebar() {
             </span>
           )}
         </Link>
-      </div>
+      </div> */}
 
       {/* User */}
       <div className="border-t py-0 flex items-center">

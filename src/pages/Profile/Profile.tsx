@@ -117,9 +117,9 @@ export default function ProfilePage() {
   const is_admin = isAdmin(user?.roleId);
 
   return (
-    <div className="p-6 mx-auto space-y-6">
+    <div className="p-6 mx-auto bg-gray-50 h-screen space-y-6">
       {/* HEADER */}
-      <div className="bg-gradient-to-r from-blue-100 to-yellow-100 p-6 rounded-2xl flex items-center justify-between">
+      <div className="bg-linear-to-r from-blue-100 to-yellow-100 p-6 rounded flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="relative">
             <Avatar className="w-16 h-16">
@@ -155,7 +155,7 @@ export default function ProfilePage() {
 
         {is_admin && (
           <Button
-            className="bg-neutral-700 hover:bg-neutral-700/95 hover:text-white text-white rounded-full px-5!"
+            className="bg-primary hover:bg-primary hover:text-white text-white rounded px-5!"
             variant="outline"
             onClick={() => setEditMode(!editMode)}
           >
@@ -166,12 +166,12 @@ export default function ProfilePage() {
       </div>
 
       {/* FORM */}
-      <div className="bg-white rounded-2xl shadow p-6 space-y-6">
+      <div className="bg-white rounded p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label className="text-sm text-gray-500">First Name</Label>
             <Input
-              className="border-0 border-b rounded-none focus-visible:ring-0 disabled:border-1 disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
+              className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
               value={profile.firstName}
               disabled={!editMode}
               onChange={(e) =>
@@ -183,7 +183,7 @@ export default function ProfilePage() {
           <div className="space-y-2">
             <Label className="text-sm text-gray-500">Last Name</Label>
             <Input
-              className="border-0 border-b rounded-none focus-visible:ring-0 disabled:border-1 disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
+              className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
               value={profile.lastName}
               disabled={!editMode}
               onChange={(e) =>
@@ -197,7 +197,7 @@ export default function ProfilePage() {
             <div className="relative">
               <Phone className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
               <Input
-                className="border-0 border-b rounded-none focus-visible:ring-0 disabled:border-1 disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
                 value={profile.phone}
                 disabled={!editMode}
                 placeholder="9199999999"
@@ -223,7 +223,7 @@ export default function ProfilePage() {
                 <div className="relative">
                   <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
                   <Input
-                    className="border-0 border-b rounded-none focus-visible:ring-0 disabled:border-1 disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                    className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
                     value={email}
                     disabled={!editMode}
                     onChange={(e) => {
@@ -245,7 +245,7 @@ export default function ProfilePage() {
                 <div className="relative">
                   <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
                   <Input
-                    className="border-0 border-b rounded-none focus-visible:ring-0 disabled:border-1 disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                    className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
                     placeholder="Secondary Email"
                     value={profile.emails[1]}
                     disabled={!editMode}
@@ -268,7 +268,7 @@ export default function ProfilePage() {
               <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
 
               <Input
-                className="border-0 border-b rounded-none focus-visible:ring-0 disabled:border-1 disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
                 placeholder="support@email.com"
                 value={profile.supportEmail}
                 disabled={!editMode}

@@ -9,7 +9,6 @@ const BroadcastLayout = () => {
 
       <main className="w-full h-screen overflow-y-scroll">
         <SiteHeader />
-        {/* <Header /> */}
 
         <Outlet />
       </main>

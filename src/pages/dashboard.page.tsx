@@ -119,7 +119,7 @@ export const DashboardPage = () => {
         },
       });
 
-      authManager.setAccountSelected(true);
+      // authManager.setAccountSelected(true);
       authManager.setAccountName(accounts[index]?.accountName);
       authManager.setAccountId(accounts[index]?.id);
     }
@@ -178,7 +178,7 @@ export const DashboardPage = () => {
 
   if (loading) {
     return (
-      <div className="p-5 space-y-4 w-[300px]">
+      <div className="p-5 space-y-4 w-75">
         <Card className="p-2">
           <div className="space-y-2">
             {[...Array(4)].map((_, i) => (
@@ -260,13 +260,12 @@ export const DashboardPage = () => {
                 <span
                   className={`
             px-2 py-0.5 rounded-full capitalize text-xs font-medium
-            ${
-              account.status === "active"
-                ? "bg-primary/10 text-primary"
-                : account.status === "inactive"
-                  ? "bg-destructive/10 text-destructive"
-                  : "bg-primary/10 text-primary"
-            }
+            ${account.status === "active"
+                      ? "bg-primary/10 text-primary"
+                      : account.status === "inactive"
+                        ? "bg-destructive/10 text-destructive"
+                        : "bg-primary/10 text-primary"
+                    }
           `}
                 >
                   {account.status}
@@ -301,11 +300,11 @@ export const DashboardPage = () => {
           {/* Dialog stays unchanged */}
           <DialogContent
             className="
-    sm:max-w-[420px]
-    rounded-2xl
-    p-6
-    shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
-  "
+            sm:max-w-105
+            rounded-2xl
+            p-6
+            shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
+          "
           >
             <form
               className="flex flex-col gap-6"

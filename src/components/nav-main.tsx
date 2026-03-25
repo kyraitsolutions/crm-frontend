@@ -74,8 +74,8 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                 onClick={() => toggleMenu(item.title)}
                 className={` w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100`}
               >
-                <div className="flex items-center gap-3">
-                  {Icon && <Icon size={20} />}
+                <div className={`flex  ${collapsed ? "justify-center" : "justify-end"} items-center gap-3`}>
+                  {Icon && <Icon size={22} />}
                   {!collapsed && <span>{item.title}</span>}
                 </div>
 
@@ -95,13 +95,13 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                 to={item.url}
                 onClick={handleClick}
                 className={cn(
-                  "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
+                  `group relative flex ${collapsed ? "justify-center" : ""} items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all`,
                   active
-                    ? "bg-[#16A34A]/10 text-[#16A34A]"
+                    ? "bg-primary/10 text-primary"
                     : "text-gray-600 hover:bg-gray-100",
                 )}
               >
-                <Icon size={16} />
+                <Icon size={20} />
 
                 {!collapsed && (
                   <span className="inline-block whitespace-nowrap overflow-x-hidden">
@@ -110,7 +110,7 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                 )}
 
                 {active && (
-                  <span className="absolute right-2 w-1.5 h-6 rounded-full bg-[#16A34A]" />
+                  <span className="absolute right-2 w-1.5 h-6 rounded-full bg-primary" />
                 )}
               </Link>
             )}
@@ -128,11 +128,11 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                       className={cn(
                         "block px-3 py-2 text-sm items-center rounded-lg gap-1",
                         childActive
-                          ? "bg-[#16A34A]/10 flex text-[#16A34A]"
+                          ? "bg-primary/10 flex text-primary"
                           : "text-gray-600 flex hover:bg-gray-100",
                       )}
                     >
-                      <ChildIcon size={16} />
+                      <ChildIcon size={18} />
                       {child.title}
                     </Link>
                   );

@@ -8,6 +8,10 @@ export interface IUser {
   updatedAt: string;
   isOnboardingCompleted: boolean;
   roleId: string;
+  organization: {
+    id: string;
+    name: string;
+  };
   userprofile: {
     firstName: string;
     lastName: string;
@@ -15,6 +19,7 @@ export interface IUser {
     accountType: string;
   };
   account: Partial<Account>;
+
   usersubscription: {
     planId: string;
   };

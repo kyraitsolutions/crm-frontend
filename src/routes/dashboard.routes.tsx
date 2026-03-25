@@ -1,9 +1,8 @@
 import { DASHBOARD_PATH } from "@/constants";
 import { DashboardLayout } from "@/layouts";
 import DashboardAccount from "@/pages/dashboard-account.page";
-import SettingsPage from "@/pages/setting.page";
+import SettingPage from "@/pages/setting.page";
 import { SubscriptionPage } from "@/pages/subscription.page";
-import { Teams } from "@/pages/teams.page";
 import { type RouteObject } from "react-router-dom";
 
 export const dashboardRoutes: RouteObject[] = [
@@ -25,7 +24,7 @@ export const dashboardRoutes: RouteObject[] = [
       // },
       {
         path: "settings",
-        element: <SettingsPage />,
+        element: <SettingPage />,
       },
       {
         path: "subscription",

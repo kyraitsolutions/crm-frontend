@@ -35,6 +35,7 @@ import {
 // import { DateRange } from "react-day-picker";
 import { ComparisonMetricCard } from "@/components/common/ComparisonMetricCard";
 
+import { StatCard } from "@/components/email/StatCard";
 import { exportToCSV, exportToPDF } from "@/lib/exportUtils";
 import { AnalyticsService } from "@/services/analytics.service";
 import {
@@ -43,11 +44,9 @@ import {
   parseISO,
   subDays,
 } from "date-fns";
-import { useParams } from "react-router-dom";
 import type { DateRange } from "react-day-picker";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { StatCard } from "@/components/email/StatCard";
-import { DashboardPage } from "./dashboard.page";
 
 interface AnalyticsData {
   totalLeads: number;
@@ -401,7 +400,6 @@ const DashboardAccount = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <DashboardPage />
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -654,7 +652,7 @@ const DashboardAccount = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="h-[280px]">
+              <div className="h-70">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={data?.leadsOverTime}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -718,7 +716,7 @@ const DashboardAccount = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="h-[280px]">
+              <div className="h-70">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -771,7 +769,7 @@ const DashboardAccount = () => {
               <div className="space-y-3">
                 {data?.leadsBySource?.map((source) => (
                   <div key={source.source} className="flex items-center gap-2">
-                    <div className="flex min-w-[90px] items-center gap-2">
+                    <div className="flex min-w-22.5 items-center gap-2">
                       <div
                         className="h-2 w-2 rounded-full"
                         style={{ backgroundColor: source.color }}
@@ -791,7 +789,7 @@ const DashboardAccount = () => {
                         }}
                       />
                     </div>
-                    <div className="flex min-w-[80px] items-center gap-2 text-sm">
+                    <div className="flex min-w-20 items-center gap-2 text-sm">
                       <span className="font-semibold">{source.count}</span>
                       <span
                         className={`flex items-center gap-0.5 ${
