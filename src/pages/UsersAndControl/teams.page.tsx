@@ -495,11 +495,9 @@ export const Teams = () => {
             <button className="flex items-center gap-1 text-xs font-semibold bg-white border rounded shadow-sm">
               {/* Active Users (1) <ChevronDown className="w-3 h-3" /> */}
             </button>
-            <div className="flex">
-              <Button className="bg-primary text-white flex items-center gap-1 hover:bg-primary">
+            <div className="flex ">
+              <Button className="bg-primary text-white flex items-center gap-1 rounded hover:bg-primary">
                 <Plus /> New User
-              </Button>
-              <Button className="bg-primary text-white rounded-r border-l border-primary hover:bg-primary">
                 <ChevronDown color="white" />
               </Button>
             </div>
