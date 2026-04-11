@@ -10,7 +10,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 export function AppLayout() {
   const authManager = new AuthStoreManager();
-
   const navigate = useNavigate();
 
   const accountStoreManager = new AccountsStoreManager();
@@ -43,30 +42,16 @@ export function AppLayout() {
   }, []);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       <AppSidebar />
 
-      <main className="w-full h-screen overflow-y-scroll">
+      <main className="w-full h-full flex flex-col p-2">
         <SiteHeader />
-        <Outlet />
+
+        <div className="flex-1 overflow-y-auto">
+          <Outlet />
+        </div>
       </main>
     </div>
-
-    // <ProtectedLayout>
-    //   {isLoading ? (
-    //     <div className="h-screen flex justify-center items-center">
-    //       <div className="size-10 animate-spin border-t-2 border-t-black rounded-full" />
-    //     </div>
-    //   ) : (
-    //     <div className="flex h-screen">
-    //       <AppSidebar />
-
-    //       <main className="w-full h-screen overflow-y-scroll">
-    //         <SiteHeader />
-    //         <Outlet />
-    //       </main>
-    //     </div>
-    //   )}
-    // </ProtectedLayout>
   );
 }

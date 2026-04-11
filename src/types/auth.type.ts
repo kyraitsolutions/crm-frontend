@@ -6,8 +6,11 @@ export interface IUser {
   profilePicture: string;
   createdAt: string;
   updatedAt: string;
-  isOnboardingCompleted: boolean;
-  roleId: string;
+  onboarding: boolean;
+  role: {
+    name: string;
+    level: number;
+  };
   organization: {
     id: string;
     name: string;
@@ -19,10 +22,10 @@ export interface IUser {
     accountType: string;
   };
   account: Partial<Account>;
-
   usersubscription: {
     planId: string;
   };
+  permissions?: string[];
 }
 
 export interface Account {

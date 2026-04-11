@@ -1,20 +1,9 @@
 import { DASHBOARD_PATH } from "@/constants";
 import { settingSections } from "@/constants/setting.constant";
-import { useAuthStore } from "@/stores";
 import { Link } from "react-router-dom";
 
 const SettingPage = () => {
-  const { accountName } = useAuthStore((state) => state);
-  //   const organizationName = user?.userprofile?.organizationName;
-
-  // const baseUrl = accountName
-  //   ? `${DASHBOARD_PATH.ROOT}/account/${accountId}/setting`
-  //   : `${DASHBOARD_PATH.ROOT}/${user?.id}/setting`;
-
-  //   const profileLink = `${baseUrl}/setting/profile`;
-  //   const settingLink = `${baseUrl}/setting`;
-
-  console.log(accountName);
+  // const { accountName } = useAuthStore((state) => state);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">

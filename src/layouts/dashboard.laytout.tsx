@@ -1,5 +1,3 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import { SiteHeader } from "@/components/site-header";
 import { DASHBOARD_PATH } from "@/constants";
 import { useAuthStore } from "@/stores";
 import { useEffect } from "react";

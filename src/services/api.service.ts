@@ -76,12 +76,13 @@ class ApiService {
   private handleError(error: AxiosError): ApiError {
     if (error.response) {
       const data = error.response.data as any;
-      console.log(data);
 
+      console.log(data);
       const apiError: ApiError = {
         message:
           data?.error?.responseMessage || // ✅ your backend format
-          data?.error?.message || // fallback
+          data?.error?.message ||
+          data?.responseMessage || // fallback
           "Something went wrong",
 
         status: error.response.status,

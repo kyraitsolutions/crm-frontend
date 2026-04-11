@@ -12,12 +12,18 @@ import {
 } from "@tabler/icons-react";
 import { BookTemplateIcon } from "lucide-react";
 import { useState } from "react";
-import { MdEmail, MdOutlineCampaign, MdOutlineContacts, MdWhatsapp } from "react-icons/md";
+import {
+  MdEmail,
+  MdOutlineCampaign,
+  MdOutlineContacts,
+  MdWhatsapp,
+} from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { SidebarFooter } from "./ui/sidebar";
+import { hasPermission } from "@/rbac";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -46,7 +52,7 @@ export function AppSidebar() {
       {
         title: "Dashboard",
         url: DASHBOARD_PATH.getAccountPath(String(accountId)),
-
+        active: true,
         icon: IconDashboard,
       },
 
@@ -54,36 +60,41 @@ export function AppSidebar() {
         title: "Leads Centre",
         url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/leads`,
         icon: IconUsers,
+        active: hasPermission(authUser?.permissions, "leads.view"),
       },
       {
         title: "Chat bot",
         url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`,
         icon: IconMessageCircle,
+        // active: hasPermission(authUser?.permissions, "chatbot.view"),
+        active: true,
       },
       {
         title: "Lead Forms",
         url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/lead-forms`,
         icon: IconFileText,
+        active: hasPermission(authUser?.permissions, "leadform.view"),
       },
       {
         title: "Broadcast",
         url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast`,
         icon: MdOutlineCampaign,
+        active: true,
         children: [
           {
             title: "Email",
             url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/email`,
-            icon: MdEmail
+            icon: MdEmail,
           },
           {
             title: "WhatsApp",
             url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/whatsapp`,
-            icon: MdWhatsapp
+            icon: MdWhatsapp,
           },
           {
             title: "Templates",
             url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/templates`,
-            icon: BookTemplateIcon
+            icon: BookTemplateIcon,
           },
         ],
       },
@@ -91,9 +102,12 @@ export function AppSidebar() {
         title: "Contacts",
         url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/contacts`,
         icon: MdOutlineContacts,
+        active: true,
       },
     ],
   };
+
+  console.log(data);
 
   return (
     <aside

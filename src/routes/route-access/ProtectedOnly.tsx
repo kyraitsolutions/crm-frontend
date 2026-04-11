@@ -4,19 +4,18 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { COOKIES_STORAGE } from "@/constants";
 import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { AuthService } from "@/services";
-import { AuthStoreManager } from "@/stores";
+import { AuthStoreManager, useAuthStore } from "@/stores";
+import AppLoader from "@/components/Loader/app-loader";
 
 export const ProtectedOnly = () => {
   const token = CookieUtils.getItem(COOKIES_STORAGE.auth_token);
   const location = useLocation();
+  const { user } = useAuthStore((state) => state);
 
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
 
   const authService = new AuthService();
   const authManager = new AuthStoreManager();
-
-  const existingUser = authManager.getUser();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,9 +24,7 @@ export const ProtectedOnly = () => {
         return;
       }
 
-      // ✅ if already exists, use it
-      if (existingUser) {
-        setUser(existingUser);
+      if (user) {
         setLoading(false);
         return;
       }
@@ -37,7 +34,6 @@ export const ProtectedOnly = () => {
         const userData = res.data?.docs;
 
         authManager.setUser(userData);
-        setUser(userData);
       } catch (err) {
         console.error(err);
       } finally {
@@ -50,11 +46,7 @@ export const ProtectedOnly = () => {
 
   // 🔄 loading state
   if (loading) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <div className="size-10 animate-spin border-t-2 border-black rounded-full" />
-      </div>
-    );
+    return <AppLoader />;
   }
 
   // not logged in

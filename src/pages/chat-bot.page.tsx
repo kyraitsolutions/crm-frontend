@@ -100,9 +100,15 @@ export function ChatBotPage() {
     try {
       setLoading(true);
       const res: any = await chatBotService.getChatBotsList(String(accountId));
-      chatBotManager.setChatBotsList(res.data.docs ?? []);
+      if (res.status === 200) {
+        chatBotManager.setChatBotsList(res.data.docs ?? []);
+      }
     } catch (error) {
-      toastMessageService.apiError(error as any);
+      const err = error as ApiError;
+      if (err) {
+        toastMessageService.apiError(err?.message || "An error occurred");
+      }
+      chatBotManager.setChatBotsList([]);
     } finally {
       setLoading(false);
     }
@@ -182,7 +188,7 @@ export function ChatBotPage() {
 
   useEffect(() => {
     getChatBotsList();
-  }, []);
+  }, [accountId]);
 
   if (loading) {
     return (

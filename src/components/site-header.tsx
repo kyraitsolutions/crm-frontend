@@ -7,15 +7,10 @@ import { Bell, Plus, Search, Settings } from "lucide-react";
 import { IconQuestionMark } from "@tabler/icons-react";
 
 export function SiteHeader() {
-  const { accountName, accountId, user } = useAuthStore((state) => state);
+  const { accountName, user } = useAuthStore((state) => state);
   const organizationName = user?.userprofile?.organizationName;
 
-  const baseUrl = accountName
-    ? `${DASHBOARD_PATH.ROOT}/account/${accountId}`
-    : `${DASHBOARD_PATH.ROOT}`;
-
-  const profileLink = `${baseUrl}/settings/profile`;
-  const settingLink = `${baseUrl}/settings`;
+  const baseUrl = `${DASHBOARD_PATH.ROOT}${DASHBOARD_PATH.SETTINGS}`;
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -66,7 +61,7 @@ export function SiteHeader() {
               <IconQuestionMark size={20} />
             </button>
             <Link
-              to={settingLink}
+              to={baseUrl}
               className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded"
             >
               <Settings size={18} />
@@ -74,7 +69,7 @@ export function SiteHeader() {
             <div className="h-5 w-0.5 bg-gray-300"></div>
           </div>
 
-          <Link to={profileLink}>
+          <Link to={`${baseUrl}/profile`}>
             <Avatar className="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full font-medium">
               <AvatarFallback className="w-8 h-8 flex text-sm items-center justify-center bg-primary text-white rounded-full font-medium">
                 {getFirstWordOfSentence(accountName || organizationName || "")}
