@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+}
 /* Apply globally */
 ::-webkit-scrollbar {
   width: 6px;
@@ -34,7 +40,7 @@
   --card-foreground: oklch(0.3211 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.3211 0 0);
-  /* --primary: #16A34A; */
+  --primary: #16A34A;
   /* --primary: oklch(70.5% 0.213 47.604); */
   /* --primary: #223458; */
   --primary: #21733F;

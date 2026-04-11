@@ -1,41 +1,41 @@
-import { EOnBoardingQuestionType } from "@/enums";
 import { z } from "zod";
-const ZBaseOnBoardingQuestion = z.object({
-    id: z.string(),
-    title: z.string(),
-    description: z.string().optional(),
+
+export const personalSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.email("Enter valid email"),
 });
 
-const ZBaseOption = z.object({
-    id: z.string(),
-    label: z.string(),
+export const companySchema = z.object({
+  companyName: z.string().optional(),
+  industry: z.string().min(1, "Industry is required"),
+
+  address: z.object({
+    line1: z.string().optional(),
+    line2: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    country: z.string().optional(),
+
+    pincode: z
+      .string()
+      .regex(/^\d{6}$/, "Pincode must be 6 digits")
+      .optional()
+      .or(z.literal("")),
+  }),
+
+  website: z.string().url("Enter valid URL").optional().or(z.literal("")),
+
+  phone: z.string().optional(),
+
+  privacyPolicy: z.string().url("Enter valid URL").optional().or(z.literal("")),
+
+  terms: z.string().url("Enter valid URL").optional().or(z.literal("")),
 });
 
-const ZMultiSelectOnBoardingQuestion = ZBaseOnBoardingQuestion.extend({
-    type: z.literal(EOnBoardingQuestionType.MULTI_SELECT),
-    options: z.array(ZBaseOption),
-    maxOptions: z.number().optional(),
-    minOptions: z.number().optional(),
+export const onboardingSchema = z.object({
+  ...personalSchema.shape,
+  ...companySchema.shape,
 });
 
-const ZTextOnBoardingQuestion = ZBaseOnBoardingQuestion.extend({
-    type: z.literal(EOnBoardingQuestionType.TEXT),
-    placeholder: z.string(),
-    multiline: z.boolean(),
-});
-
-export const ZOnBoardingQuestion = z.union([
-    ZMultiSelectOnBoardingQuestion,
-    ZTextOnBoardingQuestion,
-]);
-
-export type BaseOnBoardingQuestionProp<T> = {
-    question: T
-    value: string[] | string
-    onChange: (value: string[] | string) => void
-    onNext?: () => void
-    questionNumber?: number
-}
-export type OnBoardingMultiSelectQuestion = z.infer<typeof ZMultiSelectOnBoardingQuestion>;
-export type OnBoardingTextQuestion = z.infer<typeof ZTextOnBoardingQuestion>;
-export type OnBoardingQuestion = z.infer<typeof ZOnBoardingQuestion>;
+export type OnboardingFormData = z.infer<typeof onboardingSchema>;

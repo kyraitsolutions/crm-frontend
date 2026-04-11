@@ -12,12 +12,10 @@ export function SiteHeader() {
 
   const baseUrl = accountName
     ? `${DASHBOARD_PATH.ROOT}/account/${accountId}`
-    : `${DASHBOARD_PATH.ROOT}/org/${user?.id}`;
+    : `${DASHBOARD_PATH.ROOT}`;
 
-  const profileLink = `${baseUrl}/setting/profile`;
-  const settingLink = `${baseUrl}/setting`;
-
-  console.log(accountName);
+  const profileLink = `${baseUrl}/settings/profile`;
+  const settingLink = `${baseUrl}/settings`;
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -43,7 +41,6 @@ export function SiteHeader() {
         </h1> */}
         <div className="ml-auto flex items-center gap-2">
           <div className="flex items-center gap-4">
-
             {/* Trial Text */}
             <span className="text-md text-primary font-medium">
               Trial expires in 14 days
@@ -61,19 +58,18 @@ export function SiteHeader() {
             </button>
             <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
               <Search size={20} />
-
             </button>
             <button className="p-1.5 flex items-center justify-center hover:bg-primary/20 hover:text-primary rounded">
               <Bell size={20} />
-
             </button>
             <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
               <IconQuestionMark size={20} />
-
             </button>
-            <Link to={settingLink} className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
+            <Link
+              to={settingLink}
+              className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded"
+            >
               <Settings size={18} />
-
             </Link>
             <div className="h-5 w-0.5 bg-gray-300"></div>
           </div>

@@ -1,18 +1,20 @@
 import axios, {
+  AxiosError,
   type AxiosInstance,
   type AxiosRequestConfig,
   type AxiosResponse,
-  AxiosError,
   type InternalAxiosRequestConfig,
 } from "axios";
 
+import { COOKIES_STORAGE } from "@/constants";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
 import type {
-  ApiResponse,
   ApiError,
-  RequestConfig,
+  ApiResponse,
   HttpMethod,
+  RequestConfig,
 } from "../types";
-import { Log, LocalStorageUtils } from "../utils";
+import { Log } from "../utils";
 
 class ApiService {
   private instance: AxiosInstance;
@@ -37,7 +39,7 @@ class ApiService {
       },
       (error: AxiosError) => {
         return Promise.reject(this.handleError(error));
-      }
+      },
     );
 
     this.instance.interceptors.response.use(
@@ -46,17 +48,15 @@ class ApiService {
       },
       (error: AxiosError): Promise<AxiosError> => {
         return Promise.reject(this.handleError(error));
-      }
+      },
     );
   }
 
   private handleRequest(
-    config: InternalAxiosRequestConfig
+    config: InternalAxiosRequestConfig,
   ): InternalAxiosRequestConfig {
-    const token = LocalStorageUtils.getItem("token");
+    const token = CookieUtils.getItem(COOKIES_STORAGE.auth_token);
 
-    console.log("TOKEN FROM LS:", token); // 👈 ADD THIS
-    
     if (token && this.requiresAuth(config)) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -75,10 +75,17 @@ class ApiService {
 
   private handleError(error: AxiosError): ApiError {
     if (error.response) {
+      const data = error.response.data as any;
+      console.log(data);
+
       const apiError: ApiError = {
-        message: (error.response.data as any)?.message || error.message,
+        message:
+          data?.error?.responseMessage || // ✅ your backend format
+          data?.error?.message || // fallback
+          "Something went wrong",
+
         status: error.response.status,
-        code: (error.response.data as any)?.code,
+        code: data?.code,
       };
 
       if (error.response.status === 401) {
@@ -104,7 +111,7 @@ class ApiService {
   }
 
   private handleUnauthorized(): void {
-    LocalStorageUtils.removeItem("token");
+    CookieUtils.removeItem(COOKIES_STORAGE.auth_token);
     window.location.href = "/login";
   }
 
@@ -117,7 +124,7 @@ class ApiService {
     method: HttpMethod,
     url: string,
     data?: any,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<ApiResponse<T>> {
     const axiosConfig: AxiosRequestConfig = {
       method,
@@ -145,7 +152,7 @@ class ApiService {
   async get<T = any>(
     url: string,
     params?: any,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<ApiResponse<T>> {
     return this.request<T>("GET", url, params, config);
   }
@@ -153,7 +160,7 @@ class ApiService {
   async post<T = any>(
     url: string,
     data?: any,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<ApiResponse<T>> {
     return this.request<T>("POST", url, data, config);
   }
@@ -161,7 +168,7 @@ class ApiService {
   async put<T = any>(
     url: string,
     data?: any,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<ApiResponse<T>> {
     return this.request<T>("PUT", url, data, config);
   }
@@ -169,7 +176,7 @@ class ApiService {
   async patch<T = any>(
     url: string,
     data?: any,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<ApiResponse<T>> {
     return this.request<T>("PATCH", url, data, config);
   }
@@ -177,7 +184,7 @@ class ApiService {
   async delete<T = any>(
     url: string,
     data?: any,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<ApiResponse<T>> {
     return this.request<T>("DELETE", url, data, config);
   }
@@ -185,7 +192,7 @@ class ApiService {
   async upload<T = any>(
     url: string,
     formData: FormData,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<ApiResponse<T>> {
     const uploadConfig: RequestConfig = {
       ...config,

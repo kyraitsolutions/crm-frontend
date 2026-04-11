@@ -1,5 +1,4 @@
 import { DASHBOARD_PATH } from "@/constants";
-import { DashboardLayout } from "@/layouts";
 import { SettingLayout } from "@/layouts/setting.layout";
 import { DashboardPage } from "@/pages";
 import Integrations from "@/pages/Integration/Integrations";
@@ -12,37 +11,33 @@ import { Teams } from "@/pages/UsersAndControl/teams.page";
 import { type RouteObject } from "react-router-dom";
 
 export const settingRoutes: RouteObject[] = [
-    {
-        path: `${DASHBOARD_PATH.ROOT}/:account_type/:accountId`,
-        element: <DashboardLayout />,
+  {
+    path: `${DASHBOARD_PATH.ROOT}`,
+    children: [
+      {
+        path: "settings",
+        element: <SettingLayout />,
         children: [
-            {
-                path: "setting",
-                element: <SettingLayout />,
-                children: [
-                    { index: true, element: <SettingPage /> },
+          { index: true, element: <SettingPage /> },
 
-                    // General Link
-                    { path: "profile", element: <ProfilePage /> },
-                    { path: "company-details", element: <CompanyDetails /> },
+          // General Link
+          { path: "profile", element: <ProfilePage /> },
+          { path: "company-details", element: <CompanyDetails /> },
 
+          // User Control
+          { path: "users", element: <Teams /> },
+          { path: "roles", element: <Role /> },
+          { path: "workspace", element: <DashboardPage /> },
 
-                    // User Control
-                    { path: "users", element: <Teams /> },
-                    { path: "roles", element: <Role /> },
-                    { path: "workspace", element: <DashboardPage /> },
+          // Plan and Subscription
+          { path: "subscription", element: <SubscriptionPage /> },
 
-                    // Plan and Subscription
-                    { path: "subscription", element: <SubscriptionPage /> },
+          // Integrations
+          { path: "integrations", element: <Integrations /> },
 
-
-                    // Integrations
-                    { path: "integrations", element: <Integrations /> }
-
-                    // { path: "automations", element: <Automations /> },
-                ]
-            },
-
+          // { path: "automations", element: <Automations /> },
         ],
-    },
+      },
+    ],
+  },
 ];

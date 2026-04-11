@@ -55,7 +55,7 @@ export const Teams = () => {
   const [openAssign, setOpenAssign] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [selectedAccounts, setSelectedAccounts] = useState<string[] | []>([]);
-  const [showMore, setShowMore] = useState(false)
+  const [showMore, setShowMore] = useState(false);
 
   const is_Admin = isAdmin(user?.roleId);
 
@@ -140,6 +140,8 @@ export const Teams = () => {
     try {
       const response = await accountService.getAccounts();
 
+      console.log(response);
+
       if (response.status === 200) {
         setAccounts(response?.data?.docs);
       }
@@ -221,7 +223,7 @@ export const Teams = () => {
         <div>
           <Badge
             onClick={() => {
-              setSelectedTeamId(row.id);
+              setSelectedTeamId(row.userId);
               setSelectedAccounts([]); // reset previous selection
               setOpenAssign(true);
             }}
@@ -261,27 +263,29 @@ export const Teams = () => {
     },
     ...(is_Admin
       ? [
-        {
-          key: "action",
-          header: "Action",
-          cellClassName: "whitespace-nowrap text-gray-700",
-          render: (row: ITeam) => (
-            <div className="flex justify-center">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteTeamMember(row.userId);
-                }}
-                className="actions-btn text-red-400!"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          ),
-        },
-      ]
+          {
+            key: "action",
+            header: "Action",
+            cellClassName: "whitespace-nowrap text-gray-700",
+            render: (row: ITeam) => (
+              <div className="flex justify-center">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteTeamMember(row.userId);
+                  }}
+                  className="actions-btn text-red-400!"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            ),
+          },
+        ]
       : []),
   ];
+
+  console.log(accounts);
 
   useEffect(() => {
     getTeams();
@@ -326,12 +330,14 @@ export const Teams = () => {
       city: "",
       state: "Uttar Pradesh",
       zipCode: "",
-      country: "India"
+      country: "India",
     },
-    workspace: [{
-      name: "CRM Teamspace",
-      code: "CT"
-    }],
+    workspace: [
+      {
+        name: "CRM Teamspace",
+        code: "CT",
+      },
+    ],
     locale: {
       language: "English (United States)",
       country: "India",
@@ -339,13 +345,13 @@ export const Teams = () => {
       timeFormat: "12 Hours",
       timeZone: "(GMT 5:30) India Standard Time (Asia/Kolkata)",
       distanceUnit: "Kilometers (km)",
-      numberFormat: "1,23,456.789"
-    }
+      numberFormat: "1,23,456.789",
+    },
   };
   return (
     <div className="">
       {/* Header */}
-      {/* <div className="flex justify-between items-center w-full">
+      <div className="flex justify-between items-center w-full">
         <h1 className="text-2xl font-medium text-[#37322F]">Teams</h1>
 
         {teams.length > 0 && is_Admin && (
@@ -485,8 +491,7 @@ export const Teams = () => {
             </div>
           </div>
         </div>
-      )} */}
-
+      )}
 
       <div className="grid grid-cols-5 h-screen bg-white">
         {/* Sidebar - Same as previous */}
@@ -503,7 +508,6 @@ export const Teams = () => {
             </div>
           </div>
 
-
           {teams.map((item) => (
             <div key={item.id} className="bg-blue-50/50 p-4  cursor-pointer">
               <div className="flex gap-3 items-center">
@@ -512,19 +516,25 @@ export const Teams = () => {
                   <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-md font-semibold">{item.firstName + " " + item.lastName}</span>
+                  <span className="text-md font-semibold">
+                    {item.firstName + " " + item.lastName}
+                  </span>
                   <div className="flex items-center gap-1">
-                    <span className="text-[14px] text-slate-400">{userData.role},</span>
-                    <span className="text-[12px] bg-orange-100 text-orange-700 px-2 py-1 rounded ">Administrator</span>
+                    <span className="text-[14px] text-slate-400">
+                      {userData.role},
+                    </span>
+                    <span className="text-[12px] bg-orange-100 text-orange-700 px-2 py-1 rounded ">
+                      Administrator
+                    </span>
                   </div>
-                  <span className="text-[12px] text-slate-500 mt-0.5 tracking-wide">{item.email}</span>
+                  <span className="text-[12px] text-slate-500 mt-0.5 tracking-wide">
+                    {item.email}
+                  </span>
                 </div>
               </div>
             </div>
           ))}
-
         </div>
-
 
         <main className="col-span-3 flex-1 overflow-y-auto p-10">
           {/* Header Profile Section */}
@@ -534,13 +544,18 @@ export const Teams = () => {
             </div>
             <div className="space-y-2 mt-2">
               <div className="flex items-center gap-3">
-                <h2 className="text-xl font-bold text-slate-800">{userData.firstName}</h2>
+                <h2 className="text-xl font-bold text-slate-800">
+                  {userData.firstName}
+                </h2>
                 <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-semibold border border-orange-200">
                   Administrator
                 </span>
                 <Pencil className="w-3 h-3 text-slate-400 cursor-pointer hover:text-blue-500" />
               </div>
-              <p className="text-sm text-slate-400">{userData.role} at <span className="text-slate-500">{userData.org}</span></p>
+              <p className="text-sm text-slate-400">
+                {userData.role} at{" "}
+                <span className="text-slate-500">{userData.org}</span>
+              </p>
               <div className="flex gap-6 mt-4">
                 <div className="flex items-center gap-2 text-sm text-slate-600">
                   <Mail className="w-4 h-4 text-slate-400" /> {userData.email}
@@ -552,54 +567,80 @@ export const Teams = () => {
             </div>
           </header>
 
-          <button onClick={() => setShowMore(!showMore)} className="flex items-center gap-1 text-orange-500 text-sm font-semibold mb-5 hover:underline">
+          <button
+            onClick={() => setShowMore(!showMore)}
+            className="flex items-center gap-1 text-orange-500 text-sm font-semibold mb-5 hover:underline"
+          >
             Show Details <ChevronDown className="w-4 h-4" />
           </button>
 
-
           {/* Info Grid Sections */}
           <div className="max-w-3xl space-y-12 mt-4">
-            {showMore && <section className="border-b border-slate-50">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-bold text-primary">User Information</h2>
-                {/* <Pencil size={14} className="text-slate-400 cursor-pointer" /> */}
-              </div>
-              <div className="space-y-1">
-                <InfoRow label="First Name" value={userData.firstName} />
-                <InfoRow label="Last Name" value={userData.lastName} />
-                <InfoRow label="Email" value={userData.email} />
-                <InfoRow label="Role" value={userData.role} />
-                <InfoRow label="Profile" value={userData.isSuperAdmin ? "administrator" : ""} />
-                <div className="grid grid-cols-[200px_1fr] py-2 text-[13px]">
-                  <span className="text-slate-400 text-right pr-10">Added By</span>
-                  <span className="text-slate-700 font-medium">
-                    {userData.addedBy} <span className="text-slate-400 font-normal ml-2">{userData.addedDate}</span>
-                  </span>
+            {showMore && (
+              <section className="border-b border-slate-50">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-base font-bold text-primary">
+                    User Information
+                  </h2>
+                  {/* <Pencil size={14} className="text-slate-400 cursor-pointer" /> */}
                 </div>
-                <InfoRow label="Phone" value={userData.phone} />
-                <InfoRow label="Mobile" value={userData.mobile} />
-                <InfoRow label="Website" value={userData.website} />
-                <InfoRow label="Date of Birth" value={userData.dob} />
-              </div>
-            </section>}
-            {showMore && <section className="border-b border-slate-50">
-              <h2 className="text-base font-bold text-primary mb-4">Address Information</h2>
-              <div className="space-y-1">
-                <InfoRow label="Street" value={userData.address.street} />
-                <InfoRow label="City" value={userData.address.city} />
-                <InfoRow label="State" value={userData.address.state} />
-                <InfoRow label="Zip Code" value={userData.address.zipCode} />
-                <InfoRow label="Country" value={userData.address.country} />
-              </div>
-            </section>}
+                <div className="space-y-1">
+                  <InfoRow label="First Name" value={userData.firstName} />
+                  <InfoRow label="Last Name" value={userData.lastName} />
+                  <InfoRow label="Email" value={userData.email} />
+                  <InfoRow label="Role" value={userData.role} />
+                  <InfoRow
+                    label="Profile"
+                    value={userData.isSuperAdmin ? "administrator" : ""}
+                  />
+                  <div className="grid grid-cols-[200px_1fr] py-2 text-[13px]">
+                    <span className="text-slate-400 text-right pr-10">
+                      Added By
+                    </span>
+                    <span className="text-slate-700 font-medium">
+                      {userData.addedBy}{" "}
+                      <span className="text-slate-400 font-normal ml-2">
+                        {userData.addedDate}
+                      </span>
+                    </span>
+                  </div>
+                  <InfoRow label="Phone" value={userData.phone} />
+                  <InfoRow label="Mobile" value={userData.mobile} />
+                  <InfoRow label="Website" value={userData.website} />
+                  <InfoRow label="Date of Birth" value={userData.dob} />
+                </div>
+              </section>
+            )}
+            {showMore && (
+              <section className="border-b border-slate-50">
+                <h2 className="text-base font-bold text-primary mb-4">
+                  Address Information
+                </h2>
+                <div className="space-y-1">
+                  <InfoRow label="Street" value={userData.address.street} />
+                  <InfoRow label="City" value={userData.address.city} />
+                  <InfoRow label="State" value={userData.address.state} />
+                  <InfoRow label="Zip Code" value={userData.address.zipCode} />
+                  <InfoRow label="Country" value={userData.address.country} />
+                </div>
+              </section>
+            )}
             {/* Teamspace */}
             <section>
-              <h3 className="font-bold text-sm mb-4 uppercase tracking-wider">Workspace Information</h3>
+              <h3 className="font-bold text-sm mb-4 uppercase tracking-wider">
+                Workspace Information
+              </h3>
               <div className="flex items-center">
-                <span className="w-48 text-sm text-slate-400 text-right pr-8">Associated To</span>
+                <span className="w-48 text-sm text-slate-400 text-right pr-8">
+                  Associated To
+                </span>
                 <div className="flex items-center gap-2">
-                  <div className="bg-pink-600 text-white px-2 py-1 rounded text-xs font-bold uppercase">{userData.workspace[0].code}</div>
-                  <span className="text-sm font-medium text-slate-700">{userData.workspace[0].name}</span>
+                  <div className="bg-pink-600 text-white px-2 py-1 rounded text-xs font-bold uppercase">
+                    {userData.workspace[0].code}
+                  </div>
+                  <span className="text-sm font-medium text-slate-700">
+                    {userData.workspace[0].name}
+                  </span>
                 </div>
               </div>
             </section>
@@ -607,7 +648,9 @@ export const Teams = () => {
             {/* Locale Information */}
             <section>
               <div className="flex items-center gap-2 mb-4">
-                <h3 className="font-bold text-sm uppercase tracking-wider">Locale Information</h3>
+                <h3 className="font-bold text-sm uppercase tracking-wider">
+                  Locale Information
+                </h3>
                 <Pencil className="w-3 h-3 text-slate-400 cursor-pointer" />
               </div>
               <div className="space-y-4">
@@ -621,14 +664,50 @@ export const Teams = () => {
                   ["Number Format", userData.locale.numberFormat],
                 ].map(([label, value]) => (
                   <div key={label} className="flex">
-                    <span className="w-48 text-sm whitespace-nowrap text-slate-400 text-right pr-8">{label}</span>
-                    <span className="text-sm text-slate-700 font-medium">{value}</span>
+                    <span className="w-48 text-sm whitespace-nowrap text-slate-400 text-right pr-8">
+                      {label}
+                    </span>
+                    <span className="text-sm text-slate-700 font-medium">
+                      {value}
+                    </span>
                   </div>
                 ))}
               </div>
             </section>
           </div>
+
+          <div>
+            {accounts.length > 0 &&
+              accounts.map((acc: any) => (
+                <div>
+                  <div>
+                    <label htmlFor="">{acc.accountName}</label>
+                    <input
+                      type="checkbox"
+                      value={acc.id}
+                      onChange={(e) =>
+                        setSelectedAccounts((prev) => [...prev, e.target.value])
+                      }
+                    />
+                  </div>
+                </div>
+              ))}
+            {/* <select onChange={(e)=>handleAssignAccount()}>
+              {accounts.map((acc: any) => (
+                <option value={acc.id}>{acc.accountName}</option>
+              ))}
+            </select> */}
+          </div>
         </main>
+
+        {/* <AddNewTeamMemberPopupDialog
+          handleAddTeamMember={() => handleAddTeamMember()}
+          openAddTeamMember={true}
+          setOpenAddTeamMember={setOpenAddTeamMember}
+          newTeam={newTeam}
+          setNewTeam={setNewTeam}
+          isLoadingAddTeamMember={isLoadingAddTeamMember}
+        /> */}
       </div>
     </div>
   );
@@ -647,7 +726,14 @@ const AddNewTeamMemberPopupDialog = ({
   setNewTeam,
   isLoadingAddTeamMember,
   handleAddTeamMember,
-}: any) => {
+}: {
+  openAddTeamMember: boolean;
+  setOpenAddTeamMember: (open: boolean) => void;
+  newTeam: any;
+  setNewTeam: (team: any) => void;
+  isLoadingAddTeamMember: boolean;
+  handleAddTeamMember: () => void;
+}) => {
   return (
     <Dialog
       open={openAddTeamMember}
@@ -796,8 +882,9 @@ const AddNewTeamMemberPopupDialog = ({
   );
 };
 
-
-{/* Main Detail Pane */ }
+{
+  /* Main Detail Pane */
+}
 // <div className="flex-1 overflow-y-auto bg-white">
 //   <header className="flex items-start gap-6 mb-12">
 //     <div className="w-24 h-24 bg-orange-500 text-white rounded-full flex items-center justify-center text-4xl font-semibold shadow-lg">

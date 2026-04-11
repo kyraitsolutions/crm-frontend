@@ -31,6 +31,10 @@ export class AuthStoreManager {
     this.store.setState({ user });
   }
 
+  getUser() {
+    return this.store.getState().user;
+  }
+
   setAccountName(accountName: string | null) {
     this.store.setState({ accountName });
     CookieUtils.setItem(COOKIES_STORAGE.accountName, accountName);
