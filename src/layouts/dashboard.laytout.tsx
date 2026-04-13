@@ -1,4 +1,4 @@
-import { DASHBOARD_PATH } from "@/constants";
+import { ACCOUNT_PATHS } from "@/constants/routes";
 import { useAuthStore } from "@/stores";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -10,10 +10,10 @@ const DashboardLayout = () => {
   useEffect(() => {
     if (accountId) {
       if (lastSlug) {
-        navigate(`${DASHBOARD_PATH.getAccountPath(accountId)}/${lastSlug}`);
+        navigate(`${ACCOUNT_PATHS.byId(accountId)}/${lastSlug}`);
         return;
       }
-      navigate(DASHBOARD_PATH.getAccountPath(accountId));
+      navigate(ACCOUNT_PATHS.byId(accountId));
     }
   }, []);
   return <Outlet />;

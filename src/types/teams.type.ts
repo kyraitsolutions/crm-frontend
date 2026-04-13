@@ -7,13 +7,16 @@ export const TeamSchema = z.object({
   userProfile: z.object({
     firstName: z.string(),
     lastName: z.string(),
-    image: z.string().optional(),
+    profilePicture: z.string().optional(),
+    phone: z.string().optional(),
   }),
   email: z.email(),
   status: z.boolean().optional(),
   createdAt: z.string(), // ISO date string
   updatedAt: z.string(),
-  accounts: z.array(z.object({ accountId: z.string(), roleId: z.string() })),
+  accounts: z.array(
+    z.object({ accountId: z.string(), roleId: z.string(), name: z.string() }),
+  ),
 });
 
 export type ITeam = z.infer<typeof TeamSchema>;

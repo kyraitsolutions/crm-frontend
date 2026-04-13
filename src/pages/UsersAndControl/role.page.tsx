@@ -226,56 +226,57 @@ const Role = () => {
 
         {/* List */}
         <div className="space-y-3">
-          {roles.map((role) => (
-            <div
-              key={role.id}
-              onClick={() => startView(role)}
-              className="group flex items-center justify-between p-4 rounded-xl border bg-white cursor-pointer"
-            >
-              {/* LEFT */}
-              <div className="flex items-center gap-4">
-                <div className="p-2 rounded-lg bg-gray-100">
-                  <Users size={18} />
+          {roles?.length > 0 &&
+            roles?.map((role) => (
+              <div
+                key={role.id}
+                onClick={() => startView(role)}
+                className="group flex items-center justify-between p-4 rounded-xl border bg-white cursor-pointer"
+              >
+                {/* LEFT */}
+                <div className="flex items-center gap-4">
+                  <div className="p-2 rounded-lg bg-gray-100">
+                    <Users size={18} />
+                  </div>
+
+                  <div>
+                    <p className="font-medium text-gray-800">{role.name}</p>
+
+                    {role.isSystemRole ? (
+                      <span className="text-xs text-green-700 bg-green-100 px-2 py-1 rounded-md flex items-center gap-1 w-fit mt-1">
+                        <ShieldCheck size={12} /> System Role
+                      </span>
+                    ) : (
+                      <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md">
+                        Custom Role
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                <div>
-                  <p className="font-medium text-gray-800">{role.name}</p>
+                {/* ACTIONS */}
+                {!role.isSystemRole && user?.role?.name === ROLES.OWNER && (
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition"
+                  >
+                    <Button
+                      className="size-8 bg-primary/70 rounded-full flex items-center justify-center hover:bg-primary"
+                      onClick={() => startEdit(role)}
+                    >
+                      <Pencil size={14} />
+                    </Button>
 
-                  {role.isSystemRole ? (
-                    <span className="text-xs text-green-700 bg-green-100 px-2 py-1 rounded-md flex items-center gap-1 w-fit mt-1">
-                      <ShieldCheck size={12} /> System Role
-                    </span>
-                  ) : (
-                    <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md">
-                      Custom Role
-                    </span>
-                  )}
-                </div>
+                    <Button
+                      className="size-8 bg-red-200/80 text-red-400 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white"
+                      onClick={() => handleDeleteRole(role.id)}
+                    >
+                      <Trash2 size={14} />
+                    </Button>
+                  </div>
+                )}
               </div>
-
-              {/* ACTIONS */}
-              {!role.isSystemRole && user?.role?.name === ROLES.OWNER && (
-                <div
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition"
-                >
-                  <Button
-                    className="size-8 bg-primary/70 rounded-full flex items-center justify-center hover:bg-primary"
-                    onClick={() => startEdit(role)}
-                  >
-                    <Pencil size={14} />
-                  </Button>
-
-                  <Button
-                    className="size-8 bg-red-200/80 text-red-400 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white"
-                    onClick={() => handleDeleteRole(role.id)}
-                  >
-                    <Trash2 size={14} />
-                  </Button>
-                </div>
-              )}
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

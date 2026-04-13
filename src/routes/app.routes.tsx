@@ -10,7 +10,7 @@ import PricingPage from "@/pages/pricing.page";
 import PrivacyPolicyPage from "@/pages/privacy.page";
 import TermsPage from "@/pages/terms.page";
 import { createBrowserRouter } from "react-router-dom";
-import { builderRoutes } from "./builder.routes";
+// import { builderRoutes } from "./builder.routes";
 import { chatBotRoutes } from "./chat-bot.routes";
 import { dashboardRoutes } from "./dashboard.routes";
 import { formRoutes } from "./form.routes";
@@ -64,10 +64,10 @@ export const appRoutes = createBrowserRouter([
             element: <AppLayout />,
             children: [
               ...dashboardRoutes,
-              ...builderRoutes,
+              // ...builderRoutes,
               ...chatBotRoutes,
-              ...formRoutes,
               ...leadRoutes,
+              ...formRoutes,
               ...broadcastRoutes,
               ...contactRoutes,
               ...settingRoutes,

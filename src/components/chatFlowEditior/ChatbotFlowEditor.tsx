@@ -38,6 +38,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { Connection, Edge } from "reactflow";
 import { nodeTypes } from "./nodes";
 import { MdAdd, MdClose } from "react-icons/md";
+import { useAccountAccessStore } from "@/stores/account-access.store";
+import { Button } from "../ui/button";
+import { hasPermission, PERMISSIONS } from "@/rbac";
+import Loader from "../Loader";
 
 export const mandatoryNodes = [
   {
@@ -188,6 +192,7 @@ export default function ChatbotFlowEditor() {
   const toastMessageService = new ToastMessageService();
 
   const authUser = useAuthStore((state) => state.user);
+  const { permissions } = useAccountAccessStore((state) => state);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
@@ -197,7 +202,7 @@ export default function ChatbotFlowEditor() {
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    [setEdges],
   );
 
   const validateFlow = () => {
@@ -206,7 +211,7 @@ export default function ChatbotFlowEditor() {
 
     // RULE: Check nodes does not empty content
     const isNodeWithEmptyContent = nodes.some((n) =>
-      n.data?.elements?.some((el: any) => el.content === "")
+      n.data?.elements?.some((el: any) => el.content === ""),
     );
 
     if (isNodeWithEmptyContent) {
@@ -230,7 +235,7 @@ export default function ChatbotFlowEditor() {
 
       if (out.length === 0) {
         toastMessageService.error(
-          `Node "${node.data?.label}" must connect to another node.`
+          `Node "${node.data?.label}" must connect to another node.`,
         );
         return false;
       }
@@ -249,7 +254,7 @@ export default function ChatbotFlowEditor() {
         const edgeExists = edges.some((e) => e.sourceHandle === expectedHandle);
         if (!edgeExists) {
           toastMessageService.error(
-            `Option "${opts[i]}" in "${node.data.label}" must connect to a node.`
+            `Option "${opts[i]}" in "${node.data.label}" must connect to a node.`,
           );
           return false;
         }
@@ -265,7 +270,7 @@ export default function ChatbotFlowEditor() {
 
       if (!incoming && !outgoing && !isStartNode) {
         toastMessageService.error(
-          `Node "${node.data?.label}" must be connected or deleted.`
+          `Node "${node.data?.label}" must be connected or deleted.`,
         );
         return false;
       }
@@ -374,16 +379,16 @@ export default function ChatbotFlowEditor() {
       nds.map((node) =>
         node.id === id
           ? {
-            ...node,
-            data: {
-              ...node.data,
-              elements: newElements,
-              deleteNode,
-              updateNode,
-            },
-          }
-          : node
-      )
+              ...node,
+              data: {
+                ...node.data,
+                elements: newElements,
+                deleteNode,
+                updateNode,
+              },
+            }
+          : node,
+      ),
     );
   }, []);
 
@@ -392,14 +397,14 @@ export default function ChatbotFlowEditor() {
       nodes.map((node) =>
         node.id === id
           ? {
-            ...node,
-            data: {
-              ...node.data,
-              label,
-            },
-          }
-          : node
-      )
+              ...node,
+              data: {
+                ...node.data,
+                label,
+              },
+            }
+          : node,
+      ),
     );
   };
 
@@ -417,7 +422,7 @@ export default function ChatbotFlowEditor() {
     try {
       const response = await chatbot.getChatBotFlow(
         String(accountId),
-        String(chatBotId)
+        String(chatBotId),
       );
 
       if (response?.status === 200 || response?.status === 201) {
@@ -451,12 +456,12 @@ export default function ChatbotFlowEditor() {
         const response = await chatbot.createChatBotFlow(
           String(accountId),
           String(chatBotId),
-          payloadData
+          payloadData,
         );
 
         if (response?.status === 200 || response?.status === 201) {
           toastMessageService.success(
-            response?.message || "Your request was processed successfully"
+            response?.message || "Your request was processed successfully",
           );
         }
       }
@@ -538,39 +543,44 @@ export default function ChatbotFlowEditor() {
 
   return (
     <div className="w-full relative gap-4 p-4">
-
-        {/* React Flow Area */}
-        <div
-          className="
+      {/* React Flow Area */}
+      <div
+        className="
               h-[93dvh]
               
               absolute top-0 left-0 w-full
               bg-[#FBFAF9]
               overflow-hidden
             "
+      >
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onEdgeClick={onEdgeClick}
+          onConnect={onConnect}
+          defaultChecked
         >
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            nodeTypes={nodeTypes}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onEdgeClick={onEdgeClick}
-            onConnect={onConnect}
-            defaultChecked
-          >
-            <Controls
-              showFitView
-              className="
+          <Controls
+            showFitView
+            className="
               bg-gray-100!
               rounded-md
             "
-            />
-            <Background variant={BackgroundVariant.Lines} gap={100} size={2} className="bg-[#e2e2e2]" />
-            <div className="flex z-50 w-full h-10 justify-between! items-center px-5 bg-gray-100! absolute">
-              <button
-                onClick={() => navigate(-1)}
-                className="
+          />
+          <Background
+            variant={BackgroundVariant.Lines}
+            gap={100}
+            size={2}
+            className="bg-[#e2e2e2]"
+          />
+
+          <div className="flex z-50 w-full h-14 justify-between! items-center px-5 bg-gray-100 absolute">
+            <button
+              onClick={() => navigate(-1)}
+              className="
                   cursor-pointer
                       text-[#37322F]
                       flex justify-center items-center
@@ -578,62 +588,59 @@ export default function ChatbotFlowEditor() {
                       gap-1
                       transition
                     "
-              >
-                <ArrowLeft size={16} /> <span className="text-sm">Back</span>
-              </button>
-              <div className="flex items-center gap-4">
+            >
+              <ArrowLeft size={16} /> <span className="text-sm">Back</span>
+            </button>
 
-                <button
+            {hasPermission(
+              permissions,
+              PERMISSIONS.CHATBOTS.CREATE || PERMISSIONS.CHATBOTS.UPDATE,
+            ) && (
+              <div className="flex items-center gap-4">
+                <Button
+                  disabled={publishLoading}
                   onClick={publishChanges}
-                  className="
-                bg-primary
-                text-[#FBFAF9]
-                px-4 py-1
-                text-sm
-                rounded-[99px]
-                flex items-center gap-2
-                hover:bg-primary
-                transition cursor-pointer
-              "
+                  className="bg-primary text-white px-5 py-2 rounded-full flex items-center gap-2 disabled:opacity-60"
                 >
                   Publish
-                  {publishLoading && (
-                    <div className="h-4 w-4 border-t-2 border-t-white rounded-full animate-spin" />
-                  )}
+                  {publishLoading && <Loader />}
+                </Button>
+
+                <button
+                  onClick={() => setFieldOpen(!fieldOpen)}
+                  className="flex cursor-pointer bg-primary text-white  p-2 rounded-full justify-end "
+                >
+                  <div
+                    className={`${fieldOpen && "-rotate-45"} transition-all duration-300`}
+                  >
+                    <MdAdd size={20} />
+                  </div>
                 </button>
-                {!fieldOpen?<button onClick={() => setFieldOpen(!fieldOpen)} className="flex cursor-pointer bg-primary  p-2 rounded-full justify-end text-muted-foreground">
-                  <MdAdd size={20}/>
-                </button>
-              :<button onClick={() => setFieldOpen(!fieldOpen)} className="flex cursor-pointer bg-primary  p-2 rounded-full justify-end text-muted-foreground">
-                  <MdClose size={20}/>
-                </button>
-}
               </div>
-            </div>
-
-
-          </ReactFlow>
-        </div>
+            )}
+          </div>
+        </ReactFlow>
+      </div>
 
       {/* RIGHT: Predefined Fields */}
-      {fieldOpen && <div className="z-10 absolute right-5 bg-white mt-10 shadow-md p-2 max-h-[85dvh] col-span-2 flex flex-col gap-4 rounded">
-        <p className="text-sm font-medium text-[#37322F]">Avaliable Fields</p>
+      {fieldOpen && (
+        <div className="z-10 absolute right-5 bg-white mt-10 shadow-md p-2 max-h-[85dvh] col-span-2 flex flex-col gap-4 rounded">
+          <p className="text-sm font-medium text-[#37322F]">Avaliable Fields</p>
 
-        <div className="grid grid-cols-2 max-w-[160px] gap-4 overflow-auto hide-scrollbar">
-          {chatbotFields.map((item, index) => (
-            <div
-              key={index}
-              onClick={() => addNewNode(item.value, item.label)}
-              className="
+          <div className="grid grid-cols-2 max-w-[160px] gap-4 overflow-auto hide-scrollbar">
+            {chatbotFields.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => addNewNode(item.value, item.label)}
+                className="
                 flex flex-col items-center
                 cursor-pointer
                 transition
                 hover:scale-[1.03] 
               "
-            >
-             
-              <div
-                className="
+              >
+                <div
+                  className="
                 h-12 w-12! border 
                 rounded-xl
                 border-[rgba(50,45,43,0.12)]
@@ -643,16 +650,17 @@ export default function ChatbotFlowEditor() {
                 hover:bg-[rgba(55,50,47,0.08)]
                 transition
               "
-              >
-                {item.icon}
+                >
+                  {item.icon}
+                </div>
+                <p className="text-[10px]  text-center text-[#847971]">
+                  {item.label}
+                </p>
               </div>
-               <p className="text-[10px]  text-center text-[#847971]">
-                {item.label}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>}
+      )}
     </div>
   );
 }

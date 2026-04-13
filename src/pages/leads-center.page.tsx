@@ -50,8 +50,10 @@ import {
 } from "@/constants";
 import useDebounce from "@/hooks/useDebounce";
 import { usePagination } from "@/hooks/usePagination";
+import { hasPermission, PERMISSIONS } from "@/rbac";
 import { ToastMessageService } from "@/services";
 import { LeadService } from "@/services/lead.service";
+import { useAccountAccessStore } from "@/stores/account-access.store";
 import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
 import type { ApiError, BasicNumber, ILead } from "@/types";
 import buildParams from "@/utils/build-params.utils";
@@ -128,6 +130,7 @@ export default function LeadsCentre() {
   // Stores for leads
   const leadStoreManager = new LeadsStoreManager();
   const { leads: allLeads } = useLeadsStore((state) => state);
+  const { permissions } = useAccountAccessStore((state) => state);
 
   // Leads related states and services stores etc
   const leadService = new LeadService();
@@ -434,7 +437,6 @@ export default function LeadsCentre() {
               <DropdownMenuItem>Team B</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
           {/* Icon actions (subtle) */}
           {/* <button className="text-[#847971] hover:text-[#37322F] transition">
             <Download className="h-4 w-4" />
@@ -445,12 +447,12 @@ export default function LeadsCentre() {
           {/* <button className="text-[#847971] hover:text-[#37322F] transition">
             <Settings className="h-4 w-4" />
           </button> */}
-
           {/* Primary action */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className="
+          {hasPermission(permissions, PERMISSIONS.LEADS.CREATE) && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="
                 flex items-center gap-2
                 whitespace-nowrap
                 rounded-[99px]
@@ -462,17 +464,18 @@ export default function LeadsCentre() {
                 hover:bg-primary
                 transition
               "
-              >
-                <Plus className="h-4 w-4" />
-                Add leads
-                <ChevronDown className="h-4 w-4 opacity-70" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="rounded-lg">
-              <DropdownMenuItem>Add single lead</DropdownMenuItem>
-              <DropdownMenuItem>Import leads</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                >
+                  <Plus className="h-4 w-4" />
+                  Add leads
+                  <ChevronDown className="h-4 w-4 opacity-70" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="rounded-lg">
+                <DropdownMenuItem>Add single lead</DropdownMenuItem>
+                <DropdownMenuItem>Import leads</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
           {/* Overflow */}
           {/* <button className="text-[#847971] hover:text-[#37322F] transition">
@@ -608,33 +611,33 @@ export default function LeadsCentre() {
                 filters.assignedTo.value ||
                 filters.stage.value ||
                 filters.label.value) && (
-                  <button
-                    onClick={() =>
-                      setFilters({
-                        lead: { label: "All Leads", value: null },
-                        campaign: { label: "All Campaigns", value: null },
-                        form: { label: "All Forms", value: null },
-                        date: { label: "All Dates", value: null },
-                        status: { label: "All Status", value: null },
-                        source: { label: "All Sources", value: null },
-                        assignedTo: { label: "All Users", value: null },
-                        label: { label: "All Labels", value: null },
-                        stage: { label: "All Stages", value: null },
-                        read: { label: "All", value: null },
-                      })
-                    }
-                    className="
+                <button
+                  onClick={() =>
+                    setFilters({
+                      lead: { label: "All Leads", value: null },
+                      campaign: { label: "All Campaigns", value: null },
+                      form: { label: "All Forms", value: null },
+                      date: { label: "All Dates", value: null },
+                      status: { label: "All Status", value: null },
+                      source: { label: "All Sources", value: null },
+                      assignedTo: { label: "All Users", value: null },
+                      label: { label: "All Labels", value: null },
+                      stage: { label: "All Stages", value: null },
+                      read: { label: "All", value: null },
+                    })
+                  }
+                  className="
             flex items-center gap-1
             text-sm font-medium
             text-[#847971]
             hover:text-[#37322F]
             transition
           "
-                  >
-                    <X className="h-4 w-4" />
-                    Clear
-                  </button>
-                )}
+                >
+                  <X className="h-4 w-4" />
+                  Clear
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -726,14 +729,14 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedStageFilter.label === "All"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedStageFilter({ label: "All", value: "" })
-            // }
+              // className={
+              //   selectedStageFilter.label === "All"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedStageFilter({ label: "All", value: "" })
+              // }
             >
               All
             </Button>
@@ -741,18 +744,18 @@ export default function LeadsCentre() {
             <Button
               variant="ghost"
               size="sm"
-            // className={
-            //   selectedReadFilter.label === "Unread"
-            //     ? "bg-accent text-accent-foreground"
-            //     : ""
-            // }
-            // onClick={() =>
-            //   setSelectedReadFilter(
-            //     selectedReadFilter.label === "Unread"
-            //       ? { label: "All", value: "all" }
-            //       : { label: "Unread", value: "unread" }
-            //   )
-            // }
+              // className={
+              //   selectedReadFilter.label === "Unread"
+              //     ? "bg-accent text-accent-foreground"
+              //     : ""
+              // }
+              // onClick={() =>
+              //   setSelectedReadFilter(
+              //     selectedReadFilter.label === "Unread"
+              //       ? { label: "All", value: "all" }
+              //       : { label: "Unread", value: "unread" }
+              //   )
+              // }
             >
               Unread
             </Button>
@@ -767,12 +770,15 @@ export default function LeadsCentre() {
           <Table className="">
             <TableHeader>
               <TableRow className="border-b border-border/40">
-                <TableHead className="w-12">
-                  <Checkbox
-                    checked={selectedLeadsId?.length === allLeads?.length}
-                    onCheckedChange={handleAllLeadSelection}
-                  />
-                </TableHead>
+                {allLeads?.length > 0 &&
+                  hasPermission(permissions, PERMISSIONS.LEADS?.DELETE) && (
+                    <TableHead className="w-12">
+                      <Checkbox
+                        checked={selectedLeadsId?.length === allLeads?.length}
+                        onCheckedChange={handleAllLeadSelection}
+                      />
+                    </TableHead>
+                  )}
 
                 {[
                   "Date added",
@@ -820,14 +826,16 @@ export default function LeadsCentre() {
                     transition-colors
                   "
                   >
-                    <TableCell onClick={(e) => e.stopPropagation()}>
-                      <Checkbox
-                        checked={selectedLeadsId?.includes(lead._id)}
-                        onCheckedChange={() => {
-                          handleLeadSelection(lead._id);
-                        }}
-                      />
-                    </TableCell>
+                    {hasPermission(permissions, PERMISSIONS.LEADS?.DELETE) && (
+                      <TableCell onClick={(e) => e.stopPropagation()}>
+                        <Checkbox
+                          checked={selectedLeadsId?.includes(lead._id)}
+                          onCheckedChange={() => {
+                            handleLeadSelection(lead._id);
+                          }}
+                        />
+                      </TableCell>
+                    )}
 
                     <TableCell className="text-sm ">
                       {formatDate(lead.createdAt)}
@@ -1176,7 +1184,7 @@ export default function LeadsCentre() {
 
               <div className="grid grid-cols-2 gap-6">
                 {editableLead?.customFields &&
-                  Object.keys(editableLead.customFields).length > 0 ? (
+                Object.keys(editableLead.customFields).length > 0 ? (
                   Object.entries(editableLead.customFields).map(
                     ([key, value]) => (
                       <div key={key} className="flex flex-col gap-1">
@@ -1198,12 +1206,12 @@ export default function LeadsCentre() {
                               setEditableLead((prev) =>
                                 prev
                                   ? {
-                                    ...prev,
-                                    customFields: {
-                                      ...(prev.customFields ?? {}),
-                                      [key]: e.target.value,
-                                    },
-                                  }
+                                      ...prev,
+                                      customFields: {
+                                        ...(prev.customFields ?? {}),
+                                        [key]: e.target.value,
+                                      },
+                                    }
                                   : prev,
                               )
                             }
@@ -1232,17 +1240,19 @@ export default function LeadsCentre() {
                 <div className="relative space-y-6">
                   {/* add activity button */}
 
-                  <div className="flex items-center gap-3.5">
-                    <Button
-                      variant="outline"
-                      className="rounded-full size-10 border-primary"
-                      onClick={() => setIsAddActivityOpen(true)}
-                    >
-                      <span className="text-lg text-primary">+</span>
-                    </Button>
+                  {hasPermission(permissions, PERMISSIONS.LEADS.UPDATE) && (
+                    <div className="flex items-center gap-3.5">
+                      <Button
+                        variant="outline"
+                        className="rounded-full size-10 border-primary"
+                        onClick={() => setIsAddActivityOpen(true)}
+                      >
+                        <span className="text-lg text-primary">+</span>
+                      </Button>
 
-                    <p className="text-primary">Add Activity</p>
-                  </div>
+                      <p className="text-primary">Add Activity</p>
+                    </div>
+                  )}
 
                   {/* timeline  */}
                   <Timeline items={editableLead?.notes || []} />
@@ -1259,9 +1269,9 @@ export default function LeadsCentre() {
                       setEditableLead((prev) =>
                         prev
                           ? {
-                            ...prev,
-                            notes: [...(prev.notes || []), activity],
-                          }
+                              ...prev,
+                              notes: [...(prev.notes || []), activity],
+                            }
                           : prev,
                       );
                       handleSave(activity);
@@ -1272,39 +1282,41 @@ export default function LeadsCentre() {
             </section>
 
             {/* ACTIONS */}
-            <div className="flex items-center gap-3">
-              {!isEditing ? (
-                <>
-                  <Button className="flex-1 rounded-[99px] bg-primary text-[#FBFAF9]">
-                    Assign Lead
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1 rounded-[99px]"
-                    onClick={handleEdit}
-                  >
-                    Edit Details
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    disabled={isEditingLoading}
-                    className="flex-1 rounded-[99px] bg-primary text-[#FBFAF9]"
-                    onClick={() => handleSave()}
-                  >
-                    Save {isEditingLoading && <Loader />}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1 rounded-[99px]"
-                    onClick={handleCancel}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              )}
-            </div>
+            {hasPermission(permissions, PERMISSIONS.LEADS.UPDATE) && (
+              <div className="flex items-center gap-3">
+                {!isEditing ? (
+                  <>
+                    <Button className="flex-1 rounded-[99px] bg-primary text-[#FBFAF9]">
+                      Assign Lead
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex-1 rounded-[99px]"
+                      onClick={handleEdit}
+                    >
+                      Edit Details
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      disabled={isEditingLoading}
+                      className="flex-1 rounded-[99px] bg-primary text-[#FBFAF9]"
+                      onClick={() => handleSave()}
+                    >
+                      Save {isEditingLoading && <Loader />}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex-1 rounded-[99px]"
+                      onClick={handleCancel}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </SheetContent>
       </Sheet>
@@ -1336,10 +1348,11 @@ const Timeline = ({ items }: { items: TimelineItem[] }) => {
                 relative z-10
                 flex h-9 w-9 items-center justify-center
                 rounded-full text-white
-                ${timelineConfig[
-                      item.activitySource as keyof typeof timelineConfig
-                    ]?.bg
-                    }
+                ${
+                  timelineConfig[
+                    item.activitySource as keyof typeof timelineConfig
+                  ]?.bg
+                }
               `}
                 >
                   <Icon size={16} />

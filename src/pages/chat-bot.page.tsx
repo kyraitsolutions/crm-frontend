@@ -2,9 +2,11 @@ import { DataTable, type Column } from "@/components/common";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { DASHBOARD_PATH } from "@/constants";
+import { ACCOUNT_PATHS, CHATBOT_PATHS } from "@/constants/routes";
+import { hasPermission, PERMISSIONS } from "@/rbac";
 import { ChatBotService, ToastMessageService } from "@/services";
 import { ChatBotManager, useChatBotStore } from "@/stores";
+import { useAccountAccessStore } from "@/stores/account-access.store";
 import { alertManager } from "@/stores/alert.store";
 import type { ApiError, ChatBotListItem } from "@/types";
 import { Plus, Trash2 } from "lucide-react";
@@ -22,6 +24,8 @@ export function ChatBotPage() {
   const chatBotManager = new ChatBotManager();
   const toastMessageService = new ToastMessageService();
   const chatBotLists = useChatBotStore((state) => state.chatBotsList);
+  const { permissions } = useAccountAccessStore((state) => state);
+
   const [loading, setLoading] = useState(false);
 
   const columns: Column<ChatBotListItem>[] = [
@@ -45,6 +49,7 @@ export function ChatBotPage() {
       render: (row) => (
         <div>
           <Switch
+            disabled={!hasPermission(permissions, PERMISSIONS.CHATBOTS?.UPDATE)}
             checked={row.status}
             className="cursor-pointer"
             onClick={(e) => handleUpdateStatus(e, row.id)}
@@ -81,16 +86,20 @@ export function ChatBotPage() {
       header: "Action",
       cellClassName: "whitespace-nowrap text-gray-700",
       render: (row) => (
-        <div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeleteChatbot(row.id);
-            }}
-            className="text-red-600 hover:text-red-800 p-2 rounded-md flex-shrink-0 cursor-pointer"
-          >
-            <Trash2 size={16} />
-          </button>
+        <div className="">
+          {hasPermission(permissions, PERMISSIONS.CHATBOTS?.DELETE) ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteChatbot(row.id);
+              }}
+              className="bg-red-200 rounded-full text-red-500 hover:bg-red-500 duration-300 hover:text-white p-2  flex-shrink-0 cursor-pointer"
+            >
+              <Trash2 size={16} />
+            </button>
+          ) : (
+            <span className="text-center">-</span>
+          )}
         </div>
       ),
     },
@@ -107,6 +116,7 @@ export function ChatBotPage() {
       const err = error as ApiError;
       if (err) {
         toastMessageService.apiError(err?.message || "An error occurred");
+        navigate(ACCOUNT_PATHS.byId(accountId as string));
       }
       chatBotManager.setChatBotsList([]);
     } finally {
@@ -216,19 +226,18 @@ export function ChatBotPage() {
             insights.
           </p>
         </div>
-        {chatBotLists.length > 0 && (
-          <div className="flex justify-end">
-            <Link
-              to={`${DASHBOARD_PATH?.getAccountPath(
-                String(accountId),
-              )}/chatbot/create`}
-              className="inline-flex items-center gap-1 rounded-md  bg-primary/90 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary transition-colors duration-200 focus:outline-none"
-            >
-              <Plus size={18} />
-              Create Chatbot
-            </Link>
-          </div>
-        )}
+        {chatBotLists.length > 0 &&
+          hasPermission(permissions, PERMISSIONS.CHATBOTS?.CREATE) && (
+            <div className="flex justify-end">
+              <Link
+                to={`${CHATBOT_PATHS.getCreate(String(accountId))}`}
+                className="inline-flex items-center gap-1 rounded-md  bg-primary/90 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary transition-colors duration-200 focus:outline-none"
+              >
+                <Plus size={18} />
+                Create Chatbot
+              </Link>
+            </div>
+          )}
       </div>
 
       {/* <div className="grid grid-cols-[2fr_1fr]"> */}
@@ -241,9 +250,10 @@ export function ChatBotPage() {
             pageSize={20}
             onRowClick={(row) => {
               navigate(
-                `${DASHBOARD_PATH?.getAccountPath(String(accountId))}/chatbot/${
-                  row.id
-                }/builder`,
+                `${CHATBOT_PATHS.getBuilder(
+                  String(accountId),
+                  String(row.id),
+                )}`,
               );
             }}
             sortable={true}
@@ -262,12 +272,12 @@ export function ChatBotPage() {
           p-10
           text-center
           rounded-2xl
-          border border-dashed border-[rgba(50,45,43,0.20)]
+          border-2 border-dashed border-[rgba(50,45,43,0.20)]
           bg-[rgba(255,255,255,0)]
         "
           >
             {/* Icon */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full  bg-primary text-white border-2 border-dotted">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full  bg-primary text-white border-2 ">
               <Plus className="h-8 w-8]" />
             </div>
 
@@ -283,11 +293,10 @@ export function ChatBotPage() {
             </div>
 
             {/* CTA */}
-            <Link
-              to={`${DASHBOARD_PATH?.getAccountPath(
-                String(accountId),
-              )}/chatbot/create`}
-              className="
+            {hasPermission(permissions, PERMISSIONS.CHATBOTS?.CREATE) && (
+              <Link
+                to={`${CHATBOT_PATHS.getCreate(String(accountId))}`}
+                className="
             inline-flex items-center gap-2
             rounded-[99px]
             bg-primary
@@ -297,9 +306,10 @@ export function ChatBotPage() {
             transition
             hover:opacity-90
           "
-            >
-              + Create First Chatbot
-            </Link>
+              >
+                + Create First Chatbot
+              </Link>
+            )}
           </div>
         </div>
       )}

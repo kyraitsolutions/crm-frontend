@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { COOKIES_STORAGE, DASHBOARD_PATH } from "@/constants";
+import { COOKIES_STORAGE } from "@/constants";
 import { ToastMessageService } from "@/services";
 import { AccountService } from "@/services/account.service";
 import { AuthStoreManager, useAuthStore } from "@/stores";
@@ -32,6 +32,7 @@ import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { hasPermission } from "@/rbac";
+import { ACCOUNT_PATHS } from "@/constants/routes";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -126,7 +127,7 @@ export const DashboardPage = () => {
 
     CookieUtils.setItem(COOKIES_STORAGE.accountId, accounts[index]?.id);
 
-    navigate(DASHBOARD_PATH.getAccountPath(accounts[index]?.id));
+    navigate(ACCOUNT_PATHS.byId(accounts[index]?.id));
   };
 
   const handleDeleteAccount = async (accountId: string) => {

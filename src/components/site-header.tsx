@@ -2,15 +2,15 @@ import { useAuthStore } from "@/stores";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
-import { DASHBOARD_PATH } from "@/constants";
 import { Bell, Plus, Search, Settings } from "lucide-react";
 import { IconQuestionMark } from "@tabler/icons-react";
+import { ROUTES } from "@/constants/routes";
 
 export function SiteHeader() {
   const { accountName, user } = useAuthStore((state) => state);
   const organizationName = user?.userprofile?.organizationName;
 
-  const baseUrl = `${DASHBOARD_PATH.ROOT}${DASHBOARD_PATH.SETTINGS}`;
+  const baseUrl = `${ROUTES.DASHBOARD}/settings`;
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">

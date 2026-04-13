@@ -1,4 +1,4 @@
-import Onboarding from "@/components/on-boarding/on-boarding";
+import Onboarding from "@/pages/on-boarding/on-boarding";
 
 export function OnBoardingPage() {
   return (

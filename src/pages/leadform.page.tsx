@@ -2,10 +2,12 @@ import { DataTable, type Column } from "@/components/common";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { DASHBOARD_PATH } from "@/constants";
+import { LEAD_FORM_PATHS } from "@/constants";
+import { hasPermission, PERMISSIONS } from "@/rbac";
+
 import { ToastMessageService } from "@/services";
 import { LeadFormService } from "@/services/leadform.service";
-import { useAuthStore } from "@/stores";
+import { useAccountAccessStore } from "@/stores/account-access.store";
 import { alertManager } from "@/stores/alert.store";
 import { LeadsStoreManager, useLeadsStore } from "@/stores/leads.store";
 import type { ApiError } from "@/types";
@@ -19,11 +21,12 @@ import { Link, useParams } from "react-router-dom";
 export function LeadFormPage() {
   const { accountId } = useParams();
 
-  const { user } = useAuthStore((state) => state);
+  // const { user } = useAuthStore((state) => state);
   // const navigate = useNavigate();
   const leadFormService = new LeadFormService();
   const leadStoreManager = new LeadsStoreManager();
   const { leadForms } = useLeadsStore((state) => state);
+  const { permissions } = useAccountAccessStore((state) => state);
   const toastMessageService = new ToastMessageService();
   const [loading, setLoading] = useState(false);
   // const [forms, setLeadForms] = useState<[]>([]);
@@ -79,7 +82,7 @@ export function LeadFormPage() {
                 transition-all
                 hover:bg-[#16A34A]/10
                 hover:border-[#16A34A]/50"
-          to={`${DASHBOARD_PATH.getAccountPath(accountId)}/lead-forms/${row.id}/view`}
+          to={`${LEAD_FORM_PATHS.getView(accountId, row.id)}`}
         >
           <Eye size={16} />
         </Link>
@@ -88,7 +91,7 @@ export function LeadFormPage() {
                 transition-all
                 hover:bg-[#16A34A]/10
                 hover:border-[#16A34A]/50"
-          to={`${DASHBOARD_PATH.getAccountPath(accountId)}/lead-forms/${row.id}/update`}
+          to={`${LEAD_FORM_PATHS.update(accountId, row.id)}`}
         >
           <Edit size={16} />
         </Link>
@@ -111,7 +114,7 @@ export function LeadFormPage() {
         String(accountId),
       );
       if (response?.status === 200) {
-        leadStoreManager.setLeadForm(response?.data?.docs || []);
+        leadStoreManager.setLeadForm(response?.data.docs || []);
       }
     } catch (error) {
       toastMessageService.apiError(error as any);
@@ -206,9 +209,7 @@ export function LeadFormPage() {
 
         {leadForms.length > 0 && (
           <Link
-            to={`${DASHBOARD_PATH?.getAccountPath(
-              String(accountId),
-            )}/lead-forms/create`}
+            to={LEAD_FORM_PATHS.getCreate(String(accountId))}
             className="
           inline-flex items-center gap-2
           rounded-[99px]
@@ -277,12 +278,9 @@ export function LeadFormPage() {
               </div>
 
               {/* CTA */}
-              {user?.userprofile?.accountType?.toLowerCase() ===
-                "organization" && (
+              {hasPermission(permissions, PERMISSIONS.LEADS_FORMS.CREATE) && (
                 <Link
-                  to={`${DASHBOARD_PATH?.getAccountPath(
-                    String(accountId),
-                  )}/lead-forms/create`}
+                  to={LEAD_FORM_PATHS.getCreate(String(accountId))}
                   className="inline-flex items-center gap-2
                               rounded-[99px]
                               bg-primary

@@ -65,7 +65,6 @@ export class AccountsStoreManager {
       totalAccounts: (state.totalAccounts ?? 1) - 1,
     }));
   }
-
   /** Optimistic delete + rollback */
   deleteAccountOptimistic(accountId: string) {
     const prevAccounts = this.store.getState().accounts;

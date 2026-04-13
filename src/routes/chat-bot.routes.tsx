@@ -1,76 +1,92 @@
 import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
-import { DASHBOARD_PATH } from "@/constants";
-import {
-  ChatBotDetailLayout,
-  ChatBotUserResponsesLayout,
-  ChatBotUsersLayout,
-} from "@/layouts";
-import {
-  ChatBotNew,
-  ChatBotPage,
-  ChatBotUserResponsesPage,
-  ChatBotUsersPage,
-} from "@/pages";
-import { Navigate, type RouteObject } from "react-router-dom";
+import { CHATBOT_PATHS, CHATBOT_ROUTES } from "@/constants/routes";
+import { ChatBotNew, ChatBotPage } from "@/pages";
+import { PERMISSIONS } from "@/rbac";
+import { type RouteObject } from "react-router-dom";
+import { RequirePermission } from "./route-access/RequirePermission";
 
 export const chatBotRoutes: RouteObject[] = [
   {
-    path: `${DASHBOARD_PATH.ROOT}/account/:accountId/chatbot`,
+    path: CHATBOT_PATHS.ROOT,
     children: [
       {
-        element: <ChatBotPage />,
+        element: (
+          <RequirePermission permission={PERMISSIONS.CHATBOTS.VIEW}>
+            <ChatBotPage />
+          </RequirePermission>
+        ),
         index: true,
       },
       {
-        element: <ChatBotNew />,
-        path: "create",
+        element: (
+          <RequirePermission permission={PERMISSIONS.CHATBOTS.CREATE}>
+            <ChatBotNew />
+          </RequirePermission>
+        ),
+        path: CHATBOT_ROUTES.CREATE,
       },
       {
-        element: <ChatBotNew />,
-        path: ":chatBotId/builder",
+        element: (
+          <RequirePermission
+            permission={
+              PERMISSIONS.CHATBOTS.VIEW || PERMISSIONS.CHATBOTS.CREATE
+            }
+          >
+            <ChatBotNew />
+          </RequirePermission>
+        ),
+        path: CHATBOT_ROUTES.BUILDER,
       },
       {
-        element: <ChatbotFlowEditor />,
-        path: ":chatBotId/builder/flow-editor",
+        element: (
+          <RequirePermission
+            permission={
+              PERMISSIONS.CHATBOTS.VIEW || PERMISSIONS.CHATBOTS.CREATE
+            }
+          >
+            <ChatbotFlowEditor />
+          </RequirePermission>
+        ),
+        path: CHATBOT_ROUTES.FLOW,
       },
-      {
-        element: <ChatBotDetailLayout />,
-        path: ":chatBotId",
-        children: [
-          {
-            element: <Navigate to="/chat-bot" />,
-            index: true,
-          },
-          {
-            element: <ChatBotNew />,
-            path: "edit",
-          },
-          {
-            element: <ChatBotUsersLayout />,
-            path: "users",
-            children: [
-              {
-                index: true,
-                element: <ChatBotUsersPage />,
-              },
-              {
-                element: <ChatBotUserResponsesLayout />,
-                path: ":chatBotUserId",
-                children: [
-                  {
-                    element: <Navigate to="/chat-bot" />,
-                    index: true,
-                  },
-                  {
-                    element: <ChatBotUserResponsesPage />,
-                    index: true,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
+      // {
+      //   element: <ChatBotDetailLayout />,
+      //   path: ":chatBotId",
+      //   children: [
+      //     {
+      //       element: <Navigate to="/chat-bot" />,
+      //       index: true,
+      //     },
+      //     {
+      //       element: <ChatBotNew />,
+      //       path: "edit",
+      //     },
+      //     {
+      //       element: <ChatBotUsersLayout />,
+      //       path: "users",
+      //       children: [
+      //         {
+      //           index: true,
+      //           element: <ChatBotUsersPage />,
+      //         },
+      //         {
+      //           element: <ChatBotUserResponsesLayout />,
+      //           path: ":chatBotUserId",
+      //           children: [
+      //             {
+      //               element: <Navigate to="/chat-bot" />,
+      //               index: true,
+      //             },
+      //             {
+      //               element: <ChatBotUserResponsesPage />,
+      //               index: true,
+      //             },
+      //           ],
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
     ],
   },
 ];

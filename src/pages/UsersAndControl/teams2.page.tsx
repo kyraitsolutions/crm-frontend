@@ -43,22 +43,7 @@ const Teams = () => {
 
       if (res.status === 200) {
         const newTeamMember = res.data.doc;
-
-        // const memberPayload = {
-        //   accounts: newTeamMember?.accounts,
-        //   userProfile: {
-        //     firstName: newTeamMember?.firstName,
-        //     lastName: newTeamMember?.lastName,
-        //   },
-        //   email: newTeamMember?.email,
-        //   role: newTeamMember?.role,
-        //   id: newTeamMember?.id,
-        //   userId: newTeamMember?.userId,
-        //   createdAt: newTeamMember?.createdAt,
-        //   updatedAt: newTeamMember?.updatedAt,
-        // };
         teamStoreManager.setTeamsTop(newTeamMember);
-
         toast.apiSuccess(res.message || "Team member created successfully");
         setOpenAdd(false);
       }
