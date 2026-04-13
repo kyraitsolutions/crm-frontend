@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAlertStore } from "@/stores/alert.store";
-import { AlertTriangle, CheckCircle, XCircle, Info } from "lucide-react";
+import { AlertTriangle, CheckCircle, Info, XCircle } from "lucide-react";
+import React, { useEffect } from "react";
 
 const iconMap = {
   warning: AlertTriangle,
@@ -26,19 +26,7 @@ export const AlertDialog: React.FC = () => {
     closeAlert,
   } = useAlertStore();
 
-  const [animate, setAnimate] = useState(false);
   const Icon = iconMap[type ?? "info"];
-
-  // Trigger animation when open changes
-  useEffect(() => {
-    if (isOpen) {
-      setAnimate(true);
-    } else {
-      // Delay unmount for animation out
-      const timeout = setTimeout(() => setAnimate(false), 300);
-      return () => clearTimeout(timeout);
-    }
-  }, [isOpen]);
 
   // Disable background scroll
   useEffect(() => {
@@ -97,6 +85,7 @@ export const AlertDialog: React.FC = () => {
         <div className="flex justify-end gap-3">
           <Button
             variant="outline"
+            className="px-6 border border-primary/40 rounded-xl"
             onClick={() => {
               onCancel?.();
               closeAlert();
@@ -107,6 +96,7 @@ export const AlertDialog: React.FC = () => {
 
           <Button
             variant="destructive"
+            className="px-6 rounded-xl"
             onClick={() => {
               onConfirm?.();
               closeAlert();

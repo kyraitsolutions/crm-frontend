@@ -9,7 +9,7 @@ export class AuthService extends ApiService {
 
   async getMe(): Promise<ApiResponse<IUser>> {
     return await this.get(
-      `${API_ENDPOINT_PATH.AUTH_USER.ME}?include=organization`,
+      `${API_ENDPOINT_PATH.AUTH_USER.ME}?includes=organization,permissions`,
     );
   }
 }

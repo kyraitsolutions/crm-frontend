@@ -1,3 +1,4 @@
+import { AuthCallbackLoader } from "@/components/Loader/auth-callback-loader";
 import { COOKIES_STORAGE } from "@/constants";
 import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { useEffect } from "react";
@@ -10,19 +11,25 @@ export const AuthCallbackPage = () => {
   useEffect(() => {
     const authCallbackHandler = async () => {
       const token = new URLSearchParams(location.search).get("token");
+      console.log(token);
+      // const isOnboarding = new URLSearchParams(location.search).get(
+      //   "onboarding",
+      // );
+
       if (!token) {
         return;
       }
       CookieUtils.setItem(COOKIES_STORAGE.auth_token, token);
-      const data = { id: 213123, onboarding: true };
-      if (data.onboarding) {
-        navigate("/dashboard");
-      } else {
-        navigate("/on-boarding");
-      }
+      navigate("/dashboard");
+
+      // if (isOnboarding !== "true") {
+      //   navigate("/on-boarding");
+      // } else {
+      //   navigate("/dashboard");
+      // }
     };
     authCallbackHandler();
   }, [location.pathname, location.search, navigate]);
 
-  return <div>AuthCallbackPage</div>;
+  return <AuthCallbackLoader />;
 };

@@ -31,7 +31,7 @@ import { formatDate } from "@/utils/date-utils";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { hasPermission, isAdmin, PERMISSION } from "@/rbac";
+import { hasPermission } from "@/rbac";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -190,8 +190,6 @@ export const DashboardPage = () => {
     );
   }
 
-  console.log(user);
-
   return (
     <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 px-5 py-5">
       {accounts &&
@@ -238,7 +236,8 @@ export const DashboardPage = () => {
                 </div>
 
                 {/* Delete Button */}
-                {hasPermission(user?.roleId, PERMISSION?.ACCOUNT_DELETE) && (
+
+                {hasPermission(user?.permissions, "accounts.delete") && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -260,12 +259,13 @@ export const DashboardPage = () => {
                 <span
                   className={`
             px-2 py-0.5 rounded-full capitalize text-xs font-medium
-            ${account.status === "active"
-                      ? "bg-primary/10 text-primary"
-                      : account.status === "inactive"
-                        ? "bg-destructive/10 text-destructive"
-                        : "bg-primary/10 text-primary"
-                    }
+            ${
+              account.status === "active"
+                ? "bg-primary/10 text-primary"
+                : account.status === "inactive"
+                  ? "bg-destructive/10 text-destructive"
+                  : "bg-primary/10 text-primary"
+            }
           `}
                 >
                   {account.status}
@@ -276,7 +276,7 @@ export const DashboardPage = () => {
         })}
 
       {/* Add New Account */}
-      {isAdmin(user?.roleId) && (
+      {hasPermission(user?.permissions, "accounts.create") && (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <div

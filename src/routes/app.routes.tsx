@@ -17,12 +17,13 @@ import { formRoutes } from "./form.routes";
 import { leadRoutes } from "./lead.route";
 // import ProductPage from "@/pages/product.page";
 // import About from "@/pages/about.page";
-import { Teams } from "@/pages/UsersAndControl/teams.page";
+
 import { broadcastRoutes } from "./broadcast.routes";
 import { contactRoutes } from "./contact.routes";
 import { settingRoutes } from "./setting.routes";
 import { PublicOnly } from "./route-access/PublicOnly";
 import { ProtectedOnly } from "./route-access/ProtectedOnly";
+import Teams from "@/pages/UsersAndControl/teams2.page";
 
 export const appRoutes = createBrowserRouter([
   {

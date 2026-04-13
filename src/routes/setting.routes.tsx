@@ -7,7 +7,8 @@ import ProfilePage from "@/pages/Profile/Profile";
 import SettingPage from "@/pages/setting.page";
 import { SubscriptionPage } from "@/pages/subscription.page";
 import Role from "@/pages/UsersAndControl/role.page";
-import { Teams } from "@/pages/UsersAndControl/teams.page";
+import Teams from "@/pages/UsersAndControl/teams2.page";
+// import { Teams } from "@/pages/UsersAndControl/teams.page";
 import { type RouteObject } from "react-router-dom";
 
 export const settingRoutes: RouteObject[] = [

@@ -1,16 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Camera, Mail, Phone, Pencil } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AccountService } from "@/services/account.service";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
-import { isAdmin } from "@/rbac";
+import { Camera, Mail, Pencil, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
 
 // ---- Types ----
 type ProfileState = {
@@ -26,9 +23,7 @@ type ProfileState = {
 };
 
 export default function ProfilePage() {
-  const params = useParams();
   const { user } = useAuthStore((state) => state);
-  const accountService = new AccountService();
 
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -47,12 +42,14 @@ export default function ProfilePage() {
 
   // ---- Avatar Upload ----
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () =>
       setProfile((prev) => ({ ...prev, avatar: reader.result as string }));
     reader.readAsDataURL(file);
+    setLoading(false);
   };
 
   const handleSave = () => {
@@ -70,7 +67,6 @@ export default function ProfilePage() {
 
   // ---- Map API (SINGLE STATE SET) ----
   const mapData = (data: any) => {
-    console.log("profile", data);
     setProfile({
       firstName: data?.userprofile?.firstName || "",
       lastName: data?.userprofile?.lastName || "",
@@ -78,43 +74,19 @@ export default function ProfilePage() {
         `${data?.userprofile?.firstName || ""} ${data?.userprofile?.lastName || ""}`.trim(),
 
       accountType: data?.userprofile?.accountType || "",
-      accountName: data?.userprofile?.organizationName || "",
+      accountName: data?.organization?.name || "",
       phone: data?.phone || "",
-      avatar: data?.profilePicture || null,
-      emails: data?.email ? [data.email] : [],
+      avatar: data?.userprofile?.profilePicture || null,
+      emails: user?.email ? [user.email] : [],
       supportEmail: data?.supportEmail || "",
     });
   };
 
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      const response = await accountService.getAccountById(
-        params?.accountId || "",
-      );
-
-      console.log(response);
-
-      if (response?.status === 200) {
-        mapData(response?.data?.doc);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchProfile();
-    if (params?.accountId && params?.account_type === "account") {
-      fetchProfile();
-    } else {
-      mapData(user);
-    }
-  }, [params?.accountId]);
+    mapData(user);
+  }, []);
 
-  const is_admin = isAdmin(user?.roleId);
+  // const is_admin = isAdmin(user?.roleId);
 
   return (
     <div className="p-6 mx-auto bg-gray-50 h-screen space-y-6">
@@ -144,25 +116,21 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold">
-              {profile?.fullName || "Account"}
-            </h2>
+            <h2 className="text-lg font-semibold">{profile?.firstName}</h2>
             <p className="text-sm text-gray-600">
               {profile.emails[0] || "No email"}
             </p>
           </div>
         </div>
 
-        {is_admin && (
-          <Button
-            className="bg-primary hover:bg-primary hover:text-white text-white rounded px-5!"
-            variant="outline"
-            onClick={() => setEditMode(!editMode)}
-          >
-            <Pencil size={5} className="" />
-            {editMode ? "Cancel" : "Edit"}
-          </Button>
-        )}
+        <Button
+          className="bg-primary hover:bg-primary hover:text-white text-white rounded px-5!"
+          variant="outline"
+          onClick={() => setEditMode(!editMode)}
+        >
+          <Pencil size={5} className="" />
+          {editMode ? "Cancel" : "Edit"}
+        </Button>
       </div>
 
       {/* FORM */}
@@ -175,7 +143,7 @@ export default function ProfilePage() {
               value={profile.firstName}
               disabled={!editMode}
               onChange={(e) =>
-                setProfile((p) => ({ ...p, name: e.target.value }))
+                setProfile((p) => ({ ...p, firstName: e.target.value }))
               }
             />
           </div>
@@ -187,7 +155,7 @@ export default function ProfilePage() {
               value={profile.lastName}
               disabled={!editMode}
               onChange={(e) =>
-                setProfile((p) => ({ ...p, nickName: e.target.value }))
+                setProfile((p) => ({ ...p, lastName: e.target.value }))
               }
             />
           </div>
@@ -207,14 +175,48 @@ export default function ProfilePage() {
               />
             </div>
           </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm text-gray-500">Email</Label>
+            <div className="relative">
+              <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                value={profile.emails[0]}
+                disabled={!editMode}
+                placeholder="9199999999"
+                onChange={(e) =>
+                  setProfile((p) => ({ ...p, emails: [e.target.value] }))
+                }
+              />
+            </div>
+          </div>
+
+          {/* <div className="space-y-2">
+            <Label className="text-xs text-gray-400">Email</Label>
+
+            <div className="relative">
+              <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                value={profile.emails[0]}
+                disabled={!editMode}
+                onChange={(e) => {
+                  // const updated = [...profile.emails];
+                  // updated[index] = e.target.value;
+                  // setProfile((p) => ({ ...p, emails: updated }));
+                }}
+              />
+            </div>
+          </div> */}
         </div>
 
         {/* EMAILS */}
         <div className="space-y-8">
-          <h3 className="font-medium mb-4">Email Addresses</h3>
+          {/* <h3 className="font-medium mb-4">Email Addresses</h3> */}
 
-          <div className="grid grid-cols-2 items-center gap-6">
-            {profile.emails.map((email, index) => (
+          <div className="items-center gap-6">
+            {/* {profile.emails.map((email, index) => (
               <div key={index} className="space-y-2">
                 <Label className="text-xs text-gray-400">
                   {index === 0 ? "Primary Email" : "Secondary Email"}
@@ -234,9 +236,9 @@ export default function ProfilePage() {
                   />
                 </div>
               </div>
-            ))}
+            ))} */}
 
-            {profile?.emails?.length === 1 && (
+            {/* {profile?.emails?.length === 1 && (
               <div className="space-y-2">
                 <Label className="text-xs text-gray-400">
                   Secondary Email ( Optional )
@@ -257,11 +259,11 @@ export default function ProfilePage() {
                   />
                 </div>
               </div>
-            )}
+            )} */}
           </div>
 
           {/* SUPPORT EMAIL */}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label className="text-xs text-gray-400">Support Email</Label>
 
             <div className="relative">
@@ -280,7 +282,7 @@ export default function ProfilePage() {
                 }
               />
             </div>
-          </div>
+          </div> */}
         </div>
 
         {editMode && (

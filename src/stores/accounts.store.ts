@@ -44,7 +44,6 @@ export class AccountsStoreManager {
       }
     });
   }
-
   /** Optimistic update + rollback */
   updateAccountOptimistic(updatedAccount: IAccount) {
     const prevAccounts = this.store.getState().accounts;

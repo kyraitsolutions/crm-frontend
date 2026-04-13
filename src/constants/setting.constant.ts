@@ -54,8 +54,14 @@ export const settingSections = [
     ],
   },
   {
-    title: "Data Administration",
-    items: [{ label: "Audit Logs", link: "/audit-logs" }],
+    title: "Channels",
+    items: [
+      { label: "Whatsapp", link: "/whatsapp" },
+      { label: "Telegram", link: "/telegram" },
+      { label: "Instagram", link: "/instagram" },
+      { label: "Facebook", link: "/facebook" },
+      { label: "Chatbot", link: "/Chatbot" },
+    ],
   },
   {
     title: "Integration",
@@ -65,12 +71,18 @@ export const settingSections = [
       { label: "Integration Platforms", link: "/integration-platforms" },
     ],
   },
+
+  
   {
     title: "Developer Space",
     items: [
       { label: "APIs", link: "/apis" },
       { label: "Webhooks", link: "/webhooks" },
     ],
+  },
+  {
+    title: "Data Administration",
+    items: [{ label: "Audit Logs", link: "/audit-logs" }],
   },
   {
     title: "Plan & Subscription",

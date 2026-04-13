@@ -1,8 +1,6 @@
 import {
   // IconCreditCard,
   IconLogout,
-  // IconNotification,
-  // IconUserCircle,
 } from "@tabler/icons-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,7 +19,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { LocalStorageUtils } from "@/utils";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
+import { useNavigate } from "react-router-dom";
 
 interface NavUserProps {
   user: {
@@ -33,9 +32,10 @@ interface NavUserProps {
 
 export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
+  const navigate = useNavigate();
   const logoutHandler = () => {
-    LocalStorageUtils.clear();
-    window.location.href = "/login";
+    CookieUtils.clear();
+    navigate("/login");
   };
 
   return (

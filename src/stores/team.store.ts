@@ -11,7 +11,7 @@ export const useTeamsStore = create<ITeamsStoreState>()(
   immer<ITeamsStoreState>(() => ({
     teams: [],
     totalTeams: null,
-  }))
+  })),
 );
 
 export class TeamsStoreManager {
@@ -30,7 +30,7 @@ export class TeamsStoreManager {
   }
 
   /** Push a new team to the top */
-  setTeamsTop(team: ITeam) {
+  setTeamsTop(team: Partial<ITeam>) {
     this.store.setState((state) => ({
       teams: [team, ...state.teams],
       totalTeams: (state.totalTeams ?? 0) + 1,
@@ -38,18 +38,19 @@ export class TeamsStoreManager {
   }
 
   /** Update existing team */
-  updateTeam(updatedTeam: ITeam) {
+  updateTeam(updatedTeam: Partial<ITeam>) {
     this.store.setState((state) => {
       const index = state.teams.findIndex(
-        (t) => t.userId === updatedTeam.userId
+        (t) => t.userId === updatedTeam.userId,
       );
       if (index !== -1) {
-        state.teams[index] = updatedTeam;
+        state.teams[index] = { ...state.teams[index], ...updatedTeam };
       }
     });
   }
   /** Optimistic update + rollback */
-  updateTeamOptimistic(updatedTeam: ITeam) {
+  updateTeamOptimistic(updatedTeam: Partial<ITeam>) {
+    console.log(updatedTeam);
     const prevTeams = this.store.getState().teams;
 
     // update immediately
@@ -70,12 +71,19 @@ export class TeamsStoreManager {
     }));
   }
 
-  deleteTeamOptimistic(teamId: string) {
+  deleteTeamsByIds(teamIds: string[]) {
+    this.store.setState((state) => ({
+      teams: state.teams.filter((team) => !teamIds.includes(team.userId)),
+      totalTeams: state.totalTeams! - teamIds.length,
+    }));
+  }
+
+  deleteTeamOptimistic(teamsIds: string[]) {
     const prevTeams = this.store.getState().teams;
     const prevTotal = this.store.getState().totalTeams;
 
     // optimistic update
-    this.deleteTeam(teamId);
+    this.deleteTeamsByIds(teamsIds);
 
     // rollback function
     return () => {

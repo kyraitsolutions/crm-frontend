@@ -3,6 +3,7 @@ export const DASHBOARD_PATH = {
   ACCOUNT: "account/:account-id",
   CHATBOT_BUILDER: "/builder",
   CHATBOT_BUILDER_FLOW: `/builder/flow-editor`,
+  SETTINGS: "/settings",
   getAccountPath: (accountId: string, accountName?: string) =>
     accountName
       ? `${DASHBOARD_PATH.ROOT}/account/${accountId}/${accountName}`

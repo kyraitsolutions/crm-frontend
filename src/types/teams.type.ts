@@ -2,23 +2,18 @@ import { z } from "zod";
 
 export const TeamSchema = z.object({
   id: z.string(),
-
   userId: z.string(),
-  roleId: z.string(),
-
-  firstName: z.string(),
-  lastName: z.string(),
-
+  role: z.object({ id: z.string(), name: z.string() }),
+  userProfile: z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+    image: z.string().optional(),
+  }),
   email: z.email(),
-
-  inviteStatus: z.enum(["PENDING", "ACCEPTED", "REJECTED"]),
-  roleName: z.string(), // e.g. "TEAM_MEMBER"
-
-  status: z.boolean(),
-
-  accountIds: z.array(z.string()),
-
+  status: z.boolean().optional(),
   createdAt: z.string(), // ISO date string
+  updatedAt: z.string(),
+  accounts: z.array(z.object({ accountId: z.string(), roleId: z.string() })),
 });
 
 export type ITeam = z.infer<typeof TeamSchema>;

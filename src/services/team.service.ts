@@ -1,17 +1,24 @@
 import type { ApiResponse } from "@/types";
 import { ApiService } from "./api.service";
+import type { ITeam } from "@/types/teams.type";
 
 export class TeamService extends ApiService {
   async getTeamMembers(): Promise<ApiResponse<any>> {
     return await this.get("/team");
   }
 
-  async createTeamMember(teamMember: any): Promise<ApiResponse<any>> {
+  async createTeamMember(teamMember: ITeam): Promise<ApiResponse<any>> {
     return await this.post("/team", teamMember);
   }
 
-  async deleteTeamMember(teamMemberId: string): Promise<ApiResponse<any>> {
-    return await this.delete(`/team/${teamMemberId}`);
+  async updateTeamMember(teamMember: ITeam): Promise<ApiResponse<any>> {
+    return await this.put(`/team/${teamMember.userId}`, teamMember);
+  }
+
+  async deleteTeamMember(teamMembersIds: string[]): Promise<ApiResponse<any>> {
+    return await this.delete(`/team`, {
+      teamMembersIds,
+    });
   }
 
   async assignAccountToTeamMember(data: {

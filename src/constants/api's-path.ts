@@ -13,9 +13,16 @@ export const API_ENDPOINT_PATH = {
 
   ORGANIZATION: {
     ONBOARDING: `/organization/onboarding`,
-    // GET_ORGANIZATION_DETAILS_BY_ORGANIZATION_ID: `/organization/:organizationId`,
-
     getOrganizationDetailsByOrganizationIdPath: (id: string) =>
       `/organization/${id}`,
+    updateOrganizationPath: (id: string) => `/organization/${id}`,
+  },
+
+  ROLES: {
+    CREATE_ROLE: "/roles",
+    GET_ROLES: "/roles",
+    updateRolePath: (id: string) => `/roles/${id}`,
+    deleteRolePath: (id: string) => `/roles/${id}`,
+    getPermissionsByRolePath: (id: string) => `/roles/${id}/permissions`,
   },
 };
