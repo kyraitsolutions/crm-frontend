@@ -1,4 +1,4 @@
-import { DASHBOARD_PATH } from "@/constants";
+import { ROUTES } from "@/constants/routes";
 import { settingSections } from "@/constants/setting.constant";
 import { Link } from "react-router-dom";
 
@@ -24,7 +24,7 @@ const SettingPage = () => {
             <div className="flex flex-col gap-4">
               {section.items.map((item, i) => (
                 <Link
-                  to={`${DASHBOARD_PATH.ROOT}/settings${item.link}`}
+                  to={`${ROUTES.DASHBOARD}/settings${item.link}`}
                   key={i}
                   className="text-left cursor-pointer text-sm text-primary hover:text-primary  transition"
                 >

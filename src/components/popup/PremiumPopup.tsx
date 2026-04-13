@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { DASHBOARD_PATH } from "@/constants";
+import { ROUTES } from "@/constants/routes";
 import { useAuthStore } from "@/stores";
 import { Crown } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -16,12 +16,10 @@ interface PremiumPopupProps {
 }
 
 export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
-  const { accountName, accountId, user } = useAuthStore((state) => state);
+  const { accountName, r } = useAuthStore((state) => state);
   //   const organizationName = user?.userprofile?.organizationName;
 
-  const baseUrl = accountName
-    ? `${DASHBOARD_PATH.ROOT}/account/${accountId}/setting`
-    : `${DASHBOARD_PATH.ROOT}/org/${user?.id}/setting`;
+  const baseUrl = `${ROUTES}/settings`;
 
   //   const profileLink = `${baseUrl}/setting/profile`;
   //   const settingLink = `${baseUrl}/setting`;
@@ -35,7 +33,9 @@ export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
             <Crown className="size-7 text-yellow-600" />
           </div>
 
-          <DialogTitle className="text-xl mt-4 text-foreground">Upgrade to Premium</DialogTitle>
+          <DialogTitle className="text-xl mt-4 text-foreground">
+            Upgrade to Premium
+          </DialogTitle>
 
           <DialogDescription className="text-sm text-muted-foreground">
             You’ve reached the maximum number of accounts allowed on your
@@ -47,7 +47,12 @@ export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
           Redirecting you to subscription page…
         </div> */}
 
-        <Link to={`${baseUrl}/subscription`} className="mt-6 w-full p-2  rounded-full   bg-primary text-white hover:bg-primary/90">Upgrade Now</Link>
+        <Link
+          to={`${baseUrl}/subscription`}
+          className="mt-6 w-full p-2  rounded-full   bg-primary text-white hover:bg-primary/90"
+        >
+          Upgrade Now
+        </Link>
       </DialogContent>
     </Dialog>
   );

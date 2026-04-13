@@ -1,4 +1,4 @@
-import { DASHBOARD_PATH } from "@/constants";
+import { ROUTES } from "@/constants/routes";
 import { SettingLayout } from "@/layouts/setting.layout";
 import { DashboardPage } from "@/pages";
 import Integrations from "@/pages/Integration/Integrations";
@@ -13,7 +13,7 @@ import { type RouteObject } from "react-router-dom";
 
 export const settingRoutes: RouteObject[] = [
   {
-    path: `${DASHBOARD_PATH.ROOT}`,
+    path: ROUTES.DASHBOARD,
     children: [
       {
         path: "settings",

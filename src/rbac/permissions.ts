@@ -1,90 +1,20 @@
-// src/rbac/permissions.ts
-
-export const PERMISSION_CONFIG = [
-  {
-    title: "ACCOUNTS",
-    modules: [
-      {
-        key: "accounts",
-        label: "Accounts",
-        actions: ["create", "edit", "delete", "view", "export"],
-      },
-    ],
+export const PERMISSIONS = {
+  CHATBOTS: {
+    VIEW: "chatbots.view",
+    CREATE: "chatbots.create",
+    UPDATE: "chatbots.edit",
+    DELETE: "chatbots.delete",
   },
-  {
-    title: "CHATBOTS",
-    modules: [
-      {
-        key: "chatbots",
-        label: "Chatbots",
-        actions: ["create", "edit", "delete", "view", "launch"],
-      },
-    ],
+  LEADS: {
+    VIEW: "leads.view",
+    CREATE: "leads.create",
+    UPDATE: "leads.edit",
+    DELETE: "leads.delete",
   },
-  {
-    title: "LEADS",
-    modules: [
-      {
-        key: "leads",
-        label: "Leads",
-        actions: ["create", "edit", "delete", "view", "export"],
-      },
-    ],
+  LEADS_FORMS: {
+    VIEW: "leadForms.view",
+    CREATE: "leadForms.create",
+    UPDATE: "leadForms.edit",
+    DELETE: "leadForms.delete",
   },
-  {
-    title: "TEAM MANAGEMENT",
-    modules: [
-      {
-        key: "teams",
-        label: "Team Management",
-        actions: ["create", "edit", "delete", "view"],
-      },
-    ],
-  },
-  {
-    title: "LEAD FORM",
-    modules: [
-      {
-        key: "leadForms",
-        label: "Lead Form",
-        actions: ["create", "edit", "delete", "view", "launch", "viewReport"],
-      },
-    ],
-  },
-  {
-    title: "CAMPAIGNS",
-    modules: [
-      {
-        key: "campaigns",
-        label: "Campaigns",
-        actions: [
-          "create",
-          "edit",
-          "delete",
-          "view",
-          "export",
-          "launch",
-          "viewReport",
-        ],
-      },
-    ],
-  },
-];
-
-export const ALL_ACTIONS = [
-  "create",
-  "edit",
-  "delete",
-  "view",
-  "export",
-  // "launch",
-  // "viewReport",
-];
-
-export const modules = ["accounts", "leads", "chatbots", "leadform", "teams"];
-
-export const generateAllPermissions = () => {
-  return modules.flatMap((module) =>
-    ALL_ACTIONS.map((action) => `${module}:${action}`),
-  );
-};
+} as const;

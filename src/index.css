@@ -322,3 +322,6 @@
   @apply rounded-xl border border-primary/30 bg-primary/5 p-1 text-sm font-medium text-primary transition-all hover:bg-primary/10 hover:border-primary/5 cursor-pointer
 }
 
+.input-field{
+  @apply focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl
+}

@@ -1,4 +1,4 @@
-import { DASHBOARD_PATH } from "@/constants";
+import { BROADCAST_PATHS } from "@/constants/routes/broadcast.path";
 import { EmailMarketingLayout } from "@/layouts/emailMarketing.layout";
 import { TemplateLayout } from "@/layouts/templates.layout";
 import { WhatsappMarketingLayout } from "@/layouts/whatsappMarketing.layout";
@@ -10,7 +10,7 @@ import WhatsappMarketing from "@/pages/WhatsappMarketing";
 import { type RouteObject } from "react-router-dom";
 export const broadcastRoutes: RouteObject[] = [
   {
-    path: `${DASHBOARD_PATH.ROOT}/account/:accountId/broadcast`,
+    path: BROADCAST_PATHS.ROOT,
     // element: <BroadcastLayout />,
     children: [
       {

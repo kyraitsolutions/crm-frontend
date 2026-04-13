@@ -1,14 +1,8 @@
-import { DASHBOARD_PATH } from "@/constants";
+import { ROUTES } from "@/constants/routes";
 import { settingSections } from "@/constants/setting.constant";
 
 export const getBreadcrumbs = (pathname: string) => {
-  //   const organizationName = user?.userprofile?.organizationName;
-
-  //   const baseUrl = accountName
-  //     ? `${DASHBOARD_PATH.ROOT}/account/${accountId}/setting`
-  //     : `${DASHBOARD_PATH.ROOT}/org/${user?.id}/setting`;
-
-  const baseUrl = `${DASHBOARD_PATH.ROOT}/settings`;
+  const baseUrl = `${ROUTES.DASHBOARD}/settings`;
   const parts = pathname.split("/").filter(Boolean);
   const lastPart = "/" + parts[parts.length - 1];
 

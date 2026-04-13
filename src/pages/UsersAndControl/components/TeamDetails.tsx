@@ -7,36 +7,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ROLES } from "@/rbac";
 import type { IAccount } from "@/types/accounts.type";
+import type { ITeam } from "@/types/teams.type";
 import { formatDate } from "@/utils/date-utils";
 import { Pencil, Phone } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-type Account = {
-  accountId: string;
-  roleId: string;
-};
-
-type UserData = {
-  id: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-  role: {
-    id: string;
-    name: string;
-  };
-  userProfile: {
-    firstName: string;
-    lastName: string;
-    phone?: string;
-  };
-  accounts: Account[];
-  phone?: string;
-};
-
 type TeamDetailsProps = {
-  user: UserData;
+  user: ITeam;
   accounts: IAccount[];
   roles: any[];
   level: number;
@@ -73,7 +52,6 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
   const handleChange = (key: string, value: string) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
-
   // 🔥 ACCOUNT TOGGLE
   const handleAccountToggle = (accountId: string) => {
     setSelectedAccounts((prev) => {
@@ -198,7 +176,7 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
           </div>
         </div>
 
-        {!isEditing && (
+        {!isEditing && user?.role?.name !== ROLES.OWNER && (
           <button
             onClick={() => setIsEditing(true)}
             className="flex items-center gap-1 text-sm bg-primary p-2 text-white rounded-xl hover:underline cursor-pointer"
@@ -239,7 +217,9 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
 
       {/* ACCOUNTS SECTION */}
       <div>
-        <h3 className="text-sm font-semibold mb-3">Assigned Accounts</h3>
+        <h3 className="text-sm font-semibold mb-3">
+          {user?.role?.name !== ROLES.OWNER && "Assigned "} Accounts
+        </h3>
 
         {isEditing ? (
           <div className="border rounded-xl divide-y">
@@ -299,7 +279,8 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
                   key={acc.accountId}
                   className="px-3 py-1 text-xs bg-gray-100 rounded-md border"
                 >
-                  {acc.accountId.slice(-6)}
+                  <p>{acc?.name}</p>
+                  {/* {acc.accountId.slice(-6)} */}
                 </div>
               ))
             ) : (

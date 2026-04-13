@@ -1,4 +1,3 @@
-import { DASHBOARD_PATH } from "@/constants";
 import { cn } from "@/lib/utils";
 import { AuthStoreManager, useAuthStore } from "@/stores";
 import { useAccountsStore } from "@/stores/accounts.store";
@@ -23,7 +22,9 @@ import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { SidebarFooter } from "./ui/sidebar";
-import { hasPermission } from "@/rbac";
+import { hasPermission, PERMISSIONS } from "@/rbac";
+import { useAccountAccessStore } from "@/stores/account-access.store";
+import { ACCOUNT_PATHS } from "@/constants/routes";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -32,82 +33,73 @@ export function AppSidebar() {
   const authManager = new AuthStoreManager();
 
   const { user: authUser, accountId } = useAuthStore((state) => state);
+  const { permissions } = useAccountAccessStore((state) => state);
 
   const handleAccountSwitch = (accountId: string) => {
     const pathName = window.location.pathname;
-
     authManager.setLastSlugPath(pathName);
     authManager.setAccountId(accountId);
-    navigate(DASHBOARD_PATH.getAccountPath(accountId));
+    navigate(ACCOUNT_PATHS.byId(accountId));
   };
 
   const data = {
     navMain: [
-      // {
-      //   title: "Home",
-      //   url: DASHBOARD_PATH.ROOT,
-      //   icon: House,
-      // },
-
       {
         title: "Dashboard",
-        url: DASHBOARD_PATH.getAccountPath(String(accountId)),
+        url: ACCOUNT_PATHS.byId(String(accountId)),
         active: true,
         icon: IconDashboard,
       },
 
       {
         title: "Leads Centre",
-        url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/leads`,
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/leads`,
         icon: IconUsers,
-        active: hasPermission(authUser?.permissions, "leads.view"),
+        active: hasPermission(permissions, PERMISSIONS.LEADS.VIEW),
       },
       {
         title: "Chat bot",
-        url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`,
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/chatbot`,
         icon: IconMessageCircle,
-        // active: hasPermission(authUser?.permissions, "chatbot.view"),
-        active: true,
+        active: hasPermission(permissions, PERMISSIONS.CHATBOTS.VIEW),
       },
       {
         title: "Lead Forms",
-        url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/lead-forms`,
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/lead-forms`,
         icon: IconFileText,
-        active: hasPermission(authUser?.permissions, "leadform.view"),
+        active: hasPermission(permissions, PERMISSIONS.LEADS_FORMS.VIEW),
       },
       {
         title: "Broadcast",
-        url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast`,
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast`,
         icon: MdOutlineCampaign,
         active: true,
         children: [
           {
             title: "Email",
-            url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/email`,
+            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/email`,
             icon: MdEmail,
           },
           {
             title: "WhatsApp",
-            url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/whatsapp`,
+            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
             icon: MdWhatsapp,
           },
           {
             title: "Templates",
-            url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/broadcast/templates`,
+            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/templates`,
             icon: BookTemplateIcon,
           },
         ],
       },
       {
         title: "Contacts",
-        url: `${DASHBOARD_PATH.getAccountPath(String(accountId))}/contacts`,
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/contacts`,
         icon: MdOutlineContacts,
         active: true,
       },
     ],
   };
-
-  console.log(data);
 
   return (
     <aside
@@ -193,214 +185,3 @@ export function AppSidebar() {
     </aside>
   );
 }
-
-// import {
-//   IconCamera,
-//   IconDashboard,
-//   IconDatabase,
-//   IconFileAi,
-//   IconFileDescription,
-//   IconFileText,
-//   IconFileWord,
-//   IconInnerShadowTop,
-//   IconMessageCircle,
-//   IconReport,
-//   IconSearch,
-//   IconUsers,
-// } from "@tabler/icons-react";
-// import * as React from "react";
-
-// // import { NavDocuments } from "@/components/nav-documents";
-// import { NavMain } from "@/components/nav-main";
-// import { NavSecondary } from "@/components/nav-secondary";
-// import { NavUser } from "@/components/nav-user";
-// import {
-//   Sidebar,
-//   SidebarContent,
-//   SidebarFooter,
-//   SidebarHeader,
-//   SidebarMenu,
-//   SidebarMenuButton,
-//   SidebarMenuItem,
-// } from "@/components/ui/sidebar";
-// import { COOKIES_STORAGE, DASHBOARD_PATH } from "@/constants";
-// import { useAuthStore } from "@/stores";
-// import { CookieUtils } from "@/utils/cookie-storage.utils";
-// import { House } from "lucide-react";
-// import { Link } from "react-router-dom";
-
-// export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-//   const { user: authUser, accountSelected } = useAuthStore((state) => state);
-//   // console.log(authUser)
-//   const data = {
-//     user: {
-//       name: "shadcn",
-//       email: "m@example.com",
-//       avatar: "/avatars/shadcn.jpg",
-//     },
-//     navMain: [
-//       {
-//         title: "Home",
-//         url: DASHBOARD_PATH.ROOT,
-//         icon: House,
-//       },
-
-//       {
-//         title: "Dashboard",
-//         url: DASHBOARD_PATH.getAccountPath(
-//           String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
-//         ),
-
-//         icon: IconDashboard,
-//       },
-
-//       // {
-//       //   title: "Builder",
-//       //   url: "/builder",
-//       //   icon: IconCode,
-//       // },
-//       {
-//         title: "Leads Centre",
-//         url: `${DASHBOARD_PATH.getAccountPath(
-//           String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
-//         )}/leads`,
-//         icon: IconUsers,
-//       },
-//       {
-//         title: "Chat bot",
-//         url: `${DASHBOARD_PATH.getAccountPath(
-//           String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
-//         )}/chatbot`,
-//         icon: IconMessageCircle,
-//       },
-//       {
-//         title: "Lead Forms",
-//         url: `${DASHBOARD_PATH.getAccountPath(
-//           String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
-//         )}/lead-forms`,
-//         icon: IconFileText,
-//       },
-//       {
-//         title: "Email Campaigns",
-//         url: `${DASHBOARD_PATH.getAccountPath(
-//           String(CookieUtils.getItem(COOKIES_STORAGE.accountId)),
-//         )}/email-campaigns`,
-//         icon: IconFileText,
-//       },
-
-//       {
-//         title: "Team",
-//         url: "/dashboard/teams",
-//         icon: IconUsers,
-//       },
-//     ],
-//     navClouds: [
-//       {
-//         title: "Capture",
-//         icon: IconCamera,
-//         isActive: true,
-//         url: "#",
-//         items: [
-//           {
-//             title: "Active Proposals",
-//             url: "#",
-//           },
-//           {
-//             title: "Archived",
-//             url: "#",
-//           },
-//         ],
-//       },
-//       {
-//         title: "Proposal",
-//         icon: IconFileDescription,
-//         url: "#",
-//         items: [
-//           {
-//             title: "Active Proposals",
-//             url: "#",
-//           },
-//           {
-//             title: "Archived",
-//             url: "#",
-//           },
-//         ],
-//       },
-//       {
-//         title: "Prompts",
-//         icon: IconFileAi,
-//         url: "#",
-//         items: [
-//           {
-//             title: "Active Proposals",
-//             url: "#",
-//           },
-//           {
-//             title: "Archived",
-//             url: "#",
-//           },
-//         ],
-//       },
-//     ],
-//     navSecondary: [
-//       // {
-//       //   title: "Settings",
-//       //   url: "/dashboard/settings",
-//       //   icon: IconSettings,
-//       // },
-//       // {
-//       //   title: "Feedback",
-//       //   url: "#",
-//       //   icon: IconHelp,
-//       // },
-//       {
-//         title: "Upgrade to premium",
-//         url: "/dashboard/subscription",
-//         icon: IconSearch,
-//       },
-//     ],
-//     documents: [
-//       {
-//         name: "Data Library",
-//         url: "#",
-//         icon: IconDatabase,
-//       },
-//       {
-//         name: "Reports",
-//         url: "#",
-//         icon: IconReport,
-//       },
-//       {
-//         name: "Word Assistant",
-//         url: "#",
-//         icon: IconFileWord,
-//       },
-//     ],
-//   };
-
-//   return (
-//     <Sidebar collapsible="icon" {...props} side="left">
-//       <SidebarHeader>
-//         <SidebarMenu>
-//           <SidebarMenuItem>
-//             <SidebarMenuButton
-//               asChild
-//               className="data-[slot=sidebar-menu-button]:!p-1.5"
-//             >
-//               <Link to="/">
-//                 <IconInnerShadowTop className="!size-5 text-primary" />
-//                 <span className="text-base font-semibold">Kyra AI CRM</span>
-//               </Link>
-//             </SidebarMenuButton>
-//           </SidebarMenuItem>
-//         </SidebarMenu>
-//       </SidebarHeader>
-//       <SidebarContent>
-//         <NavMain items={data.navMain as any} show={accountSelected} />
-//         {/* <NavDocuments items={data.documents} /> */}
-//         <NavSecondary items={data.navSecondary} className="mt-auto" />
-//       </SidebarContent>
-
-//     </Sidebar>
-//   );
-// }

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { DASHBOARD_PATH } from "@/constants";
+import { LEAD_FORM_PATHS } from "@/constants";
 import { ToastMessageService } from "@/services";
 import { LeadFormService } from "@/services/leadform.service";
 import type { ApiError } from "@/types";
@@ -127,9 +127,7 @@ export default function LeadFormNew() {
 
         if (response.status === 200) {
           toastMessageService.apiSuccess(response.data.responseMessage);
-          navigate(
-            `${DASHBOARD_PATH.getAccountPath(String(accountId))}/lead-forms`,
-          );
+          navigate(`${LEAD_FORM_PATHS.getList(String(accountId))}`);
         }
         return;
       }
@@ -141,9 +139,7 @@ export default function LeadFormNew() {
 
       if (response.status === 200 || response.status === 201) {
         toastMessageService.apiSuccess(response.data.responseMessage);
-        navigate(
-          `${DASHBOARD_PATH.getAccountPath(String(accountId))}/lead-forms`,
-        );
+        navigate(`${LEAD_FORM_PATHS.getList(String(accountId))}`);
       }
     } catch (err) {
       console.error(err);
@@ -172,7 +168,8 @@ export default function LeadFormNew() {
         setFormName(response?.data?.docs?.formName);
         setCustomFields(response?.data?.docs?.formFields?.customFields || []);
         setSuccessCTA(response?.data?.docs?.successCTA);
-        setSuccessCTADestination(response?.data?.docs?.successCTADestination);
+        setSuccessCTADestinatlead -
+          formsion(response?.data?.docs?.successCTADestination);
         setHeaderImage(response?.data?.docs?.headerImage);
 
         const isCustomFieldToggleTrue =
@@ -204,13 +201,11 @@ export default function LeadFormNew() {
         <LeadFormSkeleton />
       ) : (
         <div>
-          {
-            isView && (
-
-              <div className="flex justify-end py-2 px-6 sticky top-0">
-                <Link
-                  to={`${DASHBOARD_PATH.getAccountPath(accountId!)}/lead-forms/${formId}/update`}
-                  className="
+          {isView && (
+            <div className="flex justify-end py-2 px-6 sticky top-0">
+              <Link
+                to={`${LEAD_FORM_PATHS.update(String(accountId), String(formId))}`}
+                className="
                 sticky top-44
                 z-50
                 inline-flex items-center gap-2
@@ -222,13 +217,12 @@ export default function LeadFormNew() {
                 hover:border-[#16A34A]/50
                 focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30
               "
-                >
-                  <Edit size={14} />
-                  Edit
-                </Link>
-              </div>)
-          }
-
+              >
+                <Edit size={14} />
+                Edit
+              </Link>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 px-6">
             {/* LEFT: Builder */}

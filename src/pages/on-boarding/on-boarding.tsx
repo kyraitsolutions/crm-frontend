@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { OnboardingSuccessModal } from "./on-boarding-SuccessModal";
 import { AccountService } from "@/services/account.service";
 import { AccountsStoreManager } from "@/stores/accounts.store";
-import Loader from "../Loader";
+import Loader from "../../components/Loader";
 
 export default function Onboarding() {
   const [step, setStep] = useState(1);

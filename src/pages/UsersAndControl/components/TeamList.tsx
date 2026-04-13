@@ -3,9 +3,9 @@ import { useMemo, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, User2 } from "lucide-react";
 import { alertManager } from "@/stores/alert.store";
-import { hasPermission } from "@/rbac";
+import { hasPermission, ROLES } from "@/rbac";
 
 type TeamListProps = {
   teams: ITeam[];
@@ -33,8 +33,8 @@ const TeamList = ({
 
     return teams.filter((t) => {
       return (
-        t.firstName?.toLowerCase().includes(term) ||
-        t.lastName?.toLowerCase().includes(term) ||
+        t.userProfile?.firstName?.toLowerCase().includes(term) ||
+        t.userProfile?.lastName?.toLowerCase().includes(term) ||
         t.email?.toLowerCase().includes(term)
       );
     });
@@ -66,8 +66,6 @@ const TeamList = ({
     });
   };
 
-  console.log(teams);
-
   return (
     <div className="border rounded-xl overflow-hidden">
       {/* 🔍 SEARCH */}
@@ -75,15 +73,18 @@ const TeamList = ({
         <Input
           placeholder="Search by name or email..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl"
+          onChange={(e) => {
+            setSelectedIds([]);
+            setSearch(e.target.value);
+          }}
+          className="input-field"
         />
       </div>
 
       {/* HEADER */}
       <div className="flex items-center justify-between gap-4 p-3 border-b bg-gray-50">
         {filteredTeams?.length > 0 && (
-          <div className="bg-gray-200 px-2 py-1 rounded-2xl">
+          <div className="bg-gray-200 px-3 py-1 rounded-2xl">
             <p className="text-sm text-gray-600 flex items-center gap-2">
               Total Users
               <span className=" size-6 rounded-full flex justify-center items-center bg-slate-700 text-white text-[10px] font-bold">
@@ -125,13 +126,14 @@ const TeamList = ({
 
       {/* LIST */}
       {filteredTeams?.length === 0 ? (
-        <div className="p-6 text-center text-sm text-gray-400">
-          No users found
+        <div className="p-6 text-center text-sm text-gray-400 flex flex-col items-center gap-1 font-medium">
+          <User2 /> No users found!
         </div>
       ) : (
         filteredTeams?.length > 0 &&
         filteredTeams?.map((item) => {
           const isChecked = selectedIds.includes(item.userId);
+          const isOwner = item.role.name === ROLES.OWNER;
 
           return (
             <div
@@ -159,8 +161,9 @@ const TeamList = ({
               </div>
 
               {/* RIGHT */}
-              {hasPermission(permissions, "teams.delete") && (
+              {hasPermission(permissions, "teams.delete") && !isOwner && (
                 <input
+                  disabled={isOwner}
                   type="checkbox"
                   checked={isChecked}
                   onChange={() => toggleSelect(item.userId)}

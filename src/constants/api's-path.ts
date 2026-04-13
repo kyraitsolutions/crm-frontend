@@ -18,6 +18,15 @@ export const API_ENDPOINT_PATH = {
     updateOrganizationPath: (id: string) => `/organization/${id}`,
   },
 
+  ACCOUNTS: {
+    CREATE_ACCOUNT: `/account`,
+    GET_ACCOUNTS: `/account`,
+    getAccountByIdPath: (id: string) => `/account/${id}`,
+    getAccountAccessPath: (id: string) => `/account/${id}/access`,
+    deleteAccountPath: (id: string) => `/account/${id}`,
+    updateAccountPath: (id: string) => `/account/${id}`,
+  },
+
   ROLES: {
     CREATE_ROLE: "/roles",
     GET_ROLES: "/roles",

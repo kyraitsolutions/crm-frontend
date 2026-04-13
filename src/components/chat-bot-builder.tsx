@@ -5,7 +5,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import ChatBotBuilderInfo from "./chat-bot-builder-info";
 import ChatBotBuilderInfoTabs from "./chat-bot-builder-info-tabs";
-import { DASHBOARD_PATH } from "@/constants";
 import {
   mandatoryEdges,
   mandatoryNodes,
@@ -74,9 +73,6 @@ export const ChatBotBuilder = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toastMessageService = new ToastMessageService();
-  // const [defaultValues, setDefaultValues] = useState(defaultValuesState);
-
-  // console.log(chatBotId);
 
   const chatBotService = new ChatBotService();
 
@@ -102,7 +98,7 @@ export const ChatBotBuilder = () => {
             );
 
         if (!chatBotId) {
-          const chatbotId = response?.data.docs.id;
+          const chatbotId = response?.data.docs?.id;
           createChatbotWithMandatoryNodes(chatbotId);
         }
 
