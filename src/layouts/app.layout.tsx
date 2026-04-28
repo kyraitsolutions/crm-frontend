@@ -77,10 +77,10 @@ export function AppLayout() {
   }, [accountId]);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen w-screen overflow-hidden">
       <AppSidebar />
 
-      <main className="w-full h-full flex flex-col p-2">
+      <main className="w-full h-full flex flex-col">
         <SiteHeader />
 
         <div className="flex-1 overflow-y-auto">

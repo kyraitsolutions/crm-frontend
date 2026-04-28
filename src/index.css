@@ -6,6 +6,8 @@
 body {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
+  font-weight: 500!important;
+  /* color: oklch(27.8% 0.033 256.848)!important; */
 }
 /* Apply globally */
 ::-webkit-scrollbar {
@@ -26,6 +28,9 @@ body {
   background-color: var(--popover-foreground);
 }
 
+.min {
+    width: clamp(80%, 90%, 100%);
+}
 
 
 @custom-variant dark (&:is(.dark));

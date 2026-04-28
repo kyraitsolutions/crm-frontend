@@ -148,7 +148,7 @@ function NavDropdown({
                                 <item.icon className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                                <p className="font-medium text-sm">{item.title}</p>
+                                <p className="font-medium text-xm">{item.title}</p>
                                 <p className="text-xs text-muted-foreground">{item.desc}</p>
                             </div>
                         </button>

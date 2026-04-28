@@ -138,9 +138,8 @@ const TeamList = ({
           return (
             <div
               key={item.id}
-              className={`flex items-center justify-between p-4 border-b hover:bg-gray-50 ${
-                selectedUser?.id === item.id ? "bg-blue-50" : ""
-              }`}
+              className={`flex items-center justify-between p-4 border-b hover:bg-gray-50 ${selectedUser?.id === item.id ? "bg-blue-50" : ""
+                }`}
             >
               {/* LEFT */}
               <div
