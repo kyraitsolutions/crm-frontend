@@ -47,6 +47,7 @@ import {
 import type { DateRange } from "react-day-picker";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { DatePicker } from "@/components/ui/DatePicker/DatePicker";
 
 interface AnalyticsData {
   totalLeads: number;
@@ -400,6 +401,12 @@ const DashboardAccount = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
+      <DatePicker
+        onChange={(date) => console.log(date)}
+        // disableFuture
+        // range
+        // dualCalendar
+      />
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

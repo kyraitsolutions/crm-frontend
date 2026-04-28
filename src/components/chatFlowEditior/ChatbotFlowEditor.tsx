@@ -8,40 +8,25 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { v4 as uuid } from "uuid";
 
+import { hasPermission, PERMISSIONS } from "@/rbac";
 import { ChatBotService, ToastMessageService } from "@/services";
 import { useAuthStore } from "@/stores";
-import type { ApiError } from "@/types";
-import {
-  ArrowLeft,
-  // BarChart3,
-  // Bot,
-  // ClipboardCheck,
-  // Clock,
-  // Database,
-  // FileText,
-  // Filter,
-  // Link,
-  ListChecks,
-  Mail,
-  // MessageCircle,
-  MessageSquare,
-  Phone,
-  // Send,
-  // Settings,
-  // Tags,
-  User,
-  // Zap,
-} from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
-import type { Connection, Edge } from "reactflow";
-import { nodeTypes } from "./nodes";
-import { MdAdd, MdClose } from "react-icons/md";
 import { useAccountAccessStore } from "@/stores/account-access.store";
-import { Button } from "../ui/button";
-import { hasPermission, PERMISSIONS } from "@/rbac";
+import type { ApiError } from "@/types";
+import { ArrowLeft } from "lucide-react";
+import { MdAdd } from "react-icons/md";
+import { useNavigate, useParams } from "react-router-dom";
+import type { Connection, NodeMouseHandler } from "reactflow";
 import Loader from "../Loader";
+import { Button } from "../ui/button";
+import CustomEdge from "./edges/CustomEdge";
+import { nodeTypes } from "./nodes";
+import NodeSettingsRenderer from "./nodeSetting/NodeSettingsRenderer";
+import NodeSidebar from "./sidebar/NodeSidebar";
+import type { TAppEdge, TAppNode, TAppNodeData } from "./types/types";
+import { createInitialElementsData } from "./utils/utils";
+import CustomConnectionLine from "./edges/CustomConnectionLine";
 
 export const mandatoryNodes = [
   {
@@ -193,17 +178,40 @@ export default function ChatbotFlowEditor() {
 
   const authUser = useAuthStore((state) => state.user);
   const { permissions } = useAccountAccessStore((state) => state);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState<TAppNodeData>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<TAppEdge>([]);
+  const [selectedNode, setSelectedNode] = useState<TAppNode | null>(null);
+  const [nodeSettingOpen, setNodeSettingOpen] = useState(false);
 
   const [fieldOpen, setFieldOpen] = useState(false);
 
   const [publishLoading, setPublishLoading] = useState(false);
 
-  const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-  );
+  const handleCloseSidebar = () => {
+    setFieldOpen(false);
+  };
+
+  // const onConnect = useCallback(
+  //   (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
+  //   [setEdges],
+  // );
+  const onConnect = useCallback((params: Connection) => {
+    setEdges((eds) =>
+      addEdge(
+        {
+          id: crypto.randomUUID(), // 🔥 important
+          ...params,
+          type: "custom",
+          data: {
+            onDelete: (id: string) =>
+              setEdges((eds) => eds.filter((e) => e.id !== id)),
+          },
+        },
+        eds,
+      ),
+    );
+  }, []);
 
   const validateFlow = () => {
     // const nodeMap = new Map(nodes.map((n) => [n.id, n]));
@@ -222,10 +230,10 @@ export default function ChatbotFlowEditor() {
     // 1️⃣ RULE: Check at least one end node exists
 
     const endNodes = nodes.filter((n) => n.data?.label === "End Chat");
-    if (endNodes.length === 0) {
-      toastMessageService.error("You must create an End Chat node.");
-      return false;
-    }
+    // if (endNodes.length === 0) {
+    //   toastMessageService.error("You must create an End Chat node.");
+    //   return false;
+    // }
 
     // 2️⃣ RULE: Every node (except End Chat) must have outgoing edges
     for (const node of nodes) {
@@ -303,120 +311,38 @@ export default function ChatbotFlowEditor() {
     return true;
   };
 
-  const createInitialElements = (value: string) => {
-    switch (value) {
-      case "text":
-        return [
-          {
-            id: uuid(),
-            type: "text",
-            content: "",
-          },
-        ];
-
-      case "email":
-        return [
-          {
-            id: uuid(),
-            type: "email",
-            content: "",
-          },
-        ];
-
-      case "phone":
-        return [
-          {
-            id: uuid(),
-            type: "phone",
-            content: "",
-          },
-        ];
-
-      case "option":
-        return [
-          {
-            id: uuid(),
-            type: "option",
-            title: "",
-            content: "",
-            choices: [""],
-          },
-        ];
-
-      case "date":
-        return [
-          {
-            id: uuid(),
-            type: "date",
-            content: "",
-          },
-        ];
-
-      default:
-        return [];
-    }
-  };
-
-  const addNewNode = (value: string, label: string) => {
+  const addNewNode = (type: string, label: string) => {
+    console.log(type);
     const newNode = {
       id: crypto.randomUUID(),
-      type: "chat",
+      type: type,
       position: { x: Math.random() * 400, y: Math.random() * 400 },
       data: {
-        elements: createInitialElements(value),
-        deleteNode,
-        updateNode,
-        updateNodeLabel,
-        value,
         label,
-      }, // ✅ inject deleteNode here
+        type,
+        payload: createInitialElementsData(type),
+      },
     };
     setNodes((nds) => [...nds, newNode]);
   };
 
-  const updateNode = useCallback((id: string, newElements: any) => {
-    setNodes((nds) =>
-      nds.map((node) =>
-        node.id === id
-          ? {
-              ...node,
-              data: {
-                ...node.data,
-                elements: newElements,
-                deleteNode,
-                updateNode,
-              },
-            }
-          : node,
-      ),
-    );
+  const onNodeClick: NodeMouseHandler = useCallback((_, node) => {
+    setSelectedNode(node as TAppNode); // safe cast
+    setNodeSettingOpen(true);
+    setFieldOpen(false);
   }, []);
 
-  const updateNodeLabel = (id: string, label: string) => {
-    setNodes((nodes) =>
-      nodes.map((node) =>
-        node.id === id
-          ? {
-              ...node,
-              data: {
-                ...node.data,
-                label,
-              },
-            }
-          : node,
-      ),
-    );
+  const hydratedEdges = function (edges: TAppEdge[]) {
+    return edges.map((edge: any) => ({
+      ...edge,
+      type: "custom",
+      data: {
+        ...edge.data,
+        onDelete: (id: string) =>
+          setEdges((eds) => eds.filter((e) => e.id !== id)),
+      },
+    }));
   };
-
-  const deleteNode = useCallback((id: string) => {
-    setNodes((nds) => nds.filter((n) => n.id !== id));
-    setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
-  }, []);
-
-  const onEdgeClick = useCallback((event: any, edge: any) => {
-    event.stopPropagation();
-    setEdges((eds) => eds.filter((e) => e.id !== edge.id));
-  }, []);
 
   const getChatbotFlow = async () => {
     try {
@@ -426,11 +352,13 @@ export default function ChatbotFlowEditor() {
       );
 
       if (response?.status === 200 || response?.status === 201) {
-        const data = response?.data?.docs;
+        const data = response?.data?.doc;
         const nodes = data?.nodes || [];
         const edges = data?.edges || [];
+        const hydEdges = hydratedEdges(edges);
 
-        handleRestore(nodes, edges);
+        setNodes(nodes);
+        setEdges(hydEdges);
       }
     } catch (error) {
       console.log(error);
@@ -439,16 +367,10 @@ export default function ChatbotFlowEditor() {
 
   const publishChanges = async () => {
     if (!validateFlow()) return;
-
     setPublishLoading(true);
-    const serializableNodes = nodes.map(({ data, ...rest }) => ({
-      ...rest,
-      data: { ...data, elements: data.elements },
-    }));
-
     try {
       const payloadData = {
-        nodes: serializableNodes,
+        nodes,
         edges,
       };
 
@@ -476,121 +398,46 @@ export default function ChatbotFlowEditor() {
     }
   };
 
-  const handleRestore = (nodes: any, edges: any) => {
-    if (nodes && edges) {
-      // ✅ Reattach functions to every node
-      const hydratedNodes = nodes.map((node: any) => ({
-        ...node,
-        data: {
-          ...node.data,
-          deleteNode,
-          updateNode,
-          updateNodeLabel,
-        },
-      }));
-
-      setNodes(hydratedNodes);
-      setEdges(edges);
-    }
-  };
-
   useEffect(() => {
     getChatbotFlow();
   }, []);
 
-  const chatbotFields = [
-    {
-      label: "Email",
-      value: "email",
-      icon: <Mail className="w-4 h-4 text-primary" />,
-    },
-    {
-      label: "Phone",
-      value: "phone",
-      icon: <Phone className="w-4 h-4 text-primary" />,
-    },
-    {
-      label: "Provided Option",
-      value: "option",
-      icon: <ListChecks className="w-4 h-4 text-primary" />,
-    },
-    {
-      label: "Text",
-      value: "text",
-      icon: <User className="w-4 h-4 text-primary" />,
-    },
-    {
-      label: "End Chat",
-      value: "text",
-      icon: <MessageSquare className="w-4 h-4 text-primary" />,
-    },
-
-    // 🔹 Common CRM Chatbot Builder Fields
-    // { value: "text", label: "Bot Personality", icon: <Bot className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Integrations", icon: <Link className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Knowledge Base", icon: <Database className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Automation Flow", icon: <Zap className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Follow-up Reminder", icon: <Clock className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Custom Forms", icon: <FileText className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Lead Tagging", icon: <Tags className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Qualification Questions", icon: <ClipboardCheck className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Bot Settings", icon: <Settings className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Conditional Logic", icon: <Filter className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Analytics & Reports", icon: <BarChart3 className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Live Chat Handoff", icon: <MessageCircle className="w-4 h-4 text-primary" /> },
-    // { value: "text", label: "Auto Reply Templates", icon: <Send className="w-4 h-4 text-primary" /> },
-  ];
-
   return (
     <div className="w-full relative gap-4 p-4">
-      {/* React Flow Area */}
-      <div
-        className="
-              h-[93dvh]
-              
-              absolute top-0 left-0 w-full
-              bg-[#FBFAF9]
-              overflow-hidden
-            "
-      >
+      {/*LEFT: REACT FLOW EDITOR */}
+      <div className=" h-[90dvh] absolute top-0 left-0 w-full overflow-hidden">
         <ReactFlow
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          onEdgeClick={onEdgeClick}
           onConnect={onConnect}
+          // onConnectEnd={onConnectEnd}
+          onNodeClick={onNodeClick}
           defaultChecked
+          connectionLineComponent={CustomConnectionLine}
+          // connectionLineStyle={""}
+          edgeTypes={{ custom: CustomEdge }}
+          defaultEdgeOptions={{
+            type: "custom",
+          }}
         >
-          <Controls
-            showFitView
-            className="
-              bg-gray-100!
-              rounded-md
-            "
-          />
+          <Controls showFitView className="bg-gray-100! rounded-md" />
           <Background
             variant={BackgroundVariant.Lines}
             gap={100}
             size={2}
-            className="bg-[#e2e2e2]"
+            className="bg-gray-200"
           />
 
           <div className="flex z-50 w-full h-14 justify-between! items-center px-5 bg-gray-100 absolute">
-            <button
+            <Button
               onClick={() => navigate(-1)}
-              className="
-                  cursor-pointer
-                      text-[#37322F]
-                      flex justify-center items-center
-                      rounded-md
-                      gap-1
-                      transition
-                    "
+              className=" cursor-pointer text-[#37322F]flex justify-center items-center rounded-md gap-1 transition"
             >
               <ArrowLeft size={16} /> <span className="text-sm">Back</span>
-            </button>
+            </Button>
 
             {hasPermission(
               permissions,
@@ -619,47 +466,20 @@ export default function ChatbotFlowEditor() {
               </div>
             )}
           </div>
+
+          {/* NODE SETTING SIDEBAR RENDERER  */}
+
+          <NodeSettingsRenderer
+            open={nodeSettingOpen}
+            onClose={() => setNodeSettingOpen(false)}
+            node={selectedNode as TAppNode}
+          />
         </ReactFlow>
       </div>
 
-      {/* RIGHT: Predefined Fields */}
+      {/* RIGHT: NODES SIDEBAR */}
       {fieldOpen && (
-        <div className="z-10 absolute right-5 bg-white mt-10 shadow-md p-2 max-h-[85dvh] col-span-2 flex flex-col gap-4 rounded">
-          <p className="text-sm font-medium text-[#37322F]">Avaliable Fields</p>
-
-          <div className="grid grid-cols-2 max-w-[160px] gap-4 overflow-auto hide-scrollbar">
-            {chatbotFields.map((item, index) => (
-              <div
-                key={index}
-                onClick={() => addNewNode(item.value, item.label)}
-                className="
-                flex flex-col items-center
-                cursor-pointer
-                transition
-                hover:scale-[1.03] 
-              "
-              >
-                <div
-                  className="
-                h-12 w-12! border 
-                rounded-xl
-                border-[rgba(50,45,43,0.12)]
-                flex items-center justify-center
-                text-[#847971]
-                bg-[rgba(55,50,47,0.04)]
-                hover:bg-[rgba(55,50,47,0.08)]
-                transition
-              "
-                >
-                  {item.icon}
-                </div>
-                <p className="text-[10px]  text-center text-[#847971]">
-                  {item.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <NodeSidebar onAddNode={addNewNode} onClose={handleCloseSidebar} />
       )}
     </div>
   );

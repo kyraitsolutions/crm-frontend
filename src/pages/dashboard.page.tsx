@@ -33,6 +33,7 @@ import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { hasPermission } from "@/rbac";
 import { ACCOUNT_PATHS } from "@/constants/routes";
+import { DatePicker } from "@/components/ui/DatePicker/DatePicker";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();

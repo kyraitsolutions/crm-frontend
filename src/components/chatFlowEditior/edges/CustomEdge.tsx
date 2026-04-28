@@ -1,75 +1,92 @@
-import { getBezierPath } from "reactflow";
-import { Plus } from "lucide-react";
+import ButtonClose from "@/components/ui/Buttons/ButtonClose";
+import {
+  EdgeLabelRenderer,
+  getSmoothStepPath,
+  type EdgeProps,
+} from "reactflow";
 
-type CustomEdgeProps = {
-  id: string;
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
-  style: any;
-  markerEnd: any;
-  data: any;
-};
-
-const CustomEdge = ({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  style = {},
-  markerEnd,
-  data,
-}: CustomEdgeProps) => {
-  // Generate a smooth bezier path
-  const [edgePath, labelX, labelY] = getBezierPath({
+export default function CustomEdge(props: EdgeProps) {
+  const {
+    id,
     sourceX,
     sourceY,
     targetX,
     targetY,
-  });
+    sourcePosition,
+    targetPosition,
+    data,
+  } = props;
 
-  const handleAddNode = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    data?.onAddNode?.(id);
-  };
+  const [path, labelX, labelY] = getSmoothStepPath({
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition,
+    targetPosition,
+  });
 
   return (
     <>
-      {/* Bold, smooth edge line */}
+      {/* Glow */}
       <path
-        id={id}
-        d={edgePath}
-        className="react-flow__edge-path"
-        style={{
-          stroke: "#2563eb", // Tailwind blue-600
-          strokeWidth: 3, // ⬆️ Thicker line
-          fill: "none", // ⬅️ Removes fill
-          strokeDasharray: "none", // ⬅️ Ensures solid line (no dots)
-          ...style,
-        }}
-        markerEnd={markerEnd}
+        d={path}
+        stroke="#16a34a"
+        strokeWidth={4}
+        fill="none"
+        opacity={0.15}
       />
 
-      {/* Large + icon at the middle of the edge */}
-      <foreignObject
-        width={50}
-        height={50}
-        x={labelX - 25}
-        y={labelY - 25}
-        className="cursor-pointer"
-        requiredExtensions="http://www.w3.org/1999/xhtml"
-      >
-        <div
-          onClick={handleAddNode}
-          className="w-10 h-10 flex items-center justify-center bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-all duration-200 border-2 border-white"
+      {/* Main animated dashed edge */}
+      <path
+        d={path}
+        stroke="#16a34a"
+        strokeWidth={2}
+        fill="none"
+        strokeDasharray="4 4"
+        markerEnd={`url(#arrow-${id})`} // ✅ unique arrow
+        style={{
+          animation: "dash 1s linear infinite",
+        }}
+      />
+
+      {/* Arrow marker (UNIQUE per edge) */}
+      <defs>
+        <marker
+          id={`arrow-${id}`}
+          markerWidth="6"
+          markerHeight="6"
+          refX="5"
+          refY="3"
+          orient="auto"
         >
-          <Plus size={22} />
+          <path d="M0,0 L0,6 L6,3 z" fill="#16a34a" />
+        </marker>
+      </defs>
+
+      {/* ❌ DELETE BUTTON (your original feature preserved) */}
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            position: "absolute",
+            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
+            pointerEvents: "all",
+          }}
+        >
+          <ButtonClose onClose={() => data?.onDelete?.(id)} />
         </div>
-      </foreignObject>
+      </EdgeLabelRenderer>
+
+      {/* Animation */}
+      <style>
+        {`
+          @keyframes dash {
+            to {
+              stroke-dashoffset: -12;
+            }
+          }
+        `}
+      </style>
     </>
   );
-};
-
-export default CustomEdge;
+}

@@ -1,17 +1,22 @@
 import { Handle, Position } from "reactflow";
 import { v4 as uuid } from "uuid";
-import { MdAdd,
+import {
+  MdAdd,
   //  MdAudiotrack,
-    MdCalendarToday, 
-    // MdDescription, 
-    MdEmail, 
-    // MdImage,
-     MdMessage, MdMoreVert, MdOutlineDelete, MdPhone, MdQuestionAnswer, 
-    //  MdVideocam 
-    } from "react-icons/md";
+  MdCalendarToday,
+  // MdDescription,
+  MdEmail,
+  // MdImage,
+  MdMessage,
+  MdMoreVert,
+  MdOutlineDelete,
+  MdPhone,
+  MdQuestionAnswer,
+  //  MdVideocam
+} from "react-icons/md";
 // import ConfirmModal from "@/components/confirm";
 import { Fragment, useCallback, useState } from "react";
-import {AnimatePresence, motion} from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion";
 export type BaseElement = {
   id: string;
   type: "text" | "option" | "date";
@@ -19,7 +24,7 @@ export type BaseElement = {
 
 export type ChatElement = {
   id: string;
-  type: "text" | "option" | "date" | "email"|"phone";
+  type: "text" | "option" | "date" | "email" | "phone";
   content: string;
   title?: string;
   choices?: string[];
@@ -46,7 +51,6 @@ const headerColors = {
   blue: { bg: "bg-[var(--node-blue)]", icon: "text-white" },
 };
 
-
 // const tagColors: Record<string, string> = {
 //   coral: "border-node-coral text-node-coral hover:bg-node-coral/10",
 //   orange: "border-node-orange text-node-orange hover:bg-node-orange/10",
@@ -69,16 +73,14 @@ export const ChatNode = ({ id, data }: ChatNodeData) => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   // 🔥 map node type → color
 
-// get type safely
-const type = data.value as keyof typeof typeColorMap;
+  // get type safely
+  const type = data.value as keyof typeof typeColorMap;
 
-// final color (manual override still possible)
-const color = data?.headerColor || typeColorMap[type] || "coral";
+  // final color (manual override still possible)
+  const color = data?.headerColor || typeColorMap[type] || "coral";
 
-const colorStyle = headerColors[color];
-// const tagStyle = tagColors[color];
-
-
+  const colorStyle = headerColors[color];
+  // const tagStyle = tagColors[color];
 
   const addElement = (type: "text" | "email" | "option" | "date") => {
     const newElementObj = {
@@ -91,23 +93,26 @@ const colorStyle = headerColors[color];
     const newElement = { ...newElementObj };
     data.updateNode(id, [...data.elements, newElement]);
   };
-  const removeElement = useCallback((elId: string) => {
-  data.updateNode(
-    id,
-    data.elements.filter((el) => el.id !== elId)
+  const removeElement = useCallback(
+    (elId: string) => {
+      data.updateNode(
+        id,
+        data.elements.filter((el) => el.id !== elId),
+      );
+    },
+    [data, id],
   );
-}, [data, id]);
 
   const updateElement = (elementId: string, key: string, value: any) => {
     const newElements = data.elements.map((el) =>
-      el.id === elementId ? { ...el, [key]: value } : el
+      el.id === elementId ? { ...el, [key]: value } : el,
     );
     data.updateNode(id, newElements);
   };
   const updateOptionChoice = (
     elementId: string,
     index: number,
-    value: string
+    value: string,
   ) => {
     const newElements = data.elements.map((el) => {
       if (el.id === elementId && el.type === "option") {
@@ -147,164 +152,179 @@ const colorStyle = headerColors[color];
 
   const [showMenu, setShowMenu] = useState(false);
   const headerIcons: Record<string, React.ReactNode> = {
-  text: <MdMessage size={16} />,
-  email: <MdEmail size={16} />,
-  phone: <MdPhone size={16} />,
-  option: <MdQuestionAnswer size={16} />,
-  date: <MdCalendarToday size={16} />,
-};
+    text: <MdMessage size={16} />,
+    email: <MdEmail size={16} />,
+    phone: <MdPhone size={16} />,
+    option: <MdQuestionAnswer size={16} />,
+    date: <MdCalendarToday size={16} />,
+  };
 
-//  const actionTags = [
-//     { label: "Message", icon: <MdMessage size={12} />, type: "text" as const },
-//     { label: "Image", icon: <MdImage size={12} />, type: "text" as const },
-//     { label: "Video", icon: <MdVideocam size={12} />, type: "text" as const },
-//     { label: "Audio", icon: <MdAudiotrack size={12} />, type: "text" as const },
-//     { label: "Document", icon: <MdDescription size={12} />, type: "text" as const },
-//   ];
-const icon = headerIcons[type] || <MdMessage size={16} />;
+  //  const actionTags = [
+  //     { label: "Message", icon: <MdMessage size={12} />, type: "text" as const },
+  //     { label: "Image", icon: <MdImage size={12} />, type: "text" as const },
+  //     { label: "Video", icon: <MdVideocam size={12} />, type: "text" as const },
+  //     { label: "Audio", icon: <MdAudiotrack size={12} />, type: "text" as const },
+  //     { label: "Document", icon: <MdDescription size={12} />, type: "text" as const },
+  //   ];
+  const icon = headerIcons[type] || <MdMessage size={16} />;
 
   return (
     <Fragment>
       <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="group relative w-[260px] bg-card rounded-none shadow-node antialiased overflow-visible"
-      style={{ fontFeatureSettings: '"tnum"' }}
-    >
-
-      {/* Header top dot */}
-      <Handle
-        type="target"
-        position={Position.Top}
-        className="!w-3.5 !h-3.5 !bg-node-handle !border-[3px] !border-card !shadow-sm !-top-[7px] !rounded-full"
-      />
-       {/* Colored Header */}
-      <div className={`${colorStyle.bg} flex items-center justify-between px-3 py-2.5`}>
-        <div className="flex items-center gap-2">
-          <span className={colorStyle.icon}>
-           {icon}
-
-          </span>
-          <input
-            className="bg-transparent text-[13px] font-semibold text-white outline-none placeholder:text-white/60 w-full"
-            value={data?.label}
-            onChange={(e) => data.updateNodeLabel(id, e.target.value)}
-          />
-        </div>
-        <div className="relative">
-          <button
-            onClick={() => setShowMenu(!showMenu)}
-            className="p-0.5 text-white/80 hover:text-white transition-colors"
-          >
-            <MdMoreVert size={18} />
-          </button>
-          <AnimatePresence>
-            {showMenu && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute right-0 top-8 bg-card shadow-lg border border-border rounded z-20 min-w-[120px]"
-              >
-                <button
-                  // onClick={() => { setShowMenu(false); }}
-                  onClick={handleConfirm}
-                  className="w-full px-3 py-2 text-[12px] text-destructive hover:bg-destructive/10 flex items-center gap-2 transition-colors"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="group relative w-[260px] bg-card rounded-none shadow-node antialiased overflow-visible"
+        style={{ fontFeatureSettings: '"tnum"' }}
+      >
+        {/* Header top dot */}
+        <Handle
+          type="target"
+          position={Position.Top}
+          className="!w-3.5 !h-3.5 !bg-node-handle !border-[3px] !border-card !shadow-sm !-top-[7px] !rounded-full"
+        />
+        {/* Colored Header */}
+        <div
+          className={`${colorStyle.bg} flex items-center justify-between px-3 py-2.5`}
+        >
+          <div className="flex items-center gap-2">
+            <span className={colorStyle.icon}>{icon}</span>
+            <input
+              className="bg-transparent text-[13px] font-semibold text-white outline-none placeholder:text-white/60 w-full"
+              value={data?.label}
+              onChange={(e) => data.updateNodeLabel(id, e.target.value)}
+            />
+          </div>
+          <div className="relative">
+            <button
+              onClick={() => setShowMenu(!showMenu)}
+              className="p-0.5 text-white/80 hover:text-white transition-colors"
+            >
+              <MdMoreVert size={18} />
+            </button>
+            <AnimatePresence>
+              {showMenu && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="absolute right-0 top-8 bg-card shadow-lg border border-border rounded z-20 min-w-[120px]"
                 >
-                  <MdOutlineDelete size={14} /> Delete
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <button
+                    // onClick={() => { setShowMenu(false); }}
+                    onClick={handleConfirm}
+                    className="w-full px-3 py-2 text-[12px] text-destructive hover:bg-destructive/10 flex items-center gap-2 transition-colors"
+                  >
+                    <MdOutlineDelete size={14} /> Delete
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
 
         <div className="p-3 space-y-2">
-        <AnimatePresence initial={false}>
-          {data?.elements?.map((el) => (
-            <motion.div
-              key={el.id}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-1"
-            >
-              {/* Text / Email / Phone */}
-              {(el.type === "text" || el.type === "email" || el.type === "phone") && (
-                <div className="relative">
-                  <textarea
-                    className="w-full bg-card border border-border rounded-none px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all resize-none"
-                    rows={2}
-                    value={el.content}
-                    onChange={(e) => updateElement(el.id, "content", e.target.value)}
-                    placeholder={el.type === "email" ? "name@example.com" : "Enter text here..."}
-                  />
-                  <button
-                    onClick={() => removeElement(el.id)}
-                    className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 p-1 text-muted-foreground/40 hover:text-destructive transition-all"
-                  >
-                    <MdOutlineDelete size={14} />
-                  </button>
-                </div>
-              )}
-
-              {/* Option / Question */}
-              {el.type === "option" && (
-                <div className="space-y-0">
-                  <input
-                    className="w-full bg-card border border-border rounded-none px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all mb-2"
-                    value={el.content}
-                    onChange={(e) => updateElement(el.id, "content", e.target.value)}
-                    placeholder="Would what you like to do?"
-                  />
-                  <div className="space-y-0">
-                    {el.choices?.map((choice, i) => (
-                      <div key={i} className="flex items-center relative border-b border-border last:border-b-0">
-                        <input
-                          className="flex-1 bg-card px-3 py-2.5 text-[13px] text-foreground text-center placeholder:text-muted-foreground/60 outline-none transition-all"
-                          value={choice}
-                          onChange={(e) => updateOptionChoice(el.id, i, e.target.value)}
-                          placeholder={`Option ${i + 1}`}
-                        />
-                        <button
-                          onClick={() => removeOptionChoice(el.id, i)}
-                          className="opacity-0 group-hover:opacity-60 hover:!opacity-100 px-1 text-destructive transition-all"
-                        >
-                          ×
-                        </button>
-                        <Handle
-                          type="source"
-                          id={`${el.id}-choice-${i}`}
-                          position={Position.Right}
-                          className="!right-[-8px] !w-2.5 !h-2.5 !bg-node-handle !border-[2px] !border-card !rounded-full !transition-colors"
-                        />
-                      </div>
-                    ))}
+          <AnimatePresence initial={false}>
+            {data?.elements?.map((el) => (
+              <motion.div
+                key={el.id}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="space-y-1"
+              >
+                {/* Text / Email / Phone */}
+                {(el.type === "text" ||
+                  el.type === "email" ||
+                  el.type === "phone") && (
+                  <div className="relative">
+                    <textarea
+                      className="w-full bg-card border border-border rounded-none px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all resize-none"
+                      rows={2}
+                      value={el.content}
+                      onChange={(e) =>
+                        updateElement(el.id, "content", e.target.value)
+                      }
+                      placeholder={
+                        el.type === "email"
+                          ? "name@example.com"
+                          : "Enter text here..."
+                      }
+                    />
+                    <button
+                      onClick={() => removeElement(el.id)}
+                      className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 p-1 text-muted-foreground/40 hover:text-destructive transition-all"
+                    >
+                      <MdOutlineDelete size={14} />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => addOptionChoice(el.id)}
-                    className="w-full py-2 border border-dashed border-border text-[12px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-all flex items-center justify-center gap-1"
-                  >
-                    <MdAdd size={14} /> Add Choice
-                  </button>
-                </div>
-              )}
+                )}
 
-              {/* Date */}
-              {el.type === "date" && (
-                <input
-                  type="text"
-                  className="w-full bg-card border border-border rounded-none px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all tabular-nums"
-                  value={el.content}
-                  onChange={(e) => updateElement(el.id, "content", e.target.value)}
-                  placeholder="YYYY-MM-DD"
-                />
-              )}
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+                {/* Option / Question */}
+                {el.type === "option" && (
+                  <div className="space-y-0">
+                    <input
+                      className="w-full bg-card border border-border rounded-none px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all mb-2"
+                      value={el.content}
+                      onChange={(e) =>
+                        updateElement(el.id, "content", e.target.value)
+                      }
+                      placeholder="Would what you like to do?"
+                    />
+                    <div className="space-y-0">
+                      {el.choices?.map((choice, i) => (
+                        <div
+                          key={i}
+                          className="flex items-center relative border-b border-border last:border-b-0"
+                        >
+                          <input
+                            className="flex-1 bg-card px-3 py-2.5 text-[13px] text-foreground text-center placeholder:text-muted-foreground/60 outline-none transition-all"
+                            value={choice}
+                            onChange={(e) =>
+                              updateOptionChoice(el.id, i, e.target.value)
+                            }
+                            placeholder={`Option ${i + 1}`}
+                          />
+                          <button
+                            onClick={() => removeOptionChoice(el.id, i)}
+                            className="opacity-0 group-hover:opacity-60 hover:!opacity-100 px-1 text-destructive transition-all"
+                          >
+                            ×
+                          </button>
+                          <Handle
+                            type="source"
+                            id={`${el.id}-choice-${i}`}
+                            position={Position.Right}
+                            className="!right-[-8px] !w-2.5 !h-2.5 !bg-node-handle !border-[2px] !border-card !rounded-full !transition-colors"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => addOptionChoice(el.id)}
+                      className="w-full py-2 border border-dashed border-border text-[12px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-all flex items-center justify-center gap-1"
+                    >
+                      <MdAdd size={14} /> Add Choice
+                    </button>
+                  </div>
+                )}
+
+                {/* Date */}
+                {el.type === "date" && (
+                  <input
+                    type="text"
+                    className="w-full bg-card border border-border rounded-none px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-accent focus:border-accent outline-none transition-all tabular-nums"
+                    value={el.content}
+                    onChange={(e) =>
+                      updateElement(el.id, "content", e.target.value)
+                    }
+                    placeholder="YYYY-MM-DD"
+                  />
+                )}
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
       </motion.div>
 
       {/* <div className="px-3 pb-3 flex flex-wrap gap-1.5">
@@ -320,39 +340,39 @@ const icon = headerIcons[type] || <MdMessage size={16} />;
         ))}
       </div> */}
       <div className="flex gap-1 bg-white p-2">
-              {data?.value?.toLowerCase() === "email" && (
-                // <button
-                //   className="text-xs bg-blue-500 text-white px-2 py-1 rounded flex-1"
-                //   onClick={() => addElement("email")}
-                // >
-                //   + Add More
-                // </button>
-                <button
-                   onClick={() => addElement("email")}
-                    className="w-full py-2 border border-dashed border-border text-[12px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-all flex items-center justify-center gap-1"
-                  >
-                    <MdAdd size={14} /> Add More
-                  </button>
-              )}
+        {data?.value?.toLowerCase() === "email" && (
+          // <button
+          //   className="text-xs bg-blue-500 text-white px-2 py-1 rounded flex-1"
+          //   onClick={() => addElement("email")}
+          // >
+          //   + Add More
+          // </button>
+          <button
+            onClick={() => addElement("email")}
+            className="w-full py-2 border border-dashed border-border text-[12px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-all flex items-center justify-center gap-1"
+          >
+            <MdAdd size={14} /> Add More
+          </button>
+        )}
 
-              {data?.value?.toLowerCase() === "text" && (
-                <button
-                  className="w-full py-2 border border-dashed border-border text-[12px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-all flex items-center justify-center gap-1"
-                  onClick={() => addElement("text")}
-                >
-                  + Add More
-                </button>
-              )}
+        {data?.value?.toLowerCase() === "text" && (
+          <button
+            className="w-full py-2 border border-dashed border-border text-[12px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-all flex items-center justify-center gap-1"
+            onClick={() => addElement("text")}
+          >
+            + Add More
+          </button>
+        )}
 
-              {data?.value?.toLowerCase() === "phone" && (
-                <button
-                  className="w-full py-2 border border-dashed border-border text-[12px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-all flex items-center justify-center gap-1"
-                  onClick={() => addElement("text")}
-                >
-                  + Add More
-                </button>
-              )}
-              </div>
+        {data?.value?.toLowerCase() === "phone" && (
+          <button
+            className="w-full py-2 border border-dashed border-border text-[12px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-all flex items-center justify-center gap-1"
+            onClick={() => addElement("text")}
+          >
+            + Add More
+          </button>
+        )}
+      </div>
 
       {data?.value?.toLowerCase() !== "option" && (
         <Handle
@@ -361,7 +381,6 @@ const icon = headerIcons[type] || <MdMessage size={16} />;
           className="!w-3.5 !h-3.5 !bg-node-handle !border-[3px] !border-card !shadow-sm !-bottom-[7px] !rounded-full"
         />
       )}
-
 
       {/* <ConfirmModal
         isOpen={openConfirmModal}
@@ -381,7 +400,9 @@ const icon = headerIcons[type] || <MdMessage size={16} />;
             exit={{ opacity: 0 }}
             className="absolute inset-0 z-10 bg-card/95 backdrop-blur-sm flex flex-col items-center justify-center gap-3"
           >
-            <p className="text-[12px] font-medium text-foreground">Delete this node?</p>
+            <p className="text-[12px] font-medium text-foreground">
+              Delete this node?
+            </p>
             <div className="flex gap-2">
               <button
                 onClick={handleConfirm}
