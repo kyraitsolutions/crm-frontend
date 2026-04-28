@@ -34,4 +34,8 @@ export const API_ENDPOINT_PATH = {
     deleteRolePath: (id: string) => `/roles/${id}`,
     getPermissionsByRolePath: (id: string) => `/roles/${id}/permissions`,
   },
+
+  MEDIA: {
+    GET_MEDIA_UPLOAD_PRESIGNED_URL: "/media/upload/presigned-url",
+  },
 };

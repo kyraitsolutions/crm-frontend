@@ -18,8 +18,8 @@ export const ChatNode = ({ data }: any) => {
   };
 
   const handleClick = () => {
-    alert("clicked")
-  }
+    // alert("clicked");
+  };
 
   return (
     <div
@@ -68,7 +68,7 @@ export const ChatNode = ({ data }: any) => {
         ))}
         <button
           onClick={addOption}
-          //   onClickCapture={stopPropagation}
+          // onClickCapture={stopPropagation}
           style={{
             marginTop: 6,
             background: "#1976d2",
@@ -79,7 +79,7 @@ export const ChatNode = ({ data }: any) => {
             cursor: "pointer",
           }}
         >
-          {/* + Add Option */}
+          + Add Option
         </button>
       </div>
 

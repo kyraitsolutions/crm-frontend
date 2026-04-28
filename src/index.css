@@ -55,6 +55,9 @@ body {
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.967 0.0029 264.5419);
   --secondary-foreground: oklch(0.4461 0.0263 256.8018);
+  /* --ternary:#0f172a; */
+  --ternary:#161d2d;
+
   --muted: oklch(0.9846 0.0017 247.8389);
   --muted-foreground: oklch(0.551 0.0234 264.3637);
   --accent: oklch(0.9514 0.025 236.8242);
@@ -77,6 +80,7 @@ body {
   --sidebar-accent-foreground: oklch(0.3791 0.1378 265.5222);
   --sidebar-border: oklch(0.9276 0.0058 264.5313);
   --sidebar-ring: oklch(0.6231 0.188 259.8145);
+  --font-base:oklch(0.3211 0 0);
   --header-height: 4rem;
   --font-sans: Inter, sans-serif;
   --font-serif: Source Serif 4, serif;
@@ -162,6 +166,7 @@ body {
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-ternary: var(--ternary);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -331,9 +336,24 @@ body {
 }
 
 .actions-btn{
-  @apply rounded-xl border border-primary/30 bg-primary/5 p-1 text-sm font-medium text-primary transition-all hover:bg-primary/10 hover:border-primary/5 cursor-pointer
+  @apply focus-visible:border-primary/60  rounded-xl border border-primary/30 bg-primary/5 p-1 text-sm font-medium text-primary transition-all hover:bg-primary/10 hover:border-primary/5 cursor-pointer 
 }
 
 .input-field{
   @apply focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl
+}
+
+.node-setting-header-types{
+  @apply px-3 py-1 text-xs hover:bg-emerald-500 rounded-xl hover:text-white transition cursor-pointer
+}
+
+.node-setting-input-field{
+  @apply bg-white/5 border-white/15! text-white w-full
+}
+
+.node-setting-footer-btns{
+  @apply py-2! border border-white/60 bg-transparent hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-300 rounded-xl
+}
+.node-setting-footer-btns-save{
+  @apply bg-primary text-white hover:bg-primary/90 border-none
 }

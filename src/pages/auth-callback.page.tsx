@@ -29,7 +29,7 @@ export const AuthCallbackPage = () => {
       // }
     };
     authCallbackHandler();
-  }, [location.pathname, location.search, navigate]);
+  }, []);
 
   return <AuthCallbackLoader />;
 };

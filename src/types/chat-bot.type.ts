@@ -1,3 +1,7 @@
+import type {
+  TAppEdge,
+  TAppNode,
+} from "@/components/chatFlowEditior/types/types";
 import type { LucideIcon } from "lucide-react";
 import z from "zod";
 
@@ -154,54 +158,13 @@ export interface ChatbotAppearanceSection {
   fields: AppearanceField[];
 }
 
-export interface ChatBotListItem {
-  id: string;
-  name: string;
-  description: string;
-  status: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ChatbotElement {
-  id: string;
-  type: "text" | "image" | "video" | "audio" | "email" | "option" | "date";
-  title?: string;
-  content: string;
-  date?: string;
-}
-
-export interface ChatbotNodeData {
-  label: string;
-  value: string;
-  elements: ChatbotElement[];
-}
-
-export interface ChatbotNode {
-  id: string;
-  type: "chat" | "form";
-  position: { x: number; y: number };
-  width?: number;
-  height?: number;
-  selected?: boolean;
-  dragging?: boolean;
-  data: ChatbotNodeData;
-}
-
-export interface ChatbotEdge {
-  id: string;
-  source: string;
-  target: string;
-  animated?: boolean;
-  sourceHandle?: string | null;
-  targetHandle?: string | null;
-}
-
 export interface TCreateChatBotFlow {
-  nodes?: ChatbotNode[];
-  edges?: ChatbotEdge[];
+  nodes?: TAppNode[];
+  edges?: TAppEdge[];
 }
 
 export interface ApiResponseChatBotFlowDto {
-  docs: TCreateChatBotFlow;
+  id: string;
+  nodes: TAppNode[];
+  edges: TAppEdge[];
 }

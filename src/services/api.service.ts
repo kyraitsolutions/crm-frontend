@@ -112,8 +112,8 @@ class ApiService {
   }
 
   private handleUnauthorized(): void {
-    CookieUtils.removeItem(COOKIES_STORAGE.auth_token);
-    window.location.href = "/login";
+    // CookieUtils.removeItem(COOKIES_STORAGE.auth_token);
+    // window.location.href = "/login";
   }
 
   private logRequest(config: { method?: string; url?: string }) {

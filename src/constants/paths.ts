@@ -1,23 +1,23 @@
-export const ROUTES = {
-  ROOT: "/",
-  DASHBOARD: "/dashboard",
-  ACCOUNT: "/account",
-  CHATBOT: "/chatbot",
-};
+// export const ROUTES = {
+//   ROOT: "/",
+//   DASHBOARD: "/dashboard",
+//   ACCOUNT: "/account",
+//   CHATBOT: "/chatbot",
+// };
 
-export const ACCOUNT_PATHS = {
-  ROOT: `${ROUTES.DASHBOARD}/account`,
-  byId: (accountId: string) => `${ROUTES.DASHBOARD}/account/${accountId}`,
-  PARAM: `${ROUTES.DASHBOARD}/account/:accountId`,
-};
+// export const ACCOUNT_PATHS = {
+//   ROOT: `${ROUTES.DASHBOARD}/account`,
+//   byId: (accountId: string) => `${ROUTES.DASHBOARD}/account/${accountId}`,
+//   PARAM: `${ROUTES.DASHBOARD}/account/:accountId`,
+// };
 
-const withAccount = (path: string) => `${ACCOUNT_PATHS.PARAM}${path}`;
+// const withAccount = (path: string) => `${ACCOUNT_PATHS.PARAM}${path}`;
 
-export const CHATBOT_PATHS = {
-  ROOT: withAccount("/chatbot"),
-  CREATE: "create",
-  BUILDER: withAccount("/chatbot/:chatBotId/builder"),
-};
+// export const CHATBOT_PATHS = {
+//   ROOT: withAccount("/chatbot"),
+//   CREATE: "create",
+//   BUILDER: withAccount("/chatbot/:chatBotId/builder"),
+// };
 
 // export const DASHBOARD_PATH = {
 //   ROOT: "/dashboard",
