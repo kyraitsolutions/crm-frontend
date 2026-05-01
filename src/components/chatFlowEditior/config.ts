@@ -5,8 +5,9 @@ export const NODE_LIBRARY = [
   { type: "list", label: "List" },
   { type: "button", label: "Buttons" },
   { type: "carousel", label: "Carousel" },
+  { type: "question", label: "Questions?" },
   { type: "phone", label: "Phone" },
-  { type: "end", label: "End Chat" },
+  // { type: "end", label: "End Chat" },
 ];
 
 export const BUTTON_MODES = ["url", "quick_reply"];

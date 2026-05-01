@@ -3,13 +3,21 @@ import type { Node } from "reactflow";
 export type TMessageType = "text" | "image" | "video" | "document";
 export type TMode = "url" | "quick_reply";
 
-type TQuickReplyButton = {
-  type: "quick_reply" | "reply";
-  quick_reply: {
-    id: string;
-    title: string;
-  };
-};
+export type TQuickReplyButton =
+  | {
+      type: "quick_reply";
+      quick_reply: {
+        id: string;
+        title: string;
+      };
+    }
+  | {
+      type: "reply";
+      reply: {
+        id: string;
+        title: string;
+      };
+    };
 
 type TUrlButton = {
   name: "cta_url";
@@ -18,7 +26,7 @@ type TUrlButton = {
     url: string;
   };
 };
-type TAction =
+export type TAction =
   | TUrlButton
   | {
       buttons: TQuickReplyButton[];
@@ -172,6 +180,16 @@ export type TCarouselNodeDataPayload = {
 };
 // ========================= Carousel types end ==========================
 
+//========================= Question types start ==========================
+export type TQuestionNodeDataPayload = {
+  type: "question";
+  question: {
+    text?: string | null;
+    inputType: "text" | "number" | "email" | "phone" | "date";
+  };
+};
+// ========================= Question types end ==========================
+
 type TSendMessageNodeData = TBaseNodeData<
   "send_message",
   TSendMessageNodeDataPayload
@@ -179,12 +197,14 @@ type TSendMessageNodeData = TBaseNodeData<
 type TButtonNodeData = TBaseNodeData<"button", TButtonNodeDataPayload>;
 type TListNodeData = TBaseNodeData<"list", TListNodeDataPayload>;
 type TCarouselNodeData = TBaseNodeData<"carousel", TCarouselNodeDataPayload>;
+type TQuestionNodeData = TBaseNodeData<"question", TQuestionNodeDataPayload>;
 
 export type TAppNodeData =
   | TSendMessageNodeData
   | TButtonNodeData
   | TListNodeData
-  | TCarouselNodeData;
+  | TCarouselNodeData
+  | TQuestionNodeData;
 
 export type TAppNode = Node<TAppNodeData>;
 

@@ -95,7 +95,10 @@ const CarouselNode = ({ data }: TCarouselNodeProps) => {
                       ? card.header?.image?.link
                       : card.header?.video?.link;
 
-                  const isUrl = "parameters" in card.action;
+                  const isUrlButton =
+                    card.action && "parameters" in card.action
+                      ? card.action
+                      : null;
 
                   return (
                     <div
@@ -134,16 +137,16 @@ const CarouselNode = ({ data }: TCarouselNodeProps) => {
                         {/* ACTION */}
                         <div className="mt-3 border-t border-gray-300 pt-2">
                           {/* URL BUTTON */}
-                          {isUrl && (
+                          {isUrlButton && (
                             <Button className="actions-btn w-full">
-                              <ExternalLink />{" "}
-                              {card.action.parameters.display_text}
+                              <ExternalLink />
+                              {isUrlButton?.parameters?.display_text}
                             </Button>
                           )}
 
                           {/* QUICK REPLY BUTTONS */}
                           <div className="space-y-2">
-                            {!isUrl &&
+                            {!isUrlButton &&
                               "buttons" in card.action &&
                               card.action.buttons.map((btn) => (
                                 <div
