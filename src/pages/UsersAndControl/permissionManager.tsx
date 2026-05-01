@@ -25,8 +25,8 @@ const PermissionManager: React.FC<PermissionManagerProps> = ({
   setPermissions,
   isEditable = false,
   isLoading = false,
-  onBack = () => {},
-  onSave = () => {},
+  onBack = () => { },
+  onSave = () => { },
 }) => {
   const safePermissions = Array.isArray(permissions) ? permissions : [];
 
@@ -128,10 +128,10 @@ const PermissionManager: React.FC<PermissionManagerProps> = ({
               <table className="w-full text-sm">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="px-4 py-3 text-left">Module</th>
+                    <th className="px-4 py-3 text-left w-50">Module</th>
 
                     {ALL_ACTIONS.map((action) => (
-                      <th key={action} className="text-center px-4 py-3">
+                      <th key={action} className="text-center px-4 py-3 capitalize">
                         {action}
                       </th>
                     ))}

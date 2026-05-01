@@ -109,13 +109,13 @@ export function AppSidebar() {
       )}
     >
       {/* Logo */}
-      <div className="flex items-center justify-between px-4 h-16 border-b">
+      <div className="flex items-center justify-between px-4 h-16 border-b bg-white">
         {!collapsed && (
           <Link
             to="/"
-            className={`font-semibold  text-lg text-primary whitespace-nowrap overflow-x-hidden`}
+            className={`font-semibold  text-lg text-primary h-16 whitespace-nowrap overflow-x-hidden flex items-center gap-2`}
           >
-            Kyra AI CRM
+            <img src="/Kyra4.jpg" alt="Logo" className="inline-block w-full overflow-hidden h-10" />
           </Link>
         )}
 

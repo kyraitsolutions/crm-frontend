@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/stores";
 import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
 import { Bell, Plus, Search, Settings } from "lucide-react";
 import { IconQuestionMark } from "@tabler/icons-react";
@@ -11,6 +11,8 @@ export function SiteHeader() {
   const organizationName = user?.userprofile?.organizationName;
 
   const baseUrl = `${ROUTES.DASHBOARD}/settings`;
+
+  console.log(user)
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -70,11 +72,15 @@ export function SiteHeader() {
           </div>
 
           <Link to={`${baseUrl}/profile`}>
-            <Avatar className="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full font-medium">
-              <AvatarFallback className="w-8 h-8 flex text-sm items-center justify-center bg-primary text-white rounded-full font-medium">
-                {getFirstWordOfSentence(accountName || organizationName || "")}
+            <Avatar className="">
+              {user?.userprofile?.profilePicture && (
+                <AvatarImage className="object-cover" src={user.userprofile.profilePicture} />
+              )}
+              <AvatarFallback>
+                {getFirstWordOfSentence(user?.userprofile?.firstName || "") || "A"}
               </AvatarFallback>
             </Avatar>
+
           </Link>
         </div>
       </div>
