@@ -137,6 +137,15 @@ export const createInitialElementsData = (type: string) => {
         },
       };
 
+    case "question":
+      return {
+        type: "question",
+        question: {
+          text: "",
+          inputType: "text",
+        },
+      };
+
     default:
       return [];
   }

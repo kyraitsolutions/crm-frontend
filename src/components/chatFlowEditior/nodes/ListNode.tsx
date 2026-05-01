@@ -26,7 +26,7 @@ const ListNode = ({ data }: TListNodeProps) => {
       initial={false}
       animate={{ opacity: 1 }}
     >
-      <NodeHeader title="List" className="bg-violet-500" icon={<List />} />
+      <NodeHeader title="List" className="bg-indigo-500" icon={<List />} />
 
       <div className="p-3 space-y-4 text-sm">
         {/* HEADER */}
@@ -70,7 +70,7 @@ const ListNode = ({ data }: TListNodeProps) => {
                     id={row.id}
                     type="source"
                     position={Position.Right}
-                    className="bg-primary! size-3! right-2!"
+                    className="bg-indigo-500! size-3! right-2!"
                   />
                 </div>
               ))}

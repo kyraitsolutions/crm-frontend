@@ -1,6 +1,7 @@
 import ButtonNode from "./ButtonNode";
 import CarouselNode from "./CarouselNode";
 import ListNode from "./ListNode";
+import QuestionNode from "./QuestionNode";
 import SendMessageNode from "./SendMessageNode";
 
 export const nodeTypes = {
@@ -9,4 +10,5 @@ export const nodeTypes = {
   button: ButtonNode,
   list: ListNode,
   carousel: CarouselNode,
+  question: QuestionNode,
 };

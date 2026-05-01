@@ -150,7 +150,7 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="min-w-94 w-full group relative bg-card rounded-none shadow-lg antialiased overflow-visible "
+      className="w-90 group relative bg-card rounded-none shadow-lg antialiased overflow-visible "
     >
       {/* HEADER */}
       <NodeHeader

@@ -9,8 +9,9 @@ import { uploadFileToS3WithPresignedUrl } from "@/utils/s3-upload.utils";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { motion } from "framer-motion";
-import { Pause, Play, Upload } from "lucide-react";
+import { Eye, Pause, Play, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useReactFlow } from "reactflow";
 import {
   BUTTON_HEADER_CONFIG,
@@ -18,7 +19,14 @@ import {
   HEADER_MEDIA_TYPES,
 } from "../config";
 import { SortableItem } from "../nodes/SortableItem";
-import type { TAppNodeData, TMessageType, TMode } from "../types/types";
+import type {
+  TAction,
+  TAppNodeData,
+  TMessageType,
+  TMode,
+  TQuickReplyButton,
+} from "../types/types";
+import { getDocumentMeta } from "../utils/getDocumentMeta";
 import { getFileExtensionFromMime } from "../utils/getFileExtension.utils";
 import { transformToApi } from "../utils/transformToApi.utils";
 import { createId } from "../utils/utils";
@@ -53,6 +61,9 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
   const toastService = new ToastMessageService();
 
   const payload = data.type === "button" ? data.payload : null;
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const [header, setHeader] = useState<THeaderState>({
     type: "text",
@@ -107,7 +118,7 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
     url: "",
   });
 
-  const [buttons, setButtons] = useState<TButton[]>(() => {
+  const [buttons, setButtons] = useState<TQuickReplyButton[]>(() => {
     const action = payload?.interactive?.action;
 
     if (action && "buttons" in action) {
@@ -170,11 +181,11 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
       return toastService.error("Body max 1024 characters");
     if (buttons.length > 0) {
       buttons.forEach((b, i) => {
-        if (!b.reply.title.trim())
+        if (b.type === "reply" && !b.reply.title.trim())
           return toastService.error(
             `Button ${i + 1} is empty. Please add text`,
           );
-        if (b.reply.title.length > MAX_BTN_TEXT)
+        if (b.type === "reply" && b.reply.title.length > MAX_BTN_TEXT)
           return toastService.error(`Button ${i + 1} exceeds 20 characters`);
       });
     }
@@ -241,7 +252,15 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
   };
 
   const handleRemove = (id: string) => {
-    setButtons((prev) => prev.filter((b) => b.reply.id !== id));
+    setButtons((prev) =>
+      prev.filter((b) => {
+        if (b.type === "reply") {
+          return b.reply.id !== id;
+        }
+
+        return true;
+      }),
+    );
   };
 
   const updateHeaderMedia = (type: TMessageType, url: string) => {
@@ -286,15 +305,15 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
         type: "chatbot",
       };
 
-      // const response = await mediaService.getMediaUploadPresignedUrl(payload);
-      // const doc = response.data?.doc;
+      const response = await mediaService.getMediaUploadPresignedUrl(payload);
+      const doc = response.data?.doc;
 
-      // if (response.status === 200 || response.status === 201) {
-      //   await uploadFileToS3WithPresignedUrl(doc.uploadUrl, file);
+      if (response.status === 200 || response.status === 201) {
+        await uploadFileToS3WithPresignedUrl(doc.uploadUrl, file);
 
-      //   // 🔥 replace preview with real URL
-      //   updateHeaderMedia(currentType, doc.fileUrl);
-      // }
+        // 🔥 replace preview with real URL
+        updateHeaderMedia(currentType, doc.fileUrl);
+      }
     } catch (error: any) {
       toastService.apiError(error?.message || "Failed to upload file");
     }
@@ -351,12 +370,10 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
           header: headerPayload,
           body: { text: bodyText },
           footer: { type: "text", text: footerText },
-          action: action,
+          action: action as TAction,
         },
       }),
     };
-
-    console.log(payloadData);
 
     setNodes((nds) =>
       nds.map((n) => (n.id === id ? { ...n, data: payloadData } : n)),
@@ -410,8 +427,11 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
   const renderHeader = () => {
     const config = BUTTON_HEADER_CONFIG[header.type as TMessageType];
     const currentMediaUrl = getCurrentMediaUrl();
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const doc =
+      currentMediaUrl &&
+      header.type === "document" &&
+      getDocumentMeta(currentMediaUrl || "");
+    const Icon = doc && doc.icon;
 
     const toggleVideo = () => {
       const video = videoRef.current;
@@ -464,16 +484,36 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
 
             {header.type === "video" && (
               <video
-                id="video"
+                ref={videoRef}
                 src={currentMediaUrl}
                 className="w-full h-40 object-cover rounded-lg"
                 controls
               />
             )}
 
-            {header.type === "document" && (
-              <div className="h-40 flex items-center justify-center text-gray-400">
-                📄 Document Uploaded
+            {header.type === "document" && doc && (
+              <div
+                className={`h-40 rounded-lg flex flex-col items-center justify-center gap-3`}
+              >
+                <div
+                  style={{
+                    backgroundColor: doc?.badgeBg,
+                    color: doc?.iconColor,
+                  }}
+                  className={`size-16 rounded-2xl flex items-center justify-center`}
+                >
+                  {Icon && <Icon className="" />}
+                </div>
+
+                <div className="text-center space-y-1 px-4">
+                  <p className={`text-sm font-medium`}>{doc.label}</p>
+
+                  <p className="text-xs text-white/50 truncate max-w-[220px]">
+                    {decodeURIComponent(
+                      currentMediaUrl?.split("/").pop() || "",
+                    )}
+                  </p>
+                </div>
               </div>
             )}
 
@@ -485,39 +525,48 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    const video = document.getElementById(
-                      "video",
-                    ) as HTMLVideoElement;
-
-                    if (video) video.play();
+                    toggleVideo();
                   }}
-                  className="size-12 bg-white/80 backdrop-blur-md rounded-full p-3 z-50 cursor-pointer"
-                ></button>
+                  className="size-12 flex justify-center items-center bg-ternary text-primary backdrop-blur-md rounded-full p-3 z-50 cursor-pointer"
+                >
+                  {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+                </button>
               )} */}
 
               {header.type === "video" && (
-                <div className="relative">
-                  <video
-                    ref={videoRef}
-                    src={currentMediaUrl}
-                    className="w-full h-40 object-cover rounded-lg"
-                    onEnded={() => setIsPlaying(false)}
-                  />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleVideo();
+                  }}
+                  className={` relative size-10 flex items-center justify-center rounded-full cursor-pointer z-50 transition-all duration-300 ease-out shadow-xl border backdrop-blur-xl hover:scale-110 active:scale-95 ${
+                    isPlaying
+                      ? "bg-red-500/90 border-red-300/40 text-white hover:bg-red-500"
+                      : "bg-white/90 border-white/30 text-black hover:bg-white"
+                  }`}
+                >
+                  {/* Icon */}
+                  <span className="relative flex items-center justify-center">
+                    {isPlaying ? (
+                      <Pause size={14} />
+                    ) : (
+                      <Play size={14} fill="currentColor" />
+                    )}
+                  </span>
+                </button>
+              )}
 
-                  {/* ▶ / ⏸ BUTTON */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleVideo();
-                    }}
-                    className="absolute inset-0 flex items-center justify-center z-50"
-                  >
-                    <div className="size-12 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center">
-                      {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-                    </div>
-                  </button>
-                </div>
+              {header.type === "document" && (
+                <Link
+                  to={currentMediaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative size-10 flex items-center justify-center rounded-full cursor-pointer z-50 transition-all duration-300 ease-out shadow-xl border backdrop-blur-xl hover:scale-110 active:scale-95 bg-white/60 border-white/30 text-black hover:bg-white"
+                >
+                  <Eye size={14} />
+                </Link>
               )}
 
               {/* ⬆ UPLOAD BUTTON */}
@@ -685,45 +734,57 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
               className="max-h-52 overflow-y-auto space-y-2 pr-1"
             >
               <DndContext>
-                <SortableContext items={buttons.map((b) => b.reply.id)}>
-                  {buttons.map((btn, index) => (
-                    <SortableItem
-                      key={btn.reply.id}
-                      id={btn.reply.id}
-                      length={buttons.length}
-                    >
-                      <motion.div
-                        layout
-                        className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2"
+                <SortableContext
+                  items={buttons.map((b) => {
+                    const bData = b.type === "reply" ? b.reply : null;
+                    return String(bData?.id);
+                  })}
+                >
+                  {buttons.map((btn, index) => {
+                    const btnData = btn.type === "reply" ? btn.reply : null;
+                    return (
+                      <SortableItem
+                        key={btnData?.id}
+                        id={String(btnData?.id)}
+                        length={buttons.length}
                       >
-                        <Input
-                          value={btn.reply.title}
-                          onChange={(e) =>
-                            setButtons((prev) =>
-                              prev.map((b) =>
-                                b.reply.id === btn.reply.id
-                                  ? {
-                                      ...b,
-                                      reply: {
-                                        ...b.reply,
-                                        title: e.target.value,
-                                      },
-                                    }
-                                  : b,
-                              ),
-                            )
-                          }
-                          className="bg-transparent border-none text-white input-field"
-                        />
+                        <motion.div
+                          layout
+                          className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2"
+                        >
+                          <Input
+                            value={btnData?.title}
+                            onChange={(e) =>
+                              setButtons((prev) =>
+                                prev.map((b) => {
+                                  if (b.type === "reply") {
+                                    return b.reply.id === btnData?.id
+                                      ? {
+                                          ...b,
+                                          reply: {
+                                            ...b.reply,
+                                            title: e.target.value,
+                                          },
+                                        }
+                                      : b;
+                                  }
 
-                        {index !== 0 && (
-                          <ButtonClose
-                            onClose={() => handleRemove(btn.reply.id)}
+                                  return b;
+                                }),
+                              )
+                            }
+                            className="bg-transparent border-none text-white input-field"
                           />
-                        )}
-                      </motion.div>
-                    </SortableItem>
-                  ))}
+
+                          {index !== 0 && (
+                            <ButtonClose
+                              onClose={() => handleRemove(String(btnData?.id))}
+                            />
+                          )}
+                        </motion.div>
+                      </SortableItem>
+                    );
+                  })}
                 </SortableContext>
               </DndContext>
             </div>
