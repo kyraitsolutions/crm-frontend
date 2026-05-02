@@ -704,6 +704,7 @@ const DashboardAccount = () => {
                     <Bar dataKey="facebook" stackId="a" fill="#3B5998" />
                     <Bar dataKey="instagram" stackId="a" fill="#E4405F" />
                     <Bar dataKey="webform" stackId="a" fill="#8B5CF6" />
+                    <Bar dataKey="webhook" stackId="a" fill="#8B5d32" />
                     <Bar dataKey="manual" stackId="a" fill="#F59E83" />
                   </BarChart>
                 </ResponsiveContainer>

@@ -8,6 +8,7 @@ import Recyclebin from "@/pages/DataAdministration/recyclebin.page";
 import Storage from "@/pages/DataAdministration/storage.page";
 import Webhook from "@/pages/Developer/Webhook";
 import Integrations from "@/pages/Integration/Integrations";
+import Notification from "@/pages/Notification/notification.page";
 import CompanyDetails from "@/pages/Profile/CompanyDetails";
 import ProfilePage from "@/pages/Profile/Profile";
 import SettingPage from "@/pages/setting.page";
@@ -30,6 +31,8 @@ export const settingRoutes: RouteObject[] = [
           // General Link
           { path: "profile", element: <ProfilePage /> },
           { path: "company-details", element: <CompanyDetails /> },
+          { path: "notifications", element: <Notification /> },
+
 
           // User Control
           { path: "users", element: <Teams /> },

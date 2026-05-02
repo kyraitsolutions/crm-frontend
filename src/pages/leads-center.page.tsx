@@ -49,6 +49,7 @@ import {
   WEBSOCKET_EVENTS,
   WEBSOCKET_URL,
 } from "@/constants";
+import { LEADS_ROUTES } from "@/constants/routes/leads.path";
 import useDebounce from "@/hooks/useDebounce";
 import { usePagination } from "@/hooks/usePagination";
 import { hasPermission, PERMISSIONS } from "@/rbac";
@@ -79,7 +80,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export type ActivitySource =
   | "phone_call"
@@ -121,6 +122,7 @@ const timelineConfig = {
 };
 
 export default function LeadsCentre() {
+  const navigate = useNavigate();
   // Params
   const { accountId } = useParams();
 
@@ -407,7 +409,7 @@ export default function LeadsCentre() {
 
         <div className="flex whitespace-normal items-center gap-6">
           {/* Audience filter */}
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
                 className="
@@ -438,14 +440,14 @@ export default function LeadsCentre() {
               <DropdownMenuItem>Team A</DropdownMenuItem>
               <DropdownMenuItem>Team B</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
           {/* Icon actions (subtle) */}
           {/* <button className="text-[#847971] hover:text-[#37322F] transition">
             <Download className="h-4 w-4" />
           </button> */}
-          <button className="text-[#847971] hover:text-[#37322F] transition">
+          {/* <button className="text-[#847971] hover:text-[#37322F] transition">
             <Bell className="h-4 w-4" />
-          </button>
+          </button> */}
           {/* <button className="text-[#847971] hover:text-[#37322F] transition">
             <Settings className="h-4 w-4" />
           </button> */}
@@ -473,7 +475,7 @@ export default function LeadsCentre() {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="rounded-lg">
-                <DropdownMenuItem>Add single lead</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate(`${LEADS_ROUTES.CREATE}`)} >Add single lead</DropdownMenuItem>
                 <DropdownMenuItem>Import leads</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

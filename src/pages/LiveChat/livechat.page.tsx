@@ -99,12 +99,12 @@ const LiveChat = () => {
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[3fr_6fr_4fr] ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[3fr_6fr_4fr]  ">
 
-            <div className="bg-white  w-full overflow-hidden h-full">
+            <div className="bg-white  w-full overflow-hidden h-full ">
                 <ChatFilter />
 
-                <div className="h-[calc(100vh-156px)] overflow-y-auto">
+                <div className="h-[calc(100vh-156px)] overflow-y-auto hide-scrollbar">
 
                     <Chatlist chatList={chatList} />
                 </div>

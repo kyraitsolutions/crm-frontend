@@ -9,6 +9,7 @@ type Integration = {
 };
 
 const integrations: Integration[] = [
+
     { id: '1', name: 'Zoho CRM', logo: '🔗', status: 'Not Connected', category: 'Zoho' },
     { id: '2', name: 'Bigin', logo: '▽', status: 'Not Connected', category: 'Zoho' },
     { id: '3', name: 'BulkSMS', logo: '✉', status: 'Not Connected', category: 'SMS Gateways' },
@@ -34,6 +35,7 @@ const integrations: Integration[] = [
     { id: '23', name: 'Evernote', logo: '🐘', status: 'Not Connected', category: 'Marketing' },
     { id: '24', name: 'Zoho Creator', logo: '🛠️', status: 'Not Connected', category: 'Zoho' },
     { id: '25', name: 'Zoho Contacts', logo: '📇', status: 'Not Connected', category: 'Zoho' },
+    { id: '26', name: 'Exotel', logo: '📞', status: 'Not Connected', category: 'Communication' },
     //     // ... add remaining items
     // { id: '1', name: 'Zoho CRM', logo: 'https://logo.clearbit.com/zoho.com', status: 'Not Connected', category: 'Zoho' },
     // { id: '2', name: 'Bigin', logo: 'https://www.bigin.com/favicon.ico', status: 'Not Connected', category: 'Zoho' },
@@ -63,7 +65,7 @@ const integrations: Integration[] = [
 ];
 
 
-const categories = ["All", "Zoho", "MarketPlace", "Image Hubs", "CMS", "Cloud Storage", "e-commerce", "Marketing", "Sales", "SMS Gateways"];
+const categories = ["All", "Zoho", "MarketPlace", "Image Hubs", "CMS", "Cloud Storage", "Communication", "e-commerce", "Marketing", "Sales", "SMS Gateways"];
 
 const Integrations = () => {
     const [activeTab, setActiveTab] = useState('All');

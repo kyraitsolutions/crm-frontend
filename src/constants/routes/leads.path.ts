@@ -11,8 +11,8 @@ export const LEADS_ROUTES = {
 
 export const LEADS_PATHS = {
   ROOT: withAccount("/leads"),
-  //   getList: (accountId: string) =>
-  //     `${ACCOUNT_PATHS.byId(accountId)}/${LEAD_FORM_ROUTES.LEAD_FORM}`,
+  getList: (accountId: string) =>
+      `${ACCOUNT_PATHS.byId(accountId)}/${LEADS_ROUTES.LEADS}`,
   //   getView: (accountId: string, formId: string) =>
   //     `${ACCOUNT_PATHS.byId(accountId)}/${LEAD_FORM_ROUTES.LEAD_FORM}/${formId}/view`,
   //   getCreate: (accountId: string) =>

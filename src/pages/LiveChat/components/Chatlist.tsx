@@ -32,7 +32,7 @@ const Chatlist = ({ chatList }: ChatListProps) => {
                             </AvatarFallback> */}
                         </Avatar>
 
-                        <span className="absolute -bottom-2 -right-2 h-6 w-6 flex items-center justify-center rounded-full ring-2 ring-white bg-green-400 z-50">
+                        <span className="absolute -bottom-2 -right-2 h-6 w-6 flex items-center justify-center rounded-full ring-2 ring-white bg-green-400">
                             {chat.type === "chatbot" ? <Chatbot /> : chat.type === "instagram" ?
                                 <Instagram />
                                 : chat.type === "whatsapp" ? <MdChatBubble size={14} color='#ffffff' /> : null}

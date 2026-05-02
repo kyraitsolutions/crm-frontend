@@ -5,12 +5,17 @@ import { getFirstWordOfSentence } from "@/utils/typography.utils";
 import { Bell, Plus, Search, Settings } from "lucide-react";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { ROUTES } from "@/constants/routes";
+import Notification from "./Notification/Notification";
+import { useState } from "react";
 
 export function SiteHeader() {
   const { accountName, user } = useAuthStore((state) => state);
   const organizationName = user?.userprofile?.organizationName;
 
   const baseUrl = `${ROUTES.DASHBOARD}/settings`;
+
+  const [open, setOpen] = useState<boolean>(false);
+  const [searchEnable, setSearchEnable] = useState(false);
 
   console.log(user)
 
@@ -50,13 +55,21 @@ export function SiteHeader() {
 
             {/* Add Button */}
 
-            <button className="p-1.5 flex items-center justify-center bg-primary hover:bg-primary/80 text-white rounded">
+            <button className="p-1.5 flex items-center justify-center bg-second hover:bg-second/90 text-white rounded">
               <Plus size={20} />
             </button>
-            <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
+            {searchEnable && <div
+              className={`transition-all duration-300 ease-in-out overflow-hidden ${searchEnable
+                ? "opacity-100 translate-x-0 w-64"
+                : "opacity-0 translate-x-full w-0"
+                }`}
+            >
+              <input type="text" placeholder='Search anything...' className="bg-gray-100 text-sm rounded-xl w-full py-2 px-3 focus:outline-none focus:ring-offset-2" />
+            </div>}
+            <button onClick={() => setSearchEnable(!searchEnable)} className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
               <Search size={20} />
             </button>
-            <button className="p-1.5 flex items-center justify-center hover:bg-primary/20 hover:text-primary rounded">
+            <button onClick={() => setOpen(!open)} className="p-1.5 flex items-center justify-center hover:bg-primary/20 hover:text-primary rounded">
               <Bell size={20} />
             </button>
             <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
@@ -84,6 +97,9 @@ export function SiteHeader() {
           </Link>
         </div>
       </div>
+
+
+      <Notification open={open} setOpen={setOpen} />
     </header>
   );
 }

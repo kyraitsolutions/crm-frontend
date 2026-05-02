@@ -65,7 +65,7 @@ const ChatArea = () => {
         },
     ]
     return (
-        <div className="h-[calc(100vh-156px)] overflow-y-auto p-4">
+        <div className="h-[calc(100vh-156px)] overflow-y-auto p-4 hide-scrollbar border-l border-r">
             <div className="flex flex-col gap-4">
                 {messages.map((message) => (
                     <div
