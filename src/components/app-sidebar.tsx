@@ -50,6 +50,12 @@ export function AppSidebar() {
         active: true,
         icon: IconDashboard,
       },
+      {
+        title: "Live Chat",
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/live-chat`,
+        active: true,
+        icon: IconDashboard,
+      },
 
       {
         title: "Leads Centre",
@@ -104,7 +110,7 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "h-screen bg-gray-50 border-r flex flex-col transition-all duration-300",
+        "h-full bg-gray-50 border-r flex flex-col transition-all duration-300",
         collapsed ? "w-18" : "w-90",
       )}
     >

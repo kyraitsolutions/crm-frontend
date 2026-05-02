@@ -80,10 +80,10 @@ export function AppLayout() {
     <div className="flex h-screen w-screen overflow-hidden">
       <AppSidebar />
 
-      <main className="w-full h-full flex flex-col">
+      <main className="w-full flex flex-col">
         <SiteHeader />
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 h-[calc(100vh-64px)] overflow-y-auto ">
           <Outlet />
         </div>
       </main>
