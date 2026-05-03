@@ -50,6 +50,12 @@ export function AppSidebar() {
         active: true,
         icon: IconDashboard,
       },
+      {
+        title: "Live Chat",
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/live-chat`,
+        active: true,
+        icon: IconDashboard,
+      },
 
       {
         title: "Leads Centre",
@@ -104,18 +110,18 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "h-screen bg-gray-50 border-r flex flex-col transition-all duration-300",
+        "h-full bg-gray-50 border-r flex flex-col transition-all duration-300",
         collapsed ? "w-18" : "w-90",
       )}
     >
       {/* Logo */}
-      <div className="flex items-center justify-between px-4 h-16 border-b">
+      <div className="flex items-center justify-between px-4 h-16 border-b bg-white">
         {!collapsed && (
           <Link
             to="/"
-            className={`font-semibold  text-lg text-primary whitespace-nowrap overflow-x-hidden`}
+            className={`font-semibold  text-lg text-primary h-16 whitespace-nowrap overflow-x-hidden flex items-center gap-2`}
           >
-            Kyra AI CRM
+            <img src="/Kyra4.jpg" alt="Logo" className="inline-block w-full overflow-hidden h-10" />
           </Link>
         )}
 

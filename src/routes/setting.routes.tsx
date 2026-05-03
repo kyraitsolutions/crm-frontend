@@ -1,7 +1,14 @@
 import { ROUTES } from "@/constants/routes";
 import { SettingLayout } from "@/layouts/setting.layout";
 import { DashboardPage } from "@/pages";
+import Instagram from "@/pages/Channels/instagram.page";
+import Telegram from "@/pages/Channels/telegram.page";
+import Whatsapp from "@/pages/Channels/whatsapp.page";
+import Recyclebin from "@/pages/DataAdministration/recyclebin.page";
+import Storage from "@/pages/DataAdministration/storage.page";
+import Webhook from "@/pages/Developer/Webhook";
 import Integrations from "@/pages/Integration/Integrations";
+import Notification from "@/pages/Notification/notification.page";
 import CompanyDetails from "@/pages/Profile/CompanyDetails";
 import ProfilePage from "@/pages/Profile/Profile";
 import SettingPage from "@/pages/setting.page";
@@ -24,6 +31,8 @@ export const settingRoutes: RouteObject[] = [
           // General Link
           { path: "profile", element: <ProfilePage /> },
           { path: "company-details", element: <CompanyDetails /> },
+          { path: "notifications", element: <Notification /> },
+
 
           // User Control
           { path: "users", element: <Teams /> },
@@ -36,7 +45,19 @@ export const settingRoutes: RouteObject[] = [
           // Integrations
           { path: "integrations", element: <Integrations /> },
 
-          // { path: "automations", element: <Automations /> },
+          // Channels
+          { path: "whatsapp", element: <Whatsapp /> },
+          { path: "instagram", element: <Instagram /> },
+          { path: "telegram", element: <Telegram /> },
+
+
+          // Developer
+          { path: "webhook", element: <Webhook /> },
+
+
+          // Data Administrator
+          { path: "recyclebin", element: <Recyclebin /> },
+          { path: "storage", element: <Storage /> },
         ],
       },
     ],

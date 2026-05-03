@@ -29,13 +29,17 @@ export const settingSections = [
     ],
   },
   {
-    title: "SMS",
+    title: "Channels",
     items: [
-      { label: "Overview", link: "/sms-overview" },
-      { label: "Sender Details", link: "/sender-details" },
-      { label: "10 DLC", link: "/10dlc" },
+      { label: "Whatsapp", link: "/whatsapp" },
+      { label: "Telegram", link: "/telegram" },
+      { label: "Instagram", link: "/instagram" },
+      { label: "Facebook", link: "/facebook" },
+      { label: "Chatbot", link: "/chatbot" },
+      { label: "Webform", link: "/webform" },
     ],
   },
+  
   {
     title: "Deliverability",
     items: [
@@ -53,11 +57,16 @@ export const settingSections = [
       { label: "Merge Tags", link: "/merge-tags" },
     ],
   },
-  {
-    title: "Data Administration",
-    items: [{ label: "Audit Logs", link: "/audit-logs" }],
+  
+
+{
+    title: "Bot",
+    items: [
+      { label: "Chatbot", link: "/chatbot" },
+      { label: "AI Chatbot", link: "/ai-chatbot" },
+    ],
   },
-  {
+    {
     title: "Integration",
     items: [
       { label: "Apps", link: "/integrations" },
@@ -69,7 +78,15 @@ export const settingSections = [
     title: "Developer Space",
     items: [
       { label: "APIs", link: "/apis" },
-      { label: "Webhooks", link: "/webhooks" },
+      { label: "Webhook", link: "/webhook" },
+    ],
+  },
+  {
+    title: "Data Administration",
+    items: [
+      { label: "Audit Logs", link: "/audit-logs" },
+      { label: "Storage", link: "/storage" },
+      { label: "Recycle Bin", link: "/recyclebin" }
     ],
   },
   {

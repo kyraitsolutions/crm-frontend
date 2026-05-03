@@ -123,7 +123,8 @@ interface AnalyticsData {
 }
 
 const DashboardAccount = () => {
-  const { ["account-id"]: accountId } = useParams();
+  const { ["accountId"]: accountId } = useParams();
+  // const { ["account-id"]: accountId } = useParams();
 
   const analyticsService = new AnalyticsService();
 
@@ -401,12 +402,12 @@ const DashboardAccount = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <DatePicker
+      {/* <DatePicker
         onChange={(date) => console.log(date)}
-        // disableFuture
-        // range
-        // dualCalendar
-      />
+      // disableFuture
+      // range
+      // dualCalendar
+      /> */}
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -436,11 +437,10 @@ const DashboardAccount = () => {
               text-xs font-medium
               max-md:w-full
               transition
-              ${
-                active
-                  ? "bg-primary text-[#FBFAF9]"
-                  : "text-[#37322F] hover:bg-[#EFEDEB]"
-              }
+              ${active
+                          ? "bg-primary text-[#FBFAF9]"
+                          : "text-[#37322F] hover:bg-[#EFEDEB]"
+                        }
             `}
                     >
                       {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -460,11 +460,10 @@ const DashboardAccount = () => {
         px-4 py-1.5
         text-xs font-medium
         transition
-        ${
-          comparisonMode
-            ? "bg-primary text-[#FBFAF9]"
-            : "bg-[#F7F6F4] text-[#37322F] hover:bg-[#EFEDEB]"
-        }
+        ${comparisonMode
+                  ? "bg-primary text-[#FBFAF9]"
+                  : "bg-[#F7F6F4] text-[#37322F] hover:bg-[#EFEDEB]"
+                }
         disabled:opacity-50
       `}
             >
@@ -705,6 +704,7 @@ const DashboardAccount = () => {
                     <Bar dataKey="facebook" stackId="a" fill="#3B5998" />
                     <Bar dataKey="instagram" stackId="a" fill="#E4405F" />
                     <Bar dataKey="webform" stackId="a" fill="#8B5CF6" />
+                    <Bar dataKey="webhook" stackId="a" fill="#8B5d32" />
                     <Bar dataKey="manual" stackId="a" fill="#F59E83" />
                   </BarChart>
                 </ResponsiveContainer>
@@ -789,9 +789,8 @@ const DashboardAccount = () => {
                       <div
                         className="h-full transition-all"
                         style={{
-                          width: `${
-                            (source.count / (data?.totalLeads || 1)) * 100
-                          }%`,
+                          width: `${(source.count / (data?.totalLeads || 1)) * 100
+                            }%`,
                           backgroundColor: source.color,
                         }}
                       />
@@ -799,11 +798,10 @@ const DashboardAccount = () => {
                     <div className="flex min-w-20 items-center gap-2 text-sm">
                       <span className="font-semibold">{source.count}</span>
                       <span
-                        className={`flex items-center gap-0.5 ${
-                          source.trend >= 0
-                            ? "text-[#21733F]"
-                            : "text-destructive"
-                        }`}
+                        className={`flex items-center gap-0.5 ${source.trend >= 0
+                          ? "text-[#21733F]"
+                          : "text-destructive"
+                          }`}
                       >
                         {source.trend >= 0 ? (
                           <TrendingUp className="h-3 w-3" />
@@ -834,7 +832,7 @@ const DashboardAccount = () => {
                 <LineChart data={data?.monthlyEngagement}>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    // stroke="hsl(var(--border))"
+                  // stroke="hsl(var(--border))"
                   />
                   <XAxis
                     dataKey="month"

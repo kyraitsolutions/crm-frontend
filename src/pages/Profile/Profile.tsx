@@ -89,110 +89,112 @@ export default function ProfilePage() {
   // const is_admin = isAdmin(user?.roleId);
 
   return (
-    <div className="p-6 mx-auto bg-gray-50 h-screen space-y-6">
-      {/* HEADER */}
-      <div className="bg-linear-to-r from-blue-100 to-yellow-100 p-6 rounded flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <Avatar className="w-16 h-16">
-              {profile.avatar && (
-                <AvatarImage className="object-cover" src={profile.avatar} />
+    <div className="bg-gray-50 ">
+
+      <div className="p-6 mx-auto max-w-4xl h-screen space-y-6">
+        {/* HEADER */}
+        <div className="bg-linear-to-r from-blue-100 to-yellow-100 p-6 rounded flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Avatar className="w-16 h-16">
+                {profile.avatar && (
+                  <AvatarImage className="object-cover" src={profile.avatar} />
+                )}
+                <AvatarFallback>
+                  {getFirstWordOfSentence(profile.fullName) || "A"}
+                </AvatarFallback>
+              </Avatar>
+
+              {editMode && (
+                <label className="absolute bottom-0 right-0 bg-black text-white p-1 rounded-full cursor-pointer">
+                  <Camera size={14} />
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </label>
               )}
-              <AvatarFallback>
-                {getFirstWordOfSentence(profile.fullName) || "A"}
-              </AvatarFallback>
-            </Avatar>
+            </div>
 
-            {editMode && (
-              <label className="absolute bottom-0 right-0 bg-black text-white p-1 rounded-full cursor-pointer">
-                <Camera size={14} />
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
-              </label>
-            )}
+            <div>
+              <h2 className="text-lg font-semibold">{profile?.firstName}</h2>
+              <p className="text-sm text-gray-600">
+                {profile.emails[0] || "No email"}
+              </p>
+            </div>
           </div>
 
-          <div>
-            <h2 className="text-lg font-semibold">{profile?.firstName}</h2>
-            <p className="text-sm text-gray-600">
-              {profile.emails[0] || "No email"}
-            </p>
-          </div>
+          <Button
+            className="bg-primary hover:bg-primary hover:text-white text-white rounded px-5!"
+            variant="outline"
+            onClick={() => setEditMode(!editMode)}
+          >
+            <Pencil size={5} className="" />
+            {editMode ? "Cancel" : "Edit"}
+          </Button>
         </div>
 
-        <Button
-          className="bg-primary hover:bg-primary hover:text-white text-white rounded px-5!"
-          variant="outline"
-          onClick={() => setEditMode(!editMode)}
-        >
-          <Pencil size={5} className="" />
-          {editMode ? "Cancel" : "Edit"}
-        </Button>
-      </div>
-
-      {/* FORM */}
-      <div className="bg-white rounded p-6 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label className="text-sm text-gray-500">First Name</Label>
-            <Input
-              className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
-              value={profile.firstName}
-              disabled={!editMode}
-              onChange={(e) =>
-                setProfile((p) => ({ ...p, firstName: e.target.value }))
-              }
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-sm text-gray-500">Last Name</Label>
-            <Input
-              className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
-              value={profile.lastName}
-              disabled={!editMode}
-              onChange={(e) =>
-                setProfile((p) => ({ ...p, lastName: e.target.value }))
-              }
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-sm text-gray-500">Phone</Label>
-            <div className="relative">
-              <Phone className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
+        {/* FORM */}
+        <div className="bg-white rounded p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-500">First Name</Label>
               <Input
-                className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
-                value={profile.phone}
+                className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
+                value={profile.firstName}
                 disabled={!editMode}
-                placeholder="9199999999"
                 onChange={(e) =>
-                  setProfile((p) => ({ ...p, phone: e.target.value }))
+                  setProfile((p) => ({ ...p, firstName: e.target.value }))
                 }
               />
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label className="text-sm text-gray-500">Email</Label>
-            <div className="relative">
-              <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-500">Last Name</Label>
               <Input
-                className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
-                value={profile.emails[0]}
+                className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
+                value={profile.lastName}
                 disabled={!editMode}
-                placeholder="9199999999"
                 onChange={(e) =>
-                  setProfile((p) => ({ ...p, emails: [e.target.value] }))
+                  setProfile((p) => ({ ...p, lastName: e.target.value }))
                 }
               />
             </div>
-          </div>
 
-          {/* <div className="space-y-2">
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-500">Phone</Label>
+              <div className="relative">
+                <Phone className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                  value={profile.phone}
+                  disabled={!editMode}
+                  placeholder="9199999999"
+                  onChange={(e) =>
+                    setProfile((p) => ({ ...p, phone: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-500">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                  value={profile.emails[0]}
+                  disabled={!editMode}
+                  placeholder="9199999999"
+                  onChange={(e) =>
+                    setProfile((p) => ({ ...p, emails: [e.target.value] }))
+                  }
+                />
+              </div>
+            </div>
+
+            {/* <div className="space-y-2">
             <Label className="text-xs text-gray-400">Email</Label>
 
             <div className="relative">
@@ -209,14 +211,14 @@ export default function ProfilePage() {
               />
             </div>
           </div> */}
-        </div>
+          </div>
 
-        {/* EMAILS */}
-        <div className="space-y-8">
-          {/* <h3 className="font-medium mb-4">Email Addresses</h3> */}
+          {/* EMAILS */}
+          <div className="space-y-8">
+            {/* <h3 className="font-medium mb-4">Email Addresses</h3> */}
 
-          <div className="items-center gap-6">
-            {/* {profile.emails.map((email, index) => (
+            <div className="items-center gap-6">
+              {/* {profile.emails.map((email, index) => (
               <div key={index} className="space-y-2">
                 <Label className="text-xs text-gray-400">
                   {index === 0 ? "Primary Email" : "Secondary Email"}
@@ -238,7 +240,7 @@ export default function ProfilePage() {
               </div>
             ))} */}
 
-            {/* {profile?.emails?.length === 1 && (
+              {/* {profile?.emails?.length === 1 && (
               <div className="space-y-2">
                 <Label className="text-xs text-gray-400">
                   Secondary Email ( Optional )
@@ -260,10 +262,10 @@ export default function ProfilePage() {
                 </div>
               </div>
             )} */}
-          </div>
+            </div>
 
-          {/* SUPPORT EMAIL */}
-          {/* <div className="space-y-2">
+            {/* SUPPORT EMAIL */}
+            {/* <div className="space-y-2">
             <Label className="text-xs text-gray-400">Support Email</Label>
 
             <div className="relative">
@@ -283,17 +285,19 @@ export default function ProfilePage() {
               />
             </div>
           </div> */}
-        </div>
-
-        {editMode && (
-          <div className="flex justify-end pt-4">
-            <Button onClick={handleSave} disabled={loading}>
-              Save Changes
-            </Button>
           </div>
-        )}
+
+          {editMode && (
+            <div className="flex justify-end pt-4">
+              <Button onClick={handleSave} disabled={loading}>
+                Save Changes
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
+
   );
 }
 

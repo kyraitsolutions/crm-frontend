@@ -1,16 +1,23 @@
 import { useAuthStore } from "@/stores";
 import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
 import { Bell, Plus, Search, Settings } from "lucide-react";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { ROUTES } from "@/constants/routes";
+import Notification from "./Notification/Notification";
+import { useState } from "react";
 
 export function SiteHeader() {
   const { accountName, user } = useAuthStore((state) => state);
   const organizationName = user?.userprofile?.organizationName;
 
   const baseUrl = `${ROUTES.DASHBOARD}/settings`;
+
+  const [open, setOpen] = useState<boolean>(false);
+  const [searchEnable, setSearchEnable] = useState(false);
+
+  console.log(user)
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -48,13 +55,21 @@ export function SiteHeader() {
 
             {/* Add Button */}
 
-            <button className="p-1.5 flex items-center justify-center bg-primary hover:bg-primary/80 text-white rounded">
+            <button className="p-1.5 flex items-center justify-center bg-second hover:bg-second/90 text-white rounded">
               <Plus size={20} />
             </button>
-            <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
+            {searchEnable && <div
+              className={`transition-all duration-300 ease-in-out overflow-hidden ${searchEnable
+                ? "opacity-100 translate-x-0 w-64"
+                : "opacity-0 translate-x-full w-0"
+                }`}
+            >
+              <input type="text" placeholder='Search anything...' className="bg-gray-100 text-sm rounded-xl w-full py-2 px-3 focus:outline-none focus:ring-offset-2" />
+            </div>}
+            <button onClick={() => setSearchEnable(!searchEnable)} className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
               <Search size={20} />
             </button>
-            <button className="p-1.5 flex items-center justify-center hover:bg-primary/20 hover:text-primary rounded">
+            <button onClick={() => setOpen(!open)} className="p-1.5 flex items-center justify-center hover:bg-primary/20 hover:text-primary rounded">
               <Bell size={20} />
             </button>
             <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
@@ -70,14 +85,21 @@ export function SiteHeader() {
           </div>
 
           <Link to={`${baseUrl}/profile`}>
-            <Avatar className="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full font-medium">
-              <AvatarFallback className="w-8 h-8 flex text-sm items-center justify-center bg-primary text-white rounded-full font-medium">
-                {getFirstWordOfSentence(accountName || organizationName || "")}
+            <Avatar className="">
+              {user?.userprofile?.profilePicture && (
+                <AvatarImage className="object-cover" src={user.userprofile.profilePicture} />
+              )}
+              <AvatarFallback>
+                {getFirstWordOfSentence(user?.userprofile?.firstName || "") || "A"}
               </AvatarFallback>
             </Avatar>
+
           </Link>
         </div>
       </div>
+
+
+      <Notification open={open} setOpen={setOpen} />
     </header>
   );
 }

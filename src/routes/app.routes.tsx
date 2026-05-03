@@ -11,7 +11,6 @@ import PrivacyPolicyPage from "@/pages/privacy.page";
 import TermsPage from "@/pages/terms.page";
 import { createBrowserRouter } from "react-router-dom";
 // import { builderRoutes } from "./builder.routes";
-import { chatBotRoutes } from "./chat-bot.routes";
 import { dashboardRoutes } from "./dashboard.routes";
 import { formRoutes } from "./form.routes";
 import { leadRoutes } from "./lead.route";
@@ -24,6 +23,8 @@ import { settingRoutes } from "./setting.routes";
 import { PublicOnly } from "./route-access/PublicOnly";
 import { ProtectedOnly } from "./route-access/ProtectedOnly";
 import Teams from "@/pages/UsersAndControl/teams2.page";
+import { liveChatRoutes } from "./livechat.routes";
+import { chatBotRoutes } from "@/rbac/chat-bot.routes";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -65,6 +66,7 @@ export const appRoutes = createBrowserRouter([
             children: [
               ...dashboardRoutes,
               // ...builderRoutes,
+              ...liveChatRoutes,
               ...chatBotRoutes,
               ...leadRoutes,
               ...formRoutes,

@@ -2,8 +2,8 @@ import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
 import { CHATBOT_PATHS, CHATBOT_ROUTES } from "@/constants/routes";
 import { ChatBotNew, ChatBotPage } from "@/pages";
 import { PERMISSIONS } from "@/rbac";
+import { RequirePermission } from "@/routes/route-access/RequirePermission";
 import { type RouteObject } from "react-router-dom";
-import { RequirePermission } from "./route-access/RequirePermission";
 
 export const chatBotRoutes: RouteObject[] = [
   {

@@ -7,7 +7,7 @@ const SettingLayout = () => {
     <div className="flex h-screen">
       {/* <AppSidebar /> */}
 
-      <main className="w-full h-screen overflow-y-scroll">
+      <main className="w-full h-screen">
         {/* <SiteHeader /> */}
         <Header />
         <Outlet />
