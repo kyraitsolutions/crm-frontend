@@ -27,8 +27,6 @@ const ButtonNode = ({ data }: TButtonNodeProps) => {
       ? payload.interactive.action.parameters
       : null;
 
-  console.log(buttons);
-
   const renderHeader = (header: THeader) => {
     if (!header) return null;
     const { type, text, image, video, document } = header;
