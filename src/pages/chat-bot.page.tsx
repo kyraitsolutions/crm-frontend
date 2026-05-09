@@ -2,6 +2,7 @@ import { DataTable, type Column } from "@/components/common";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
+import { COOKIES_STORAGE } from "@/constants";
 import { ACCOUNT_PATHS, CHATBOT_PATHS } from "@/constants/routes";
 import { hasPermission, PERMISSIONS } from "@/rbac";
 import { ChatBotService, ToastMessageService } from "@/services";
@@ -9,13 +10,15 @@ import { ChatBotManager, useChatBotStore } from "@/stores";
 import { useAccountAccessStore } from "@/stores/account-access.store";
 import { alertManager } from "@/stores/alert.store";
 import type { ApiError, ChatBotListItem } from "@/types";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { Plus, Trash2 } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 export function ChatBotPage() {
-  const { accountId } = useParams();
+  // const { accountId } = useParams();
+  const accountId = CookieUtils.getItem(COOKIES_STORAGE.accountId);
 
   // const [nodes, setNodes] = useState([]);
   // const [edges, setEdges] = useState([]);

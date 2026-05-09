@@ -1,6 +1,7 @@
+import ChatBotBuilderConfiguration from "@/components/chat-bot-builder-config";
 import { ROUTES } from "@/constants/routes";
 import { SettingLayout } from "@/layouts/setting.layout";
-import { DashboardPage } from "@/pages";
+import { ChatBotPage, DashboardPage } from "@/pages";
 import Instagram from "@/pages/Channels/instagram.page";
 import Telegram from "@/pages/Channels/telegram.page";
 import Whatsapp from "@/pages/Channels/whatsapp.page";
@@ -54,7 +55,9 @@ export const settingRoutes: RouteObject[] = [
           // Developer
           { path: "webhook", element: <Webhook /> },
 
-
+          // Bot
+          { path: "chatbot", element: <ChatBotPage /> },
+          { path: "chatflows", element: <ChatBotBuilderConfiguration /> },
           // Data Administrator
           { path: "recyclebin", element: <Recyclebin /> },
           { path: "storage", element: <Storage /> },
