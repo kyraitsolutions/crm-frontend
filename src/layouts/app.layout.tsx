@@ -10,6 +10,7 @@ import { AccountsStoreManager } from "@/stores/accounts.store";
 import type { ApiError } from "@/types";
 // 👈 NEW
 import { CookieUtils } from "@/utils/cookie-storage.utils";
+import { SocketProvider } from "@/websocket/socket.provider";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
@@ -77,17 +78,19 @@ export function AppLayout() {
   }, [accountId]);
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden">
-      <AppSidebar />
+    <SocketProvider accountId={String(accountId)}>
+      <div className="flex h-screen w-screen overflow-hidden">
+        <AppSidebar />
 
-      <main className="w-full flex flex-col">
-        <SiteHeader />
+        <main className="w-full flex flex-col">
+          <SiteHeader />
 
-        <div className="flex-1 h-[calc(100vh-64px)] overflow-y-auto ">
-          <Outlet />
-        </div>
-      </main>
-    </div>
+          <div className="flex-1 h-[calc(100vh-64px)] overflow-y-auto ">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    </SocketProvider>
   );
 }
 
