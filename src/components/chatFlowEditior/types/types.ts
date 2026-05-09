@@ -46,31 +46,31 @@ type TSendMessageNodeDataPayload = Array<
       content: string;
     }
   | {
-      id: string;
+      id?: string;
       type: "image";
-      image: {
-        url: string;
+      image?: {
+        link: string;
         caption?: string;
       };
     }
   | {
-      id: string;
+      id?: string;
       type: "video";
-      video: {
-        url: string;
+      video?: {
+        link: string;
+      };
+    }
+  | {
+      id?: string;
+      type: "document";
+      document?: {
+        link: string;
       };
     }
 >;
 // ======================== Send message types end ==========================
 
 // ========================== Button types start ==========================
-// export type TButton = {
-//   type: "reply";
-//   reply: {
-//     id: string;
-//     title: string;
-//   };
-// };
 
 export type TFooter = {
   type: "text";

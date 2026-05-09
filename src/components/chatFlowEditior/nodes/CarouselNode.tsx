@@ -148,16 +148,22 @@ const CarouselNode = ({ data }: TCarouselNodeProps) => {
                           <div className="space-y-2">
                             {!isUrlButton &&
                               "buttons" in card.action &&
-                              card.action.buttons.map((btn) => (
-                                <div
-                                  key={btn.quick_reply.id}
-                                  className="flex items-center gap-2 text-blue-600 text-sm"
-                                >
-                                  <Button className="actions-btn w-full">
-                                    <Reply /> {btn.quick_reply.title}
-                                  </Button>
-                                </div>
-                              ))}
+                              card.action.buttons.map((btn) => {
+                                const btnData =
+                                  btn?.type === "quick_reply"
+                                    ? btn?.quick_reply
+                                    : null;
+                                return (
+                                  <div
+                                    key={btnData?.id}
+                                    className="flex items-center gap-2 text-blue-600 text-sm"
+                                  >
+                                    <Button className="actions-btn w-full">
+                                      <Reply /> {btnData?.title}
+                                    </Button>
+                                  </div>
+                                );
+                              })}
                           </div>
                         </div>
                       </div>
