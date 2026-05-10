@@ -7,6 +7,8 @@ import { Bot, LucideInstagram, MessageSquareText } from "lucide-react";
 import { useConversationStore } from "../store/conversation.store";
 import { ChatListSkeleton } from "./skeletons/ChatListSkeleton";
 import Loader from "@/components/Loader";
+import { formatTime } from "@/utils/date-utils";
+import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDisplayName";
 
 interface ChatListProps {
   conversationList: TConversation[] | [];
@@ -21,9 +23,8 @@ interface ChatListProps {
 // };
 const Chatlist = ({ conversationList }: ChatListProps) => {
   const [activeChat, setActiveChat] = useState<string | null>(null);
-  const { isRefetching, isLoadingMore } = useConversationStore(
-    (state) => state,
-  );
+  const { isRefetching, isLoadingMore, setSelectConversationId } =
+    useConversationStore((state) => state);
 
   if (isRefetching) {
     return <ChatListSkeleton />;
@@ -51,20 +52,23 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
   return (
     <div>
       {conversationList?.length > 0 &&
-        conversationList?.map((conv, index) => {
+        conversationList?.map((conv) => {
           const name =
             conv?.profile?.displayName ||
-            `Visitor ${conv.visitorId.slice(-5).toUpperCase()}`;
+            buildAndGetVisitorDisplayNameByVisitorId(conv?.visitorId);
 
           const lastMessage = conv?.lastMessage?.text || "No messages yet";
 
           return (
             <div
               key={conv._id}
-              onClick={() => setActiveChat(conv._id)}
+              onClick={() => {
+                setActiveChat(conv._id);
+                setSelectConversationId(conv._id);
+              }}
               className={`flex gap-3 ${activeChat === conv._id && "bg-primary/10"} hover:bg-primary/10 cursor-pointer group flex items-center w-full py-4 px-4 border-b border-gray-100 transition-all`}
             >
-              {index + 1}
+              {/* {index + 1} */}
               {/* Avatar */}
               <div className="relative">
                 <Avatar className="size-11 border border-gray-300 flex items-center justify-center bg-gray-100">
@@ -105,7 +109,7 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
                   </h3>
 
                   <span className="text-xs text-gray-400 whitespace-nowrap">
-                    {new Date(conv?.updatedAt || "")?.toLocaleDateString()}
+                    {formatTime(String(conv?.updatedAt))}
                   </span>
                 </div>
 

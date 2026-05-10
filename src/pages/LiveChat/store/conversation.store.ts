@@ -1,8 +1,9 @@
 "use client";
 
 import { create } from "zustand";
-import type { TConversation } from "../types/conversation.type";
 import { conversationService } from "../services/conversation.service";
+import type { TConversation } from "../types/conversation.type";
+import type { TMessage } from "../types/message.type";
 import {
   createCacheKey,
   getCache,
@@ -10,8 +11,6 @@ import {
   setCache,
   type TCacheMap,
 } from "../utils/cache.utils";
-import type { TMessageType } from "@/components/chatFlowEditior/types/types";
-import type { TMessage } from "../types/message.type";
 
 type TConversationQuery = {
   // page: number;
@@ -44,7 +43,7 @@ type TConversationStore = {
   isLoadingMore: boolean;
 
   fetchConversations: (accountId: string) => Promise<void>;
-  selectConversation: (conversationId: string) => void;
+  setSelectConversationId: (conversationId: string) => void;
   getSelectedConversation: () => TConversation | undefined;
   updateConversationRealtime: ({
     message,
@@ -154,13 +153,13 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
       });
 
       // auto select first conversation
-      const selectedConversationId = get().selectedConversationId;
+      // const selectedConversationId = get().selectedConversationId;
 
-      if (!selectedConversationId && conversations.length > 0) {
-        set({
-          selectedConversationId: conversations[0]._id,
-        });
-      }
+      // if (!selectedConversationId && conversations.length > 0) {
+      //   set({
+      //     selectedConversationId: conversations[0]._id,
+      //   });
+      // }
     } catch (error) {
       console.error("Fetch conversations error", error);
     } finally {
@@ -171,9 +170,15 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
     }
   },
 
-  selectConversation: (conversationId: string) => {
+  setSelectConversationId: (conversationId: string) => {
     set({
       selectedConversationId: conversationId,
+      isLoadingMore: false,
+      conversations: get().conversations.map((conversation) => ({
+        ...conversation,
+        unreadCount:
+          conversation._id === conversationId ? 0 : conversation.unreadCount,
+      })),
     });
   },
 
@@ -226,6 +231,13 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
     message: TMessage;
     conversation: TConversation;
   }) => {
+    const updatedConversation = {
+      ...conversation,
+      unreadCount:
+        conversation?._id === get().selectedConversationId
+          ? 0
+          : conversation.unreadCount,
+    };
     set((state) => {
       const existingConversation = state.conversations.find(
         (item) => item._id === conversation._id,
@@ -241,7 +253,7 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
         conversations: [
           {
             ...(existingConversation || {}),
-            ...conversation,
+            ...updatedConversation,
           },
           ...filteredConversations,
         ],

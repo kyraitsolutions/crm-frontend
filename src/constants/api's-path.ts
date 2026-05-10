@@ -42,4 +42,9 @@ export const API_ENDPOINT_PATH = {
   CONVERSATION: {
     getConversationByIdPath: (id: string) => `/conversation/${id}`,
   },
+
+  CONVERSATION_MESSAGES: {
+    getMessageByConversationIdPath: (conversationId: string) =>
+      `/message/${conversationId}`,
+  },
 };
