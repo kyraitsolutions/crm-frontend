@@ -1,7 +1,14 @@
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T> {
   data: {
     docs: T[];
     doc: T;
+    meta?: {
+      hasNextPage: boolean;
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
   };
   status: number;
   message?: string;

@@ -1,3 +1,9 @@
+import type {
+  TButtonNodeDataPayload,
+  TCarouselNodeDataPayload,
+  TListNodeDataPayload,
+  TQuestionNodeDataPayload,
+} from "@/components/chatFlowEditior/types/types";
 import { z } from "zod";
 
 const TMessageType = z.enum([
@@ -44,55 +50,106 @@ export const BaseMessageSchema = z.object({
       message: z.string().optional(),
     })
     .optional(),
+  createdAt: z.date(),
+  updateAt: z.date(),
 });
 
-export const TextMessageSchema = BaseMessageSchema.extend({
-  type: z.literal("text"),
-  body: z.object({
-    text: z.string(),
-  }),
-});
+export type TBaseMessage = z.infer<typeof BaseMessageSchema>;
 
-export const ImageMessageSchema = BaseMessageSchema.extend({
-  type: z.literal("image"),
+export type TTextMessage = TBaseMessage & {
+  type: "text";
+  body: {
+    text: string;
+  };
+};
 
-  media: z.object({
-    type: "image",
-    image: z.object({
-      link: z.string().optional(),
-      id: z.string().optional(),
-      caption: z.string().optional(),
-    }),
-  }),
-});
+export type TImageMessage = TBaseMessage & {
+  type: "image";
+  media: {
+    type: "image";
+    image: {
+      link: string;
+      id: string;
+      caption: string;
+    };
+  };
+};
 
-export const VideoMessageSchema = BaseMessageSchema.extend({
-  type: z.literal("video"),
-  media: z.object({
-    type: "video",
-    video: z.object({
-      link: z.string().optional(),
-      id: z.string().optional(),
-      caption: z.string().optional(),
-    }),
-  }),
-});
+export type TVideoMessage = TBaseMessage & {
+  type: "video";
+  media: {
+    type: "video";
+    video: {
+      link: string;
+      id: string;
+    };
+  };
+};
 
-export const DocumentMessageSchema = BaseMessageSchema.extend({
-  type: z.literal("document"),
-  media: z.object({
-    type: "document",
-    document: z.object({
-      link: z.string().optional(),
-      id: z.string().optional(),
-      caption: z.string().optional(),
-    }),
-  }),
-});
+export type TDocumentMessage = TBaseMessage & {
+  type: "document";
+  media: {
+    type: "document";
+    document: {
+      link: string;
+      id: string;
+    };
+  };
+};
+
+// export const TextMessageSchema = BaseMessageSchema.extend({
+//   type: z.literal("text"),
+//   body: z.object({
+//     text: z.string(),
+//   }),
+// });
+
+// export const ImageMessageSchema = BaseMessageSchema.extend({
+//   type: z.literal("image"),
+
+//   media: z.object({
+//     type: "image",
+//     image: z.object({
+//       link: z.string().optional(),
+//       id: z.string().optional(),
+//       caption: z.string().optional(),
+//     }),
+//   }),
+// });
+
+// export const VideoMessageSchema = BaseMessageSchema.extend({
+//   type: z.literal("video"),
+//   media: z.object({
+//     type: "video",
+//     video: z.object({
+//       link: z.string().optional(),
+//       id: z.string().optional(),
+//       caption: z.string().optional(),
+//     }),
+//   }),
+// });
+
+// export const DocumentMessageSchema = BaseMessageSchema.extend({
+//   type: z.literal("document"),
+//   media: z.object({
+//     type: "document",
+//     document: z.object({
+//       link: z.string().optional(),
+//       id: z.string().optional(),
+//       caption: z.string().optional(),
+//     }),
+//   }),
+// });
+
+export type TInteractiveButtonMessage = TBaseMessage & TButtonNodeDataPayload;
+export type TInteractiveListMessage = TBaseMessage & TListNodeDataPayload;
+export type TInteractiveCarouselMessage = TBaseMessage &
+  TCarouselNodeDataPayload;
+export type TQuestionMessage = TBaseMessage & TQuestionNodeDataPayload;
 
 // export const InteractiveButtonMessageSchema = BaseMessageSchema.extend({
 //   type: z.literal("interactive"),
-//   interactive: ButtonNodeDataPayloadSchema.shape.interactive,
+//   interactive: TButtonNodeData,
 // });
 
 // export const InteractiveListMessageSchema = BaseMessageSchema.extend({
@@ -105,14 +162,24 @@ export const DocumentMessageSchema = BaseMessageSchema.extend({
 //   question: QuestionNodeDataPayloadSchema.shape.question,
 // });
 
-export const MessageSchema = z.union([
-  TextMessageSchema,
-  ImageMessageSchema,
-  VideoMessageSchema,
-  DocumentMessageSchema,
-  //   InteractiveButtonMessageSchema,
-  //   InteractiveListMessageSchema,
-  //   QuestionMessageSchema,
-]);
+// export const MessageSchema = z.union([
+//   TextMessageSchema,
+//   ImageMessageSchema,
+//   VideoMessageSchema,
+//   DocumentMessageSchema,
+//   InteractiveButtonMessageSchema,
+//   InteractiveListMessageSchema,
+//   QuestionMessageSchema,
+// ]);
 
-export type TMessage = z.infer<typeof MessageSchema>;
+// export type TMessage = z.infer<typeof MessageSchema>;
+
+export type TMessage =
+  | TTextMessage
+  | TImageMessage
+  | TVideoMessage
+  | TDocumentMessage
+  | TInteractiveButtonMessage
+  | TInteractiveListMessage
+  | TInteractiveCarouselMessage
+  | TQuestionMessage;
