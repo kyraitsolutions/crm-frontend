@@ -5,19 +5,21 @@ import { getFirstWordOfSentence } from "@/utils/typography.utils";
 import { Bell, Plus, Search, Settings } from "lucide-react";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { ROUTES } from "@/constants/routes";
-import Notification from "./Notification/Notification";
 import { useState } from "react";
+import Notification from "@/pages/Notification/Notification";
+import { useNotificationStore } from "@/pages/Notification/store/notification.store";
 
 export function SiteHeader() {
   const { accountName, user } = useAuthStore((state) => state);
-  const organizationName = user?.userprofile?.organizationName;
+  const { bellCount, clearBellCount } = useNotificationStore((state) => state);
+  // const organizationName = user?.userprofile?.organizationName;
 
   const baseUrl = `${ROUTES.DASHBOARD}/settings`;
 
   const [open, setOpen] = useState<boolean>(false);
   const [searchEnable, setSearchEnable] = useState(false);
 
-  console.log(user)
+  console.log(user);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -58,23 +60,48 @@ export function SiteHeader() {
             <button className="p-1.5 flex items-center justify-center bg-second hover:bg-second/90 text-white rounded">
               <Plus size={20} />
             </button>
-            {searchEnable && <div
-              className={`transition-all duration-300 ease-in-out overflow-hidden ${searchEnable
-                ? "opacity-100 translate-x-0 w-64"
-                : "opacity-0 translate-x-full w-0"
+            {searchEnable && (
+              <div
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                  searchEnable
+                    ? "opacity-100 translate-x-0 w-64"
+                    : "opacity-0 translate-x-full w-0"
                 }`}
+              >
+                <input
+                  type="text"
+                  placeholder="Search anything..."
+                  className="bg-gray-100 text-sm rounded-xl w-full py-2 px-3 focus:outline-none focus:ring-offset-2"
+                />
+              </div>
+            )}
+            <button
+              onClick={() => setSearchEnable(!searchEnable)}
+              className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded"
             >
-              <input type="text" placeholder='Search anything...' className="bg-gray-100 text-sm rounded-xl w-full py-2 px-3 focus:outline-none focus:ring-offset-2" />
-            </div>}
-            <button onClick={() => setSearchEnable(!searchEnable)} className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
               <Search size={20} />
             </button>
-            <button onClick={() => setOpen(!open)} className="p-1.5 flex items-center justify-center hover:bg-primary/20 hover:text-primary rounded">
-              <Bell size={20} />
+
+            <button
+              onClick={() => {
+                setOpen(!open);
+                clearBellCount();
+              }}
+              className=" relative p-2 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-primary/10 hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <Bell size={20} className="text-gray-700" />
+
+              {bellCount > 0 && (
+                <span className=" absolute -top-1 -right-1 min-w-5 h-5 px-1 flex items-center justify-center rounded-full  bg-red-500  text-white text-[10px] font-semibold shadow-md border-2 border-white">
+                  {bellCount > 99 ? "99+" : bellCount}
+                </span>
+              )}
             </button>
+
             <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
               <IconQuestionMark size={20} />
             </button>
+
             <Link
               to={baseUrl}
               className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded"
@@ -87,19 +114,22 @@ export function SiteHeader() {
           <Link to={`${baseUrl}/profile`}>
             <Avatar className="">
               {user?.userprofile?.profilePicture && (
-                <AvatarImage className="object-cover" src={user.userprofile.profilePicture} />
+                <AvatarImage
+                  className="object-cover"
+                  src={user.userprofile.profilePicture}
+                />
               )}
               <AvatarFallback>
-                {getFirstWordOfSentence(user?.userprofile?.firstName || "") || "A"}
+                {getFirstWordOfSentence(user?.userprofile?.firstName || "") ||
+                  "A"}
               </AvatarFallback>
             </Avatar>
-
           </Link>
         </div>
       </div>
 
-
       <Notification open={open} setOpen={setOpen} />
+      {/* <Notification open={open} setOpen={setOpen} /> */}
     </header>
   );
 }
