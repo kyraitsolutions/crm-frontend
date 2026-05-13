@@ -25,6 +25,9 @@ import { ProtectedOnly } from "./route-access/ProtectedOnly";
 import Teams from "@/pages/UsersAndControl/teams2.page";
 import { liveChatRoutes } from "./livechat.routes";
 import { chatBotRoutes } from "@/rbac/chat-bot.routes";
+import LeadCentrePage from "@/components/website/Product/leadCentre.page";
+import WebsiteChatbotPage from "@/components/website/Product/websiteChatbot.page";
+import AiChatbotPage from "@/components/website/Product/aiChatbot.page";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -35,6 +38,15 @@ export const appRoutes = createBrowserRouter([
         element: <HomePage />,
         index: true,
       },
+      { path: "/product/lead-centre", element: <LeadCentrePage /> },
+      { path: "/product/website-chatbot", element: <WebsiteChatbotPage /> },
+      { path: "/product/ai-chatbot", element: <AiChatbotPage /> },
+      { path: "/product/whatsapp-chatbot", element: <LeadCentrePage /> },
+      { path: "/product/ai-whatsapp-bot", element: <LeadCentrePage /> },
+      { path: "/product/whatsapp-marketing", element: <LeadCentrePage /> },
+      { path: "/product/email-marketing", element: <LeadCentrePage /> },
+      { path: "/product/whatsapp-forms", element: <LeadCentrePage /> },
+      { path: "/product/whatsapp-link-qr", element: <LeadCentrePage /> },
       {
         element: <PricingPage />,
         path: "/pricing",

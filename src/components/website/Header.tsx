@@ -16,35 +16,39 @@ import {
     Globe,
     MousePointerClick,
     ChevronDown,
+    Brain,
+    Webhook,
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 
 const productItems = [
-    { icon: MessageSquare, title: "WhatsApp Marketing", desc: "Broadcast, Automate & Grow" },
-    { icon: Megaphone, title: "AI Ads Manager", desc: "5X your leads" },
-    { icon: Bot, title: "WhatsApp Chatbots", desc: "Automate conversations" },
-    { icon: Sparkles, title: "AI WhatsApp Chatbot", desc: "GPT-powered chatbot" },
-    { icon: CreditCard, title: "WhatsApp Payments", desc: "Collect payments in chat" },
-    { icon: FileText, title: "WhatsApp Forms", desc: "Collect data via WhatsApp" },
-    { icon: Link2, title: "WhatsApp Link & QR", desc: "Generate links & QR codes" },
-    { icon: BadgeCheck, title: "WhatsApp Blue Tick", desc: "Get verified badge" },
-    { icon: ShoppingBag, title: "Showroom Kit", desc: "Showcase products" },
-    { icon: User, title: "AiKarsy", desc: "AI personal assistant" },
+    { icon: User, title: "Lead Centre", desc: "Manage, track & organize", path: "/product/lead-centre" },
+    { icon: MessageSquare, title: "Website Chatbot", desc: "Flow-based chatbot for websites", path: "/product/website-chatbot" },
+    { icon: Sparkles, title: "AI Website Chatbot", desc: "GPT-powered AI replies", path: "/product/ai-chatbot" },
+    // { icon: Megaphone, title: "AI Ads Manager", desc: "5X your leads" },
+    { icon: Bot, title: "WhatsApp Chatbots", desc: "Automate WhatsApp conversations", path: "/product/whatsapp-chatbot" },
+    { icon: Brain, title: "AI WhatsApp Chatbot", desc: "GPT-powered chatbot", path: "/product/ai-whatsapp-bot" },
+    { icon: MessageSquare, title: "WhatsApp Marketing", desc: "Broadcast, Automate & Grow", path: "/product/whatsapp-marketing" },
+    { icon: Radio, title: "Email Marketing", desc: "Campaigns, automations & newsletters", path: "/product/email-marketing" },
+
+    // { icon: CreditCard, title: "WhatsApp Payments", desc: "Collect payments in chat" },
+    { icon: FileText, title: "WhatsApp Forms", desc: "Collect data via WhatsApp", path: "/product/whatsapp-forms" },
+    { icon: Link2, title: "WhatsApp Link & QR", desc: "Generate links & QR codes", path: "/product/whatsapp-link-qr" },
+
+    // { icon: BadgeCheck, title: "WhatsApp Blue Tick", desc: "Get verified badge" },
+    // { icon: ShoppingBag, title: "Showroom Kit", desc: "Showcase products" },
+    // { icon: User, title: "AiKarsy", desc: "AI personal assistant" },
 ];
 
 const featureItems = [
     { icon: LayoutGrid, title: "Features Overview", desc: "All features at a glance" },
     { icon: Radio, title: "WhatsApp Broadcasting", desc: "Send bulk messages" },
     { icon: Sparkles, title: "AI WhatsApp Chatbot", desc: "Smart AI conversations" },
-    { icon: Megaphone, title: "Ads Manager", desc: "Manage ad campaigns" },
     { icon: Workflow, title: "Chatbot Flow Builder", desc: "Visual flow builder" },
-    { icon: ShoppingBag, title: "WhatsApp Catalog", desc: "Product catalogs" },
-    { icon: CreditCard, title: "Payments", desc: "In-chat payments" },
     { icon: FileText, title: "Forms", desc: "Data collection forms" },
-    { icon: Globe, title: "Webviews", desc: "In-chat web pages" },
-    { icon: MousePointerClick, title: "Click Tracking", desc: "Track link clicks" },
+    { icon: Webhook, title: "Webhook", desc: "Capture leads from websites" },
 ];
 const Header = () => {
     return (
@@ -75,15 +79,16 @@ const Header = () => {
                             <Link to="/product" className="text-gray-700 hover:text-primary text-sm font-medium transition-colors">
                                 Product
                             </Link> */}
-                            <Link to="/pricing" className="text-gray-700 hover:text-primary text-sm font-medium transition-colors">
-                                Pricing
-                            </Link>
+
                             {/* <Link to="#review" className="text-gray-700 hover:text-primary text-sm font-medium transition-colors">
                                 Review
                             </Link> */}
 
                             <NavDropdown label="Product" items={productItems} />
                             <NavDropdown label="Features" items={featureItems} />
+                            <Link to="/pricing" className="text-gray-750  hover:text-primary  font-medium! transition-colors">
+                                Pricing
+                            </Link>
 
                         </div>
                     </div>
@@ -123,7 +128,7 @@ function NavDropdown({
     items,
 }: {
     label: string;
-    items: { icon: any; title: string; desc: string }[];
+    items: { icon: any; title: string; desc: string, path?: string }[];
 }) {
     const [open, setOpen] = useState(false);
 
@@ -140,7 +145,7 @@ function NavDropdown({
             {open && (
                 <div className="absolute top-full left-0 mt-1 bg-popover  rounded-md shadow-md p-4 grid grid-cols-1 gap-1 w-75 animate-slide-in z-50">
                     {items.map((item) => (
-                        <button
+                        <Link to={item.path || ""}
                             key={item.title}
                             className="flex items-start gap-3 p-2 rounded-xl hover:bg-secondary transition-colors text-left group"
                         >
@@ -151,7 +156,7 @@ function NavDropdown({
                                 <p className="font-medium text-xm">{item.title}</p>
                                 <p className="text-xs text-muted-foreground">{item.desc}</p>
                             </div>
-                        </button>
+                        </Link>
                     ))}
                 </div>
             )}
