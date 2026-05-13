@@ -47,4 +47,8 @@ export const API_ENDPOINT_PATH = {
     getMessageByConversationIdPath: (conversationId: string) =>
       `/message/${conversationId}`,
   },
+
+  NOTIFICATIONS:{
+    GET_NOTIFICATIONS: `/notifications`
+  }
 };

@@ -33,7 +33,6 @@ import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { hasPermission } from "@/rbac";
 import { ACCOUNT_PATHS } from "@/constants/routes";
-import { DatePicker } from "@/components/ui/DatePicker/DatePicker";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -261,13 +260,12 @@ export const DashboardPage = () => {
                 <span
                   className={`
             px-2 py-0.5 rounded-full capitalize text-xs font-medium
-            ${
-              account.status === "active"
-                ? "bg-primary/10 text-primary"
-                : account.status === "inactive"
-                  ? "bg-destructive/10 text-destructive"
-                  : "bg-primary/10 text-primary"
-            }
+            ${account.status === "active"
+                      ? "bg-primary/10 text-primary"
+                      : account.status === "inactive"
+                        ? "bg-destructive/10 text-destructive"
+                        : "bg-primary/10 text-primary"
+                    }
           `}
                 >
                   {account.status}
