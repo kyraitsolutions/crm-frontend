@@ -2,6 +2,10 @@ import { Button } from "@/components/ui/button";
 import ButtonClose from "@/components/ui/Buttons/ButtonClose";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { FILE_LIMITS } from "@/constants";
+import { ToastMessageService } from "@/services";
+import { MediaService } from "@/services/media.service";
+import { uploadFileToS3WithPresignedUrl } from "@/utils/s3-upload.utils";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { motion } from "framer-motion";
@@ -10,8 +14,7 @@ import { Handle, Position, useReactFlow } from "reactflow";
 import type { TAppNodeData, TMessageType } from "../types/types";
 import NodeHeader from "./NodeHeader";
 import { SortableItem } from "./SortableItem";
-import { ToastMessageService } from "@/services";
-import { FILE_LIMITS } from "@/constants";
+import { getDocumentMeta } from "../utils/getDocumentMeta";
 
 type TSendMessageNodeProps = {
   id: string;
@@ -22,6 +25,7 @@ const MESSAGE_TYPES = [
   { label: "Message", value: "text" },
   { label: "Image", value: "image" },
   { label: "Video", value: "video" },
+  { label: "Document", value: "document" },
 ];
 
 const createMessageItem = (type: TMessageType) => {
@@ -35,10 +39,13 @@ const createMessageItem = (type: TMessageType) => {
       content: "",
     },
     image: {
-      image: { url: "", caption: "" },
+      image: { link: "", caption: "" },
     },
     video: {
-      video: { url: "" },
+      video: { link: "" },
+    },
+    document: {
+      document: { link: "" },
     },
   };
 
@@ -51,20 +58,79 @@ const createMessageItem = (type: TMessageType) => {
 export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
   const { setNodes } = useReactFlow();
   const toastService = new ToastMessageService();
+  const mediaService = new MediaService();
   const payload = data?.type === "send_message" ? data.payload : [];
 
-  const handleFile = (
+  // const handleFile = (
+  //   index: number,
+  //   type: Omit<TMessageType, "text">,
+  //   file?: File,
+  // ) => {
+  //   if (!file) return;
+
+  //   const limits = FILE_LIMITS[type.toUpperCase() as keyof typeof FILE_LIMITS];
+
+  //   if (limits && file.size > limits.MAX_SIZE_MB) {
+  //     const maxMB = limits.MAX_SIZE_MB / (1024 * 1024);
+  //     return toastService.error(`Max size ${maxMB} MB`);
+  //   }
+
+  //   const newPayload = [...payload];
+  //   const item = newPayload[index];
+
+  //   if (item.type === "image") {
+  //     newPayload[index] = {
+  //       ...item,
+  //       image: {
+  //         ...item.image,
+  //         link: URL.createObjectURL(file),
+  //       },
+  //     };
+  //   }
+
+  //   if (item?.type === "video") {
+  //     newPayload[index] = {
+  //       ...item,
+  //       video: {
+  //         link: URL.createObjectURL(file),
+  //       },
+  //     };
+  //   }
+  //   updatePayload(newPayload);
+
+  //   const payload = {
+  //     fileName: file.name,
+  //     mimeType: fileType,
+  //     fileSize: file.size,
+  //     type: "chatbot",
+  //   };
+
+  //   const response = await mediaService.getMediaUploadPresignedUrl(payload);
+  //   const doc = response.data?.doc;
+
+  //   if (response.status === 200 || response.status === 201) {
+  //     await uploadFileToS3WithPresignedUrl(doc.uploadUrl, file);
+
+  //     // 🔥 replace preview with real URL
+  //     updateHeaderMedia(currentType, doc.fileUrl);
+  //   }
+  // };
+
+  const handleFile = async (
     index: number,
     type: Omit<TMessageType, "text">,
     file?: File,
   ) => {
     if (!file) return;
 
-    if (type === "image" && file.size > FILE_LIMITS.IMAGE.MAX_SIZE_MB) {
-      toastService.error("Max Size 5MB");
-      return;
+    const limits = FILE_LIMITS[type.toUpperCase() as keyof typeof FILE_LIMITS];
+
+    if (limits && file.size > limits.MAX_SIZE_MB) {
+      const maxMB = limits.MAX_SIZE_MB / (1024 * 1024);
+      return toastService.error(`Max size ${maxMB} MB`);
     }
 
+    // local preview
     const newPayload = [...payload];
     const item = newPayload[index];
 
@@ -73,27 +139,97 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
         ...item,
         image: {
           ...item.image,
-          // file,
-          url: URL.createObjectURL(file),
+          link: URL.createObjectURL(file),
         },
       };
     }
 
-    if (item?.type === "video") {
+    if (item.type === "video") {
       newPayload[index] = {
         ...item,
         video: {
-          url: URL.createObjectURL(file),
-          // file,
-          // preview: URL.createObjectURL(file),
+          ...item.video,
+          link: URL.createObjectURL(file),
+        },
+      };
+    }
+
+    if (item.type === "document") {
+      newPayload[index] = {
+        ...item,
+        document: {
+          ...item.document,
+          link: URL.createObjectURL(file),
         },
       };
     }
 
     updatePayload(newPayload);
+
+    // upload payload
+    const uploadPayload = {
+      fileName: file.name,
+      mimeType: file.type,
+      fileSize: file.size,
+      type: "chatbot",
+    };
+
+    try {
+      const response =
+        await mediaService.getMediaUploadPresignedUrl(uploadPayload);
+
+      const doc = response.data?.doc;
+
+      if (response.status === 200 || response.status === 201) {
+        await uploadFileToS3WithPresignedUrl(doc.uploadUrl, file);
+
+        // replace local preview with actual CDN url
+        // const updatedPayload = [...newPayload];
+        // const item = updatedPayload[index];
+
+        console.log("item", item);
+
+        if (item.type === "image") {
+          newPayload[index] = {
+            ...item,
+            image: {
+              ...item.image,
+              link: doc.fileUrl,
+            },
+          };
+        }
+
+        if (item.type === "video") {
+          newPayload[index] = {
+            ...item,
+            video: {
+              ...item.video,
+              link: doc.fileUrl,
+            },
+          };
+        }
+
+        if (item.type === "document") {
+          newPayload[index] = {
+            ...item,
+            document: {
+              ...item.document,
+              link: doc.fileUrl,
+            },
+          };
+        }
+
+        console.log("updatedPayload", newPayload);
+
+        updatePayload(newPayload);
+      }
+    } catch (error) {
+      console.error(error);
+      toastService.error("Upload failed");
+    }
   };
 
-  const addMessage = (type: "text" | "image" | "video") => {
+  const addMessage = (type: TMessageType) => {
     const newItem = createMessageItem(type);
     updatePayload([...payload, newItem]);
   };
@@ -126,7 +262,13 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
 
   const handleInputChange = (index: number, value: string) => {
     const newPayload = [...payload];
-    newPayload[index] = { ...newPayload[index], content: value, type: "text" };
+
+    newPayload[index] = {
+      ...newPayload[index],
+      content: String(value),
+      type: "text",
+      id: crypto.randomUUID(),
+    };
     updatePayload(newPayload);
   };
 
@@ -161,9 +303,13 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
 
       <div className="px-5 py-2 space-y-4">
         <DndContext onDragEnd={handleDragEnd}>
-          <SortableContext items={payload.map((i) => i.id)}>
+          <SortableContext items={payload?.map((i) => i.id) as string[]}>
             {payload.map((item, index) => (
-              <SortableItem key={item.id} id={item.id} length={payload.length}>
+              <SortableItem
+                key={item.id}
+                id={String(item?.id)}
+                length={payload.length}
+              >
                 <div key={item.id} className="space-y-6 relative">
                   {/* TEXT */}
                   {item.type === "text" && (
@@ -179,10 +325,10 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                   {item.type === "image" && (
                     <div className="rounded-xl space-y-3 bg-slate-200/50 border border-blue-100 p-3">
                       {/* ✅ IMAGE PREVIEW */}
-                      {item.image?.url && (
+                      {item.image?.link && (
                         <div className="relative group">
                           <img
-                            src={item.image?.url}
+                            src={item.image?.link}
                             alt="preview"
                             className="w-full h-40 object-cover rounded-lg border"
                           />
@@ -209,7 +355,7 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                       )}
 
                       {/* Upload Box */}
-                      {!item.image?.url && (
+                      {!item.image?.link && (
                         <div>
                           <label className="flex flex-col items-center justify-center p-6 cursor-pointer border-2 border-dashed border-blue-200 rounded-lg bg-white transition-all duration-200 hover:bg-blue-50">
                             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mb-2">
@@ -259,47 +405,141 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
 
                   {/* VIDEO */}
                   {item.type === "video" && (
-                    <div className="rounded-xl space-y-3 bg-slate-200/50 border border-purple-100 p-3">
-                      {/* Upload Box */}
-                      <label className="flex flex-col items-center justify-center p-6 cursor-pointer border-2 border-dashed border-purple-200 rounded-lg bg-white hover:bg-purple-50 transition-all duration-200">
-                        {/* Icon */}
-                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600 mb-2">
-                          <Video />
+                    <div>
+                      {item.video?.link && (
+                        <div className="relative group">
+                          <video
+                            src={item.video?.link}
+                            className="w-full h-40 object-cover rounded-lg border"
+                          />
                         </div>
+                      )}
 
-                        {/* Text */}
-                        <p className="text-sm font-medium text-gray-700">
-                          Upload Video
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          Click or drag & drop
-                        </p>
+                      {!item?.video?.link && (
+                        <div className="rounded-xl space-y-3 bg-slate-200/50 border border-purple-100 p-3">
+                          {/* Upload Box */}
+                          <label className="flex flex-col items-center justify-center p-6 cursor-pointer border-2 border-dashed border-purple-200 rounded-lg bg-white hover:bg-purple-50 transition-all duration-200">
+                            {/* Icon */}
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600 mb-2">
+                              <Video />
+                            </div>
 
-                        {/* Hidden Input */}
-                        <Input
-                          type="file"
-                          accept="video/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
+                            {/* Text */}
+                            <p className="text-sm font-medium text-gray-700">
+                              Upload Video
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              Click or drag & drop
+                            </p>
 
-                            if (file && file.size > 20 * 1024 * 1024) {
-                              alert("Max 20MB");
-                              return;
-                            }
+                            {/* Hidden Input */}
+                            <Input
+                              type="file"
+                              accept="video/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                handleFile(index, "video", e.target.files?.[0]);
+                              }}
+                            />
+                          </label>
 
-                            updateItem(index, {
-                              ...item,
-                              video: { file },
-                            });
-                          }}
-                        />
-                      </label>
+                          {/* Footer Info */}
+                          <p className="text-[11px] text-gray-400 text-center">
+                            Max size: 20MB
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
-                      {/* Footer Info */}
-                      <p className="text-[11px] text-gray-400 text-center">
-                        Max size: 20MB
-                      </p>
+                  {item.type === "document" && (
+                    <div>
+                      {item.document?.link ? (
+                        (() => {
+                          const doc = getDocumentMeta(item.document.link || "");
+                          const Icon = doc?.icon;
+
+                          return (
+                            <div className="rounded-xl border border-gray-200 bg-slate-200/50 p-4 space-y-3">
+                              <a
+                                href={item.document.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3"
+                              >
+                                <div
+                                  style={{
+                                    backgroundColor: doc?.badgeBg,
+                                    color: doc?.badgeText,
+                                  }}
+                                  className="size-12 rounded-xl bg-white border flex items-center justify-center"
+                                >
+                                  {Icon && <Icon />}
+                                </div>
+
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs text-gray-500">
+                                    {doc.label?.toUpperCase()} Document
+                                  </p>
+
+                                  <p className="text-sm font-medium break-words">
+                                    {decodeURIComponent(
+                                      item?.document?.link?.split("/").pop() ||
+                                        "",
+                                    )}
+                                  </p>
+                                </div>
+                              </a>
+
+                              {/* Replace */}
+                              <label className="flex items-center justify-center p-3 cursor-pointer border-2 border-dashed rounded-lg bg-white hover:bg-gray-100 transition">
+                                <p className="text-sm">Replace Document</p>
+
+                                <Input
+                                  type="file"
+                                  className="hidden"
+                                  onChange={(e) =>
+                                    handleFile(
+                                      index,
+                                      "document",
+                                      e.target.files?.[0],
+                                    )
+                                  }
+                                />
+                              </label>
+                            </div>
+                          );
+                        })()
+                      ) : (
+                        <div className="rounded-xl space-y-3 bg-slate-200/50 border border-gray-200 p-3">
+                          <label className="flex flex-col items-center justify-center p-6 cursor-pointer border-2 border-dashed border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-all duration-200">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-700 mb-2">
+                              <Upload size={18} />
+                            </div>
+
+                            <p className="text-sm font-medium text-gray-700">
+                              Upload Document
+                            </p>
+
+                            <p className="text-xs text-gray-400">
+                              PDF, DOCX, XLSX, PPTX
+                            </p>
+
+                            <Input
+                              type="file"
+                              className="hidden"
+                              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                              onChange={(e) =>
+                                handleFile(
+                                  index,
+                                  "document",
+                                  e.target.files?.[0],
+                                )
+                              }
+                            />
+                          </label>
+                        </div>
+                      )}
                     </div>
                   )}
 

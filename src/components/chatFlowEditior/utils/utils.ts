@@ -1,10 +1,9 @@
-import { v4 as uuid } from "uuid";
 export const createInitialElementsData = (type: string) => {
   switch (type) {
     case "date":
       return [
         {
-          id: uuid(),
+          id: createId(),
           type: "date",
           content: "",
         },
@@ -13,7 +12,7 @@ export const createInitialElementsData = (type: string) => {
     case "send_message":
       return [
         {
-          id: uuid(),
+          id: createId(),
           type: "text",
           content: "",
         },
@@ -39,7 +38,7 @@ export const createInitialElementsData = (type: string) => {
               {
                 type: "reply",
                 reply: {
-                  id: `btn_1_${uuid()}`,
+                  id: `btn_1_${createId()}`,
                   title: "Button 1",
                 },
               },
@@ -71,7 +70,7 @@ export const createInitialElementsData = (type: string) => {
                 title: "Section Title",
                 rows: [
                   {
-                    id: `section_1_row_1_${uuid()}`,
+                    id: `section_1_row_1_${createId()}`,
                     title: "Row Title",
                     description: "",
                   },

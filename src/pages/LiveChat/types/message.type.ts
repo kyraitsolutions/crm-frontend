@@ -146,6 +146,7 @@ export type TInteractiveListMessage = TBaseMessage & TListNodeDataPayload;
 export type TInteractiveCarouselMessage = TBaseMessage &
   TCarouselNodeDataPayload;
 export type TQuestionMessage = TBaseMessage & TQuestionNodeDataPayload;
+export type TCarouselMessage = TBaseMessage & TCarouselNodeDataPayload;
 
 // export const InteractiveButtonMessageSchema = BaseMessageSchema.extend({
 //   type: z.literal("interactive"),
@@ -182,4 +183,5 @@ export type TMessage =
   | TInteractiveButtonMessage
   | TInteractiveListMessage
   | TInteractiveCarouselMessage
-  | TQuestionMessage;
+  | TQuestionMessage
+  | TCarouselMessage;

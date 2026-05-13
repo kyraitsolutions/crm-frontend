@@ -287,7 +287,6 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
 
       if (limits && file.size > limits.MAX_SIZE_MB) {
         const maxMB = limits.MAX_SIZE_MB / (1024 * 1024);
-
         return toastService.error(`Max size ${maxMB} MB`);
       }
 

@@ -214,105 +214,10 @@ export default function ChatbotFlowEditor() {
   }, []);
 
   const validateFlow = () => {
-    // const nodeMap = new Map(nodes.map((n) => [n.id, n]));
-    // const edgeMap = edges;
-
-    // RULE: Check nodes does not empty content
-    const isNodeWithEmptyContent = nodes.some((n) =>
-      n.data?.elements?.some((el: any) => el.content === ""),
-    );
-
-    if (isNodeWithEmptyContent) {
-      toastMessageService.error("All nodes must have content.");
-      return false;
-    }
-
-    // 1️⃣ RULE: Check at least one end node exists
-
-    const endNodes = nodes.filter((n) => n.data?.label === "End Chat");
-    // if (endNodes.length === 0) {
-    //   toastMessageService.error("You must create an End Chat node.");
-    //   return false;
-    // }
-
-    // 2️⃣ RULE: Every node (except End Chat) must have outgoing edges
-    for (const node of nodes) {
-      if (node.data?.label === "End Chat") continue;
-
-      const out = edges.filter((e) => e.source === node.id);
-
-      if (out.length === 0) {
-        toastMessageService.error(
-          `Node "${node.data?.label}" must connect to another node.`,
-        );
-        return false;
-      }
-    }
-
-    // 3️⃣ RULE: Every option must have an edge
-    for (const node of nodes) {
-      if (node.data?.value !== "option") continue;
-
-      const opts = node.data.elements[0]?.choices || [];
-
-      for (let i = 0; i < opts.length; i++) {
-        const el = node.data.elements[0];
-        const expectedHandle = `${el.id}-choice-${i}`;
-
-        const edgeExists = edges.some((e) => e.sourceHandle === expectedHandle);
-        if (!edgeExists) {
-          toastMessageService.error(
-            `Option "${opts[i]}" in "${node.data.label}" must connect to a node.`,
-          );
-          return false;
-        }
-      }
-    }
-
-    for (const node of nodes) {
-      const incoming = edges.some((e) => e.target === node.id);
-      const outgoing = edges.some((e) => e.source === node.id);
-
-      // Allow start node to have no incoming
-      const isStartNode = node.id === nodes[0].id;
-
-      if (!incoming && !outgoing && !isStartNode) {
-        toastMessageService.error(
-          `Node "${node.data?.label}" must be connected or deleted.`,
-        );
-        return false;
-      }
-    }
-
-    // 4️⃣ RULE: End node must be reachable in the flow
-    // const visited = new Set();
-
-    // const dfs = (nodeId: string) => {
-    //   visited.add(nodeId);
-    //   const out = edges.filter((e) => e.source === nodeId);
-
-    //   for (const e of out) {
-    //     if (!visited.has(e.target)) dfs(e.target);
-    //   }
-    // };
-
-    // const startNode = nodes[0]?.id;
-    // dfs(startNode);
-
-    // for (const endNode of endNodes) {
-    //   if (!visited.has(endNode.id)) {
-    //     toastMessageService.error(
-    //       "Your flow must end at an End Chat node. Some paths do not reach it."
-    //     );
-    //     return false;
-    //   }
-    // }
-
     return true;
   };
 
   const addNewNode = (type: string, label: string) => {
-    console.log(type);
     const newNode = {
       id: crypto.randomUUID(),
       type: type,

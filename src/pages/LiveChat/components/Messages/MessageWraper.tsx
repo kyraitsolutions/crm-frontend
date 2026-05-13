@@ -49,7 +49,7 @@ const MessageWrapper = ({
       )}
 
       <div
-        className={`flex flex-col px-3 pt-3 pb-1 rounded-2xl text-sm leading-relaxed max-w-100 w-fit text-slate-900 border border-primary/20  ${
+        className={`flex flex-col px-3 pt-3 pb-1 rounded-2xl text-sm leading-relaxed max-w-80 w-fit text-slate-900 border border-primary/20  ${
           isIncoming
             ? "bg-white border border-gray-200 rounded-tl-sm"
             : "bg-white/60 rounded-tr-sm"

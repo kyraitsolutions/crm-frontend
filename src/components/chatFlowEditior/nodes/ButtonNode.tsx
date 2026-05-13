@@ -96,7 +96,7 @@ const ButtonNode = ({ data }: TButtonNodeProps) => {
       transition={{ duration: 0.35, ease: "easeOut" }}
       // className="group relative w-[260px] bg-card rounded-none shadow-node antialiased overflow-visible"
       style={{ fontFeatureSettings: '"tnum"' }}
-      className="w-90 bg-white rounded-xl shadow-lg border overflow-hidden will-change-transform"
+      className=" w-90 bg-white rounded-xl shadow-lg border overflow-hidden will-change-transform"
     >
       {/* HEADER */}
       <NodeHeader
@@ -111,7 +111,7 @@ const ButtonNode = ({ data }: TButtonNodeProps) => {
         {header && renderHeader(header)}
 
         {/* BODY */}
-        <p className="text-gray-800">{bodyText}</p>
+        <pre className="text-gray-800 whitespace-pre-wrap">{bodyText}</pre>
 
         {/* FOOTER */}
         {footerText && <p className="text-xs text-gray-400">{footerText}</p>}

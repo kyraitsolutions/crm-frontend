@@ -14,6 +14,8 @@ const ChatProfile = () => {
   );
   const sharedMedia = extractSharedMedia(messages);
 
+  console.log("Shared Media", sharedMedia);
+
   const selectedConversation = conversations.find(
     (conversation) => conversation._id === selectedConversationId,
   );
@@ -91,6 +93,22 @@ const ChatProfile = () => {
                 className="w-full h-full object-cover"
               />
             )}
+
+            {media.type === "video" && (
+              <video
+                src={media.url}
+                className="w-full h-full object-cover"
+                // controls
+              />
+            )}
+
+            {/* {media.type === "audio" && (
+              <audio
+                src={media.url}
+                className="w-full h-full object-cover"
+                // controls
+              />
+            )} */}
           </div>
         ))}
 

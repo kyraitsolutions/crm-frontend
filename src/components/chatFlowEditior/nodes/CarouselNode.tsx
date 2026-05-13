@@ -103,7 +103,7 @@ const CarouselNode = ({ data }: TCarouselNodeProps) => {
                   return (
                     <div
                       key={i}
-                      className="min-w-80 bg-white rounded-xl border shadow-sm overflow-hidden flex flex-col"
+                      className="min-w-75 bg-white rounded-xl border shadow-sm overflow-hidden flex flex-col"
                     >
                       {/* IMAGE / VIDEO */}
                       {header ? (
@@ -156,11 +156,19 @@ const CarouselNode = ({ data }: TCarouselNodeProps) => {
                                 return (
                                   <div
                                     key={btnData?.id}
-                                    className="flex items-center gap-2 text-blue-600 text-sm"
+                                    // className="flex justify-between items-center gap-2 text-blue-600 text-sm"
+                                    className="relative text-blue-600 text-sm"
                                   >
                                     <Button className="actions-btn w-full">
                                       <Reply /> {btnData?.title}
                                     </Button>
+
+                                    <Handle
+                                      id={btnData?.id}
+                                      type="source"
+                                      position={Position.Right}
+                                      className="bg-indigo-500! size-3! right-2!"
+                                    />
                                   </div>
                                 );
                               })}
@@ -181,6 +189,14 @@ const CarouselNode = ({ data }: TCarouselNodeProps) => {
         position={Position.Left}
         className="bg-slate-600! size-3!"
       />
+
+      {"parameters" in cards[0].action && (
+        <Handle
+          type="source"
+          position={Position.Right}
+          className="bg-orange-500! size-3! -right-2!"
+        />
+      )}
     </motion.div>
   );
 };

@@ -2,22 +2,24 @@ import { Button } from "@/components/ui/button";
 import ButtonClose from "@/components/ui/Buttons/ButtonClose";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { FILE_LIMITS } from "@/constants";
 import { ToastMessageService } from "@/services";
+import { MediaService } from "@/services/media.service";
+import { uploadFileToS3WithPresignedUrl } from "@/utils/s3-upload.utils";
 import { Plus, Trash2, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReactFlow } from "reactflow";
-import { createId } from "../utils/utils";
-import type { TAppNodeData, TCarouselCard, TMode } from "../types/types";
-import { FILE_LIMITS } from "@/constants";
 import {
   BUTTON_MODES,
   CAROUSEL_HEADER_MEDIA_SUPPORT,
   HEADER_MEDIA_TYPES,
 } from "../config";
+import type { TAppNodeData, TCarouselCard, TMode } from "../types/types";
+import { createId } from "../utils/utils";
 
 const MAX_CARDS = 10;
 const MIN_CARDS = 2;
-const MAX_CARDS_QUICK_REPLY_BUTTONS = 3;
+// const MAX_CARDS_QUICK_REPLY_BUTTONS = 3;
 const MAX_BODY = 1024;
 const MAX_CARD_BODY = 160;
 const MAX_CARD_BODY_LINE_BREAKS = 2;
@@ -63,6 +65,7 @@ const CarouselNodeSetting = ({
   const [cards, setCards] = useState<TCarouselCard[]>([]);
 
   const validate = () => {
+    console.log(cards);
     if (!bodyText.trim()) return toast.error("Body text is required");
 
     if (cards.length < MIN_CARDS)
@@ -81,7 +84,8 @@ const CarouselNodeSetting = ({
       if ("parameters" in c.action) {
         if (!c.action.parameters?.display_text)
           return toast.error(`Card ${i + 1} buttons text are required`);
-        return toast.error(`Card ${i + 1} buttons url are required`);
+        if (!c.action.parameters?.url)
+          return toast.error(`Card ${i + 1} buttons url are required`);
       } else {
         if (!c.action.buttons.length)
           return toast.error(`Card ${i + 1} buttons are required`);
@@ -93,7 +97,7 @@ const CarouselNodeSetting = ({
     cards: TCarouselCard[],
     newMode: TMode,
   ): TCarouselCard[] => {
-    return cards.map((card) => {
+    return cards.map((card, index) => {
       if (newMode === "url") {
         return {
           ...card,
@@ -114,16 +118,16 @@ const CarouselNodeSetting = ({
           ? card.action.buttons
           : [
               {
-                type: "quick_reply",
+                type: "quick_replys",
                 quick_reply: {
-                  id: createId(),
+                  id: `card_${index + 1}_btn_1_${createId()}`,
                   title: "Option 1",
                 },
               },
               {
                 type: "quick_reply",
                 quick_reply: {
-                  id: createId(),
+                  id: `card_${index + 1}_btn_2_${createId()}`,
                   title: "Option 2",
                 },
               },
@@ -133,11 +137,8 @@ const CarouselNodeSetting = ({
         ...card,
         action: {
           buttons: defaultButtons.map((btn: any) => ({
-            type: "quick_reply",
-            quick_reply: {
-              id: createId(),
-              title: btn.quick_reply.title,
-            },
+            type: btn.type,
+            quick_reply: btn.quick_reply,
           })),
         },
       };
@@ -146,6 +147,7 @@ const CarouselNodeSetting = ({
 
   const handleModeSwitch = (newMode: TMode) => {
     const transformedCards = transformCardsByMode(cards, newMode);
+    console.log(transformedCards);
     setCards(transformedCards);
     setMode(newMode);
   };
@@ -199,20 +201,20 @@ const CarouselNodeSetting = ({
     );
   };
 
-  const updateQuickReply = (cardId: string, btnId: string, value: string) => {
-    setCards((prev) =>
-      prev.map((c) =>
-        c.id === cardId
-          ? {
-              ...c,
-              quickReplies: c.quickReplies?.map((b) =>
-                b.id === btnId ? { ...b, title: value } : b,
-              ),
-            }
-          : c,
-      ),
-    );
-  };
+  // const updateQuickReply = (cardId: string, btnId: string, value: string) => {
+  //   setCards((prev) =>
+  //     prev.map((c) =>
+  //       c.id === cardId
+  //         ? {
+  //             ...c,
+  //             quickReplies: c.quickReplies?.map((b) =>
+  //               b.id === btnId ? { ...b, title: value } : b,
+  //             ),
+  //           }
+  //         : c,
+  //     ),
+  //   );
+  // };
 
   const handleSave = () => {
     validate();
@@ -361,6 +363,7 @@ const CarouselCardItem = ({
   onRemoveCard,
 }: TCarouselCardItemProps) => {
   const toastService = new ToastMessageService();
+  const mediaService = new MediaService();
   const headerUrl =
     card.header?.type === "image"
       ? card.header?.image?.link
@@ -369,24 +372,78 @@ const CarouselCardItem = ({
   const bodyText = card.body?.text || "";
   const isUrl = "parameters" in card.action;
 
-  const handleFile = (file?: File) => {
-    if (!file) return;
+  const handleFile = async (file?: File) => {
+    try {
+      if (!file) return;
 
-    const fileSize = file.size;
+      const currentType = card.header.type;
 
-    if (fileSize > FILE_LIMITS.IMAGE.MAX_SIZE_MB) {
-      toastService.error("Max File Size 5MB");
-      return;
+      // 🔹 validate
+      const limits =
+        FILE_LIMITS[currentType.toUpperCase() as keyof typeof FILE_LIMITS];
+
+      if (limits && file.size > limits.MAX_SIZE_MB) {
+        const maxMB = limits.MAX_SIZE_MB / (1024 * 1024);
+
+        toastService.error(`Max size ${maxMB} MB`);
+        return;
+      }
+
+      // 🔹 instant preview
+      const previewUrl = URL.createObjectURL(file);
+
+      onUpdateCard(card.card_index, "header", {
+        type: currentType,
+        ...(currentType === "image"
+          ? {
+              image: {
+                link: previewUrl,
+              },
+            }
+          : {
+              video: {
+                link: previewUrl,
+              },
+            }),
+      });
+
+      // 🔹 upload payload
+      const uploadPayload = {
+        fileName: file.name,
+        mimeType: file.type,
+        fileSize: file.size,
+        type: "chatbot",
+      };
+
+      // 🔹 get signed url
+      const response =
+        await mediaService.getMediaUploadPresignedUrl(uploadPayload);
+
+      const doc = response.data?.doc;
+
+      if (response.status === 200 || response.status === 201) {
+        // 🔹 upload to s3
+        await uploadFileToS3WithPresignedUrl(doc.uploadUrl, file);
+
+        // 🔹 replace preview with cdn url
+        onUpdateCard(card.card_index, "header", {
+          type: currentType,
+          ...(currentType === "image"
+            ? {
+                image: {
+                  link: doc.fileUrl,
+                },
+              }
+            : {
+                video: {
+                  link: doc.fileUrl,
+                },
+              }),
+        });
+      }
+    } catch (error: any) {
+      toastService.apiError(error?.message || "Failed to upload file");
     }
-
-    const fileUrl = URL.createObjectURL(file);
-
-    onUpdateCard(card.card_index, "header", {
-      type: card.header.type,
-      ...(card.header.type === "image"
-        ? { image: { link: fileUrl } }
-        : { video: { link: fileUrl } }),
-    });
   };
 
   return (
@@ -567,14 +624,19 @@ const CarouselCardItem = ({
         {/* QUICK REPLY MODE */}
         {mode === "quick_reply" &&
           "buttons" in card.action &&
-          card.action.buttons.map((btn, i) => (
-            <Input
-              key={btn.quick_reply.id}
-              placeholder={`Option ${i + 1}`}
-              value={btn.quick_reply.title}
-              className="input-field bg-white/5 border-white/15! text-white"
-            />
-          ))}
+          card.action.buttons.map((btn, i) => {
+            const btnData = btn.type === "quick_reply" ? btn.quick_reply : null;
+            return (
+              <div>
+                <Input
+                  key={btnData?.id}
+                  placeholder={`Option ${i + 1}`}
+                  value={btnData?.title}
+                  className="input-field bg-white/5 border-white/15! text-white"
+                />
+              </div>
+            );
+          })}
       </div>
 
       {/* DELETE */}
@@ -589,122 +651,3 @@ const CarouselCardItem = ({
     </div>
   );
 };
-
-{
-  /* <div className="space-y-4">
-          {cards?.length > 0 &&
-            cards.map((card, index) => {
-              const headerUrl =
-                card.header?.type === "image"
-                  ? card.header?.image?.link
-                  : card?.header?.video?.link;
-
-              const bodyText = card.body?.text || "";
-              const isUrl = "parameters" in card.action;
-
-              return (
-                <div
-                  key={card.card_index}
-                  className="group/card bg-white/5 border border-white/10 rounded-lg p-3 space-y-3 relative"
-                >
-             
-                  <div className="flex gap-2 mb-2">
-                    {HEADER_MEDIA_TYPE.map((type) => (
-                      <Button
-                        key={type}
-                        onClick={() =>
-                          updateCard(card.card_index, "header", {
-                            type,
-                            ...(type === "image"
-                              ? { image: { link: "" } }
-                              : { video: { link: "" } }),
-                          })
-                        }
-                        className={`px-3 py-1! text-xs cursor-pointer hover:bg-emerald-500 hover:text-white rounded ${
-                          card.header.type === type
-                            ? "bg-emerald-500 text-white"
-                            : "bg-white/5 text-gray-400"
-                        }`}
-                      >
-                        {type}
-                      </Button>
-                    ))}
-                  </div>
-                
-
-                 
-                  <Textarea
-                    value={bodyText}
-                    onChange={(e) =>
-                      updateCard(card.card_index, "body", {
-                        text: e.target.value,
-                      })
-                    }
-                    placeholder="Card body"
-                    className="input-field bg-white/5"
-                  />
-
-                  
-                  {mode === "url" && isUrl && (
-                    <>
-                      <Input
-                        placeholder="Button text"
-                        value={card.action.parameters.display_text}
-                        onChange={(e) =>
-                          updateCard(card.card_index, "action", {
-                            ...card.action,
-                            parameters: {
-                              ...card.action.parameters,
-                              display_text: e.target.value,
-                            },
-                          })
-                        }
-                      />
-
-                      <Input
-                        placeholder="URL"
-                        value={card.action.parameters.url}
-                        onChange={(e) =>
-                          updateCard(card.card_index, "action", {
-                            ...card.action,
-                            parameters: {
-                              ...card.action.parameters,
-                              url: e.target.value,
-                            },
-                          })
-                        }
-                      />
-                    </>
-                  )}
-
-                
-                  {mode === "quick_reply" &&
-                    "buttons" in card.action &&
-                    card.action.buttons.map((btn, i) => (
-                      <Input
-                        key={btn.quick_reply.id}
-                        value={btn.quick_reply.title}
-                        onChange={(e) =>
-                          updateQuickReply(
-                            card.card_index,
-                            btn.quick_reply.id,
-                            e.target.value,
-                          )
-                        }
-                      />
-                    ))}
-
-              
-                  {index > 0 && (
-                    <Button
-                      onClick={() => removeCard(card.card_index)}
-                      className="absolute top-2 right-2 opacity-0 group-hover/card:opacity-100 bg-red-500"
-                    >
-                      <Trash2 size={14} />
-                    </Button>
-                  )}
-                </div>
-              );
-            })}
-</div> */
-}
