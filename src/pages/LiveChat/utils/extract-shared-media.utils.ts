@@ -15,7 +15,6 @@ export const extractSharedMedia = (messages: TMessage[]) => {
         createdAt: message.createdAt,
       });
     }
-
     /*
       NORMAL VIDEO MESSAGE
     */
@@ -23,6 +22,18 @@ export const extractSharedMedia = (messages: TMessage[]) => {
       media.push({
         type: "video",
         url: message.media?.video?.link,
+        messageId: message.messageId,
+        createdAt: message.createdAt,
+      });
+    }
+
+    /*
+      NORMAL DOCUMENT MESSAGE
+    */
+    if (message.type === "document") {
+      media.push({
+        type: "document",
+        url: message.media?.document?.link,
         messageId: message.messageId,
         createdAt: message.createdAt,
       });

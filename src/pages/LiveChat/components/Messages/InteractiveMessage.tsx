@@ -1,5 +1,6 @@
 import type { TMessage } from "../../types/message.type";
 import InteractiveButtonMessage from "./InteractiveButtonMessage";
+import InteractiveCarouselMessage from "./InteractiveCarouselMessage";
 import InteractiveListMessage from "./InteractiveListMessage";
 
 type TInteractiveMessage = {
@@ -37,6 +38,9 @@ const InteractiveMessage = ({
           onButtonClick={onButtonClick}
         />
       );
+
+    case "carousel":
+      return <InteractiveCarouselMessage message={message} />;
 
     default:
       return null;

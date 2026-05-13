@@ -3,6 +3,9 @@ import TextMessage from "./TextMessage";
 import InteractiveMessage from "./InteractiveMessage";
 import QuestionMessage from "./QuestionMessage";
 import MessageWrapper from "./MessageWraper";
+import ImageMessage from "./ImageMessage";
+import VideoMessage from "./VideoMessage";
+import DocumentMessage from "./DocumentMessage";
 
 const Message = ({ message }: { message: TMessage }) => {
   const isIncoming = message.from === "user";
@@ -18,13 +21,13 @@ const Message = ({ message }: { message: TMessage }) => {
         return <QuestionMessage message={message} />;
 
       case "image":
-        return <div>Image</div>;
+        return <ImageMessage message={message} />;
 
       case "video":
-        return <div>Video</div>;
+        return <VideoMessage message={message} />;
 
       case "document":
-        return <div>Document</div>;
+        return <DocumentMessage message={message} />;
 
       default:
         return null;

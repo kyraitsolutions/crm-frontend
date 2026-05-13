@@ -1,7 +1,8 @@
-import { Bot, ExternalLink, Reply } from "lucide-react";
-import type { TMessage } from "../../types/message.type";
+import type { THeader } from "@/components/chatFlowEditior/types/types";
+import { getDocumentMeta } from "@/components/chatFlowEditior/utils/getDocumentMeta";
+import { Download, ExternalLink, Reply } from "lucide-react";
 import { Link } from "react-router-dom";
-import MessageWrapper from "./MessageWraper";
+import type { TMessage } from "../../types/message.type";
 
 type TInteractiveButtonMessage = {
   message: TMessage;
@@ -26,7 +27,10 @@ const InteractiveButtonMessage = ({
   onButtonClick,
 }: TInteractiveButtonMessage) => {
   const interactive =
-    message?.type === "interactive" ? message?.interactive : null;
+    message?.type === "interactive" && message?.interactive?.type === "button"
+      ? message?.interactive
+      : null;
+
   if (!interactive) return null;
 
   // const isIncoming = message.from === "user";
@@ -34,15 +38,16 @@ const InteractiveButtonMessage = ({
   const { header, body, footer, action } = interactive;
 
   /** ---------- HEADER ---------- */
-  const renderHeader = () => {
+  const renderHeader = (header: THeader) => {
     if (!header) return null;
+    const { type, text, image, video, document } = header;
 
-    switch (header.type) {
+    switch (type) {
       case "image":
-        return header.image?.link ? (
+        return image?.link ? (
           <div className="w-full aspect-[4/2.5] overflow-hidden rounded-xl bg-black/5">
             <img
-              src={header.image.link}
+              src={image?.link}
               alt="image"
               className="object-cover w-full h-full"
             />
@@ -52,58 +57,55 @@ const InteractiveButtonMessage = ({
         );
 
       case "video":
-        return header.video?.link ? (
+        return video?.link ? (
           <div className="overflow-hidden rounded-xl bg-black">
-            <video controls className="block w-full">
-              <source src={header.video.link} />
-            </video>
+            <video
+              src={video.link}
+              controls
+              muted
+              className="block w-full"
+            ></video>
           </div>
         ) : null;
 
-      //   case "document": {
-      //     const link = header.document?.link;
-      //     const name =
-      //       header.document?.filename || filenameFromUrl(link, "Document");
-      //     const ext = (name.split(".").pop() || "FILE").toUpperCase().slice(0, 4);
-      //     return (
-      //       <a
-      //         href={link}
-      //         target="_blank"
-      //         rel="noopener noreferrer"
-      //         className="flex items-center gap-3 rounded-xl border border-black/10 bg-white/70 p-3 transition hover:bg-white"
-      //       >
-      //         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-black/80 text-[10px] font-bold tracking-wide text-white">
-      //           {ext}
-      //         </div>
-      //         <div className="min-w-0 flex-1">
-      //           <div className="truncate text-sm font-medium text-gray-900">
-      //             {name}
-      //           </div>
-      //           <div className="text-xs text-gray-500">Tap to open</div>
-      //         </div>
-      //         <svg
-      //           className="h-5 w-5 shrink-0 text-gray-500"
-      //           viewBox="0 0 24 24"
-      //           fill="none"
-      //           stroke="currentColor"
-      //           strokeWidth={2}
-      //         >
-      //           <path
-      //             strokeLinecap="round"
-      //             strokeLinejoin="round"
-      //             d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"
-      //           />
-      //         </svg>
-      //       </a>
-      //     );
-      //   }
+      case "document": {
+        const doc = getDocumentMeta(document?.link || "");
+        const Icon = doc?.icon;
 
+        const fileName = decodeURIComponent(
+          document?.link?.split("/").pop() || "Document",
+        );
+
+        return (
+          <div className="rounded-xl flex flex-col items-center justify-center gap-3 border p-2 bg-gray-100">
+            <div
+              style={{
+                backgroundColor: doc?.badgeBg || "#ffffff",
+                color: doc?.badgeText || "#000000",
+              }}
+              className="size-16 rounded-2xl flex items-center justify-center shadow-sm"
+            >
+              {Icon && <Icon className="size-5" />}
+            </div>
+
+            <div className="text-center space-y-1 px-4">
+              <p className="text-sm font-medium">{doc?.label || "Document"}</p>
+
+              <p className="text-xs break-words max-w-[220px] text-gray-600">
+                {fileName}
+              </p>
+            </div>
+
+            <a download href={document?.link} className="shrink-0">
+              <Download className="size-5 text-blue-500" />
+            </a>
+          </div>
+        );
+      }
       case "text":
       default:
-        return header.text ? (
-          <div className="text-sm font-semibold text-gray-900">
-            {header.text}
-          </div>
+        return text ? (
+          <div className="text-sm font-semibold text-gray-900">{text}</div>
         ) : null;
     }
   };
@@ -159,7 +161,9 @@ const InteractiveButtonMessage = ({
     // className={`px-4 py-3 rounded-2xl text-sm leading-relaxed max-w-100 w-full border border-primary/30 text-slate-900 ${isIncoming ? "bg-white  rounded-tl-sm" : "bg-white/60  rounded-tr-sm"}`}
     >
       {/* Header */}
-      {header && <div className="overflow-x-hidden">{renderHeader()}</div>}
+      {header && (
+        <div className="overflow-x-hidden">{renderHeader(header)}</div>
+      )}
 
       {/* Body + footer */}
       {(body?.text || footer?.text) && (

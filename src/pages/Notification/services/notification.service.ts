@@ -1,13 +1,13 @@
 import type { ApiResponse } from "@/types";
-import { ApiService } from "./api.service";
+
 import { API_ENDPOINT_PATH } from "@/constants/api's-path";
-import type { INotification } from "@/components/Notification/Notification";
+import { ApiService } from "@/services";
+import type { TNotification } from "../types/notification.type";
 
 export class NotificationService extends ApiService {
   async getNotifications(
     organizationId: string,
-  ): Promise<ApiResponse<INotification>> {
-    console.log("Org id in functiion", organizationId);
+  ): Promise<ApiResponse<TNotification>> {
     return await this.get(
       `${API_ENDPOINT_PATH?.NOTIFICATIONS?.GET_NOTIFICATIONS}/${organizationId}`,
     );

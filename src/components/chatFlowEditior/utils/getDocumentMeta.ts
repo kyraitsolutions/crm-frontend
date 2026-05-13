@@ -1,4 +1,5 @@
 import { FileSpreadsheet, FileText } from "lucide-react";
+import { FaFilePdf } from "react-icons/fa";
 export const getDocumentMeta = (url: string) => {
   const extension = url.split(".").pop()?.toLowerCase() || "";
 
@@ -6,7 +7,7 @@ export const getDocumentMeta = (url: string) => {
     case "pdf":
       return {
         label: "PDF",
-        icon: FileText,
+        icon: FaFilePdf,
         cardClass: "file-card pdf",
         accentColor: "#E24B4A",
         iconColor: "#E24B4A",
