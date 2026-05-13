@@ -63,12 +63,12 @@ export function AppSidebar() {
         icon: IconUsers,
         active: hasPermission(permissions, PERMISSIONS.LEADS.VIEW),
       },
-      {
-        title: "Chat bot",
-        url: `${ACCOUNT_PATHS.byId(String(accountId))}/chatbot`,
-        icon: IconMessageCircle,
-        active: hasPermission(permissions, PERMISSIONS.CHATBOTS.VIEW),
-      },
+      // {
+      //   title: "Chat bot",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/chatbot`,
+      //   icon: IconMessageCircle,
+      //   active: hasPermission(permissions, PERMISSIONS.CHATBOTS.VIEW),
+      // },
       {
         title: "Lead Forms",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/lead-forms`,

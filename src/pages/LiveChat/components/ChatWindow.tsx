@@ -6,7 +6,6 @@ import ChatMessagebox from "./ChatMessagebox";
 import { useMessageStore } from "../store/message.store";
 import { useSocketEvent } from "@/websocket/socket.hook";
 import { LIVE_CHAT_SOCKET_EVENTS } from "@/constants/socketEvent.constatn";
-import { MessageSquareMore } from "lucide-react";
 import { ChatMessagesSkeleton } from "./skeletons/ChatMessageSkelton";
 import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDisplayName";
 
