@@ -33,6 +33,7 @@ import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { hasPermission } from "@/rbac";
 import { ACCOUNT_PATHS } from "@/constants/routes";
+import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -239,7 +240,8 @@ export const DashboardPage = () => {
                 {/* Delete Button */}
 
                 {hasPermission(user?.permissions, "accounts.delete") && (
-                  <button
+                  <ButtonWithTitle
+                    title="Delete"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDeleAccountClick(account.id);
@@ -247,7 +249,7 @@ export const DashboardPage = () => {
                     className="actions-btn text-red-400!"
                   >
                     <Trash2 size={16} />
-                  </button>
+                  </ButtonWithTitle>
                 )}
               </div>
 

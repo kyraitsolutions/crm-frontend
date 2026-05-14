@@ -10,11 +10,10 @@ import type { TNotification } from "../types/notification.type";
 const NotificationCard = ({ data }: { data: TNotification }) => {
   return (
     <div
-      className={`relative flex gap-4 items-start px-4 py-2.5 transition-all duration-200 cursor-pointer hover:-translate-y-[1px] ${
-        !data?.isRead
+      className={`relative flex gap-4 items-start px-4 py-2.5 transition-all duration-200 cursor-pointer hover:-translate-y-[1px] ${!data?.isRead
           ? "bg-primary/5 border-primary/25 shadow-primary/10"
           : "border-gray-200"
-      }`}
+        }`}
     >
       {/* {!data?.isRead && (
         <span className="absolute top-4 right-4 size-2.5 rounded-full bg-primary animate-pulse" />
@@ -38,9 +37,8 @@ const NotificationCard = ({ data }: { data: TNotification }) => {
       <div className="flex-1 flex flex-col gap-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <p
-            className={`text-xs font-medium break-words ${
-              !data?.isRead ? "text-primary" : "text-gray-800"
-            }`}
+            className={`text-xs font-medium break-words ${!data?.isRead ? "text-primary" : "text-gray-800"
+              }`}
           >
             {data.title}
           </p>
@@ -53,9 +51,8 @@ const NotificationCard = ({ data }: { data: TNotification }) => {
         </div>
 
         <p
-          className={`text-xs leading-relaxed ${
-            !data?.isRead ? "text-gray-700" : "text-gray-500"
-          }`}
+          className={`text-xs leading-relaxed ${!data?.isRead ? "text-gray-700" : "text-gray-500"
+            }`}
         >
           {data.description}
         </p>

@@ -32,7 +32,7 @@ const Notification = ({
   };
 
   useEffect(() => {
-    // getNotifications();
+    getNotifications();
   }, []);
 
   useSocketEvent(
@@ -52,16 +52,16 @@ const Notification = ({
           }}
           className="absolute h-screen w-screen bg-black/40 top-0 right-0 z-10 flex justify- "
         >
-          <div className="bg-linear-to-b from-green-50 to-orange-50 w-100 h-full px-4 overflow-y-scroll hide-scrollbar">
+          <div className="bg-linear-to-b   from-green-50 to-orange-50 w-100 h-full px-4 overflow-y-scroll hide-scrollbar">
             <div className="">
               <NotificationHeader />
             </div>
 
-            {/* <div>
+            <div>
               <h1 className="text-md font-semibold mt-2">High priority</h1>
-            </div> */}
+            </div>
 
-            <div className="divide-y divide-primary/10!">
+            <div className="divide-y divide-primary/10! mt-4">
               {notifications?.map((notification) => {
                 // if (!notification.isPriority) return null;
                 return (

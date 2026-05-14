@@ -17,7 +17,7 @@ const ChatProfile = () => {
   console.log("Shared Media", sharedMedia);
 
   const selectedConversation = conversations.find(
-    (conversation) => conversation._id === selectedConversationId,
+    (conversation) => conversation.id === selectedConversationId,
   );
 
   if (!selectedConversation) {
@@ -98,7 +98,7 @@ const ChatProfile = () => {
               <video
                 src={media.url}
                 className="w-full h-full object-cover"
-                // controls
+              // controls
               />
             )}
 

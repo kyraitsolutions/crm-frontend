@@ -61,12 +61,12 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
 
           return (
             <div
-              key={conv._id}
+              key={conv.id}
               onClick={() => {
-                setActiveChat(conv._id);
-                setSelectConversationId(conv._id);
+                setActiveChat(conv.id);
+                setSelectConversationId(conv.id);
               }}
-              className={`flex gap-3 ${activeChat === conv._id && "bg-primary/10"} hover:bg-primary/10 cursor-pointer group flex items-center w-full py-4 px-4 border-b border-gray-100 transition-all`}
+              className={`flex gap-3 ${activeChat === conv.id && "bg-primary/10"} hover:bg-primary/10 cursor-pointer group flex items-center w-full py-4 px-4 border-b border-gray-100 transition-all`}
             >
               {/* {index + 1} */}
               {/* Avatar */}
@@ -101,9 +101,8 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
               <div className="flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <h3
-                    className={`truncate ${
-                      activeChat === conv._id ? "font-semibold" : "font-medium"
-                    } text-gray-700`}
+                    className={`truncate ${activeChat === conv.id ? "font-semibold" : "font-medium"
+                      } text-gray-700`}
                   >
                     {name}
                   </h3>

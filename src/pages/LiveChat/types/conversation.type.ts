@@ -21,7 +21,7 @@ export const LastMessageSchema = z.object({
 });
 
 export const ConversationSchema = z.object({
-  _id: z.string(),
+  id: z.string(),
   accountId: z.string(),
   visitorId: z.string(),
   platform: PlatformSchema,

@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/stores";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
 import { Bell, Plus, Search, Settings } from "lucide-react";
@@ -8,8 +8,11 @@ import { ROUTES } from "@/constants/routes";
 import { useState } from "react";
 import Notification from "@/pages/Notification/Notification";
 import { useNotificationStore } from "@/pages/Notification/store/notification.store";
+import ButtonWithTitle from "./ui/Buttons/ButtonWithTitle";
 
 export function SiteHeader() {
+  const navigate = useNavigate();
+
   const { accountName, user } = useAuthStore((state) => state);
   const { bellCount, clearBellCount } = useNotificationStore((state) => state);
   // const organizationName = user?.userprofile?.organizationName;
@@ -62,11 +65,10 @@ export function SiteHeader() {
             </button>
             {searchEnable && (
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                  searchEnable
-                    ? "opacity-100 translate-x-0 w-64"
-                    : "opacity-0 translate-x-full w-0"
-                }`}
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${searchEnable
+                  ? "opacity-100 translate-x-0 w-64"
+                  : "opacity-0 translate-x-full w-0"
+                  }`}
               >
                 <input
                   type="text"
@@ -75,14 +77,16 @@ export function SiteHeader() {
                 />
               </div>
             )}
-            <button
+            <ButtonWithTitle
+              title="Search"
               onClick={() => setSearchEnable(!searchEnable)}
               className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded"
             >
               <Search size={20} />
-            </button>
+            </ButtonWithTitle>
 
-            <button
+            <ButtonWithTitle
+              title="Notifications"
               onClick={() => {
                 setOpen(!open);
                 clearBellCount();
@@ -96,18 +100,18 @@ export function SiteHeader() {
                   {bellCount > 99 ? "99+" : bellCount}
                 </span>
               )}
-            </button>
+            </ButtonWithTitle>
 
-            <button className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
+            <ButtonWithTitle title="Help & Support" className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
               <IconQuestionMark size={20} />
-            </button>
+            </ButtonWithTitle>
 
-            <Link
-              to={baseUrl}
+            <ButtonWithTitle title="Settings"
+              onClick={() => navigate(baseUrl)}
               className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded"
             >
               <Settings size={18} />
-            </Link>
+            </ButtonWithTitle>
             <div className="h-5 w-0.5 bg-gray-300"></div>
           </div>
 
