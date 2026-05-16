@@ -9,24 +9,28 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 
+import FlowModal from "@/pages/ChatFlows/components/FlowModal";
+import { chatflowService } from "@/pages/ChatFlows/services/chatflow.service";
 import { hasPermission, PERMISSIONS } from "@/rbac";
 import { ChatBotService, ToastMessageService } from "@/services";
 import { useAuthStore } from "@/stores";
 import { useAccountAccessStore } from "@/stores/account-access.store";
 import type { ApiError } from "@/types";
-import { ArrowLeft } from "lucide-react";
-import { MdAdd } from "react-icons/md";
+import { ArrowLeft, Upload, Workflow } from "lucide-react";
+import { MdAdd, MdOutlineDrafts } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Connection, NodeMouseHandler } from "reactflow";
 import Loader from "../Loader";
 import { Button } from "../ui/button";
+import CustomConnectionLine from "./edges/CustomConnectionLine";
 import CustomEdge from "./edges/CustomEdge";
+import EmptyFlowState from "./EmptyFlowState";
+import FlowEditorLoading from "./FlowEditorLoading";
 import { nodeTypes } from "./nodes";
 import NodeSettingsRenderer from "./nodeSetting/NodeSettingsRenderer";
 import NodeSidebar from "./sidebar/NodeSidebar";
 import type { TAppEdge, TAppNode, TAppNodeData } from "./types/types";
 import { createInitialElementsData } from "./utils/utils";
-import CustomConnectionLine from "./edges/CustomConnectionLine";
 
 export const mandatoryNodes = [
   {
@@ -173,20 +177,23 @@ export const mandatoryEdges = [
 export default function ChatbotFlowEditor() {
   const navigate = useNavigate();
   const chatbot = new ChatBotService();
-  const { accountId, chatBotId } = useParams();
+  const { chatflowId } = useParams();
   const toastMessageService = new ToastMessageService();
 
-  const authUser = useAuthStore((state) => state.user);
+  const { user: authUser, accountId } = useAuthStore((state) => state);
   const { permissions } = useAccountAccessStore((state) => state);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<TAppNodeData>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<TAppEdge>([]);
   const [selectedNode, setSelectedNode] = useState<TAppNode | null>(null);
   const [nodeSettingOpen, setNodeSettingOpen] = useState(false);
+  const [flowName, setFlowName] = useState("");
+  const [flowId, setFlowId] = useState<string | null>(null);
 
+  const [flowModalOpen, setFlowModalOpen] = useState(false);
   const [fieldOpen, setFieldOpen] = useState(false);
-
   const [publishLoading, setPublishLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleCloseSidebar = () => {
     setFieldOpen(false);
@@ -250,10 +257,11 @@ export default function ChatbotFlowEditor() {
   };
 
   const getChatbotFlow = async () => {
+    setLoading(true);
     try {
-      const response = await chatbot.getChatBotFlow(
+      const response = await chatflowService.getChatFlow(
         String(accountId),
-        String(chatBotId),
+        String(chatflowId),
       );
 
       if (response?.status === 200 || response?.status === 201) {
@@ -261,35 +269,46 @@ export default function ChatbotFlowEditor() {
         const nodes = data?.nodes || [];
         const edges = data?.edges || [];
         const hydEdges = hydratedEdges(edges);
-
         setNodes(nodes);
         setEdges(hydEdges);
+        setFlowName(data?.name || "");
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const publishChanges = async () => {
+  const publishChanges = async (status: string) => {
     if (!validateFlow()) return;
     setPublishLoading(true);
     try {
       const payloadData = {
         nodes,
         edges,
+        name: flowName,
+        status,
       };
 
       if (authUser) {
-        const response = await chatbot.createChatBotFlow(
-          String(accountId),
-          String(chatBotId),
-          payloadData,
-        );
+        const response =
+          (chatflowId && flowName) || flowId
+            ? await chatflowService.updateChatFlow(
+                String(chatflowId || flowId),
+                payloadData,
+              )
+            : await chatflowService.createChatFlow(
+                String(accountId),
+                payloadData,
+              );
 
         if (response?.status === 200 || response?.status === 201) {
           toastMessageService.success(
             response?.message || "Your request was processed successfully",
           );
+
+          setFlowId(response?.data.doc.id);
         }
       }
     } catch (error) {
@@ -303,9 +322,24 @@ export default function ChatbotFlowEditor() {
     }
   };
 
+  const handleFieldOpen = () => {
+    if (!flowName) return setFlowModalOpen(true);
+
+    setFieldOpen(!fieldOpen);
+  };
+
   useEffect(() => {
+    if (!chatflowId) return setLoading(false);
     getChatbotFlow();
   }, []);
+
+  if (loading) {
+    return <FlowEditorLoading />;
+  }
+
+  if (chatflowId && !nodes.length) {
+    return <EmptyFlowState />;
+  }
 
   return (
     <div className="w-full relative gap-4 p-4">
@@ -336,34 +370,68 @@ export default function ChatbotFlowEditor() {
             className="bg-gray-200"
           />
 
-          <div className="flex z-50 w-full h-14 justify-between! items-center px-5 bg-gray-100 absolute">
-            <Button
-              onClick={() => navigate(-1)}
-              className=" cursor-pointer text-[#37322F]flex justify-center items-center rounded-md gap-1 transition"
-            >
-              <ArrowLeft size={16} /> <span className="text-sm">Back</span>
-            </Button>
+          <div className="flex z-50 w-full h-16 justify-between! items-center px-5 bg-gray-100 absolute">
+            <div className="flex items-center gap-4">
+              <Button
+                onClick={() => navigate(-1)}
+                className=" cursor-pointer bg-gray-300 rounded-full size-8 text-primary"
+              >
+                <ArrowLeft size={12} />
+                {/* <span className="text-sm text-white">Back</span> */}
+              </Button>
+
+              <div className="flex items-center gap-2 px-3 py-2">
+                <div className="flex items-center justify-center size-8 rounded-lg bg-primary/10">
+                  <Workflow className="size-4 text-primary" />
+                </div>
+
+                <div className="flex flex-col">
+                  <h1 className="text-sm font-semibold text-foreground leading-none">
+                    {flowName || "Untitled Flow"}
+                  </h1>
+
+                  <span className="text-[11px] text-muted-foreground mt-1">
+                    Chat Flow
+                  </span>
+                </div>
+              </div>
+            </div>
 
             {hasPermission(
               permissions,
               PERMISSIONS.CHATBOTS.CREATE || PERMISSIONS.CHATBOTS.UPDATE,
             ) && (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3.5">
+                <Button
+                  disabled={!flowName || !nodes?.length}
+                  className="actions-btn p-2!"
+                  onClick={() => publishChanges("draft")}
+                >
+                  <MdOutlineDrafts size={18} />
+
+                  <span>Draft</span>
+                </Button>
+
                 <Button
                   disabled={publishLoading}
-                  onClick={publishChanges}
-                  className="bg-primary text-white px-5 py-2 rounded-full flex items-center gap-2 disabled:opacity-60"
+                  onClick={() => publishChanges("published")}
+                  className="bg-primary text-white px-5 py-2 rounded-xl flex items-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed"
                 >
-                  Publish
+                  <Upload size={16} />
+
+                  <span>Publish</span>
+
                   {publishLoading && <Loader />}
                 </Button>
 
                 <button
-                  onClick={() => setFieldOpen(!fieldOpen)}
-                  className="flex cursor-pointer bg-primary text-white  p-2 rounded-full justify-end "
+                  onClick={handleFieldOpen}
+                  className="flex cursor-pointer bg-primary text-white p-2 rounded-full justify-end"
                 >
                   <div
-                    className={`${fieldOpen && "-rotate-45"} transition-all duration-300`}
+                    className={`${
+                      fieldOpen && "-rotate-45"
+                    } transition-all duration-300`}
                   >
                     <MdAdd size={20} />
                   </div>
@@ -386,6 +454,18 @@ export default function ChatbotFlowEditor() {
       {fieldOpen && (
         <NodeSidebar onAddNode={addNewNode} onClose={handleCloseSidebar} />
       )}
+
+      <FlowModal
+        open={flowModalOpen}
+        onClose={() => {
+          setFlowModalOpen(false);
+        }}
+        handleSave={(value) => {
+          setFlowName(value);
+          setFlowModalOpen(false);
+          setFieldOpen(true);
+        }}
+      />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { getFirstWordOfSentence } from "@/utils/typography.utils";
 import { Bell, Plus, Search, Settings } from "lucide-react";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { ROUTES } from "@/constants/routes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Notification from "@/pages/Notification/Notification";
 import { useNotificationStore } from "@/pages/Notification/store/notification.store";
 import ButtonWithTitle from "./ui/Buttons/ButtonWithTitle";
@@ -21,8 +21,6 @@ export function SiteHeader() {
 
   const [open, setOpen] = useState<boolean>(false);
   const [searchEnable, setSearchEnable] = useState(false);
-
-  console.log(user);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -65,10 +63,11 @@ export function SiteHeader() {
             </button>
             {searchEnable && (
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${searchEnable
-                  ? "opacity-100 translate-x-0 w-64"
-                  : "opacity-0 translate-x-full w-0"
-                  }`}
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                  searchEnable
+                    ? "opacity-100 translate-x-0 w-64"
+                    : "opacity-0 translate-x-full w-0"
+                }`}
               >
                 <input
                   type="text"
@@ -102,11 +101,15 @@ export function SiteHeader() {
               )}
             </ButtonWithTitle>
 
-            <ButtonWithTitle title="Help & Support" className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded">
+            <ButtonWithTitle
+              title="Help & Support"
+              className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded"
+            >
               <IconQuestionMark size={20} />
             </ButtonWithTitle>
 
-            <ButtonWithTitle title="Settings"
+            <ButtonWithTitle
+              title="Settings"
               onClick={() => navigate(baseUrl)}
               className="p-1.5 flex items-center justify-center  hover:bg-primary/20 hover:text-primary rounded"
             >

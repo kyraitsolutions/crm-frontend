@@ -1,5 +1,12 @@
 import { DataTable, type Column } from "@/components/common";
 import { Card } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { COOKIES_STORAGE } from "@/constants";
@@ -14,20 +21,21 @@ import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { Plus, Trash2 } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useChatFlowStore } from "./ChatFlows/store/chatflow.store";
 
 export function ChatBotPage() {
   // const { accountId } = useParams();
   const accountId = CookieUtils.getItem(COOKIES_STORAGE.accountId);
 
-  // const [nodes, setNodes] = useState([]);
-  // const [edges, setEdges] = useState([]);
   const navigate = useNavigate();
   const chatBotService = new ChatBotService();
   const chatBotManager = new ChatBotManager();
   const toastMessageService = new ToastMessageService();
+
   const chatBotLists = useChatBotStore((state) => state.chatBotsList);
   const { permissions } = useAccountAccessStore((state) => state);
+  const { flows, fetchFlows } = useChatFlowStore((state) => state);
 
   const [loading, setLoading] = useState(false);
 
@@ -58,6 +66,41 @@ export function ChatBotPage() {
             onClick={(e) => handleUpdateStatus(e, row.id)}
           />
         </div>
+      ),
+    },
+    {
+      key: "flow",
+      header: "Attached Flow",
+
+      render: (row) => (
+        <Select
+          value={row.flowId || ""}
+          onValueChange={(value) => handleAttachFlow(row.id, value)}
+        >
+          <SelectTrigger
+            onClick={(e) => e.stopPropagation()}
+            className="text-sm h-7! cursor-pointer"
+          >
+            <SelectValue
+              placeholder="Select flow"
+              className="py-0.5! text-xs"
+            />
+          </SelectTrigger>
+
+          <SelectContent>
+            {flows.map((flow) => (
+              <SelectItem key={flow.id} value={flow.id}>
+                <div className="flex items-center gap-2">
+                  <span>{flow.name}</span>
+
+                  <span className="text-xs text-muted-foreground capitalize">
+                    ({flow.status})
+                  </span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       ),
     },
     {
@@ -114,6 +157,7 @@ export function ChatBotPage() {
       const res: any = await chatBotService.getChatBotsList(String(accountId));
       if (res.status === 200) {
         chatBotManager.setChatBotsList(res.data.docs ?? []);
+        fetchFlows(String(accountId));
       }
     } catch (error) {
       const err = error as ApiError;
@@ -199,6 +243,33 @@ export function ChatBotPage() {
     // otpimistic delete
   };
 
+  const handleAttachFlow = async (chatbotId: string, flowId: string) => {
+    try {
+      chatBotManager.updateChatBot(chatbotId, {
+        flowId,
+      });
+
+      const updatedData = {
+        flowId,
+      };
+      const response = await chatBotService.updateChatBot(
+        String(accountId),
+        chatbotId,
+        updatedData,
+      );
+
+      if (response.status === 200) {
+        toastMessageService.apiSuccess(response.message);
+      }
+
+      toastMessageService.apiSuccess("Flow attached successfully");
+    } catch (error) {
+      const err = error as ApiError;
+
+      toastMessageService.apiError(err.message);
+    }
+  };
+
   useEffect(() => {
     getChatBotsList();
   }, [accountId]);
@@ -266,19 +337,8 @@ export function ChatBotPage() {
           />
         </div>
       ) : (
-        <div className="flex w-full justify-center items-center h-[75vh]">
-          <div
-            className="
-          flex flex-col justify-center items-center
-          max-w-xl w-full
-          gap-6
-          p-10
-          text-center
-          rounded-2xl
-          border-2 border-dashed border-[rgba(50,45,43,0.20)]
-          bg-[rgba(255,255,255,0)]
-        "
-          >
+        <div className="flex w-full justify-center items-center ">
+          <div className="flex flex-col justify-center items-center max-w-xl w-full gap-6 p-10 text-center rounded-2xl border-2 border-dashed border-[rgba(50,45,43,0.20)]bg-[rgba(255,255,255,0)">
             {/* Icon */}
             <div className="flex h-16 w-16 items-center justify-center rounded-full  bg-primary text-white border-2 ">
               <Plus className="h-8 w-8]" />

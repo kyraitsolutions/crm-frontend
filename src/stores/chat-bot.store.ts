@@ -9,7 +9,7 @@ interface IChatBotStoreState {
 export const useChatBotStore = create<IChatBotStoreState>()(
   immer((_) => ({
     chatBotsList: [],
-  }))
+  })),
 );
 
 export class ChatBotManager {
@@ -33,10 +33,21 @@ export class ChatBotManager {
     });
   }
 
+  updateChatBot(chatbotId: string, updatedData: any) {
+    this.store.setState((state) => {
+      state.chatBotsList = state.chatBotsList.map((chatbot) => {
+        if (chatbot.id === chatbotId) {
+          return { ...chatbot, ...updatedData };
+        }
+        return chatbot;
+      });
+    });
+  }
+
   deleteChatBot(chatbotId: string) {
     this.store.setState((state) => {
       state.chatBotsList = state.chatBotsList.filter(
-        (chatbot) => chatbot.id !== chatbotId
+        (chatbot) => chatbot.id !== chatbotId,
       );
     });
   }
