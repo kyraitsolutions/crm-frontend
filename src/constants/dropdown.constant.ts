@@ -23,6 +23,7 @@ export const sourceOptions = [
   { label: "Webform", value: "webform" },
   { label: "Manual", value: "manual" },
   { label: "Webhook", value: "webhook" },
+  { label: "Import", value: "import"  },
 ];
 
 export const stageOptions=[

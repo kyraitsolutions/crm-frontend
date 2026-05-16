@@ -71,8 +71,8 @@ export const settingSections = [
     title: "Integration",
     items: [
       { label: "Apps", link: "/integrations" },
-      { label: "Marketplace", link: "/marketplace" },
-      { label: "Integration Platforms", link: "/integration-platforms" },
+      // { label: "Marketplace", link: "/marketplace" },
+      // { label: "Integration Platforms", link: "/integration-platforms" },
     ],
   },
   {
@@ -85,7 +85,7 @@ export const settingSections = [
   {
     title: "Data Administration",
     items: [
-      { label: "Audit Logs", link: "/audit-logs" },
+      // { label: "Audit Logs", link: "/audit-logs" },
       { label: "Storage", link: "/storage" },
       { label: "Recycle Bin", link: "/recyclebin" }
     ],

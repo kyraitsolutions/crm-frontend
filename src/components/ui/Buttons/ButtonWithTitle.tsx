@@ -27,7 +27,7 @@ const ButtonWithTitle = ({
     position = "bottom",
 }: ButtonWithTitleProps) => {
     return (
-        <div className="group">
+        <div className={`group`}>
             <button
                 disabled={disabled}
                 onClick={onClick}
@@ -35,10 +35,10 @@ const ButtonWithTitle = ({
                 {children}
             </button>
 
-            <div
+            {title && <div
                 className={`
                     absolute z-50 whitespace-nowrap shadow-xl border
-                    bg-white px-3 py-2 text-xs text-black
+                    bg-white px-3 py-2 text-xs text-gray-600
                     opacity-0 pointer-events-none
                     transition-opacity duration-200 rounded
                     group-hover:opacity-100
@@ -47,7 +47,7 @@ const ButtonWithTitle = ({
                     `}
             >
                 {title}
-            </div>
+            </div>}
         </div>
     );
 };
