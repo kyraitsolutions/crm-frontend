@@ -163,8 +163,9 @@ export interface TCreateChatBotFlow {
   edges?: TAppEdge[];
 }
 
-export interface ApiResponseChatBotFlowDto {
+export interface ApiResponseChatFlowDto {
   id: string;
+  name: string;
   nodes: TAppNode[];
   edges: TAppEdge[];
 }

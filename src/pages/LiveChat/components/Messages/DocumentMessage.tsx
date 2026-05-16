@@ -47,7 +47,14 @@ const DocumentMessage = ({ message }: TDocumentMessageProps) => {
       >
         llll
         {/* ICON */}
-        <div className="shrink-0">{icon && <doc.icon />}</div>
+        <div
+          className="shrink-0"
+          style={{
+            color: doc.iconColor,
+          }}
+        >
+          {icon && <doc.icon className="size-6" />}
+        </div>
         {/* INFO */}
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-gray-800 break-words">

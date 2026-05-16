@@ -38,7 +38,12 @@ const Notification = ({
   useSocketEvent(
     NOTIFICATION_SOCKET_EVENTS?.NOTIFICATION?.NEW_NOTIFICATION,
     useCallback((data) => {
-      prependNotification(data?.notification);
+      if (data?.notification) {
+        prependNotification(data?.notification);
+        new window.Notification(data?.notification?.title, {
+          body: data?.notification?.title,
+        });
+      }
     }, []),
   );
 

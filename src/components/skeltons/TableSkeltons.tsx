@@ -1,4 +1,4 @@
-import { TableRow, TableCell } from "@/components/ui/table";
+import { TableRow, TableCell, Table } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -8,7 +8,7 @@ type TableSkeletonProps = {
 
 export const TableSkeleton = ({ rows = 8 }: TableSkeletonProps) => {
   return (
-    <>
+    <Table>
       {Array.from({ length: rows }).map((_, i) => (
         <TableRow key={i} className="animate-pulse">
           <TableCell>
@@ -54,6 +54,6 @@ export const TableSkeleton = ({ rows = 8 }: TableSkeletonProps) => {
           </TableCell>
         </TableRow>
       ))}
-    </>
+    </Table>
   );
 };

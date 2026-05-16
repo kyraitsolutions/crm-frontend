@@ -177,7 +177,7 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
       conversations: get().conversations.map((conversation) => ({
         ...conversation,
         unreadCount:
-          conversation._id === conversationId ? 0 : conversation.unreadCount,
+          conversation.id === conversationId ? 0 : conversation.unreadCount,
       })),
     });
   },
@@ -185,7 +185,7 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
   getSelectedConversation: () => {
     const { conversations, selectedConversationId } = get();
     return conversations.find(
-      (conversation) => conversation._id === selectedConversationId,
+      (conversation) => conversation.id === selectedConversationId,
     );
   },
 
@@ -234,18 +234,18 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
     const updatedConversation = {
       ...conversation,
       unreadCount:
-        conversation?._id === get().selectedConversationId
+        conversation?.id === get().selectedConversationId
           ? 0
           : conversation.unreadCount,
     };
     set((state) => {
       const existingConversation = state.conversations.find(
-        (item) => item._id === conversation._id,
+        (item) => item.id === conversation.id,
       );
 
       // remove old conversation if exists
       const filteredConversations = state.conversations.filter(
-        (item) => item._id !== conversation._id,
+        (item) => item.id !== conversation.id,
       );
 
       // prepend updated/new conversation
@@ -301,7 +301,6 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
       });
 
       const cache = getCache(conversationCache, queryKey);
-      console.log("cache", cache);
 
       const params = {
         accountId: currentAccountId,

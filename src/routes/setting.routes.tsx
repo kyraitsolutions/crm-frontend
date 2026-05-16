@@ -5,6 +5,7 @@ import { ChatBotPage, DashboardPage } from "@/pages";
 import Instagram from "@/pages/Channels/instagram.page";
 import Telegram from "@/pages/Channels/telegram.page";
 import Whatsapp from "@/pages/Channels/whatsapp.page";
+import ChatFlows from "@/pages/ChatFlows/ChatFlows";
 import Recyclebin from "@/pages/DataAdministration/recyclebin.page";
 import Storage from "@/pages/DataAdministration/storage.page";
 import Webhook from "@/pages/Developer/Webhook";
@@ -19,6 +20,9 @@ import Role from "@/pages/UsersAndControl/role.page";
 import Teams from "@/pages/UsersAndControl/teams2.page";
 // import { Teams } from "@/pages/UsersAndControl/teams.page";
 import { type RouteObject } from "react-router-dom";
+import { RequirePermission } from "./route-access/RequirePermission";
+import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
+import { PERMISSIONS } from "@/rbac";
 
 export const settingRoutes: RouteObject[] = [
   {
@@ -56,7 +60,31 @@ export const settingRoutes: RouteObject[] = [
 
           // Bot
           { path: "chatbot", element: <ChatBotPage /> },
-          { path: "chatflows", element: <ChatBotBuilderConfiguration /> },
+          { path: "chatflows", element: <ChatFlows /> },
+          {
+            path: "chatflows/flow-builder",
+            element: (
+              <RequirePermission
+                permission={
+                  PERMISSIONS.CHATBOTS.VIEW || PERMISSIONS.CHATBOTS.CREATE
+                }
+              >
+                <ChatbotFlowEditor />
+              </RequirePermission>
+            ),
+          },
+          {
+            path: "chatflows/:chatflowId/flow-builder",
+            element: (
+              <RequirePermission
+                permission={
+                  PERMISSIONS.CHATBOTS.VIEW || PERMISSIONS.CHATBOTS.CREATE
+                }
+              >
+                <ChatbotFlowEditor />
+              </RequirePermission>
+            ),
+          },
           // Data Administrator
           { path: "recyclebin", element: <Recyclebin /> },
           { path: "storage", element: <Storage /> },
