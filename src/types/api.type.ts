@@ -9,6 +9,7 @@ export interface ApiResponse<T> {
       total: number;
       totalPages: number;
     };
+    pagination?:Record<string,any>
   };
   status: number;
   message?: string;

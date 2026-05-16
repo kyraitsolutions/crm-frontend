@@ -30,7 +30,7 @@ type TContactStore = {
 };
 
 const initialContactQuery: TContactQuery = {
-    limit: 25,
+    limit: 20,
     search: "",
     source: "",
     status: "",
