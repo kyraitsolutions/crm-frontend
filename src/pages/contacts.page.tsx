@@ -18,10 +18,9 @@ const Contacts = () => {
         setOpen,
         currentPage,
         totalPages,
-        totalItems,
         setCurrentPage
     } = useContactStore((state) => state);
-    const [selectedContacts, setSelectedContacts] = useState([]);
+    const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
     const { accountId } = useAuthStore((state) => state);
 
     const [showFilters, setShowFilters] = useState(true);
@@ -47,13 +46,79 @@ const Contacts = () => {
         unsubscribed: "bg-gray-100 text-gray-600",
         bounced: "bg-red-100 text-red-700",
     } as const;
+
+    const handleSelectedContact = (id: string) => {
+        setSelectedContacts(
+            (prev) =>
+                prev.includes(id)
+                    ? prev.filter(
+                        (contactId) =>
+                            contactId !==
+                            id
+                    )
+                    : [
+                        ...prev,
+                        id,
+                    ]
+        );
+    };
     return (
         <div className="px-6 py-2 ">
 
-            <div className="flex justify-between items-center mb-3">
-                <h2 className="text-xl font-semibold">Contacts</h2>
+            <div className="flex justify-between gap-2 items-center my-5">
+                <div className="flex items-center gap-3 w-full">
 
-                <div className="flex whitespace-normal items-center gap-2">
+                    {/* <h2 className="text-xl font-semibold">Contacts</h2> */}
+                    <div className="flex gap-2 items-center w-full">
+                        {/* Search */}
+                        <div className="relative w-full max-w-sm">
+                            <input
+                                type="text"
+                                placeholder="Search contacts..."
+                                value={searchQuery}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    // setCurrentPage(1);
+                                }}
+                                className="
+                                w-full
+                                bg-gray-100 rounded-xl!
+                                px-4
+                                border-gray-300
+                                py-2.5 pr-8
+                                text-sm
+                                text-[#37322F]
+                                placeholder:text-[#847971]
+                                focus:outline-none
+                                focus:border-gray-300
+                                transition
+                            "
+                            />
+
+                            {/* Right icon */}
+                            <div className="absolute right-3  top-1/2 -translate-y-1/2">
+                                {searchQuery ? (
+                                    <button
+                                        onClick={() => {
+                                            setSearchQuery("");
+                                            // setCurrentPage(1);
+                                        }}
+                                        className="text-[#847971] mt-1 hover:text-[#37322F] transition"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                ) : (
+                                    <Search className="h-4 w-4 text-[#847971]" />
+                                )}
+                            </div>
+                        </div>
+                        <ButtonWithTitle title="Contact filter" className="flex items-center gap-1 text-primary font-medium">
+                            <Filter className="h-4.5 w-4.5 text-primary" /> Filter
+                        </ButtonWithTitle>
+                    </div>
+                </div>
+
+                <div className="flex whitespace-normal items-center justify-end gap-2 w-full">
                     <ButtonWithTitle
                         disabled={true}
                         title={selectedContacts.length < 1 ? "Select atleast one contact" : ""}
@@ -71,186 +136,7 @@ const Contacts = () => {
                         className="border border-primary hover:bg-primary/10 text-primary text-sm px-3 py-1.5 rounded font-medium transition">
                         Import Contact
                     </ButtonWithTitle>
-
-
-                    {/* Primary action */}
-                    {/* <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                className=""
-                            >
-                                <Plus className="h-4 w-4" />
-                                Add Subscriber
-                                <ChevronDown className="h-4 w-4 opacity-70" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="rounded-lg shadow-sm px-3 bg-white mt-2 text-sm py-2">
-                            <DropdownMenuItem className="py-1 cursor-pointer">Add single</DropdownMenuItem>
-                            <DropdownMenuItem className="py-1 cursor-pointer">Import subscriber</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu> */}
                 </div>
-
-            </div>
-
-            <div className="">
-                <div className="mb-6 flex items-center justify-between gap-6">
-                    {/* Search */}
-                    <div className="relative w-full max-w-md">
-                        <input
-                            type="text"
-                            placeholder="Search contacts..."
-                            //   value={searchQuery}
-                            onChange={(e) => {
-                                setSearchQuery(e.target.value);
-                                // setCurrentPage(1);
-                            }}
-                            className="
-                                w-full
-                                bg-transparent
-                                border-b
-                                border-[rgba(50,45,43,0.20)]
-                                py-2 pr-8
-                                text-sm
-                                text-[#37322F]
-                                placeholder:text-[#847971]
-                                focus:outline-none
-                                focus:border-[#37322F]
-                                transition
-                            "
-                        />
-
-                        {/* Right icon */}
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2">
-                            {searchQuery ? (
-                                <button
-                                    onClick={() => {
-                                        // setSearchQuery("");
-                                        // setCurrentPage(1);
-                                    }}
-                                    className="text-[#847971] hover:text-[#37322F] transition"
-                                >
-                                    <X className="h-4 w-4" />
-                                </button>
-                            ) : (
-                                <Search className="h-4 w-4 text-[#847971]" />
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Filters toggle */}
-                    <button
-                        onClick={() => setShowFilters(!showFilters)}
-                        className="
-                        flex items-center gap-2
-                        whitespace-nowrap
-                        text-sm font-medium
-                        text-[#37322F]
-                        hover:text-[#1f1c1a]
-                        transition
-                        "
-                    >
-                        <Filter className="h-4 w-4 text-[#847971]" />
-                        {showFilters ? "Hide filters" : "Show filters"}
-                    </button>
-                </div>
-
-                {showFilters && (
-                    <div className="mb-6">
-                        <div className="flex flex-wrap items-center gap-3">
-                            <PillFilterDropdown
-                                label={filters.form.label}
-                                options={formOptions}
-                                allLabel="All Forms"
-                                onSelect={(value) =>
-                                    setFilters((prev) => ({ ...prev, form: value }))
-                                }
-                            />
-
-                            <PillFilterDropdown
-                                label={filters.date.label}
-                                options={dateOptions}
-                                allLabel="All Dates"
-                                onSelect={(value) =>
-                                    setFilters((prev) => ({ ...prev, date: value }))
-                                }
-                            />
-
-                            <PillFilterDropdown
-                                label={filters.status.label}
-                                options={statusOptions}
-                                allLabel="All Status"
-                                onSelect={(value) =>
-                                    setFilters((prev) => ({ ...prev, status: value }))
-                                }
-                            />
-
-                            <PillFilterDropdown
-                                label={filters.source.label}
-                                options={sourceOptions}
-                                allLabel="All Sources"
-                                onSelect={(value) =>
-                                    setFilters((prev) => ({ ...prev, source: value }))
-                                }
-                            />
-
-                            <PillFilterDropdown
-                                label={filters.stage.label}
-                                options={stageOptions}
-                                allLabel="All Stages"
-                                onSelect={(value) =>
-                                    setFilters((prev) => ({ ...prev, stage: value }))
-                                }
-                            />
-
-                            <PillFilterDropdown
-                                label={filters.label.label}
-                                options={labelOptions}
-                                allLabel="All Labels"
-                                onSelect={(value) =>
-                                    setFilters((prev) => ({ ...prev, label: value }))
-                                }
-                            />
-
-                            {/* Clear filters */}
-                            {(filters.form.value ||
-                                filters.date.value ||
-                                filters.status.value ||
-                                filters.source.value ||
-                                filters.assignedTo.value ||
-                                filters.stage.value ||
-                                filters.label.value) && (
-                                    <button
-                                        onClick={() =>
-                                            setFilters({
-                                                lead: { label: "All Leads", value: null },
-                                                campaign: { label: "All Campaigns", value: null },
-                                                form: { label: "All Forms", value: null },
-                                                date: { label: "All Dates", value: null },
-                                                status: { label: "All Status", value: null },
-                                                source: { label: "All Sources", value: null },
-                                                assignedTo: { label: "All Users", value: null },
-                                                label: { label: "All Labels", value: null },
-                                                stage: { label: "All Stages", value: null },
-                                                read: { label: "All", value: null },
-                                            })
-                                        }
-                                        className="
-            flex items-center gap-1
-            text-sm font-medium
-            text-[#847971]
-            hover:text-[#37322F]
-            transition
-          "
-                                    >
-                                        <X className="h-4 w-4" />
-                                        Clear
-                                    </button>
-                                )}
-                        </div>
-                    </div>
-                )}
-
 
             </div>
 
@@ -274,9 +160,18 @@ const Contacts = () => {
 
                     <tbody>
                         {contacts?.map((contact) => (
-                            <tr key={contact.id} className="even:bg-muted capitalize">
+                            <tr key={contact._id} className="even:bg-muted capitalize">
                                 <td className="p-3">
-                                    <input type="checkbox" />
+                                    <input type="checkbox"
+                                        checked={selectedContacts.includes(
+                                            contact._id
+                                        )}
+                                        onChange={() =>
+                                            handleSelectedContact(
+                                                contact._id
+                                            )
+                                        }
+                                    />
                                 </td>
                                 <td className="p-3 font-medium capitalize">{contact.name}</td>
                                 <td className="p-3 font-medium capitalize whitespace-nowrap">{contact.phone}</td>

@@ -30,7 +30,7 @@ type TContactStore = {
 };
 
 const initialContactQuery: TContactQuery = {
-    limit: 20,
+    limit: 14,
     search: "",
     source: "",
     status: "",
@@ -128,7 +128,7 @@ export const useContactStore = create<TContactStore>((set, get) => ({
         const { contacts, selectedContactId } = get();
 
         return contacts.find(
-            (contact) => contact.id === selectedContactId
+            (contact) => contact._id === selectedContactId
         );
     },
 })

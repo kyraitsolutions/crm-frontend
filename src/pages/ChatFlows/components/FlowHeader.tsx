@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { Plus } from "lucide-react";
 
 type Props = {
@@ -16,13 +17,14 @@ const FlowHeader = ({ onCreateFlow }: Props) => {
         </p>
       </div>
 
-      <Button
+      <ButtonWithTitle
+        title="Create chatflow"
         onClick={onCreateFlow}
-        className="gap-2 rounded-xl actions-btn p-2!"
+        className="gap-2 rounded-xl  flex items-center actions-btn p-2!"
       >
         <Plus size={18} />
         Create Flow
-      </Button>
+      </ButtonWithTitle>
     </div>
   );
 };

@@ -5,10 +5,10 @@ export const settingSections = [
       { label: "Profile", link: "/profile" },
       { label: "Company Details", link: "/company-details" },
       { label: "Notifications", link: "/notifications" },
-      { label: "Bot Filter", link: "/bot-filter" },
-      { label: "Subscription", link: "/subscription" },
-      { label: "Compliance Settings", link: "/compliance-settings" },
-      { label: "Manage Opt-in", link: "/manage-optin" },
+      // { label: "Bot Filter", link: "/bot-filter" },
+      // { label: "Subscription", link: "/subscription" },
+      // { label: "Compliance Settings", link: "/compliance-settings" },
+      // { label: "Manage Opt-in", link: "/manage-optin" },
     ],
   },
   {
@@ -19,15 +19,15 @@ export const settingSections = [
       { label: "Accounts & Workspaces", link: "/workspace" },
     ],
   },
-  {
-    title: "Campaign Policy",
-    items: [
-      { label: "Email Limits", link: "/email-limits" },
-      { label: "Campaign Tracking", link: "/campaign-tracking" },
-      { label: "Content Approval", link: "/content-approval" },
-      { label: "Export Policy", link: "/export-policy" },
-    ],
-  },
+  // {
+  //   title: "Campaign Policy",
+  //   items: [
+  //     { label: "Email Limits", link: "/email-limits" },
+  //     { label: "Campaign Tracking", link: "/campaign-tracking" },
+  //     { label: "Content Approval", link: "/content-approval" },
+  //     { label: "Export Policy", link: "/export-policy" },
+  //   ],
+  // },
   {
     title: "Channels",
     items: [
@@ -35,28 +35,28 @@ export const settingSections = [
       { label: "Telegram", link: "/telegram" },
       { label: "Instagram", link: "/instagram" },
       { label: "Facebook", link: "/facebook" },
-      { label: "Chatbot", link: "/chatbot" },
-      { label: "Webform", link: "/webform" },
+      // { label: "Chatbot", link: "/chatbot" },
+      // { label: "Webform", link: "/webform" },
     ],
   },
   
-  {
-    title: "Deliverability",
-    items: [
-      { label: "Manage Senders", link: "/manage-senders" },
-      { label: "Domain Authentication", link: "/domain-authentication" },
-      { label: "Custom Return Path", link: "/custom-return-path" },
-      { label: "Imprint Details", link: "/imprint-details" },
-    ],
-  },
-  {
-    title: "Customization",
-    items: [
-      { label: "Signup Pages and Emails", link: "/signup-pages" },
-      { label: "Custom Fields", link: "/custom-fields" },
-      { label: "Merge Tags", link: "/merge-tags" },
-    ],
-  },
+  // {
+  //   title: "Deliverability",
+  //   items: [
+  //     { label: "Manage Senders", link: "/manage-senders" },
+  //     { label: "Domain Authentication", link: "/domain-authentication" },
+  //     { label: "Custom Return Path", link: "/custom-return-path" },
+  //     { label: "Imprint Details", link: "/imprint-details" },
+  //   ],
+  // },
+  // {
+  //   title: "Customization",
+  //   items: [
+  //     { label: "Signup Pages and Emails", link: "/signup-pages" },
+  //     { label: "Custom Fields", link: "/custom-fields" },
+  //     { label: "Merge Tags", link: "/merge-tags" },
+  //   ],
+  // },
   
 
 {
@@ -64,21 +64,21 @@ export const settingSections = [
     items: [
       { label: "Chat Bot", link: "/chatbot" },
       { label: "Chat Flows", link: "/chatflows" },
-      { label: "AI Chatbot", link: "/ai-chatbot" },
+      // { label: "AI Chatbot", link: "/ai-chatbot" },
     ],
   },
     {
     title: "Integration",
     items: [
       { label: "Apps", link: "/integrations" },
-      // { label: "Marketplace", link: "/marketplace" },
+      { label: "Marketplace", link: "/marketplace" },
       // { label: "Integration Platforms", link: "/integration-platforms" },
     ],
   },
   {
     title: "Developer Space",
     items: [
-      { label: "APIs", link: "/apis" },
+      { label: "APIs", link: "https://api.kyraitsolutions.com/docs" },
       { label: "Webhook", link: "/webhook" },
     ],
   },

@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Notification from "@/pages/Notification/Notification";
 import { useNotificationStore } from "@/pages/Notification/store/notification.store";
 import ButtonWithTitle from "./ui/Buttons/ButtonWithTitle";
+import GlobalSearch from "./globalSearch/GlobalSearch";
 
 export function SiteHeader() {
   const navigate = useNavigate();
@@ -20,7 +21,14 @@ export function SiteHeader() {
   const baseUrl = `${ROUTES.DASHBOARD}/settings`;
 
   const [open, setOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState("");
   const [searchEnable, setSearchEnable] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
+
+  // Open popup when search has value
+  useEffect(() => {
+    setOpenSearch(search.trim().length > 0);
+  }, [search]);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -63,14 +71,15 @@ export function SiteHeader() {
             </button>
             {searchEnable && (
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                  searchEnable
-                    ? "opacity-100 translate-x-0 w-64"
-                    : "opacity-0 translate-x-full w-0"
-                }`}
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${searchEnable
+                  ? "opacity-100 translate-x-0 w-64"
+                  : "opacity-0 translate-x-full w-0"
+                  }`}
               >
                 <input
                   type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search anything..."
                   className="bg-gray-100 text-sm rounded-xl w-full py-2 px-3 focus:outline-none focus:ring-offset-2"
                 />
@@ -136,6 +145,7 @@ export function SiteHeader() {
       </div>
 
       <Notification open={open} setOpen={setOpen} />
+      <GlobalSearch search={search} openSearch={openSearch} setOpenSearch={setOpenSearch} />
       {/* <Notification open={open} setOpen={setOpen} /> */}
     </header>
   );

@@ -48,6 +48,7 @@ import type { DateRange } from "react-day-picker";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { DatePicker } from "@/components/ui/DatePicker/DatePicker";
+import { useAuthStore } from "@/stores";
 
 interface AnalyticsData {
   totalLeads: number;
@@ -123,7 +124,8 @@ interface AnalyticsData {
 }
 
 const DashboardAccount = () => {
-  const { ["accountId"]: accountId } = useParams();
+  // const { ["accountId"]: accountId } = useParams();
+  const { accountId } = useAuthStore((state) => state);
   // const { ["account-id"]: accountId } = useParams();
 
   const analyticsService = new AnalyticsService();
@@ -388,6 +390,7 @@ const DashboardAccount = () => {
   const getOverview = async () => {
     try {
       const response = await analyticsService.getOverview(String(accountId));
+      console.log("response", response)
       const data = await response.data;
 
       setFullAnalytics(data.data);
@@ -398,7 +401,7 @@ const DashboardAccount = () => {
 
   useEffect(() => {
     getOverview();
-  }, []);
+  }, [accountId]);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">

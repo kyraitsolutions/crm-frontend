@@ -7,4 +7,11 @@ export class AnalyticsService extends ApiService {
     ): Promise<ApiResponse<any>> {
         return await this.get(`/account/${accountId}/overview`);
     }
+    async getSearch(
+        accountId: string,
+        search:string
+    ): Promise<ApiResponse<any>> {
+        // return await this.get(`/account/${accountId}/overview`);
+        return await this.get(`/account/${accountId}/search?query=${search}`,);
+    }
 }

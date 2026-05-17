@@ -12,14 +12,16 @@ import { useAuthStore } from "@/stores";
 
 
 const ContactPopup = () => {
-    const { open, setOpen, createContact } = useContactStore((state) => state);
+    const { open, setOpen,
+        createContact
+    } = useContactStore((state) => state);
     const { accountId } = useAuthStore((state) => state)
 
     const {
         register,
         handleSubmit,
         watch,
-        reset,
+        // reset,
         formState: {
             errors,
             isSubmitting,
@@ -43,9 +45,8 @@ const ContactPopup = () => {
 
     const nameValue = watch("name") || "";
 
-    const onSubmit = async (data: TCreateContact) => {
-        const success = await createContact(data);
-
+    const onSubmit = async (data: z.input<typeof CreateContactSchema>) => {
+        await createContact(data as TCreateContact);
     };
 
     if (!open) return null;

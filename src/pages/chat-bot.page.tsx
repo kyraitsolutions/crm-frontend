@@ -47,7 +47,7 @@ export function ChatBotPage() {
 
       render: (row) => (
         <div>
-          <div className="font-medium text-gray-900">{row.name}</div>
+          <div className="font-medium text-gray-900 capitalize">{row.name}</div>
           <div className="text-sm text-gray-500">{row.description}</div>
         </div>
       ),

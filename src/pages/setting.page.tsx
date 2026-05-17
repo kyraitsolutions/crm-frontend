@@ -24,7 +24,7 @@ const SettingPage = () => {
             <div className="flex flex-col gap-4">
               {section.items.map((item, i) => (
                 <Link
-                  to={`${ROUTES.DASHBOARD}/settings${item.link}`}
+                  to={item.label === "APIs" ? item.link : `${ROUTES.DASHBOARD}/settings${item.link}`}
                   key={i}
                   className="text-left cursor-pointer text-sm text-primary hover:text-primary  transition"
                 >
