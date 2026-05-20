@@ -11,7 +11,7 @@ interface ButtonWithTitleProps {
 }
 
 const positionClasses = {
-    top: "top-1 left-56 -translate-x-1/2 mb-2",
+    top: "top-50 left-10 -translate-x-1/2 mb-2",
     bottom: "top- left -translate-x-1/2 mt-5 ml-10",
     left: "right-full top-1/2 -translate-y-1/2 mr-2",
     right: "left-full top-1/2 -translate-y-1/2 ml-2",
@@ -27,7 +27,7 @@ const ButtonWithTitle = ({
     position = "bottom",
 }: ButtonWithTitleProps) => {
     return (
-        <div className={`group`}>
+        <div className={`group relative`}>
             <button
                 disabled={disabled}
                 onClick={onClick}
@@ -37,7 +37,7 @@ const ButtonWithTitle = ({
 
             {title && <div
                 className={`
-                    absolute z-50 whitespace-nowrap shadow-xl border
+                    absolute z-[9999] whitespace-nowrap shadow-xl border
                     bg-white px-3 py-2 text-xs text-gray-600
                     opacity-0 pointer-events-none
                     transition-opacity duration-200 rounded

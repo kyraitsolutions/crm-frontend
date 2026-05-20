@@ -4,6 +4,7 @@ import { type RouteObject } from "react-router-dom";
 import { RequirePermission } from "./route-access/RequirePermission";
 import { PERMISSIONS } from "@/rbac";
 import AddLead from "@/pages/LeadCentre/AddLead";
+import LeadDetail from "@/pages/LeadCentre/components/LeadDetail";
 export const leadRoutes: RouteObject[] = [
   {
     path: LEADS_PATHS.ROOT,
@@ -24,6 +25,14 @@ export const leadRoutes: RouteObject[] = [
           </RequirePermission>
         ),
         path: "create",
+      },
+      {
+        element: (
+          <RequirePermission permission={PERMISSIONS.LEADS.CREATE}>
+            <LeadDetail />
+          </RequirePermission>
+        ),
+        path: "lead-details",
       },
       // {
       //     element: <LeadFormNew />,

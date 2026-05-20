@@ -3,6 +3,7 @@ import { Info, MessageSquareMore } from "lucide-react";
 import { useState } from "react";
 import { MdInfo, MdLocationOn } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
+import LeadDetail from "./components/LeadDetail";
 
 const AddLead = () => {
     const navigate = useNavigate();

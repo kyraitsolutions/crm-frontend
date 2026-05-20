@@ -822,7 +822,8 @@ export default function LeadsCentre() {
                 allLeads.map((lead: any) => (
                   <TableRow
                     key={lead.id}
-                    onClick={() => handleRowClick(lead)}
+                    // onClick={() => handleRowClick(lead)}
+                    onClick={() => navigate(`/dashboard/account/${accountId}/leads/lead-details`)}
                     className="
                     cursor-pointer
                     border-b border-border/30

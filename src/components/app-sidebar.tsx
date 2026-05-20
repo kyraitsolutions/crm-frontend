@@ -35,9 +35,10 @@ export function AppSidebar() {
   const { user: authUser, accountId } = useAuthStore((state) => state);
   const { permissions } = useAccountAccessStore((state) => state);
 
-  const handleAccountSwitch = (accountId: string) => {
+  const handleAccountSwitch = (accountId: string, accountName: string) => {
     const pathName = window.location.pathname;
     authManager.setLastSlugPath(pathName);
+    authManager.setAccountName(accountName);
     authManager.setAccountId(accountId);
     navigate(ACCOUNT_PATHS.byId(accountId));
   };
@@ -142,8 +143,8 @@ export function AppSidebar() {
           accounts={accounts}
           selectedAccountId={accountId || accounts[0]?.id}
           collapsed={collapsed}
-          onSwitch={(accountId) => {
-            handleAccountSwitch(accountId);
+          onSwitch={(accountId, accountName) => {
+            handleAccountSwitch(accountId, accountName);
           }}
         />
       </div>
