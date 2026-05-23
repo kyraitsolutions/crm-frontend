@@ -1,24 +1,26 @@
 import { Clock, Link } from 'lucide-react';
 import { useState } from 'react'
 
-const Notes = () => {
+const Notes = ({ notes: initialNotes }: { notes: any[] }) => {
     const [showNoteEditor, setShowNoteEditor] = useState(false);
     const [noteTitle, setNoteTitle] = useState("");
     const [showNotes, setShowNotes] = useState(true);
-    const [notes, setNotes] = useState([
-        {
-            id: 1,
-            title: "gfhfg",
-            createdBy: "Abhijeet Singh",
-            time: "now",
-        },
-        {
-            id: 2,
-            title: "dfhfghfg",
-            createdBy: "Abhijeet Singh",
-            time: "now",
-        },
-    ]);
+    // const [notes, setNotes] = useState(initialNotes);
+    // const [notes, setNotes] = useState([
+    //     {
+
+    //         id: 1,
+    //         title: "gfhfg",
+    //         createdBy: "Abhijeet Singh",
+    //         time: "now",
+    //     },
+    //     {
+    //         id: 2,
+    //         title: "dfhfghfg",
+    //         createdBy: "Abhijeet Singh",
+    //         time: "now",
+    //     },
+    // ]);
 
     const handleSaveNote = () => {
         if (!noteTitle.trim()) return;
@@ -30,10 +32,12 @@ const Notes = () => {
             time: "now",
         };
 
-        setNotes((prev) => [newNote, ...prev]);
+        // setNotes((prev) => [newNote, ...prev]);
         setNoteTitle("");
         setShowNoteEditor(false);
     };
+
+    console.log("Notes", initialNotes)
     return (
         <div className="bg-white rounded-xl overflow-hidden">
             {/* Header */}
@@ -57,42 +61,49 @@ const Notes = () => {
             {showNotes && <div className="p-5">
                 {/* Existing Notes */}
                 <div className="space-y-7 mb-5">
-                    {notes.map((note) => (
+                    {initialNotes.map((note) => (
                         <div
-                            key={note.id}
+                            key={note._id}
                             className="flex gap-4"
                         >
-                            {/* Avatar */}
                             <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-medium text-md shrink-0">
-                                {note.createdBy.charAt(0)}
+                                {note?.createdBy?.charAt(0)}
                             </div>
+                            <div className="flex flex-col gap-2">
+                                {/* Avatar */}
 
-                            {/* Content */}
-                            <div>
-                                <h3 className="text-sm font-medium capitalize">
-                                    {note.title}
-                                </h3>
+                                <div className='capitalize text-xs text-gray-600 bg-gray-200 w-fit px-2 py-1 rounded-xl flex items-center gap-2'>
+                                    <span>Had conversation on</span> {note.activitySource}
+                                </div>
 
-                                <div className="flex items-center gap-2 mt-2 text-sm text-[#5b6b82] flex-wrap">
-                                    <span>Lead</span>
+                                {/* Content */}
+                                <div>
+                                    <h3 className="text-sm font-medium capitalize">
+                                        {note.message}
+                                    </h3>
 
-                                    <span className="text-[#4f46e5] cursor-pointer hover:underline">
-                                        Yvonne Tjepkema (Sa...
-                                    </span>
+                                    <div className="flex items-center gap-2 text-sm text-[#5b6b82] flex-wrap">
+                                        <span>Lead</span>
 
-                                    <span>•</span>
+                                        <span className="text-[#4f46e5] cursor-pointer hover:underline">
+                                            Yvonne Tjepkema (Sa...
+                                        </span>
 
-                                    <span>Add Note</span>
+                                        <span>•</span>
 
-                                    <span>•</span>
+                                        <span>Add Note</span>
 
-                                    <span><Clock size={14} /></span>
+                                        <span>•</span>
 
-                                    <span>{note.time}</span>
+                                        <span><Clock size={14} /></span>
 
-                                    <span>by {note.createdBy}</span>
+                                        <span>{note.time}</span>
+
+                                        <span>by {note.createdBy}</span>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     ))}
                 </div>

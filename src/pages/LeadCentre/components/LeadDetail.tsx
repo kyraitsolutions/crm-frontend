@@ -1,7 +1,5 @@
-import { useState } from "react";
-import {
-    Clock3,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Clock3, } from "lucide-react";
 import Notes from "./Notes";
 import Overview from "./Overview";
 import DetailCard from "./DetailCard";
@@ -10,6 +8,10 @@ import LeadHeader from "./LeadHeader";
 import Timeline from "./Timeline";
 import Attachment from "./Attachment";
 import EmailEditor from "./EmailEditor";
+import { useParams } from "react-router-dom";
+import { LeadService } from "@/services/lead.service";
+import { useAuthStore } from "@/stores";
+import { timeAgo } from "@/utils/date.utils";
 
 interface Lead {
     name: string;
@@ -20,10 +22,11 @@ interface Lead {
     mobile: string;
     status: string;
     title: string;
-    source: string;
+    source: { name: string };
     website: string;
     notes: string[];
-    attachments: string[]
+    attachments: string[],
+    updatedAt?: string;
 }
 
 const leadData: Lead = {
@@ -35,33 +38,62 @@ const leadData: Lead = {
     mobile: "555-555-5555",
     status: "Pre-Qualified",
     title: "Office Assistant III",
-    source: "External Referral",
+    source: { name: "External Referral" },
     website: "http://www.feltzprintingservice.com",
     notes: ["kya hal hein", "kuch nhi"],
-    attachments: ["kya hal hein", "kuch nhi", "thik hai"]
+    attachments: ["kya hal hein", "kuch nhi", "thik hai"],
+    updatedAt: "2023-10-10T10:00:00Z"
 };
 
 
 
 
 const LeadDetail = () => {
-
+    const { leadId } = useParams();
+    const { accountId } = useAuthStore((state) => state);
+    const leadService = new LeadService();
     const [activeTab, setActiveTab] = useState("overview");
     const [openEmailEditor, setOpenEmailEditor] = useState(false);
+
+    const [lead, setLead] = useState<Lead | null>(null);
+
+    const getLead = async () => {
+        try {
+            const response = await leadService.getLead(String(accountId), leadId || "");
+            console.log("🚀 ~ file: LeadDetail.tsx:22 ~ getLeads ~ response:", response)
+
+            if (response.status === 200 || response.status === 201) {
+                setLead(response.data?.doc || {});
+                // leadStoreManager.setLeads(response.data?.docs || []);
+                // setTotalItems(response.data?.pagination?.totalDocs);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            // setIsLoadingLeads(false);
+        }
+    };
+    useEffect(() => {
+        getLead();
+        // calculateBasicNumber()
+    }, [leadId]);
+
+    console.log("🚀 ~ file: LeadDetail.tsx:24 ~ LeadDetail ~ leadId:", leadId)
+
 
 
     return (
         <div className="h-screen bg-[#f4f5f8] flex flex-col hide-scrollbar ">
             {/* Header */}
-            <LeadHeader onClick={() => setOpenEmailEditor((prev) => !prev)} />
+            <LeadHeader lead={lead} onClick={() => setOpenEmailEditor((prev) => !prev)} />
             {/* Sidebar */}
             <div className="flex overflow-hidden">
 
                 {/* Side bar */}
                 <Sidebar
                     counts={{
-                        notes: leadData.notes.length,
-                        attachments: leadData.attachments.length,
+                        notes: lead?.notes?.length || 0,
+                        attachments: lead?.attachments?.length || 0,
                         emails: 5,
                         campaigns: 2,
                     }}
@@ -96,7 +128,8 @@ const LeadDetail = () => {
 
                             <div className="flex items-center gap-2 text-[#64748b] text-sm">
                                 <Clock3 size={16} />
-                                Last Update : 56 day(s) ago
+                                Last Update : {timeAgo(lead?.updatedAt || "")}
+
                             </div>
                         </div>
                     </div>
@@ -104,13 +137,13 @@ const LeadDetail = () => {
                     {/* Scrollable Body */}
                     {activeTab === "overview" && <div className="flex-1 overflow-y-auto p-5 space-y-5 hide-scrollbar">
                         {/* Overview Card */}
-                        <Overview />
+                        <Overview lead={lead} />
 
                         {/* Details Section */}
-                        <DetailCard />
+                        <DetailCard lead={lead} />
 
                         {/* Notes Section */}
-                        <Notes />
+                        <Notes notes={lead?.notes || []} />
 
                         {/* Attachment */}
                         <Attachment />

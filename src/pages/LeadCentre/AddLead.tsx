@@ -1,9 +1,10 @@
 import { sourceOptions, stageOptions, statusOptions } from "@/constants";
-import { Info, MessageSquareMore } from "lucide-react";
+import { ChevronLeft, Info, MessageSquareMore } from "lucide-react";
 import { useState } from "react";
 import { MdInfo, MdLocationOn } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import LeadDetail from "./components/LeadDetail";
+import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 
 const AddLead = () => {
     const navigate = useNavigate();
@@ -73,6 +74,11 @@ const AddLead = () => {
 
     return (
         <div className=" bg-linear-to-b from-green-50 to-orange-50 p-6">
+            <div className="flex items-center gap-4">
+                <ButtonWithTitle onClick={() => navigate(`/dashboard/account/${accountId}/leads`)} title="Go back to leads" className="flex items-center">
+                    <ChevronLeft className="text-slate-600" /> Go Back
+                </ButtonWithTitle>
+            </div>
             <div className="mx-auto max-w-4xl">
 
                 <div className="mb-6">

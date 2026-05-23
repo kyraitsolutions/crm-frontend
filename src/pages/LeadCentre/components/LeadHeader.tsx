@@ -13,8 +13,9 @@ interface Lead {
     mobile: string;
     status: string;
     title: string;
-    source: string;
+    source: { name: string };
     website: string;
+    profileImage?: string;
 }
 
 const leadData: Lead = {
@@ -26,15 +27,16 @@ const leadData: Lead = {
     mobile: "555-555-5555",
     status: "Pre-Qualified",
     title: "Office Assistant III",
-    source: "External Referral",
+    source: { name: "External Referral" },
     website: "http://www.feltzprintingservice.com",
 };
 
 
 interface LeadHeaderProps {
     onClick: () => void;
+    lead: Lead | null;
 }
-const LeadHeader = ({ onClick }: LeadHeaderProps) => {
+const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
     const { accountId } = useAuthStore((state) => state);
     const navigate = useNavigate();
     return (
@@ -47,18 +49,28 @@ const LeadHeader = ({ onClick }: LeadHeaderProps) => {
                             <ChevronLeft className="text-slate-600" />
                         </ButtonWithTitle>
 
-                        <img
-                            src="https://i.pravatar.cc/80?img=5"
-                            alt="profile"
-                            className="w-10 h-10 rounded-md"
-                        />
+                        {lead?.profileImage ? (
+                            <img
+                                src={lead.profileImage}
+                                alt="profile"
+                                className="w-10 h-10 rounded-md"
+                            />
+                        ) : (
+                            <div className="w-10 h-10 rounded-md bg-gray-300 flex items-center justify-center">
+                                <span className="text-gray-600 text-lg font-bold">
+                                    {lead?.name?.charAt(0) || "U"}
+                                </span>
+                            </div>
+                        )
+
+                        }
 
                         <div>
                             <h1 className="text-md font-medium ">
-                                {leadData.name}
+                                {lead?.name}
                                 <span className=" text-gray-500">
                                     {" "}
-                                    - {leadData.company}
+                                    - {lead?.company || "Company Name"}
                                 </span>
                             </h1>
 

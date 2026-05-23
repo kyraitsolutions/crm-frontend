@@ -9,7 +9,9 @@ interface Lead {
     mobile: string;
     status: string;
     title: string;
-    source: string;
+    source: {
+        name: string;
+    };
     website: string;
 }
 
@@ -22,10 +24,12 @@ const leadData: Lead = {
     mobile: "555-555-5555",
     status: "Pre-Qualified",
     title: "Office Assistant III",
-    source: "External Referral",
+    source: {
+        name: "External Referral"
+    },
     website: "http://www.feltzprintingservice.com",
 };
-const DetailCard = () => {
+const DetailCard = ({ lead }: { lead: Lead | null }) => {
     const [hideDetails, setHideDetails] = useState(true);
 
     return (
@@ -45,29 +49,29 @@ const DetailCard = () => {
                         <div>
                             <FieldRow
                                 label="Lead Owner"
-                                value={leadData.owner}
+                                value={lead?.owner || "Assignee--"}
                             />
 
                             <FieldRow
                                 label="Title"
-                                value={leadData.title}
+                                value={lead?.title || ""}
                             />
 
                             <FieldRow
                                 label="Phone"
-                                value={leadData.phone}
+                                value={lead?.phone || ""}
                                 isPhone
                             />
 
                             <FieldRow
                                 label="Mobile"
-                                value={leadData.mobile}
+                                value={lead?.phone || ""}
                                 isPhone
                             />
 
                             <FieldRow
                                 label="Lead Source"
-                                value={leadData.source}
+                                value={lead?.source.name || ""}
                             />
                         </div>
 
@@ -75,27 +79,27 @@ const DetailCard = () => {
                         <div>
                             <FieldRow
                                 label="Company"
-                                value={leadData.company}
+                                value={lead?.company || ""}
                             />
 
                             <FieldRow
                                 label="Lead Name"
-                                value={leadData.name}
+                                value={lead?.name || ""}
                             />
 
                             <FieldRow
                                 label="Email"
-                                value={leadData.email}
+                                value={lead?.email || ""}
                             />
 
                             <FieldRow
                                 label="Website"
-                                value={leadData.website}
+                                value={lead?.website || ""}
                             />
 
                             <FieldRow
                                 label="Lead Status"
-                                value={leadData.status}
+                                value={lead?.status || ""}
                             />
                         </div>
                     </div>
@@ -136,23 +140,23 @@ const DetailCard = () => {
                         <div>
                             <FieldRow
                                 label="Most Recent Visit"
-                                value={leadData.owner}
+                                value={lead?.owner || "Assignee--"}
                             />
 
                             <FieldRow
                                 label="Average Time Spent (Minutes)"
-                                value={leadData.title}
+                                value={lead?.title || ""}
                             />
 
                             <FieldRow
                                 label="Referrer"
-                                value={leadData.phone}
+                                value={lead?.phone || ""}
                                 isPhone
                             />
 
                             <FieldRow
                                 label="First Visit"
-                                value={leadData.mobile}
+                                value={lead?.phone || ""}
                                 isPhone
                             />
 
@@ -162,22 +166,22 @@ const DetailCard = () => {
                         <div>
                             <FieldRow
                                 label="First Page Visited"
-                                value={leadData.company}
+                                value={lead?.company || ""}
                             />
 
                             <FieldRow
                                 label="Number Of Chats"
-                                value={leadData.name}
+                                value={lead?.name || ""}
                             />
 
                             <FieldRow
                                 label="Visitor Score"
-                                value={leadData.email}
+                                value={lead?.email || ""}
                             />
 
                             <FieldRow
                                 label="Days Visited"
-                                value={leadData.website}
+                                value={lead?.website || ""}
                             />
 
                         </div>

@@ -8,7 +8,9 @@ interface Lead {
     mobile: string;
     status: string;
     title: string;
-    source: string;
+    source: {
+        name: string;
+    };
     website: string;
 }
 
@@ -21,34 +23,34 @@ const leadData: Lead = {
     mobile: "555-555-5555",
     status: "Pre-Qualified",
     title: "Office Assistant III",
-    source: "External Referral",
+    source: { name: "External Referral" },
     website: "http://www.feltzprintingservice.com",
 };
-const Overview = () => {
+const Overview = ({ lead }: { lead: Lead | null }) => {
     return (
         <div className="bg-white rounded-xl py-8">
             <div className="max-w-4xl mx-auto">
                 <FieldRow
                     label="Lead Owner"
-                    value={leadData.owner}
+                    value={lead?.owner || "Assignee--"}
                 />
                 <FieldRow
                     label="Email"
-                    value={leadData.email}
+                    value={lead?.email || ""}
                 />
                 <FieldRow
                     label="Phone"
-                    value={leadData.phone}
+                    value={lead?.phone || ""}
                     isPhone
                 />
                 <FieldRow
                     label="Mobile"
-                    value={leadData.mobile}
+                    value={lead?.phone || ""}
                     isPhone
                 />
                 <FieldRow
                     label="Lead Status"
-                    value={leadData.status}
+                    value={lead?.status || ""}
                 />
             </div>
         </div>

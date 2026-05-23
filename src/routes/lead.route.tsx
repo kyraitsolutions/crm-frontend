@@ -1,10 +1,11 @@
 import { LEADS_PATHS } from "@/constants/routes/leads.path";
-import LeadsCentre from "@/pages/leads-center.page";
 import { type RouteObject } from "react-router-dom";
 import { RequirePermission } from "./route-access/RequirePermission";
 import { PERMISSIONS } from "@/rbac";
 import AddLead from "@/pages/LeadCentre/AddLead";
 import LeadDetail from "@/pages/LeadCentre/components/LeadDetail";
+import LeadCenter from "@/pages/LeadCentre/leadCentre.page";
+// import LeadsCentre from "@/pages/leads-center.page";
 export const leadRoutes: RouteObject[] = [
   {
     path: LEADS_PATHS.ROOT,
@@ -13,7 +14,8 @@ export const leadRoutes: RouteObject[] = [
       {
         element: (
           <RequirePermission permission={PERMISSIONS.LEADS.VIEW}>
-            <LeadsCentre />
+            <LeadCenter />
+            {/* <LeadsCentre /> */}
           </RequirePermission>
         ),
         index: true,
@@ -32,7 +34,7 @@ export const leadRoutes: RouteObject[] = [
             <LeadDetail />
           </RequirePermission>
         ),
-        path: "lead-details",
+        path: ":leadId/lead-details",
       },
       // {
       //     element: <LeadFormNew />,

@@ -6,6 +6,7 @@ export const LeadSchema = z.object({
   name: z.string().min(1),
   email: z.string().optional(), // can be empty string
   phone: z.string().optional(),
+  message: z.string().optional(),
   customFields: z.record(z.string(), z.any()).optional(), // empty object allowed
   stage: z.string().min(1),
   status: z.string().min(1),

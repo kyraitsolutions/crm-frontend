@@ -6,16 +6,11 @@ import {
   IconChevronRight,
   IconDashboard,
   IconFileText,
-  IconMessageCircle,
   IconUsers,
 } from "@tabler/icons-react";
-import { BookTemplateIcon } from "lucide-react";
 import { useState } from "react";
 import {
-  MdEmail,
-  MdOutlineCampaign,
   MdOutlineContacts,
-  MdWhatsapp,
 } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
@@ -25,6 +20,7 @@ import { SidebarFooter } from "./ui/sidebar";
 import { hasPermission, PERMISSIONS } from "@/rbac";
 import { useAccountAccessStore } from "@/stores/account-access.store";
 import { ACCOUNT_PATHS } from "@/constants/routes";
+import { Gauge, MessagesSquare } from "lucide-react";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -49,13 +45,13 @@ export function AppSidebar() {
         title: "Dashboard",
         url: ACCOUNT_PATHS.byId(String(accountId)),
         active: true,
-        icon: IconDashboard,
+        icon: Gauge,
       },
       {
         title: "Live Chat",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/live-chat`,
         active: true,
-        icon: IconDashboard,
+        icon: MessagesSquare,
       },
 
       {
@@ -76,29 +72,29 @@ export function AppSidebar() {
         icon: IconFileText,
         active: hasPermission(permissions, PERMISSIONS.LEADS_FORMS.VIEW),
       },
-      {
-        title: "Broadcast",
-        url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast`,
-        icon: MdOutlineCampaign,
-        active: true,
-        children: [
-          {
-            title: "Email",
-            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/email`,
-            icon: MdEmail,
-          },
-          {
-            title: "WhatsApp",
-            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
-            icon: MdWhatsapp,
-          },
-          {
-            title: "Templates",
-            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/templates`,
-            icon: BookTemplateIcon,
-          },
-        ],
-      },
+      // {
+      //   title: "Broadcast",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast`,
+      //   icon: MdOutlineCampaign,
+      //   active: true,
+      //   children: [
+      //     {
+      //       title: "Email",
+      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/email`,
+      //       icon: MdEmail,
+      //     },
+      //     {
+      //       title: "WhatsApp",
+      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
+      //       icon: MdWhatsapp,
+      //     },
+      //     {
+      //       title: "Templates",
+      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/templates`,
+      //       icon: BookTemplateIcon,
+      //     },
+      //   ],
+      // },
       {
         title: "Contacts",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/contacts`,
