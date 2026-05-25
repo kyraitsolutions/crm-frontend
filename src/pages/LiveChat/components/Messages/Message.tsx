@@ -1,11 +1,11 @@
 import type { TMessage } from "../../types/message.type";
-import TextMessage from "./TextMessage";
-import InteractiveMessage from "./InteractiveMessage";
-import QuestionMessage from "./QuestionMessage";
-import MessageWrapper from "./MessageWraper";
-import ImageMessage from "./ImageMessage";
-import VideoMessage from "./VideoMessage";
 import DocumentMessage from "./DocumentMessage";
+import ImageMessage from "./ImageMessage";
+import InteractiveMessage from "./InteractiveMessage";
+import MessageWrapper from "./MessageWraper";
+import QuestionMessage from "./QuestionMessage";
+import TextMessage from "./TextMessage";
+import VideoMessage from "./VideoMessage";
 
 const Message = ({ message }: { message: TMessage }) => {
   const isIncoming = message.from === "user";

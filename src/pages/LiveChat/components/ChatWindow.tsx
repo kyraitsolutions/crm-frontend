@@ -10,9 +10,8 @@ import { ChatMessagesSkeleton } from "./skeletons/ChatMessageSkelton";
 import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDisplayName";
 
 const ChatWindow = () => {
-  const { selectedConversationId, conversations } = useConversationStore(
-    (state) => state,
-  );
+  const { selectedConversationId, conversations, selectedMessageId } =
+    useConversationStore((state) => state);
   const { fetchMessages, messages, appendMessage, loadingMessages } =
     useMessageStore((state) => state);
 
@@ -85,7 +84,7 @@ const ChatWindow = () => {
       {loadingMessages ? (
         <ChatMessagesSkeleton />
       ) : (
-        <ChatArea messages={messages} />
+        <ChatArea messages={messages} selectedMessageId={selectedMessageId} />
       )}
       <ChatMessagebox />
     </div>

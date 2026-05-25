@@ -7,9 +7,10 @@ import { formatChatDate } from "../utils/date.utils";
 
 type ChatAreaProps = {
   messages: TMessage[] | [];
+  selectedMessageId?: string | null;
 };
 
-const ChatArea = ({ messages }: ChatAreaProps) => {
+const ChatArea = ({ messages, selectedMessageId }: ChatAreaProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Auto scroll to bottom
@@ -19,6 +20,19 @@ const ChatArea = ({ messages }: ChatAreaProps) => {
 
     container.scrollTop = container.scrollHeight;
   }, [messages]);
+
+  useLayoutEffect(() => {
+    if (!selectedMessageId) return;
+
+    const element = document.getElementById(`message-${selectedMessageId}`);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [selectedMessageId]);
 
   return (
     <div
@@ -34,7 +48,7 @@ const ChatArea = ({ messages }: ChatAreaProps) => {
             !isSameDay(previousMessage.createdAt, message.createdAt);
 
           return (
-            <div key={message.messageId}>
+            <div key={message.messageId} id={`message-${message.messageId}`}>
               {showDateSeparator && (
                 <DateSeparator date={formatChatDate(message.createdAt)} />
               )}

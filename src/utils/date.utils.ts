@@ -45,3 +45,25 @@ export const timeAgo = (date: string | Date): string => {
   const diffInYears = Math.floor(diffInMonths / 12);
   return `${diffInYears} year${diffInYears > 1 ? "s" : ""} ago`;
 };
+
+export const formatChartDate = (dateString: string) => {
+  console.log(dateString);
+  const [_, month, day] = dateString.split("-");
+
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  return `${months[Number(month) - 1]} ${Number(day)}`;
+};

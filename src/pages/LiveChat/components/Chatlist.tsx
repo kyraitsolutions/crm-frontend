@@ -9,6 +9,7 @@ import { ChatListSkeleton } from "./skeletons/ChatListSkeleton";
 import Loader from "@/components/Loader";
 import { formatTime } from "@/utils/date-utils";
 import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDisplayName";
+import { highlightText } from "@/utils/highlightText";
 
 interface ChatListProps {
   conversationList: TConversation[] | [];
@@ -23,8 +24,12 @@ interface ChatListProps {
 // };
 const Chatlist = ({ conversationList }: ChatListProps) => {
   const [activeChat, setActiveChat] = useState<string | null>(null);
-  const { isRefetching, isLoadingMore, setSelectConversationId } =
-    useConversationStore((state) => state);
+  const {
+    isRefetching,
+    isLoadingMore,
+    setSelectConversationId,
+    conversationQuery,
+  } = useConversationStore((state) => state);
 
   if (isRefetching) {
     return <ChatListSkeleton />;
@@ -57,6 +62,7 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
             conv?.profile?.displayName ||
             buildAndGetVisitorDisplayNameByVisitorId(conv?.visitorId);
 
+          const previewText = conv.searchPreview || null;
           const lastMessage = conv?.lastMessage?.text || "No messages yet";
 
           return (
@@ -64,7 +70,7 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
               key={conv.id}
               onClick={() => {
                 setActiveChat(conv.id);
-                setSelectConversationId(conv.id);
+                setSelectConversationId(conv.id, conv?.matchedMessageId);
               }}
               className={`flex gap-3 ${activeChat === conv.id && "bg-primary/10"} hover:bg-primary/10 cursor-pointer group flex items-center w-full py-4 px-4 border-b border-gray-100 transition-all`}
             >
@@ -101,8 +107,9 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
               <div className="flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <h3
-                    className={`truncate ${activeChat === conv.id ? "font-semibold" : "font-medium"
-                      } text-gray-700`}
+                    className={`truncate ${
+                      activeChat === conv.id ? "font-semibold" : "font-medium"
+                    } text-gray-700`}
                   >
                     {name}
                   </h3>
@@ -113,9 +120,13 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
                 </div>
 
                 <div className="flex items-center justify-between gap-2 mt-1">
-                  <p className="text-sm text-gray-500 ">
-                    {lastMessage?.slice(0, 30)}...
-                  </p>
+                  {previewText ? (
+                    highlightText(previewText, conversationQuery?.search)
+                  ) : (
+                    <p className="text-sm text-gray-500 ">
+                      {lastMessage?.slice(0, 30)}...
+                    </p>
+                  )}
 
                   {conv.unreadCount > 0 && (
                     <span className="min-w-5 h-5 px-1 flex items-center justify-center rounded-full bg-primary/90 text-white text-xs font-medium">

@@ -36,6 +36,7 @@ type TConversationStore = {
   conversationQuery: TConversationQuery;
   currentAccountId: string | null;
   conversationCache: TConversationCache;
+  selectedMessageId: string | null;
 
   isInitialLoading: boolean;
   isRefetching: boolean;
@@ -43,7 +44,10 @@ type TConversationStore = {
   isLoadingMore: boolean;
 
   fetchConversations: (accountId: string) => Promise<void>;
-  setSelectConversationId: (conversationId: string) => void;
+  setSelectConversationId: (
+    conversationId: string,
+    messageId?: string | null,
+  ) => void;
   getSelectedConversation: () => TConversation | undefined;
   updateConversationRealtime: ({
     message,
@@ -81,6 +85,8 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
     status: [],
     tags: [],
   },
+  selectedMessageId: null,
+  search: "",
   conversationCache: {},
   hasMore: false,
   isInitialLoading: true,
@@ -170,7 +176,10 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
     }
   },
 
-  setSelectConversationId: (conversationId: string) => {
+  setSelectConversationId: (
+    conversationId: string,
+    messageId?: string | null,
+  ) => {
     set({
       selectedConversationId: conversationId,
       isLoadingMore: false,
@@ -179,6 +188,7 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
         unreadCount:
           conversation.id === conversationId ? 0 : conversation.unreadCount,
       })),
+      selectedMessageId: messageId || null,
     });
   },
 

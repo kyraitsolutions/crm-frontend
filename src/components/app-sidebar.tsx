@@ -1,12 +1,14 @@
+import { ACCOUNT_PATHS } from "@/constants/routes";
 import { cn } from "@/lib/utils";
+import { hasPermission, PERMISSIONS } from "@/rbac";
 import { AuthStoreManager, useAuthStore } from "@/stores";
+import { useAccountAccessStore } from "@/stores/account-access.store";
 import { useAccountsStore } from "@/stores/accounts.store";
 import {
   IconChevronLeft,
   IconChevronRight,
   IconDashboard,
   IconFileText,
-  IconMessageCircle,
   IconUsers,
 } from "@tabler/icons-react";
 import { BookTemplateIcon } from "lucide-react";
@@ -22,9 +24,6 @@ import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { SidebarFooter } from "./ui/sidebar";
-import { hasPermission, PERMISSIONS } from "@/rbac";
-import { useAccountAccessStore } from "@/stores/account-access.store";
-import { ACCOUNT_PATHS } from "@/constants/routes";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -111,7 +110,7 @@ export function AppSidebar() {
     <aside
       className={cn(
         "h-full bg-gray-50 border-r flex flex-col transition-all duration-300",
-        collapsed ? "w-18" : "w-90",
+        collapsed ? "w-18" : "w-64",
       )}
     >
       {/* Logo */}
@@ -121,7 +120,11 @@ export function AppSidebar() {
             to="/"
             className={`font-semibold  text-lg text-primary h-16 whitespace-nowrap overflow-x-hidden flex items-center gap-2`}
           >
-            <img src="/Kyra4.jpg" alt="Logo" className="inline-block w-full overflow-hidden h-10" />
+            <img
+              src="/Kyra4.jpg"
+              alt="Logo"
+              className="inline-block w-full overflow-hidden h-10"
+            />
           </Link>
         )}
 

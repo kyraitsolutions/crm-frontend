@@ -1,13 +1,17 @@
 import { Filter } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { useConversationStore } from "../store/conversation.store";
+import useDebounce from "@/hooks/useDebounce";
+import { Input } from "@/components/ui/input";
 
 const ChatFilter = () => {
   const [activeFilter, setActiveFilter] = useState("all");
+  const [search, setSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
   const [appliedFilter, setAppliedFilter] = useState<string[]>([]);
 
+  const debouncedSearch = useDebounce(search, 500);
   const { updateConversationQuery } = useConversationStore((state) => state);
 
   const filters = [
@@ -50,20 +54,27 @@ const ChatFilter = () => {
     });
   };
 
+  useEffect(() => {
+    updateConversationQuery({
+      search: debouncedSearch,
+    });
+  }, [debouncedSearch]);
+
   return (
     <div className="flex flex-col gap-2 py-2 mt-1 relative">
       <div className="flex items-center justify-between px-3">
         <h1 className="text-lg font-semibold">Chats</h1>
         <button className="flex items-center gap-1 text-sm cursor-pointer font-medium text-white bg-second rounded-xl py-1 px-2 hover:bg-second/90">
-          <MdAdd size={24} className="text-white" />
+          <MdAdd size={14} className="text-white" />
         </button>
       </div>
 
       <div className="px-3 flex items-center gap-2">
-        <input
+        <Input
           type="text"
+          onChange={(e) => setSearch(e.target.value)}
           placeholder="Filter conversations"
-          className="bg-gray-100 text-sm rounded-xl w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="input-field"
         />
         <button
           onClick={() => setFilterOpen(!filterOpen)}
