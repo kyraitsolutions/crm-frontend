@@ -60,11 +60,11 @@ const LiveChat = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[3fr_6fr_4fr]  ">
-      <div className="bg-white  w-full overflow-hidden h-full ">
+      <div className="bg-white  w-full overflow-hidden h-full  ">
         <ChatFilter />
 
         <div
-          className="h-[50vh] border overflow-y-auto hide-scrollbar"
+          className=" bg- overflow-y-auto hide-scrollbar"
           onScroll={(e) => handleScroll(e)}
         >
           <Chatlist conversationList={conversations || []} />

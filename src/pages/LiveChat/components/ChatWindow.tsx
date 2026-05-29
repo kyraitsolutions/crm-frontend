@@ -68,7 +68,7 @@ const ChatWindow = () => {
   }
 
   const selectedConversation = conversations.find(
-    (conversation) => conversation._id === selectedConversationId,
+    (conversation) => conversation.id === selectedConversationId,
   );
 
   return (

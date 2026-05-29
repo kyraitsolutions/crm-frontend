@@ -48,6 +48,7 @@ import type { DateRange } from "react-day-picker";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { DatePicker } from "@/components/ui/DatePicker/DatePicker";
+import { useAuthStore } from "@/stores";
 
 interface AnalyticsData {
   totalLeads: number;
@@ -123,7 +124,8 @@ interface AnalyticsData {
 }
 
 const DashboardAccount = () => {
-  const { ["accountId"]: accountId } = useParams();
+  // const { ["accountId"]: accountId } = useParams();
+  const { accountId } = useAuthStore((state) => state);
   // const { ["account-id"]: accountId } = useParams();
 
   const analyticsService = new AnalyticsService();
@@ -352,11 +354,10 @@ const DashboardAccount = () => {
               text-xs font-medium
               max-md:w-full
               transition
-              ${
-                active
-                  ? "bg-primary text-[#FBFAF9]"
-                  : "text-[#37322F] hover:bg-[#EFEDEB]"
-              }
+              ${active
+                          ? "bg-primary text-[#FBFAF9]"
+                          : "text-[#37322F] hover:bg-[#EFEDEB]"
+                        }
             `}
                     >
                       {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -706,9 +707,8 @@ const DashboardAccount = () => {
                       <div
                         className="h-full transition-all"
                         style={{
-                          width: `${
-                            (source.count / (data?.totalLeads || 1)) * 100
-                          }%`,
+                          width: `${(source.count / (data?.totalLeads || 1)) * 100
+                            }%`,
                           backgroundColor: source.color,
                         }}
                       />
@@ -716,11 +716,10 @@ const DashboardAccount = () => {
                     <div className="flex min-w-20 items-center gap-2 text-sm">
                       <span className="font-semibold">{source.count}</span>
                       <span
-                        className={`flex items-center gap-0.5 ${
-                          source.trend >= 0
+                        className={`flex items-center gap-0.5 ${source.trend >= 0
                             ? "text-[#21733F]"
                             : "text-destructive"
-                        }`}
+                          }`}
                       >
                         {source.trend >= 0 ? (
                           <TrendingUp className="h-3 w-3" />
@@ -751,7 +750,7 @@ const DashboardAccount = () => {
                 <LineChart data={data?.monthlyEngagement}>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    // stroke="hsl(var(--border))"
+                  // stroke="hsl(var(--border))"
                   />
                   <XAxis
                     dataKey="month"

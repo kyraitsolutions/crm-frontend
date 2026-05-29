@@ -14,7 +14,7 @@ type Account = {
 type Props = {
   accounts: Account[];
   selectedAccountId?: string;
-  onSwitch: (accountId: string) => void;
+  onSwitch: (accountId: string, accountName: string) => void;
   collapsed?: boolean;
 };
 
@@ -97,7 +97,7 @@ export function AccountSwitcher({
           />
 
           {/* List */}
-          <div className="space-y-1 w-full max-h-90 overflow-y-auto">
+          <div className="space-y-1 w-full max-h-90 overflow-y-auto hide-scrollbar">
             {filteredAccounts.length === 0 && (
               <div className="flex flex-col gap-1 items-center justify-center mt-2">
                 <CircleUserRound size={22} color="#2b292952" />
@@ -111,13 +111,13 @@ export function AccountSwitcher({
               <button
                 key={acc.id}
                 onClick={() => {
-                  onSwitch(acc.id);
+                  onSwitch(acc.id, acc.accountName);
                   setOpen(false);
                 }}
                 className={cn(
                   "w-full text-left px-2 py-2 rounded-md text-sm hover:bg-primary/10",
                   selectedAccountId === acc.id &&
-                    "bg-primary/10 text-primary font-medium",
+                  "bg-primary/10 text-primary font-medium",
                 )}
               >
                 <div className="flex items-center gap-2">

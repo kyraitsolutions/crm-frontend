@@ -11,19 +11,16 @@ import {
   IconFileText,
   IconUsers,
 } from "@tabler/icons-react";
-import { BookTemplateIcon } from "lucide-react";
 import { useState } from "react";
 import {
-  MdEmail,
-  MdOutlineCampaign,
   MdOutlineContacts,
-  MdWhatsapp,
 } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { SidebarFooter } from "./ui/sidebar";
+import { Gauge, MessagesSquare } from "lucide-react";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -34,9 +31,10 @@ export function AppSidebar() {
   const { user: authUser, accountId } = useAuthStore((state) => state);
   const { permissions } = useAccountAccessStore((state) => state);
 
-  const handleAccountSwitch = (accountId: string) => {
+  const handleAccountSwitch = (accountId: string, accountName: string) => {
     const pathName = window.location.pathname;
     authManager.setLastSlugPath(pathName);
+    authManager.setAccountName(accountName);
     authManager.setAccountId(accountId);
     navigate(ACCOUNT_PATHS.byId(accountId));
   };
@@ -47,13 +45,13 @@ export function AppSidebar() {
         title: "Dashboard",
         url: ACCOUNT_PATHS.byId(String(accountId)),
         active: true,
-        icon: IconDashboard,
+        icon: Gauge,
       },
       {
         title: "Live Chat",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/live-chat`,
         active: true,
-        icon: IconDashboard,
+        icon: MessagesSquare,
       },
 
       {
@@ -74,29 +72,29 @@ export function AppSidebar() {
         icon: IconFileText,
         active: hasPermission(permissions, PERMISSIONS.LEADS_FORMS.VIEW),
       },
-      {
-        title: "Broadcast",
-        url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast`,
-        icon: MdOutlineCampaign,
-        active: true,
-        children: [
-          {
-            title: "Email",
-            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/email`,
-            icon: MdEmail,
-          },
-          {
-            title: "WhatsApp",
-            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
-            icon: MdWhatsapp,
-          },
-          {
-            title: "Templates",
-            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/templates`,
-            icon: BookTemplateIcon,
-          },
-        ],
-      },
+      // {
+      //   title: "Broadcast",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast`,
+      //   icon: MdOutlineCampaign,
+      //   active: true,
+      //   children: [
+      //     {
+      //       title: "Email",
+      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/email`,
+      //       icon: MdEmail,
+      //     },
+      //     {
+      //       title: "WhatsApp",
+      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
+      //       icon: MdWhatsapp,
+      //     },
+      //     {
+      //       title: "Templates",
+      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/templates`,
+      //       icon: BookTemplateIcon,
+      //     },
+      //   ],
+      // },
       {
         title: "Contacts",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/contacts`,
@@ -145,8 +143,8 @@ export function AppSidebar() {
           accounts={accounts}
           selectedAccountId={accountId || accounts[0]?.id}
           collapsed={collapsed}
-          onSwitch={(accountId) => {
-            handleAccountSwitch(accountId);
+          onSwitch={(accountId, accountName) => {
+            handleAccountSwitch(accountId, accountName);
           }}
         />
       </div>

@@ -20,6 +20,7 @@ export interface IUser {
     lastName: string;
     organizationName: string;
     accountType: string;
+    profilePicture:string
   };
   account: Partial<Account>;
   usersubscription: {

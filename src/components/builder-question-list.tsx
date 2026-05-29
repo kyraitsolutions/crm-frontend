@@ -14,7 +14,7 @@ export function QuestionList() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex-1 overflow-y-auto p-4 pt-0">
+      <div className="flex-1 overflow-y-auto p-4 pt-0 hide-scrollbar">
         {questions?.length === 0 ? (
           <div className="flex h-32 items-center justify-center text-center">
             <div className="text-sm text-muted-foreground">
@@ -28,11 +28,10 @@ export function QuestionList() {
             {questions?.map((question, index) => (
               <Card
                 key={question.id}
-                className={`group cursor-pointer shadow-none border rounded-xl p-4 transition ${
-                  selectedQuestionId === question.id
+                className={`group cursor-pointer shadow-none border rounded-xl p-4 transition ${selectedQuestionId === question.id
                     ? "border-primary bg-muted/50"
                     : "border-border hover:bg-muted/30 "
-                }`}
+                  }`}
                 onClick={() =>
                   builderStoreManager.setSelectedQuestionId(question.id)
                 }

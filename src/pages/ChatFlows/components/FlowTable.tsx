@@ -247,7 +247,7 @@ const FlowTable = ({ flows, loading }: TFlowTableProps) => {
 
               {/* ACTIONS */}
               <TableCell>
-                <div className="flex justify-end">
+                <div className="flex justify-center">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button

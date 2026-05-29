@@ -122,6 +122,7 @@ export const DashboardPage = () => {
       });
 
       // authManager.setAccountSelected(true);
+      console.log("auth", accounts[index]?.accountName)
       authManager.setAccountName(accounts[index]?.accountName);
       authManager.setAccountId(accounts[index]?.id);
     }

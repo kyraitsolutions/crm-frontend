@@ -22,7 +22,7 @@ const tabs = [
   // { id: "customization", label: "Customization", icon: Sliders },
   { id: "appearance", label: "Appearance", icon: Palette },
   { id: "configration", label: "Configuration", icon: Cog },
-  { id: "chatbotFlow", label: "Chatbot Flow", icon: Cog },
+  // { id: "chatbotFlow", label: "Chatbot Flow", icon: Cog },
   { id: "chatbot-preview", label: "Preview", icon: Cog },
   { id: "integration", label: "Integration", icon: Cog },
 ];
@@ -96,11 +96,10 @@ export default function ChatBotBuilderInfoTabs({
             transition-colors
             max-sm:flex-col
             cursor-pointer
-            ${
-              activeTab === tab.id
-                ? "bg-[#FBFAF9] text-[#37322F] shadow"
-                : "text-[#847971] hover:bg-[#F7F6F4] hover:text-[#37322F]"
-            }
+            ${activeTab === tab.id
+                    ? "bg-[#FBFAF9] text-[#37322F] shadow"
+                    : "text-[#847971] hover:bg-[#F7F6F4] hover:text-[#37322F]"
+                  }
           `}
                 onClick={() => {
                   if (tab?.id === "chatbotFlow") {

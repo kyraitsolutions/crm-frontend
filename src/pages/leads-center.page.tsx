@@ -823,6 +823,7 @@ export default function LeadsCentre() {
                   <TableRow
                     key={lead.id}
                     onClick={() => handleRowClick(lead)}
+                    // onClick={() => navigate(`/dashboard/account/${accountId}/leads/lead-details`)}
                     className="
                     cursor-pointer
                     border-b border-border/30

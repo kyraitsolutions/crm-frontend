@@ -92,10 +92,10 @@ export const ChatBotBuilder = () => {
         const response = !chatBotId
           ? await chatBotService?.createChatBot(String(accountId), data)
           : await chatBotService.updateChatBot(
-              String(accountId),
-              String(chatBotId),
-              data,
-            );
+            String(accountId),
+            String(chatBotId),
+            data,
+          );
 
         if (!chatBotId) {
           const chatbotId = response?.data.docs?.id;

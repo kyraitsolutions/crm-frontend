@@ -61,7 +61,7 @@ const ChatFilter = () => {
   }, [debouncedSearch]);
 
   return (
-    <div className="flex flex-col gap-2 py-2 mt-1 relative">
+    <div className="flex flex-col gap-2 pt-2 mt-1 relative">
       <div className="flex items-center justify-between px-3">
         <h1 className="text-lg font-semibold">Chats</h1>
         <button className="flex items-center gap-1 text-sm cursor-pointer font-medium text-white bg-second rounded-xl py-1 px-2 hover:bg-second/90">
@@ -84,7 +84,7 @@ const ChatFilter = () => {
         </button>
       </div>
 
-      <div className="flex item-center border-b border-t border-gray-100 overflow-scroll gap-2 px-3 py-2">
+      <div className="flex item-center border-t border-b hide-scrollbar border-gray-100 overflow-scroll gap-2 px-3 py-2">
         {filters.map((filter) => (
           <button
             key={filter.value}
@@ -126,11 +126,10 @@ const ChatFilter = () => {
                       onClick={() => handleAddFilter(i)}
                       className={`
                                                     text-xs py-1 px-3 border rounded-full capitalize cursor-pointer transition
-                                                    ${
-                                                      appliedFilter.includes(i)
-                                                        ? "bg-second text-white border-second"
-                                                        : "bg-white hover:bg-gray-100"
-                                                    }
+                                                    ${appliedFilter.includes(i)
+                          ? "bg-second text-white border-second"
+                          : "bg-white hover:bg-gray-100"
+                        }
                                                 `}
                     >
                       {i}
