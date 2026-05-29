@@ -29,8 +29,17 @@ import FlowEditorLoading from "./FlowEditorLoading";
 import { nodeTypes } from "./nodes";
 import NodeSettingsRenderer from "./nodeSetting/NodeSettingsRenderer";
 import NodeSidebar from "./sidebar/NodeSidebar";
-import type { TAppEdge, TAppNode, TAppNodeData } from "./types/types";
+import type {
+  TAppEdge,
+  TAppNode,
+  TAppNodeData,
+  TButtonNodeData,
+} from "./types/types";
 import { createInitialElementsData } from "./utils/utils";
+import {
+  validateButtonNode,
+  validateSendMessageNode,
+} from "./utils/nodesValidation";
 
 export const mandatoryNodes = [
   {
@@ -221,6 +230,31 @@ export default function ChatbotFlowEditor() {
   }, []);
 
   const validateFlow = () => {
+    let validateObj: {
+      message: string;
+      isValid: boolean;
+    } | null = null;
+    for (const value of nodes) {
+      switch (value.type) {
+        case "send_message":
+          validateObj = validateSendMessageNode(value.data.payload);
+          // console.log(validateSendMessageNode(value.data.payload));
+          break;
+        case "":
+          validateObj = validateButtonNode(
+            value.data.payload as TButtonNodeData["payload"],
+          );
+          break;
+      }
+    }
+
+    console.log(validateObj);
+
+    if (!validateObj?.isValid) {
+      toastMessageService.error(validateObj.message);
+      return false;
+    }
+
     return true;
   };
 

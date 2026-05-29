@@ -194,7 +194,7 @@ type TSendMessageNodeData = TBaseNodeData<
   "send_message",
   TSendMessageNodeDataPayload
 >;
-type TButtonNodeData = TBaseNodeData<"button", TButtonNodeDataPayload>;
+export type TButtonNodeData = TBaseNodeData<"button", TButtonNodeDataPayload>;
 type TListNodeData = TBaseNodeData<"list", TListNodeDataPayload>;
 type TCarouselNodeData = TBaseNodeData<"carousel", TCarouselNodeDataPayload>;
 type TQuestionNodeData = TBaseNodeData<"question", TQuestionNodeDataPayload>;

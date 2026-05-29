@@ -1,4 +1,3 @@
-import ChatBotBuilderConfiguration from "@/components/chat-bot-builder-config";
 import { ROUTES } from "@/constants/routes";
 import { SettingLayout } from "@/layouts/setting.layout";
 import { ChatBotPage, DashboardPage } from "@/pages";
@@ -19,10 +18,11 @@ import { SubscriptionPage } from "@/pages/subscription.page";
 import Role from "@/pages/UsersAndControl/role.page";
 import Teams from "@/pages/UsersAndControl/teams2.page";
 // import { Teams } from "@/pages/UsersAndControl/teams.page";
-import { type RouteObject } from "react-router-dom";
-import { RequirePermission } from "./route-access/RequirePermission";
 import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
 import { PERMISSIONS } from "@/rbac";
+import { type RouteObject } from "react-router-dom";
+import { RequirePermission } from "./route-access/RequirePermission";
+import ConfigurationPage from "@/pages/Settings/configuration/ConfigurationPage";
 
 export const settingRoutes: RouteObject[] = [
   {
@@ -88,6 +88,9 @@ export const settingRoutes: RouteObject[] = [
           // Data Administrator
           { path: "recyclebin", element: <Recyclebin /> },
           { path: "storage", element: <Storage /> },
+
+          // configuration
+          { path: "configuration", element: <ConfigurationPage /> },
         ],
       },
     ],

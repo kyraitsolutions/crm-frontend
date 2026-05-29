@@ -39,7 +39,7 @@ export const settingSections = [
       { label: "Webform", link: "/webform" },
     ],
   },
-  
+
   {
     title: "Deliverability",
     items: [
@@ -49,17 +49,20 @@ export const settingSections = [
       { label: "Imprint Details", link: "/imprint-details" },
     ],
   },
+  // {
+  //   title: "Customization",
+  //   items: [
+  //     { label: "Signup Pages and Emails", link: "/signup-pages" },
+  //     { label: "Custom Fields", link: "/custom-fields" },
+  //     { label: "Merge Tags", link: "/merge-tags" },
+  //   ],
+  // },
   {
-    title: "Customization",
-    items: [
-      { label: "Signup Pages and Emails", link: "/signup-pages" },
-      { label: "Custom Fields", link: "/custom-fields" },
-      { label: "Merge Tags", link: "/merge-tags" },
-    ],
+    title: "Configuration",
+    items: [{ label: "Configuration", link: "/configuration" }],
   },
-  
 
-{
+  {
     title: "Bot",
     items: [
       { label: "Chat Bot", link: "/chatbot" },
@@ -67,7 +70,7 @@ export const settingSections = [
       { label: "AI Chatbot", link: "/ai-chatbot" },
     ],
   },
-    {
+  {
     title: "Integration",
     items: [
       { label: "Apps", link: "/integrations" },
@@ -87,7 +90,7 @@ export const settingSections = [
     items: [
       { label: "Audit Logs", link: "/audit-logs" },
       { label: "Storage", link: "/storage" },
-      { label: "Recycle Bin", link: "/recyclebin" }
+      { label: "Recycle Bin", link: "/recyclebin" },
     ],
   },
   {

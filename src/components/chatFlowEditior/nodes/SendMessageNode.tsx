@@ -262,13 +262,13 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
 
   const handleInputChange = (index: number, value: string) => {
     const newPayload = [...payload];
-
+    const item = newPayload[index];
+    if (item.type !== "text") return;
     newPayload[index] = {
-      ...newPayload[index],
-      content: String(value),
-      type: "text",
-      id: crypto.randomUUID(),
+      ...item,
+      content: value,
     };
+
     updatePayload(newPayload);
   };
 
