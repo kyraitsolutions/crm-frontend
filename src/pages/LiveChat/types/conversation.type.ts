@@ -28,6 +28,8 @@ export const ConversationSchema = z.object({
   identifiers: IdentifiersSchema,
   status: ConversationStatusSchema.default("open"),
   lastMessage: LastMessageSchema.optional(),
+  searchPreview: z.string().nullable().optional(),
+  matchedMessageId: z.string().nullable().optional(),
   profile: z
     .object({
       displayName: z.string().nullable().optional(),

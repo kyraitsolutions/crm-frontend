@@ -139,94 +139,6 @@ const DashboardAccount = () => {
     null,
   );
 
-  // Full dataset
-  // const fullAnalytics: AnalyticsData = {
-  //   totalLeads: 1847,
-  //   todayLeads: 43,
-  //   weeklyLeads: 286,
-  //   monthlyLeads: 1124,
-  //   conversionRate: 24.5,
-  //   avgResponseTime: 3.2,
-  //   activeChatbots: 8,
-  //   activeWebforms: 5,
-  //   activeGoogleAds: 12,
-  //   activeSocialMedia: 6,
-
-  //   leadsBySource: [
-  //     { source: "Chatbot", count: 542, trend: 12.5, color: "#3B82F6" },
-  //     { source: "Website", count: 398, trend: 8.3, color: "#10B981" },
-  //     { source: "Google Ads", count: 321, trend: -3.2, color: "#F59E0B" },
-  //     { source: "WhatsApp", count: 245, trend: 15.7, color: "#22C55E" },
-  //     { source: "Facebook", count: 186, trend: 5.4, color: "#3B5998" },
-  //     { source: "Instagram", count: 155, trend: 9.8, color: "#E4405F" },
-  //     { source: "Webform", count: 142, trend: 6.1, color: "#8B5CF6" },
-  //     { source: "Manual", count: 58, trend: -1.5, color: "#6B7280" },
-  //   ],
-
-  //   leadsByStatus: [
-  //     { status: "New", count: 523, percentage: 28.3 },
-  //     { status: "Contacted", count: 412, percentage: 22.3 },
-  //     { status: "Qualified", count: 368, percentage: 19.9 },
-  //     { status: "Converted", count: 453, percentage: 24.5 },
-  //     { status: "Lost", count: 91, percentage: 4.9 },
-  //   ],
-
-  //   leadsOverTime: [
-  //     { date: "2024-11-18", chatbot: 45, website: 32, googleAds: 28, whatsapp: 18, facebook: 15, instagram: 12, webform: 10, manual: 5, total: 165 },
-  //     { date: "2024-11-19", chatbot: 52, website: 38, googleAds: 31, whatsapp: 22, facebook: 18, instagram: 14, webform: 12, manual: 4, total: 191 },
-  //     { date: "2024-11-20", chatbot: 48, website: 35, googleAds: 25, whatsapp: 20, facebook: 16, instagram: 13, webform: 11, manual: 6, total: 174 },
-  //     { date: "2024-11-21", chatbot: 58, website: 42, googleAds: 33, whatsapp: 25, facebook: 19, instagram: 16, webform: 14, manual: 5, total: 212 },
-  //     { date: "2024-11-22", chatbot: 55, website: 40, googleAds: 30, whatsapp: 23, facebook: 17, instagram: 15, webform: 13, manual: 7, total: 200 },
-  //     { date: "2024-11-23", chatbot: 61, website: 45, googleAds: 35, whatsapp: 27, facebook: 21, instagram: 17, webform: 15, manual: 6, total: 227 },
-  //     { date: "2024-11-24", chatbot: 68, website: 48, googleAds: 38, whatsapp: 29, facebook: 23, instagram: 19, webform: 16, manual: 8, total: 249 },
-  //   ],
-
-  //   hourlyEngagement: [
-  //     { hour: "00:00", engagements: 12 },
-  //     { hour: "03:00", engagements: 8 },
-  //     { hour: "06:00", engagements: 15 },
-  //     { hour: "09:00", engagements: 45 },
-  //     { hour: "12:00", engagements: 62 },
-  //     { hour: "15:00", engagements: 58 },
-  //     { hour: "18:00", engagements: 48 },
-  //     { hour: "21:00", engagements: 35 },
-  //   ],
-
-  //   weeklyEngagement: [
-  //     { week: "Week 1", leads: 842, conversions: 198 },
-  //     { week: "Week 2", leads: 921, conversions: 215 },
-  //     { week: "Week 3", leads: 1056, conversions: 268 },
-  //     { week: "Week 4", leads: 1124, conversions: 286 },
-  //   ],
-
-  //   monthlyEngagement: [
-  //     { month: "Jul", leads: 3245, conversions: 745, revenue: 89500 },
-  //     { month: "Aug", leads: 3512, conversions: 821, revenue: 95200 },
-  //     { month: "Sep", leads: 3789, conversions: 892, revenue: 102300 },
-  //     { month: "Oct", leads: 4021, conversions: 965, revenue: 108900 },
-  //     { month: "Nov", leads: 4358, conversions: 1067, revenue: 118600 },
-  //   ],
-
-  //   recentLeads: [
-  //     { name: "Rajesh Kumar", source: "Chatbot", status: "New", date: "2024-11-24", time: "14:32" },
-  //     { name: "Priya Sharma", source: "Google Ads", status: "Contacted", date: "2024-11-24", time: "14:28" },
-  //     { name: "Amit Patel", source: "WhatsApp", status: "Qualified", date: "2024-11-24", time: "14:15" },
-  //     { name: "Sneha Desai", source: "Website", status: "New", date: "2024-11-24", time: "14:08" },
-  //     { name: "Vikram Singh", source: "Facebook", status: "Contacted", date: "2024-11-24", time: "13:55" },
-  //   ],
-
-  //   channelPerformance: [
-  //     { channel: "Chatbot", leads: 542, conversions: 145, conversionRate: 26.8, status: "active" },
-  //     { channel: "Website", leads: 398, conversions: 98, conversionRate: 24.6, status: "active" },
-  //     { channel: "Google Ads", leads: 321, conversions: 75, conversionRate: 23.4, status: "active" },
-  //     { channel: "WhatsApp", leads: 245, conversions: 62, conversionRate: 25.3, status: "active" },
-  //     { channel: "Facebook", leads: 186, conversions: 42, conversionRate: 22.6, status: "active" },
-  //     { channel: "Instagram", leads: 155, conversions: 35, conversionRate: 22.6, status: "active" },
-  //     { channel: "Webform", leads: 142, conversions: 38, conversionRate: 26.8, status: "active" },
-  //     { channel: "Manual", leads: 58, conversions: 15, conversionRate: 25.9, status: "active" },
-  //   ],
-  // };
-
   // Filter data based on date range
   const data = useMemo(() => {
     if (!dateRange?.from) {
@@ -389,11 +301,13 @@ const DashboardAccount = () => {
 
   const getOverview = async () => {
     try {
-      const response = await analyticsService.getOverview(String(accountId));
-      console.log("response", response)
-      const data = await response.data;
+      const params = {
+        accountId: accountId,
+        range: timeRange,
+      };
+      const response = await analyticsService.getOverview(params);
 
-      setFullAnalytics(data.data);
+      setFullAnalytics(response.data?.doc);
     } catch (error) {
       console.log("Error", error);
     }
@@ -401,7 +315,7 @@ const DashboardAccount = () => {
 
   useEffect(() => {
     getOverview();
-  }, [accountId]);
+  }, [timeRange]);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -454,7 +368,7 @@ const DashboardAccount = () => {
             </div>
 
             {/* Compare */}
-            <button
+            {/*<button
               onClick={() => setComparisonMode(!comparisonMode)}
               disabled={!dateRange?.from}
               className={`
@@ -463,16 +377,17 @@ const DashboardAccount = () => {
         px-4 py-1.5
         text-xs font-medium
         transition
-        ${comparisonMode
-                  ? "bg-primary text-[#FBFAF9]"
-                  : "bg-[#F7F6F4] text-[#37322F] hover:bg-[#EFEDEB]"
-                }
+        ${
+          comparisonMode
+            ? "bg-primary text-[#FBFAF9]"
+            : "bg-[#F7F6F4] text-[#37322F] hover:bg-[#EFEDEB]"
+        }
         disabled:opacity-50
       `}
             >
               <ArrowLeftRight className="h-3.5 w-3.5" />
               Compare
-            </button>
+            </button> */}
 
             {/* Export */}
             <div className="flex items-center gap-2">
@@ -802,8 +717,8 @@ const DashboardAccount = () => {
                       <span className="font-semibold">{source.count}</span>
                       <span
                         className={`flex items-center gap-0.5 ${source.trend >= 0
-                          ? "text-[#21733F]"
-                          : "text-destructive"
+                            ? "text-[#21733F]"
+                            : "text-destructive"
                           }`}
                       >
                         {source.trend >= 0 ? (

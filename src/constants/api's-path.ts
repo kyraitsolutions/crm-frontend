@@ -11,6 +11,11 @@ export const API_ENDPOINT_PATH = {
     ONBOARDING: `/organization/onboarding`,
   },
 
+  DASHBOARD: {
+    // GET_DASHBOARD_OVERVIEW: "/dashboard/overview",
+    getDashboardOverviewPath: (id: string) => `/account/${id}/overview`,
+  },
+
   ORGANIZATION: {
     ONBOARDING: `/organization/onboarding`,
     getOrganizationDetailsByOrganizationIdPath: (id: string) =>
@@ -48,7 +53,7 @@ export const API_ENDPOINT_PATH = {
       `/message/${conversationId}`,
   },
 
-  NOTIFICATIONS:{
-    GET_NOTIFICATIONS: `/notifications`
-  }
+  NOTIFICATIONS: {
+    GET_NOTIFICATIONS: `/notifications`,
+  },
 };
