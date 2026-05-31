@@ -37,7 +37,7 @@ const ChatArea = ({ messages, selectedMessageId }: ChatAreaProps) => {
   return (
     <div
       ref={containerRef}
-      className="h-[70vh] overflow-y-auto p-4 hide-scrollbar border-l border-r"
+      className="h-[70vh] overflow-y-auto p-4 hide-scrollbar"
     >
       <div className="flex flex-col gap-3">
         {messages?.map((message, index) => {

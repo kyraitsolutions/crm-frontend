@@ -11,6 +11,7 @@ import { useConversationStore } from "./store/conversation.store";
 
 const LiveChat = () => {
   const {
+    selectedConversationId,
     fetchConversations,
     conversations,
     updateConversationRealtime,
@@ -59,8 +60,8 @@ const LiveChat = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[3fr_6fr_4fr]  ">
-      <div className="bg-white  w-full overflow-hidden h-full  ">
+    <div className={`grid grid-cols-1 md:grid-cols-2 ${selectedConversationId ? "lg:grid-cols-[3fr_6fr_3fr]" : "lg:grid-cols-[3fr_9fr]"}  `}>
+      <div className="bg-white border-r h-[calc(100vh-64px)]! w-full overflow-hidden">
         <ChatFilter />
 
         <div
@@ -75,9 +76,9 @@ const LiveChat = () => {
         <ChatWindow />
       </div>
 
-      <div className="bg-white p-4 ">
+      {selectedConversationId && <div className="bg-white p-4 border-l ">
         <ChatProfile />
-      </div>
+      </div>}
     </div>
   );
 };

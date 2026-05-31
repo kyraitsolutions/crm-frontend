@@ -1,7 +1,7 @@
 import type { ApiResponse } from "@/types";
 import { ApiService } from "./api.service";
 import { API_ENDPOINT_PATH } from "@/constants/api's-path";
-import type { INotification } from "@/components/Notification/Notification";
+import type { INotification } from "@/types/notification.type";
 
 export class NotificationService extends ApiService {
   async getNotifications(

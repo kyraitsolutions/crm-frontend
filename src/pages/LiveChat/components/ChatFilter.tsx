@@ -65,7 +65,7 @@ const ChatFilter = () => {
       <div className="flex items-center justify-between px-3">
         <h1 className="text-lg font-semibold">Chats</h1>
         <button className="flex items-center gap-1 text-sm cursor-pointer font-medium text-white bg-second rounded-xl py-1 px-2 hover:bg-second/90">
-          <MdAdd size={14} className="text-white" />
+          <MdAdd size={18} className="text-white" />
         </button>
       </div>
 
@@ -74,11 +74,11 @@ const ChatFilter = () => {
           type="text"
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Filter conversations"
-          className="input-field"
+          className="input-field text-primary placeholder:text-primary border border-primary"
         />
         <button
           onClick={() => setFilterOpen(!filterOpen)}
-          className="cursor-pointer bg-gray-100 py-2 px-2.5 rounded text-gray-500"
+          className="cursor-pointer bg-gray-100 duration-300 hover:bg-primary/20 py-2 px-2.5 rounded text-primary"
         >
           <Filter size={20} />
         </button>
@@ -94,7 +94,7 @@ const ChatFilter = () => {
                 filter.value as "all" | "whatsapp" | "instagram" | "chatbot",
               )
             }
-            className={`rounded-full cursor-pointer text-sm py-1.5 px-2.5 ${activeFilter === filter.value ? "bg-primary text-white" : "bg-gray-100 text-gray-700"}`}
+            className={`rounded-full cursor-pointer text-xs font-medium py-1.5 px-2.5 ${activeFilter === filter.value ? "bg-primary text-white" : "bg-gray-100 text-gray-700"}`}
           >
             {filter.label}
           </button>

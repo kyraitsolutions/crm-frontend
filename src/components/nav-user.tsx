@@ -23,6 +23,7 @@ import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { useNavigate } from "react-router-dom";
 
 interface NavUserProps {
+  collapsed: boolean;
   user: {
     name: string;
     email: string;
@@ -30,7 +31,7 @@ interface NavUserProps {
   };
 }
 
-export function NavUser({ user }: NavUserProps) {
+export function NavUser({ collapsed, user }: NavUserProps) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const logoutHandler = () => {
@@ -38,6 +39,8 @@ export function NavUser({ user }: NavUserProps) {
     navigate("/login");
   };
 
+
+  console.log(user)
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -48,17 +51,17 @@ export function NavUser({ user }: NavUserProps) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-full grayscale">
-                <AvatarImage src={user.avatar} alt={user.name.at(0)} />
-                <AvatarFallback className="rounded-">
-                  {user.name.at(0)}
+                <AvatarImage src={user.avatar} alt={user.name?.charAt(0)} className="" />
+                <AvatarFallback className="rounded capitalize">
+                  {user.name ? user.name?.charAt(0) : user.email.charAt(0) || ""}
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+              {!collapsed && <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium capitalize">{user?.name ? user?.name : user.email?.split('@gmail.com')}</span>
                 <span className="text-muted-foreground truncate text-xs">
                   {user.email}
                 </span>
-              </div>
+              </div>}
               {/* <IconDotsVertical className="ml-auto size-4" /> */}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -72,10 +75,12 @@ export function NavUser({ user }: NavUserProps) {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-full">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg capitalize bg-second font-medium text-white">
+                    {user.name ? user.name?.charAt(0) : user.email.charAt(0) || ""}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium capitalize">{user?.name ? user?.name : user.email?.split('@gmail.com')}</span>
                   <span className="text-muted-foreground truncate text-xs">
                     {user.email}
                   </span>

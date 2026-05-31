@@ -1,13 +1,25 @@
 import { Button } from '@/components/ui/button'
+import { WhatsappService } from '@/services/whatsapp.service';
+import { useAuthStore } from '@/stores';
 import { Link } from 'react-router-dom'
 const IntegrationCard = ({ data }: any) => {
+    const { accountId } = useAuthStore((state) => state)
+    const whatsappService = new WhatsappService();
     const Icon = data.icon
 
-    const handleWhatsapp = () => {
-        alert(`Redirecting to ${data.name}`)
-    }
+    const handleWhatsapp = async () => {
+        try {
+            const response = await whatsappService.connectWhatsapp(accountId || "");
+
+            window.open(response?.data?.docs?.signupUrl)
+            console.log(response?.data?.docs?.signupUrl)
+        } catch (error) { }
+    };
+
+
+
     return (
-        <div className=" mt-5 bg-gray-100 min-h-screen bg-white">
+        <div className=" mt-5 bg-gray-100 min-h-screen">
             <div className="w-full rounded-xl">
                 <div className="p-6">
 

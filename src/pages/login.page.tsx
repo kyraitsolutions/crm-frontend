@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
 // import { motion } from "framer-motion";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
+import { Link } from "react-router-dom";
 
 export function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -88,11 +90,18 @@ export function LoginPage() {
               asChild
               variant="outline"
               type="button"
+              onClick={() => {
+                CookieUtils.clear();
+                window.location.href =
+                  // "https://crm-backend-7lf9.onrender.com/api/auth/google";
+                  "http://localhost:3000/api/auth/google";
+              }}
               className={cn(
                 "w-full flex items-center justify-center gap-2 hover:bg-gray-50"
               )}
             >
-              <a href="https://crm-backend-7lf9.onrender.com/api/auth/google">
+              <div>
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -104,7 +113,8 @@ export function LoginPage() {
                   />
                 </svg>
                 Continue with Google
-              </a>
+              </div>
+
             </Button>
 
             {/* Apple Login */}
@@ -127,12 +137,12 @@ export function LoginPage() {
 
         <CardFooter className="flex justify-center mt-4 text-sm text-muted-foreground">
           Don’t have an account?{" "}
-          <a
-            href="/signup"
+          <Link
+            to="/register"
             className="ml-1 font-medium text-primary hover:underline"
           >
             Sign up
-          </a>
+          </Link>
         </CardFooter>
       </Card>
       {/* </motion.div> */}

@@ -24,7 +24,7 @@ import { Gauge, MessagesSquare } from "lucide-react";
 
 export function AppSidebar() {
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const { accounts } = useAccountsStore((state) => state);
   const authManager = new AuthStoreManager();
 
@@ -107,8 +107,8 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "h-full bg-gray-50 border-r flex flex-col transition-all duration-300",
-        collapsed ? "w-18" : "w-64",
+        "h-full bg-gray-50 border-r flex flex-col  transition-all duration-300",
+        collapsed ? "w-20 items-center" : "w-74",
       )}
     >
       {/* Logo */}
@@ -181,6 +181,7 @@ export function AppSidebar() {
         )} */}
         <SidebarFooter>
           <NavUser
+            collapsed={collapsed}
             user={{
               avatar: authUser?.profilePicture || "",
               name: authUser?.firstName || "",

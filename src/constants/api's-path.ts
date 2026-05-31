@@ -56,4 +56,7 @@ export const API_ENDPOINT_PATH = {
   NOTIFICATIONS: {
     GET_NOTIFICATIONS: `/notifications`,
   },
+  WHATSAPP:{
+    CONNECT_WHATSAPP:'/whatsapp/connect',
+  }
 };

@@ -21,31 +21,32 @@ const ChatProfile = () => {
   );
 
   if (!selectedConversation) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center px-6 text-center border">
-        <div className="size-20 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200 shadow-sm">
-          <MdOutlinePeopleOutline size={34} className="text-gray-400" />
-        </div>
+    return null
+    // return (
+    //   <div className="h-full flex flex-col items-center justify-center px-6 text-center border">
+    //     <div className="size-20 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200 shadow-sm">
+    //       <MdOutlinePeopleOutline size={34} className="text-gray-400" />
+    //     </div>
 
-        <h2 className="mt-4 text-lg font-semibold text-gray-700">
-          No Conversation Selected
-        </h2>
+    //     <h2 className="mt-4 text-lg font-semibold text-gray-700">
+    //       No Conversation Selected
+    //     </h2>
 
-        <p className="mt-2 text-sm text-gray-500 max-w-xs">
-          Select a conversation from the chat list to view customer profile and
-          shared media.
-        </p>
-      </div>
-    );
+    //     <p className="mt-2 text-sm text-gray-500 max-w-xs">
+    //       Select a conversation from the chat list to view customer profile and
+    //       shared media.
+    //     </p>
+    //   </div>
+    // );
   }
 
   return (
-    <div className="flex flex-col px-3 gap-3">
+    <div className="flex flex-col px-3">
       <div>
-        <h1 className="text-md text-gray-500 uppercase font-semibold">
+        <h1 className="text-sm text-gray-500 uppercase font-semibold">
           Customer Profile
         </h1>
-        <div className="flex flex-col items-center  justify-center gap-2 py-4 bg-gray-100 rounded-2xl px-3 mt-2">
+        <div className="flex flex-col items-center mt-5 justify-center gap-2 py-4 bg-gray-100 rounded-2xl px-3 mt-2">
           <div>
             {selectedConversation?.profile?.avatar ? (
               <Avatar className="h-30 w-30 flex items-center justify-center bg-gray-100">
@@ -63,18 +64,18 @@ const ChatProfile = () => {
               </div>
             )}
           </div>
-          <h1 className="text-lg font-bold">
+          <h1 className="text-sm font-bold">
             {selectedConversation?.profile?.displayName ||
               buildAndGetVisitorDisplayNameByVisitorId(
                 String(selectedConversation?.visitorId),
               )}
           </h1>
           {/* <p className="text-gray-500">Marketing Director @ Company Name</p> */}
-          <div className="flex gap-5">
-            <p className="text-sm text-gray-500">
+          <div className="flex gap-5 items-center">
+            <p className="text-xs text-gray-500">
               Joined: {formatDate(String(selectedConversation?.createdAt))}
             </p>
-            <p className="text-sm px-2 bg-primary/20 rounded-xl text-center text-primary border border-primary">
+            <p className="text-xs px-2 bg-primary/10 rounded-xl text-center text-primary border border-primary">
               Active
             </p>
           </div>
@@ -134,7 +135,7 @@ const ChatProfile = () => {
         </div>
       </div> */}
       <div>
-        <h1 className="text-md text-gray-500 uppercase font-semibold">
+        <h1 className="text-sm text-gray-500 uppercase font-semibold">
           Other Info
         </h1>
       </div>

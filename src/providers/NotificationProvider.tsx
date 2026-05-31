@@ -81,11 +81,10 @@ const NotificationProvider = ({ children }: Props) => {
       {children}
 
       <div
-        className={`fixed top-0 left-0 w-full h-screen  transform transition-all duration-500 ease-out bg-black/40 backdrop-blur-[2px] flex justify-center items-start ${
-          showBanner
-            ? "translate-y-0 opacity-100"
-            : "-translate-y-10 opacity-0 pointer-events-none"
-        }`}
+        className={`fixed top-0 left-0 w-full  h-screen  transform transition-all duration-500 ease-out bg-black/40 backdrop-blur-[2px] flex justify-center items-start ${showBanner
+          ? "translate-y-0 opacity-100"
+          : "-translate-y-10 opacity-0 pointer-events-none"
+          }`}
       >
         <div className="overflow-hidden max-w-xl w-full rounded-2xl border border-gray-200 bg-white shadow-2xl backdrop-blur-xl">
           {/* Top Accent */}
