@@ -78,9 +78,9 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 md:px-4">
+    <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 md:px-4">
       {!showSuccess && (
-        <div className="w-full max-w-3xl md:max-h-[95vh] max-h-full overflow-y-auto bg-white rounded-2xl shadow-xl p-6 space-y-8">
+        <div className="w-full max-w-3xl md:max-h-[95vh] max-h-full overflow-y-auto bg-white rounded-xl shadow-sm p-6 space-y-8">
           {/* HEADER */}
           <div className="space-y-2">
             <h1 className="text-2xl font-semibold">Welcome 👋</h1>

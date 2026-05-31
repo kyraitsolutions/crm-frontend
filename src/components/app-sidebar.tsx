@@ -107,28 +107,29 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "h-full bg-gray-50 border-r flex flex-col  transition-all duration-300",
+        "h-full bg-slate-900 border-r flex flex-col  transition-all duration-300",
         collapsed ? "w-20 items-center" : "w-74",
       )}
     >
       {/* Logo */}
-      <div className="flex items-center justify-between px-4 h-16 border-b bg-white">
+      <div className="flex items-center justify-between px-4 h-16 border-b ">
         {!collapsed && (
           <Link
             to="/"
-            className={`font-semibold  text-lg text-primary h-16 whitespace-nowrap overflow-x-hidden flex items-center gap-2`}
+            className={`font-bold  text-2xl text-primary h-16 whitespace-nowrap overflow-x-hidden flex items-center gap-2`}
           >
-            <img
+            {/* <img
               src="/Kyra4.jpg"
               alt="Logo"
               className="inline-block w-full overflow-hidden h-10"
-            />
+            /> */}
+            KYRA
           </Link>
         )}
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 rounded-lg bg-gray-100 cursor-pointer "
+          className="p-2 bg-primary text-white rounded-xl cursor-pointer "
         >
           {collapsed ? (
             <IconChevronRight size={18} />

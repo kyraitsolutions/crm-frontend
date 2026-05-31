@@ -48,16 +48,16 @@ export function NavUser({ collapsed, user }: NavUserProps) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="hover:bg-transparent! cursor-pointer"
             >
-              <Avatar className="h-8 w-8 rounded-full grayscale">
+              <Avatar className="h-8 w-8 rounded-full">
                 <AvatarImage src={user.avatar} alt={user.name?.charAt(0)} className="" />
                 <AvatarFallback className="rounded capitalize">
                   {user.name ? user.name?.charAt(0) : user.email.charAt(0) || ""}
                 </AvatarFallback>
               </Avatar>
               {!collapsed && <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium capitalize">{user?.name ? user?.name : user.email?.split('@gmail.com')}</span>
+                <span className="truncate font-medium capitalize text-white/70">{user?.name ? user?.name : user.email?.split('@gmail.com')}</span>
                 <span className="text-muted-foreground truncate text-xs">
                   {user.email}
                 </span>

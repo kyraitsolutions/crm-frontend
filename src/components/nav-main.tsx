@@ -88,8 +88,8 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                     className={cn(
                       `group relative flex ${collapsed ? "flex-col justify-center gap-1 py-3" : "px-3 gap-3 rounded-xl py-2.5 "} items-center    text-sm font-medium transition-all`,
                       active
-                        ? "bg-primary/10 text-primary"
-                        : "text-gray-600 hover:bg-gray-100",
+                        ? "bg-primary text-white"
+                        : "text-white/70 hover:bg-primary/50 hover:text-white",
                     )}
                   >
                     <Icon size={20} />
@@ -101,10 +101,10 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                     {/* )} */}
 
                     {active && !collapsed && (
-                      <span className="absolute right-2 w-1.5 h-6 rounded-full bg-primary" />
+                      <span className="absolute right-2 w-1.5 h-6 rounded-full bg-white" />
                     )}
                     {active && collapsed && (
-                      <span className="absolute left-0 w-[2px] h-full rounded-full bg-primary" />
+                      <span className="absolute left-0 w-[2px] h-full rounded-full bg-white" />
                     )}
                   </Link>
                 )

@@ -1,115 +1,64 @@
-import React, { useEffect, useRef, useState, type JSX } from 'react'
-import type { Option } from "@/components/filter-dropdown";
-import { LeadService } from '@/services/lead.service';
-import { usePagination } from '@/hooks/usePagination';
+import { useEffect, useRef, useState, type JSX } from 'react'
 import useDebounce from '@/hooks/useDebounce';
-import { LeadsStoreManager, useLeadsStore } from '@/stores/leads.store';
 import { useAccountAccessStore } from '@/stores/account-access.store';
-import buildParams from '@/utils/build-params.utils';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Clock3, Import, Mail, Phone, Shapes, Webhook } from 'lucide-react';
 import { formatDate } from '@/utils/date-utils';
 import { useAuthStore } from '@/stores';
-import { stageOptions } from '@/constants';
 import { TbManualGearbox } from 'react-icons/tb';
 import { Instagram } from '@/icons/icons';
 import { MdWhatsapp } from 'react-icons/md';
 import { FaGoogle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { LEADS_PATHS } from '@/constants/routes/leads.path';
+import { useConfigurationStore } from '@/pages/Settings/configuration/store/configuration.store';
+import { useLeadsStore } from '../store/lead.store';
+import { Pagination } from '@/components/pagination';
 const LeadTable = () => {
     const navigate = useNavigate();
-    const isSkeletonShow = useRef(true);
-    const leadService = new LeadService();
 
-    const [isLoadingLeads, setIsLoadingLeads] = useState(false);
+    // new Integration using zustand
+    const { accountId } = useAuthStore((state) => state)
+
+    const { leads, fetchLeads, currentPage, setCurrentPage, totalPages, loadingLeads } = useLeadsStore((state) => state);
+
+    useEffect(() => {
+        fetchLeads(accountId || "")
+    }, [accountId, currentPage])
+
+
+
+    console.log("Lead", leads)
+
+
+
+    const isSkeletonShow = useRef(true);
+    const { getConfigurations, configurationItems, activeTab } = useConfigurationStore(
+        (state) => state,
+    );
+
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Pagination state
-    const [pageSize] = useState(10);
-    const [totalItems, setTotalItems] = useState<number | null>(null);
-    const [currentPage, setCurrentPage] = useState(1);
-
-
-    const { accountId } = useAuthStore((state) => state)
-    const leadStoreManager = new LeadsStoreManager();
-    const { leads: allLeads } = useLeadsStore((state) => state);
     const { permissions } = useAccountAccessStore((state) => state);
 
     const debouncedSearchQuery = useDebounce(searchQuery, 500);
     // Filters and search query state
 
-    const [filters, setFilters] = useState<Record<string, Option>>({
-        lead: { label: "All Leads", value: null },
-        campaign: { label: "All Campaigns", value: null },
-        form: { label: "All Forms", value: null },
-        date: { label: "All Dates", value: null },
-        status: { label: "All Status", value: null },
-        source: { label: "All Sources", value: null },
-        assignedTo: { label: "All Users", value: null },
-        label: { label: "All Labels", value: null },
-        stage: { label: "All Stages", value: null },
-        read: { label: "All", value: null },
-    });
 
 
-    // Pagination hook
-    const {
-        currentPage: currentPageNumber,
-        goToPage,
-        totalPages,
-    } = usePagination({
-        totalItems: totalItems || 0,
-        itemsPerPage: pageSize,
-        initialPage: currentPage,
-    });
-    const getLeads = async () => {
 
-        console.log("Fetching leads with filters:", filters, "and search query:", debouncedSearchQuery);
-        if (isSkeletonShow.current) {
-            setIsLoadingLeads(true);
-            isSkeletonShow.current = false;
-        }
-        try {
-            const pageIndex = currentPageNumber;
-            const rowPerPage = pageSize;
 
-            const allFilters = {
-                q: searchQuery.trim() || undefined,
-                stage: filters.stage.value,
-                status: filters.status.value,
-                "source.name": filters.source.value,
-                assignedTo: filters.assignedTo.value,
-                campaign: filters.campaign.value,
-                form: filters.form.value,
-                dateRange: filters.date.value,
-                label: filters.label.value,
-                lead: filters.lead.value,
-                read: filters.read.value,
-            };
-
-            const params = buildParams(allFilters, pageIndex, rowPerPage);
-            // console.log(params);
-            const response = await leadService.getLeads(String(accountId), params);
-
-            if (response.status === 200 || response.status === 201) {
-                leadStoreManager.setLeads(response.data?.docs || []);
-                setTotalItems(response.data?.pagination?.totalDocs);
-            }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsLoadingLeads(false);
-        }
-    };
     useEffect(() => {
-        getLeads();
+        // getLeads();
         // calculateBasicNumber()
-    }, [currentPageNumber, filters, debouncedSearchQuery]);
+    }, [currentPage, debouncedSearchQuery]);
 
 
+
+    useEffect(() => {
+        getConfigurations();
+    }, [activeTab]);
 
     const getIconForSource: Record<string, JSX.Element> = {
         website: <Shapes className="size-4 text-muted-foreground" />,
@@ -122,9 +71,10 @@ const LeadTable = () => {
         webhook: <Webhook className="size-4 text-muted-foreground" />,
         import: <Import className="size-4 text-muted-foreground" />,
     };
+
     return (
         <div className="overlead-hidden hide-scrollbar bg-white rounded-xl">
-            <Table>
+            <Table className='border-b'>
                 <TableHeader className="bg-muted/30">
                     <TableRow className="hover:bg-transparent">
                         <TableHead className="text-xs font-semibold uppercase tracking-wide text-white bg-primary p-3">
@@ -151,11 +101,11 @@ const LeadTable = () => {
                 </TableHeader>
 
                 <TableBody>
-                    {allLeads?.map((lead, index) => (
+                    {leads?.map((lead, index) => (
                         <TableRow
                             key={lead._id}
                             onClick={() => navigate(LEADS_PATHS.getLeadDetail(String(accountId), lead._id))}
-                            className="group border-b border-gray-200 transition-colors hover:bg-muted/20 odd:bg-gray-100/40"
+                            className="group border-b  border-gray-200 transition-colors hover:bg-muted/20 odd:bg-gray-100/40"
                         >
                             <TableCell className="">
                                 <p className="flex items-center gap-4">
@@ -223,19 +173,19 @@ const LeadTable = () => {
                                     </SelectTrigger>
 
                                     <SelectContent>
-                                        {stageOptions.map((stage) => (
+                                        {configurationItems.map((stage) => (
                                             <SelectItem
-                                                key={stage.value}
-                                                value={stage.value}
+                                                key={stage._id}
+                                                value={stage.key}
                                                 className="capitalize"
                                             >
-                                                <div className="flex items-center gap-2">
-                                                    <Badge
-                                                        variant={stage.value === 'converted' ? 'default' : stage.value === "intake" ? 'destructive' : 'ternary'}
-                                                        className="capitalize border-none rounded-2xl px-2 text-xs"
+                                                <div className="flex items-center gap-2" >
+                                                    <div
+                                                        className={`capitalize border-none rounded-2xl px-2 text-xs py-0.5 text-white`}
+                                                        style={{ background: stage.color }}
                                                     >
                                                         {stage.label}
-                                                    </Badge>
+                                                    </div>
                                                 </div>
                                             </SelectItem>
                                         ))}
@@ -312,6 +262,17 @@ const LeadTable = () => {
                     ))}
                 </TableBody>
             </Table>
+            <div className='px-5'>
+
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    goToPage={(page) => {
+                        setCurrentPage(page);
+                    }}
+                />
+            </div>
+
         </div>
     )
 }
