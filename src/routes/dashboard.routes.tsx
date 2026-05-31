@@ -1,6 +1,5 @@
 import { ACCOUNT_ROUTES, ROUTES } from "@/constants/routes";
 import { DashboardLayout } from "@/layouts";
-import DashboardAccount from "@/pages/dashboard-account.page";
 import DashboardOverviewPage from "@/pages/Dashboard/DashboardOverviewPage";
 import { SubscriptionPage } from "@/pages/subscription.page";
 import { type RouteObject } from "react-router-dom";

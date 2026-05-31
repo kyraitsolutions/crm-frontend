@@ -1,15 +1,11 @@
 import { AppLayout, RootLayout } from "@/layouts";
 import {
   AuthCallbackPage,
-  HomePage,
   LoginPage,
   OnBoardingPage,
-  RegisterPage,
+  Register,
 } from "@/pages";
-import PricingPage from "@/pages/pricing.page";
-import PrivacyPolicyPage from "@/pages/privacy.page";
-import TermsPage from "@/pages/terms.page";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 // import { builderRoutes } from "./builder.routes";
 import { dashboardRoutes } from "./dashboard.routes";
 import { formRoutes } from "./form.routes";
@@ -25,9 +21,6 @@ import { ProtectedOnly } from "./route-access/ProtectedOnly";
 import Teams from "@/pages/UsersAndControl/teams2.page";
 import { liveChatRoutes } from "./livechat.routes";
 import { chatBotRoutes } from "@/rbac/chat-bot.routes";
-import LeadCentrePage from "@/components/website/Product/leadCentre.page";
-import WebsiteChatbotPage from "@/components/website/Product/websiteChatbot.page";
-import AiChatbotPage from "@/components/website/Product/aiChatbot.page";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -35,29 +28,8 @@ export const appRoutes = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        element: <HomePage />,
+        element: <Navigate to="/dashboard" replace />,
         index: true,
-      },
-      { path: "/product/lead-centre", element: <LeadCentrePage /> },
-      { path: "/product/website-chatbot", element: <WebsiteChatbotPage /> },
-      { path: "/product/ai-chatbot", element: <AiChatbotPage /> },
-      { path: "/product/whatsapp-chatbot", element: <LeadCentrePage /> },
-      { path: "/product/ai-whatsapp-bot", element: <LeadCentrePage /> },
-      { path: "/product/whatsapp-marketing", element: <LeadCentrePage /> },
-      { path: "/product/email-marketing", element: <LeadCentrePage /> },
-      { path: "/product/whatsapp-forms", element: <LeadCentrePage /> },
-      { path: "/product/whatsapp-link-qr", element: <LeadCentrePage /> },
-      {
-        element: <PricingPage />,
-        path: "/pricing",
-      },
-      {
-        element: <TermsPage />,
-        path: "/terms",
-      },
-      {
-        element: <PrivacyPolicyPage />,
-        path: "/privacy-policy",
       },
 
       // Auth PUBLIC ONLY (not logged in)
@@ -65,7 +37,7 @@ export const appRoutes = createBrowserRouter([
         element: <PublicOnly />,
         children: [
           { path: "/login", element: <LoginPage /> },
-          { path: "/register", element: <RegisterPage /> },
+          { path: "/register", element: <Register /> },
         ],
       },
 

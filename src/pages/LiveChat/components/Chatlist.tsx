@@ -37,16 +37,16 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
 
   if (!conversationList?.length) {
     return (
-      <div className="flex h-[calc(100vh-180px)] flex-col items-center justify-center px-6 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-          <MessageSquareText size={38} className="text-primary" />
+      <div className="flex h-[calc(100vh-205px)] flex-col items-center justify-center px-6 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+          <MessageSquareText size={24} className="text-primary" />
         </div>
 
-        <h2 className="mt-5 text-lg font-semibold text-gray-800">
+        <h2 className="mt-5 text-sm font-semibold text-gray-800">
           No Conversations Found
         </h2>
 
-        <p className="mt-2 max-w-[280px] text-sm leading-relaxed text-gray-500">
+        <p className="mt-2 max-w-70 text-xs leading-relaxed text-gray-500">
           There are no conversations available right now. Try changing filters
           or wait for new incoming chats.
         </p>
@@ -55,7 +55,7 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
   }
 
   return (
-    <div>
+    <div className="">
       {conversationList?.length > 0 &&
         conversationList?.map((conv) => {
           const name =
@@ -107,9 +107,8 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
               <div className="flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <h3
-                    className={`truncate ${
-                      activeChat === conv.id ? "font-semibold" : "font-medium"
-                    } text-gray-700`}
+                    className={`truncate ${activeChat === conv.id ? "font-semibold" : "font-medium"
+                      } text-gray-700 text-sm`}
                   >
                     {name}
                   </h3>
@@ -123,7 +122,7 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
                   {previewText ? (
                     highlightText(previewText, conversationQuery?.search)
                   ) : (
-                    <p className="text-sm text-gray-500 ">
+                    <p className="text-xs text-gray-500 ">
                       {lastMessage?.slice(0, 30)}...
                     </p>
                   )}

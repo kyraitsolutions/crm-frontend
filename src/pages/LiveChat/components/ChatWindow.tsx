@@ -55,11 +55,12 @@ const ChatWindow = () => {
 
   if (messages.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex h-full w-full items-center justify-center">
         <div className="text-center">
-          <h3 className="text-lg font-medium text-gray-700">No messages yet</h3>
+          <img src="/src/assets/nochathistoryfound_CnSlq9EOHBW59HI8RYjeSpZ_WbWyQz9RmyNcvToLwGw4g31mlf1rnCox3Y3F-6xk_.svg" rel="preload" fetchPriority="high" alt="No chats yet" className="w-75" />
+          <h3 className="text-sm mt-2 font-semibold text-gray-800">No messages yet</h3>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500">
             Start the conversation by sending a message.
           </p>
         </div>
@@ -72,7 +73,7 @@ const ChatWindow = () => {
   );
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-50">
       <ChatHeader
         name={String(
           buildAndGetVisitorDisplayNameByVisitorId(

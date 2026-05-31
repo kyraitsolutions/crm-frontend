@@ -37,7 +37,7 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
   };
 
   return (
-    <nav className="flex-1 px-2 py-4 space-y-1">
+    <nav className={`flex-1 ${!collapsed ? "px-3 space-y-1" : ""}`}>
       {items?.length > 0 &&
         items?.map((item) => {
           const Icon = item.icon;
@@ -54,17 +54,19 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
           };
 
           return (
-            <>
+            <div className={`${collapsed && "border-b border-primary/10 "}`}>
               {item.children ? (
                 <button
                   onClick={() => toggleMenu(item.title)}
                   className={` w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100`}
                 >
                   <div
-                    className={`flex  ${collapsed ? "justify-center" : "justify-end"} items-center gap-3`}
+                    className={`flex  ${collapsed ? "justify-center" : "justify-end "} items-center gap-3`}
                   >
                     {Icon && <Icon size={22} />}
-                    {!collapsed && <span>{item.title}</span>}
+                    {!collapsed &&
+                      <span>{item.title}</span>
+                    }
                   </div>
 
                   {!collapsed && (
@@ -84,7 +86,7 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                     to={item.url}
                     onClick={handleClick}
                     className={cn(
-                      `group relative flex ${collapsed ? "justify-center" : ""} items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all`,
+                      `group relative flex ${collapsed ? "flex-col justify-center gap-1 py-3" : "px-3 gap-3 rounded-xl py-2.5 "} items-center    text-sm font-medium transition-all`,
                       active
                         ? "bg-primary/10 text-primary"
                         : "text-gray-600 hover:bg-gray-100",
@@ -92,14 +94,17 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                   >
                     <Icon size={20} />
 
-                    {!collapsed && (
-                      <span className="inline-block whitespace-nowrap overflow-x-hidden">
-                        {item.title}
-                      </span>
-                    )}
+                    {/* {collapsed && ( */}
+                    <span className={`${collapsed ? "text-[12px] text-center" : ""}`}>
+                      {item.title}
+                    </span>
+                    {/* )} */}
 
-                    {active && (
+                    {active && !collapsed && (
                       <span className="absolute right-2 w-1.5 h-6 rounded-full bg-primary" />
+                    )}
+                    {active && collapsed && (
+                      <span className="absolute left-0 w-[2px] h-full rounded-full bg-primary" />
                     )}
                   </Link>
                 )
@@ -129,7 +134,7 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                   })}
                 </div>
               )}
-            </>
+            </div>
           );
         })}
     </nav>
