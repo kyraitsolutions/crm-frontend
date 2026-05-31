@@ -118,7 +118,7 @@ const MySubscriptionPage = () => {
 
                     {/* Stats */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-                        <div className="border border-slate-200 rounded-2xl p-5">
+                        <div className="border border-slate-200 rounded-xl p-5">
                             <div className="flex items-center gap-3">
                                 <div className="bg-blue-100 p-3 rounded-xl">
                                     <CalendarDays
@@ -139,7 +139,7 @@ const MySubscriptionPage = () => {
                             </div>
                         </div>
 
-                        <div className="border border-slate-200 rounded-2xl p-5">
+                        <div className="border border-slate-200 rounded-xl p-5">
                             <div className="flex items-center gap-3">
                                 <div className="bg-orange-100 p-3 rounded-xl">
                                     <Clock3
@@ -160,7 +160,7 @@ const MySubscriptionPage = () => {
                             </div>
                         </div>
 
-                        <div className="border border-slate-200 rounded-2xl p-5">
+                        <div className="border border-slate-200 rounded-xl p-5">
                             <div className="flex items-center gap-3">
                                 <div className="bg-green-100 p-3 rounded-xl">
                                     <CreditCard
