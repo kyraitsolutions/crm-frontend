@@ -18,20 +18,22 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLeadsStore } from "../store/lead.store";
+import { useAuthStore } from "@/stores";
 
 const Toolbar = () => {
     const navigate = useNavigate();
-    const { openSort, setOpenSort } = useLeadsStore((state) => state);
+    const { accountId } = useAuthStore((state) => state)
+    const { openSort, loadingLeads, setOpenSort, fetchLeads } = useLeadsStore((state) => state);
 
     const viewOptions = [
         { title: "List view", icon: List },
-        { title: "Kanban view", icon: Columns2 },
-        { title: "Grid view", icon: LayoutGrid },
-        { title: "Chart view", icon: PieChart },
-        { title: "Timeline view", icon: SquareStack },
-        { title: "Split view", icon: Minus },
-        { title: "Map view", icon: MapPin },
-        { title: "More views", icon: ChevronDown },
+        // { title: "Kanban view", icon: Columns2 },
+        // { title: "Grid view", icon: LayoutGrid },
+        // { title: "Chart view", icon: PieChart },
+        // { title: "Timeline view", icon: SquareStack },
+        // { title: "Split view", icon: Minus },
+        // { title: "Map view", icon: MapPin },
+        // { title: "More views", icon: ChevronDown },
     ];
 
     const [filters, setFilters] = useState<Record<string, Option>>({
@@ -85,7 +87,7 @@ const Toolbar = () => {
                 <div className="h-5 w-px bg-gray-300" />
 
                 {/* Refresh */}
-                <ButtonWithTitle className="hover:text-black transition flex items-center">
+                <ButtonWithTitle onClick={() => fetchLeads(String(accountId))} className={`hover:text-black transition flex items-center ${loadingLeads && "animate-spin"}`}>
                     <RotateCw size={18} />
                 </ButtonWithTitle>
             </div>

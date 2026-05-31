@@ -95,6 +95,9 @@ export const settingSections = [
   },
   {
     title: "Plan & Subscription",
-    items: [{ label: "Upgrade plan", link: "/subscription" }],
+    items: [
+      { label: "My plan", link: "/my-plan" },
+      { label: "Upgrade plan", link: "/subscription" }
+    ],
   },
 ];
