@@ -54,6 +54,13 @@ export const API_ENDPOINT_PATH = {
   },
 
   NOTIFICATIONS: {
-    GET_NOTIFICATIONS: `/notifications`,
+    GET_NOTIFICATIONS: `/notification`,
+  },
+
+  CONFIGURATION: {
+    GET_CONFIGURATION: `/configuration`,
+    createConfigItemPath: (id: string) => `/configuration/${id}`,
+    deleteConfigItemPath: (configId: string, itemId: string) =>
+      `/configuration/${configId}/${itemId}`,
   },
 };

@@ -10,67 +10,23 @@ import StatusActions from "../table/cells/StatusActions";
 import { DataTable } from "../table/DataTable";
 import LeadStatusModal from "../../modals/LeadStatusModal";
 import { useState } from "react";
-
-const LEAD_STATUS = [
-  {
-    order: 1,
-    label: "Open",
-    key: "open",
-    color: "#22C55E",
-    system: true,
-    default: true,
-  },
-
-  {
-    order: 2,
-    label: "Potential",
-    key: "potential",
-    color: "#F59E0B",
-    system: true,
-    default: false,
-  },
-
-  {
-    order: 3,
-    label: "Converted",
-    key: "converted",
-    color: "#3B82F6",
-    system: true,
-    default: false,
-  },
-
-  {
-    order: 4,
-    label: "Interested",
-    key: "interested",
-    color: "#8B5CF6",
-    system: false,
-    default: false,
-  },
-
-  {
-    order: 5,
-    label: "Not Interested",
-    key: "not_interested",
-    color: "#EC4899",
-    system: false,
-    default: false,
-  },
-
-  {
-    order: 6,
-    label: "Junk / Spam",
-    key: "junk",
-    color: "#F97316",
-    system: false,
-    default: false,
-  },
-];
+import { useConfigurationStore } from "../../store/configuration.store";
+import { ToastMessageService } from "@/services";
+import { alertManager } from "@/stores/alert.store";
+import type { ApiError } from "@/types";
+import type { TConfigValue } from "../../types/configuration.type";
 
 const LeadStatusSection = () => {
-  const [statuses, setStatuses] = useState(LEAD_STATUS);
+  const {
+    createConfigurationItem,
+    configurationItems,
+    deleteConfigurationItem,
+  } = useConfigurationStore((state) => state);
+  const toastService = new ToastMessageService();
+  // const [statuses, setStatuses] = useState(LEAD_STATUS);
   const [openModal, setOpenModal] = useState(false);
   const [editingStatus, setEditingStatus] = useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const columns = [
     {
@@ -140,7 +96,7 @@ const LeadStatusSection = () => {
         <StatusActions
           row={row}
           onEdit={() => handleEdit(row)}
-          onDelete={() => handleDelete(row.id)}
+          onDelete={() => handleDelete(row._id)}
         />
       ),
     },
@@ -157,34 +113,45 @@ const LeadStatusSection = () => {
   };
 
   const handleDelete = (id: number) => {
-    setStatuses((prev) => prev.filter((item) => item.id !== id));
+    alertManager.show({
+      type: "warning",
+      title: "Delete Status",
+      message: "Are you sure you want to delete this status?",
+      onConfirm: async () => {
+        const response = await deleteConfigurationItem(String(id));
+
+        if (response && response.status === 200) {
+          toastService.success(
+            response?.message || "Status deleted successfully!",
+          );
+        }
+      },
+    });
   };
 
-  const handleSubmit = (values: any) => {
-    if (editingStatus) {
-      setStatuses((prev) =>
-        prev.map((item) =>
-          item.id === editingStatus.id
-            ? {
-                ...item,
-                ...values,
-              }
-            : item,
-        ),
-      );
-    } else {
-      setStatuses((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          order: prev.length + 1,
-          system: false,
-          ...values,
-        },
-      ]);
+  const handleSubmit = async (values: Partial<TConfigValue>) => {
+    setIsSubmitting(true);
+    try {
+      if (editingStatus) {
+        console.log(values);
+      } else {
+        const payload = { ...values, order: configurationItems.length + 1 };
+        const response = await createConfigurationItem(payload);
+        if (response && response?.status === 201) {
+          toastService.success(
+            response?.message || "Status created successfully!",
+          );
+        }
+      }
+      setOpenModal(false);
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastService.error(err.message);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setOpenModal(false);
   };
 
   return (
@@ -214,7 +181,7 @@ const LeadStatusSection = () => {
           <div className="mb-8 grid grid-cols-3 gap-5">
             <StatsCard
               title="Total Statuses"
-              value="6"
+              value={String(configurationItems.length)}
               icon={<GripVertical className="size-4 text-[#16A34A]" />}
               subtitle="All lead statuses"
               iconBg="bg-[#DCFCE7]"
@@ -222,7 +189,9 @@ const LeadStatusSection = () => {
 
             <StatsCard
               title="System Statuses"
-              value="3"
+              value={String(
+                configurationItems.filter((item) => item.system).length,
+              )}
               icon={<Lock className="size-4 text-[#3B82F6]" />}
               subtitle="Cannot be deleted"
               iconBg="bg-[#DBEAFE]"
@@ -230,7 +199,9 @@ const LeadStatusSection = () => {
 
             <StatsCard
               title="Custom Statuses"
-              value="3"
+              value={String(
+                configurationItems.filter((item) => !item.system).length,
+              )}
               icon={<Pencil className="size-4 text-[#8B5CF6]" />}
               subtitle="Created by you"
               iconBg="bg-[#F3E8FF]"
@@ -258,7 +229,7 @@ const LeadStatusSection = () => {
           </div> */}
 
           {/* TABLE */}
-          <DataTable columns={columns} data={LEAD_STATUS} />
+          <DataTable columns={columns} data={configurationItems} />
 
           {/* ALERT */}
           <div className="mt-5 rounded-2xl border border-[#DCFCE7] bg-[#F0FDF4] px-5 py-4 text-sm text-[#15803D]">
@@ -319,6 +290,7 @@ const LeadStatusSection = () => {
         open={openModal}
         onClose={() => setOpenModal(false)}
         onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
         initialData={editingStatus}
       />
     </div>

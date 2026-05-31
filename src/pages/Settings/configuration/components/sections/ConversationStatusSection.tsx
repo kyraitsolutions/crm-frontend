@@ -20,84 +20,83 @@ import StatusActions from "../table/cells/StatusActions";
 
 import { DataTable } from "../table/DataTable";
 import LeadStatusModal from "../../modals/LeadStatusModal";
-
-const INITIAL_CONVERSATION_STATUS = [
-  {
-    id: 1,
-    order: 1,
-    label: "Open",
-    key: "open",
-    color: "#22C55E",
-    system: true,
-  },
-
-  {
-    id: 2,
-    order: 2,
-    label: "Pending",
-    key: "pending",
-    color: "#F59E0B",
-    system: true,
-  },
-
-  {
-    id: 3,
-    order: 3,
-    label: "Closed",
-    key: "closed",
-    color: "#EF4444",
-    system: true,
-  },
-];
+import type { TConfigValue } from "../../types/configuration.type";
+import { ToastMessageService } from "@/services";
+import { useConfigurationStore } from "../../store/configuration.store";
+import type { ApiError } from "@/types";
+import { alertManager } from "@/stores/alert.store";
 
 const ConversationStatusSection = () => {
-  const [statuses, setStatuses] = useState(INITIAL_CONVERSATION_STATUS);
-
+  const {
+    createConfigurationItem,
+    configurationItems,
+    deleteConfigurationItem,
+  } = useConfigurationStore((state) => state);
+  const toastService = new ToastMessageService();
+  // const [statuses, setStatuses] = useState(INITIAL_CONVERSATION_STATUS);
   const [openModal, setOpenModal] = useState(false);
-
   const [editingStatus, setEditingStatus] = useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCreate = () => {
     setEditingStatus(null);
-
     setOpenModal(true);
   };
 
   const handleEdit = (row: any) => {
     setEditingStatus(row);
-
     setOpenModal(true);
   };
 
   const handleDelete = (id: number) => {
-    setStatuses((prev) => prev.filter((item) => item.id !== id));
+    alertManager.show({
+      type: "warning",
+      title: "Delete Status",
+      message: "Are you sure you want to delete this status?",
+      onConfirm: async () => {
+        const response = await deleteConfigurationItem(String(id));
+
+        if (response && response.status === 200) {
+          toastService.success(
+            response?.message || "Status deleted successfully!",
+          );
+        }
+      },
+    });
   };
 
-  const handleSubmit = (values: any) => {
-    if (editingStatus) {
-      setStatuses((prev) =>
-        prev.map((item) =>
-          item.id === editingStatus.id
-            ? {
-                ...item,
-                ...values,
-              }
-            : item,
-        ),
-      );
-    } else {
-      setStatuses((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          order: prev.length + 1,
-          system: false,
-          ...values,
-        },
-      ]);
+  const handleSubmit = async (values: Partial<TConfigValue>) => {
+    setIsSubmitting(true);
+    try {
+      const payload = { ...values, order: configurationItems.length + 1 };
+      if (editingStatus) {
+        // setStatuses((prev) =>
+        //   prev.map((item) =>
+        //     item.id === editingStatus.id
+        //       ? {
+        //           ...item,
+        //           ...values,
+        //         }
+        //       : item,
+        //   ),
+        // );
+      } else {
+        const response = await createConfigurationItem(payload);
+        if (response && response?.status === 201) {
+          toastService.success(
+            response?.message || "Status created successfully!",
+          );
+        }
+      }
+      setOpenModal(false);
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastService.error(err.message);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setOpenModal(false);
   };
 
   const columns = [
@@ -168,7 +167,7 @@ const ConversationStatusSection = () => {
         <StatusActions
           row={row}
           onEdit={() => handleEdit(row)}
-          onDelete={() => handleDelete(row.id)}
+          onDelete={() => handleDelete(row._id)}
         />
       ),
     },
@@ -201,7 +200,7 @@ const ConversationStatusSection = () => {
             <div className="mb-8 grid grid-cols-3 gap-5">
               <StatsCard
                 title="Total Statuses"
-                value={String(statuses.length)}
+                value={String(configurationItems.length)}
                 icon={<MessageSquare className="size-4 text-[#16A34A]" />}
                 subtitle="All conversation statuses"
                 iconBg="bg-[#DCFCE7]"
@@ -209,7 +208,9 @@ const ConversationStatusSection = () => {
 
               <StatsCard
                 title="System Statuses"
-                value={String(statuses.filter((item) => item.system).length)}
+                value={String(
+                  configurationItems.filter((item) => item.system).length,
+                )}
                 icon={<Lock className="size-4 text-[#3B82F6]" />}
                 subtitle="Cannot be deleted"
                 iconBg="bg-[#DBEAFE]"
@@ -217,7 +218,9 @@ const ConversationStatusSection = () => {
 
               <StatsCard
                 title="Custom Statuses"
-                value={String(statuses.filter((item) => !item.system).length)}
+                value={String(
+                  configurationItems.filter((item) => !item.system).length,
+                )}
                 icon={<Pencil className="size-4 text-[#8B5CF6]" />}
                 subtitle="Created by you"
                 iconBg="bg-[#F3E8FF]"
@@ -225,7 +228,7 @@ const ConversationStatusSection = () => {
             </div>
 
             {/* TABLE */}
-            <DataTable columns={columns} data={statuses} />
+            <DataTable columns={columns} data={configurationItems} />
 
             {/* ALERT */}
             <div className="mt-5 rounded-2xl border border-[#DCFCE7] bg-[#F0FDF4] px-5 py-4 text-sm text-[#15803D]">
@@ -287,6 +290,7 @@ const ConversationStatusSection = () => {
         onClose={() => setOpenModal(false)}
         onSubmit={handleSubmit}
         initialData={editingStatus}
+        isSubmitting={isSubmitting}
       />
     </>
   );

@@ -11,12 +11,14 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
+import Loader from "@/components/Loader";
 
 interface LeadStatusModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (values: any) => void;
   initialData?: any;
+  isSubmitting?: boolean;
 }
 
 const presetColors = [
@@ -41,6 +43,7 @@ const LeadStatusModal = ({
   onClose,
   onSubmit,
   initialData,
+  isSubmitting,
 }: LeadStatusModalProps) => {
   const [form, setForm] = useState({
     label: "",
@@ -53,7 +56,7 @@ const LeadStatusModal = ({
       setForm({
         label: initialData.label,
         color: initialData.color,
-        default: initialData.default,
+        default: initialData.isDefault,
       });
     } else {
       setForm({
@@ -65,6 +68,9 @@ const LeadStatusModal = ({
   }, [initialData]);
 
   const generatedKey = useMemo(() => {
+    if (initialData?.system) {
+      return initialData.key;
+    }
     return generateKey(form.label);
   }, [form.label]);
 
@@ -289,6 +295,7 @@ const LeadStatusModal = ({
               "
             >
               {initialData ? "Save Changes" : "Create Status"}
+              {isSubmitting && <Loader />}
             </Button>
           </div>
         </div>

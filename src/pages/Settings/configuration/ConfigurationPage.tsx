@@ -1,7 +1,16 @@
+import { useEffect } from "react";
 import ConfigurationContent from "./components/tabs/ConfigurationContent";
 import ConfigurationTabs from "./components/tabs/ConfigurationTabs";
+import { useConfigurationStore } from "./store/configuration.store";
 
 const ConfigurationPage = () => {
+  const { getConfigurations, activeTab } = useConfigurationStore(
+    (state) => state,
+  );
+
+  useEffect(() => {
+    getConfigurations();
+  }, [activeTab]);
   return (
     <div>
       {/* <ConfigurationHeader /> */}
