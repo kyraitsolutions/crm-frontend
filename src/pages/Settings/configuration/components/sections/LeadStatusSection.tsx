@@ -20,10 +20,10 @@ const LeadStatusSection = () => {
   const {
     createConfigurationItem,
     configurationItems,
+    updateConfigurationItem,
     deleteConfigurationItem,
   } = useConfigurationStore((state) => state);
   const toastService = new ToastMessageService();
-  // const [statuses, setStatuses] = useState(LEAD_STATUS);
   const [openModal, setOpenModal] = useState(false);
   const [editingStatus, setEditingStatus] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,7 +133,15 @@ const LeadStatusSection = () => {
     setIsSubmitting(true);
     try {
       if (editingStatus) {
-        console.log(values);
+        const response = await updateConfigurationItem(
+          editingStatus._id,
+          values,
+        );
+        if (response && response?.status === 200) {
+          toastService.success(
+            response?.message || "Status updated successfully!",
+          );
+        }
       } else {
         const payload = { ...values, order: configurationItems.length + 1 };
         const response = await createConfigurationItem(payload);

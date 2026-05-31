@@ -77,7 +77,6 @@ class ApiService {
     if (error.response) {
       const data = error.response.data as any;
 
-      console.log(data);
       const apiError: ApiError = {
         message:
           data?.error?.responseMessage || // ✅ your backend format
@@ -112,8 +111,8 @@ class ApiService {
   }
 
   private handleUnauthorized(): void {
-    // CookieUtils.removeItem(COOKIES_STORAGE.auth_token);
-    // window.location.href = "/login";
+    CookieUtils.removeItem(COOKIES_STORAGE.auth_token);
+    window.location.href = "/login";
   }
 
   private logRequest(config: { method?: string; url?: string }) {

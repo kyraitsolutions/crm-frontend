@@ -21,6 +21,10 @@ interface ConfigurationState {
 
   getConfigurations: () => Promise<void>;
   createConfigurationItem: (payload: any) => Promise<ApiResponse<any>>;
+  updateConfigurationItem: (
+    itemId: string,
+    payload: Partial<ConfigurationItem>,
+  ) => Promise<ApiResponse<any>>;
   deleteConfigurationItem: (itemId: string) => Promise<ApiResponse<any>>;
 }
 
@@ -70,7 +74,17 @@ export const useConfigurationStore = create<ConfigurationState>((set, get) => ({
 
     return response;
   },
+  updateConfigurationItem: async (itemId: string, payload: any) => {
+    const configId = get().configId as string;
+    const response = await configurationService.updateConfigItem(
+      configId,
+      itemId,
+      payload,
+    );
+    await get().getConfigurations();
 
+    return response;
+  },
   deleteConfigurationItem: async (itemId: string) => {
     const configId = get().configId;
 

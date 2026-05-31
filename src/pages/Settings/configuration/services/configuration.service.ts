@@ -15,6 +15,13 @@ export class ConfigurationService extends ApiService {
     );
   }
 
+  async updateConfigItem(configId: string, itemId: string, payload: any) {
+    return await this.put(
+      `${API_ENDPOINT_PATH.CONFIGURATION.updateConfigItemPath(configId, itemId)}`,
+      payload,
+    );
+  }
+
   async deleteConfigurationItem(configId: string, itemId: string) {
     return await this.delete(
       `${API_ENDPOINT_PATH.CONFIGURATION.deleteConfigItemPath(configId, itemId)}`,
