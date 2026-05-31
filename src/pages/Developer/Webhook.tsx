@@ -10,14 +10,14 @@ export default function Webhook() {
     const copyWebhookUrl = `http://localhost:3000/api/account/<app_secret>/lead/webhook/create`;
 
     const [formData, setFormData] = useState({
-        name: "John Doe",
+        name: "Abhijeet Doe",
         email: "john@example.com",
         phone: "+911234567890",
         message: "Interested in your service",
     });
 
     const [customFields, setCustomFields] = useState([
-        { key: "city", value: "Mumbai" },
+        { key: "city", value: "Delhi" },
     ]);
 
     const [devTab, setDevTab] = useState("fetch");

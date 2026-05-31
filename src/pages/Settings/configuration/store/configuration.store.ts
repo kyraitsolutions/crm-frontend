@@ -3,7 +3,7 @@ import { configurationService } from "../services/configuration.service";
 import { CONFIGURATION_MAP } from "../constants/configuration.constants";
 import type { ApiResponse } from "@/types";
 
-interface ConfigurationItem {
+export interface ConfigurationItem {
   _id: string;
   key: string;
   label: string;

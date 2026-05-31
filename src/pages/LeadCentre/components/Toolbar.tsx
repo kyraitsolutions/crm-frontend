@@ -1,3 +1,4 @@
+import type { Option } from "@/components/filter-dropdown";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { LEADS_ROUTES } from "@/constants/routes/leads.path";
 import {
@@ -14,10 +15,14 @@ import {
     RotateCw,
     Ellipsis,
 } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLeadsStore } from "../store/lead.store";
 
 const Toolbar = () => {
     const navigate = useNavigate();
+    const { openSort, setOpenSort } = useLeadsStore((state) => state);
+
     const viewOptions = [
         { title: "List view", icon: List },
         { title: "Kanban view", icon: Columns2 },
@@ -28,8 +33,23 @@ const Toolbar = () => {
         { title: "Map view", icon: MapPin },
         { title: "More views", icon: ChevronDown },
     ];
+
+    const [filters, setFilters] = useState<Record<string, Option>>({
+        lead: { label: "All Leads", value: null },
+        campaign: { label: "All Campaigns", value: null },
+        form: { label: "All Forms", value: null },
+        date: { label: "All Dates", value: null },
+        status: { label: "All Status", value: null },
+        source: { label: "All Sources", value: null },
+        assignedTo: { label: "All Users", value: null },
+        label: { label: "All Labels", value: null },
+        stage: { label: "All Stages", value: null },
+        read: { label: "All", value: null },
+    });
+
+
     return (
-        <div className="flex items-center justify-between gap-4 border-b px-4 py-2 bg-white text-gray-700">
+        <div className="relative flex items-center justify-between gap-4 border-b px-4 py-2 bg-white text-gray-700">
             <div className="flex items-center gap-4">
 
                 {/* Filter */}
@@ -39,7 +59,7 @@ const Toolbar = () => {
                 </ButtonWithTitle>
 
                 {/* Sort */}
-                <ButtonWithTitle className="flex items-center gap-2 hover:text-black transition">
+                <ButtonWithTitle onClick={() => setOpenSort(!openSort)} className="flex items-center gap-2 hover:text-black transition">
                     <ArrowUpDown size={16} />
                     <span className="text-sm font-medium">Sort</span>
                 </ButtonWithTitle>
@@ -88,6 +108,7 @@ const Toolbar = () => {
                     <Ellipsis size={20} />
                 </ButtonWithTitle>
             </div>
+
         </div>
     );
 };
