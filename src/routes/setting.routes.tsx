@@ -23,6 +23,7 @@ import { PERMISSIONS } from "@/rbac";
 import { type RouteObject } from "react-router-dom";
 import { RequirePermission } from "./route-access/RequirePermission";
 import ConfigurationPage from "@/pages/Settings/configuration/ConfigurationPage";
+import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page";
 
 export const settingRoutes: RouteObject[] = [
   {
@@ -46,6 +47,7 @@ export const settingRoutes: RouteObject[] = [
 
           // Plan and Subscription
           { path: "subscription", element: <SubscriptionPage /> },
+          { path: "my-plan", element: <MySubscriptionPage /> },
 
           // Integrations
           { path: "integrations", element: <Integrations /> },

@@ -12,38 +12,39 @@ import { useParams } from "react-router-dom";
 import { LeadService } from "@/services/lead.service";
 import { useAuthStore } from "@/stores";
 import { timeAgo } from "@/utils/date.utils";
+import type { ILead } from "../types/lead.type";
 
-interface Lead {
-    name: string;
-    company: string;
-    owner: string;
-    email: string;
-    phone: string;
-    mobile: string;
-    status: string;
-    title: string;
-    source: { name: string };
-    website: string;
-    notes: string[];
-    attachments: string[],
-    updatedAt?: string;
-}
 
-const leadData: Lead = {
-    name: "Ms. Yvonne Tjepkema (Sample)",
-    company: "Grayson",
-    owner: "Abhijeet Singh",
-    email: "yvonne-tjepkema@noemail.invalid",
-    phone: "555-555-5555",
-    mobile: "555-555-5555",
-    status: "Pre-Qualified",
-    title: "Office Assistant III",
-    source: { name: "External Referral" },
-    website: "http://www.feltzprintingservice.com",
-    notes: ["kya hal hein", "kuch nhi"],
-    attachments: ["kya hal hein", "kuch nhi", "thik hai"],
-    updatedAt: "2023-10-10T10:00:00Z"
-};
+
+// const leadData: Lead = {
+//     name: "Ms. Yvonne Tjepkema (Sample)",
+//     company: "Grayson",
+//     owner: "Abhijeet Singh",
+//     email: "yvonne-tjepkema@noemail.invalid",
+//     phone: "555-555-5555",
+//     mobile: "555-555-5555",
+//     status: "Pre-Qualified",
+//     title: "Office Assistant III",
+//     source: { name: "External Referral" },
+//     website: "http://www.feltzprintingservice.com",
+//     notes: [
+//         {
+//             message: "kya hal hein",
+//             type: "text",
+//             createdAt: "2023-10-10T10:00:00Z",
+//             updatedAt: "2023-10-10T10:00:00Z",
+//             createdBy: "Abhijeet Singh"
+//         },
+//         {
+//             message: "kuch nhi", type: "text", createdAt: "2023-10-10T10:00:00Z", updatedAt: "2023-10-10T10:00:00Z", createdBy: "Abhijeet Singh"
+//         },
+//         { message: "thik hai", type: "phone", createdAt: "2023-10-10T10:00:00Z", updatedAt: "2023-10-10T10:00:00Z", createdBy: "Abhijeet Singh" }
+
+//     ],
+//     attachments: ["kya hal hein", "kuch nhi", "thik hai"],
+//     updatedAt: "2023-10-10T10:00:00Z",
+//     createdAt: "2023-10-01T10:00:00Z",
+// };
 
 
 
@@ -55,12 +56,12 @@ const LeadDetail = () => {
     const [activeTab, setActiveTab] = useState("overview");
     const [openEmailEditor, setOpenEmailEditor] = useState(false);
 
-    const [lead, setLead] = useState<Lead | null>(null);
+    const [lead, setLead] = useState<ILead | null>(null);
 
     const getLead = async () => {
         try {
             const response = await leadService.getLead(String(accountId), leadId || "");
-            console.log("🚀 ~ file: LeadDetail.tsx:22 ~ getLeads ~ response:", response)
+            console.log("Lead api response:", response)
 
             if (response.status === 200 || response.status === 201) {
                 setLead(response.data?.doc || {});
@@ -78,7 +79,7 @@ const LeadDetail = () => {
         // calculateBasicNumber()
     }, [leadId]);
 
-    console.log("🚀 ~ file: LeadDetail.tsx:24 ~ LeadDetail ~ leadId:", leadId)
+    console.log("🚀 ~ file: LeadDetail.tsx:24 ~ LeadDetail ~ leadId:", lead)
 
 
 

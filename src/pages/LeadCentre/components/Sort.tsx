@@ -30,7 +30,7 @@ const Sort = () => {
         <>
             {openSort && (
                 <div
-                    className="fixed inset-0 z-50 "
+                    className="absolute inset-0 z-50 "
                     onClick={() =>
                         setOpenSort(
                             false
@@ -38,7 +38,8 @@ const Sort = () => {
                     }
                 >
 
-                    <div onClick={(e) => e.stopPropagation()} className=" relative top-52 left-48 w-105 rounded-xl border border-primary bg-white shadow-xl p-4 -z-20">
+                    {/* <div onClick={(e) => e.stopPropagation()} className=" relative top-52 left-48 w-105 rounded-xl border border-primary bg-white shadow-xl p-4 -z-20"> */}
+                    <div onClick={(e) => e.stopPropagation()} className=" relative mt-10 w-105 rounded-xl border border-primary bg-white shadow-xl p-4 -z-20">
                         <div >
                             <div className='h-5.5 w-5.5 bg-white border-l border-t border-primary rotate-45 rounded-xl -mt-6.5' />
                             <h3 className="text-sm font-medium mb-3">

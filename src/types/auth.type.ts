@@ -23,8 +23,10 @@ export interface IUser {
     profilePicture:string
   };
   account: Partial<Account>;
-  usersubscription: {
+  subscription: {
     planId: string;
+    startedAt:Date;
+    expiresAt:Date
   };
   permissions?: string[];
 }

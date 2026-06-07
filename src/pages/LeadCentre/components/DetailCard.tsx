@@ -1,35 +1,8 @@
 import { useState } from 'react'
 import { FieldRow } from './FieldRow'
-interface Lead {
-    name: string;
-    company: string;
-    owner: string;
-    email: string;
-    phone: string;
-    mobile: string;
-    status: string;
-    title: string;
-    source: {
-        name: string;
-    };
-    website: string;
-}
+import type { ILead } from '../types/lead.type';
 
-const leadData: Lead = {
-    name: "Ms. Yvonne Tjepkema (Sample)",
-    company: "Grayson",
-    owner: "Abhijeet Singh",
-    email: "yvonne-tjepkema@noemail.invalid",
-    phone: "555-555-5555",
-    mobile: "555-555-5555",
-    status: "Pre-Qualified",
-    title: "Office Assistant III",
-    source: {
-        name: "External Referral"
-    },
-    website: "http://www.feltzprintingservice.com",
-};
-const DetailCard = ({ lead }: { lead: Lead | null }) => {
+const DetailCard = ({ lead }: { lead: ILead | null }) => {
     const [hideDetails, setHideDetails] = useState(true);
 
     return (
@@ -44,34 +17,45 @@ const DetailCard = ({ lead }: { lead: Lead | null }) => {
                         Lead Information
                     </h2>
 
-                    <div className="grid grid-cols-2 gap-x-24 max-w-4xl mx-auto">
+                    <div className="grid xl:grid-cols-2 gap-x-24 max-w-4xl mx-auto">
                         {/* Left */}
                         <div>
                             <FieldRow
                                 label="Lead Owner"
-                                value={lead?.owner || "Assignee--"}
+                                fieldKey="assignedTo"
+                                value={lead?.assignedTo || "Assignee--"}
+                                leadId={lead?.id}
                             />
 
                             <FieldRow
                                 label="Title"
-                                value={lead?.title || ""}
+                                value={lead?.title || "Sample Inquiry"}
+                                fieldKey="title"
+                                leadId={lead?.id}
                             />
 
                             <FieldRow
                                 label="Phone"
-                                value={lead?.phone || ""}
+                                fieldKey="phone"
                                 isPhone
+                                value={lead?.phone || ""}
+                                leadId={lead?.id}
+
                             />
 
                             <FieldRow
                                 label="Mobile"
-                                value={lead?.phone || ""}
+                                value={lead?.mobile || ""}
                                 isPhone
+                                fieldKey="mobile"
+                                leadId={lead?.id}
                             />
 
                             <FieldRow
                                 label="Lead Source"
                                 value={lead?.source.name || ""}
+                                fieldKey="source.name"
+                                leadId={lead?.id}
                             />
                         </div>
 
@@ -79,27 +63,37 @@ const DetailCard = ({ lead }: { lead: Lead | null }) => {
                         <div>
                             <FieldRow
                                 label="Company"
-                                value={lead?.company || ""}
+                                fieldKey="company"
+                                value={lead?.company || "TCS"}
+                                leadId={lead?.id}
                             />
 
                             <FieldRow
                                 label="Lead Name"
                                 value={lead?.name || ""}
+                                fieldKey="name"
+                                leadId={lead?.id}
                             />
 
                             <FieldRow
                                 label="Email"
                                 value={lead?.email || ""}
+                                fieldKey="email"
+                                leadId={lead?.id}
                             />
 
                             <FieldRow
                                 label="Website"
                                 value={lead?.website || ""}
+                                fieldKey="website"
+                                leadId={lead?.id}
                             />
 
                             <FieldRow
                                 label="Lead Status"
                                 value={lead?.status || ""}
+                                fieldKey="status"
+                                leadId={lead?.id}
                             />
                         </div>
                     </div>
@@ -111,7 +105,37 @@ const DetailCard = ({ lead }: { lead: Lead | null }) => {
                     <div className="max-w-4xl mx-auto">
                         <FieldRow
                             label="Address"
-                            value={"Mohali, India"}
+                            value={lead?.meta?.location?.address || "Mohali, India"}
+                            fieldKey="meta.location.address"
+                            leadId={lead?.id}
+                        />
+                        <FieldRow
+                            label="City"
+                            value={lead?.meta?.location?.city || "Mohali"}
+                            fieldKey="meta.location.city"
+                            leadId={lead?.id}
+                        />
+                        <FieldRow
+                            label="Country"
+                            value={lead?.meta?.location?.country || "India"}
+                            fieldKey="meta.location.country"
+                            leadId={lead?.id}
+                        />
+                    </div>
+
+
+                </div>
+
+                <div className="p-6">
+                    <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
+                        Message Information
+                    </h2>
+                    <div className="max-w-4xl mx-auto">
+                        <FieldRow
+                            label="Message"
+                            value={lead?.message || "No message provided."}
+                            fieldKey="message"
+                            leadId={lead?.id}
                         />
                     </div>
 
@@ -124,21 +148,23 @@ const DetailCard = ({ lead }: { lead: Lead | null }) => {
                     <div className="max-w-4xl mx-auto">
                         <FieldRow
                             label="Description"
-                            value={"Address Information Address 639 Main St Anchorage, AK 99501"}
+                            value={lead?.description || "No description provided."}
+                            fieldKey="description"
+                            leadId={lead?.id}
                         />
                     </div>
 
 
                 </div>
-                <div className="p-6">
+                {/* <div className="p-6">
                     <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
                         Visit Summary
                     </h2>
 
-                    <div className="grid grid-cols-2 gap-x-24 max-w-4xl mx-auto">
-                        {/* Left */}
+                    <div className="grid xl:grid-cols-2 gap-x-24 max-w-4xl mx-auto">
                         <div>
                             <FieldRow
+
                                 label="Most Recent Visit"
                                 value={lead?.owner || "Assignee--"}
                             />
@@ -162,7 +188,6 @@ const DetailCard = ({ lead }: { lead: Lead | null }) => {
 
                         </div>
 
-                        {/* Right */}
                         <div>
                             <FieldRow
                                 label="First Page Visited"
@@ -186,7 +211,7 @@ const DetailCard = ({ lead }: { lead: Lead | null }) => {
 
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>}
 
 

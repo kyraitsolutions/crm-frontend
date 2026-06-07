@@ -1,24 +1,27 @@
 
 
 
-import type { ILead } from "@/types/lead.type";
 import { create } from "zustand";
 import { leadService } from "../services/lead.service";
+import type { ILead } from "../types/lead.type";
 
 interface ILeadsStoreState {
     leads: ILead[] | [];
     totalItems: number | null;
     //   leadForms: ILeadForm[] | [];
-    currentPage:number,
-    totalPages:number,
-
+    currentPage:number;
+    totalPages:number;
+    editingField: string | null;
+    updatingLead: boolean;
     loadingLeads:boolean;
     leadQuery:TLeadQuery;
     setLeadQuery: (query: Partial<TLeadQuery>) => void;
     openSort: boolean;
     setOpenSort: (openSort: boolean) => void;
+    setEditingField:(field: string | null) => void;
     setCurrentPage: (page: number) => void;
     fetchLeads:(accountId: string) => Promise<void>;
+    updateLeadField: (accountId:string,leadId: string,field: keyof ILead,value: any) => Promise<void>;
 }
 
 
@@ -65,6 +68,8 @@ export const useLeadsStore = create<ILeadsStoreState>((set,get)=>({
     totalPages:1,
     totalItems:10,
 
+    editingField: null,
+    updatingLead: false,
 
     leadQuery:initialLeadQuery,
     setLeadQuery: (query) => {
@@ -76,24 +81,25 @@ export const useLeadsStore = create<ILeadsStoreState>((set,get)=>({
             currentPage: 1,
         }));
     },
+
     openSort: false,
-    setOpenSort: (openSort: boolean) => {
+    setEditingField: (field) => {
         set({
-            openSort: openSort
-        })
+            editingField: field,
+        });
+    },
+    setOpenSort: (openSort) => {
+        set({openSort: openSort})
     },
     setCurrentPage: (page) => {
-        const current =
-            get().currentPage;
+        const current =get().currentPage;
 
         if (current === page)
             return;
 
-        set({
-            currentPage: page,
-        });
+        set({currentPage: page,});
     },
-    fetchLeads:async(accountId:string)=>{
+    fetchLeads:async(accountId)=>{
         try {
             set({loadingLeads:true})
 
@@ -132,7 +138,40 @@ export const useLeadsStore = create<ILeadsStoreState>((set,get)=>({
         }finally{
             set({loadingLeads:false})
         }
-    }
+    },
+    updateLeadField: async (accountId,leadId,field,value) => {
+
+        console.log("Updating lead", {leadId,field,value});
+        const prevLeads =get().leads;
+
+        try {
+            set({updatingLead: true});
+
+            // Optimistic update
+            set((state) => ({
+                leads: state.leads.map((lead) =>
+                    lead.id === leadId? {...lead,[field]:value,}: lead
+            ),
+            }));
+
+            // Partial payload only
+            const payload = {
+                id:leadId,
+                [field]: value,
+            };
+
+            await leadService.updateLead(accountId, payload);
+
+            set({editingField: null,});
+        } catch (error) {
+            console.error("Update lead failed",error);
+
+            // rollback
+            set({    leads: prevLeads,});
+        } finally {
+            set({updatingLead: false,});
+        }
+    },
 }));
 
 // export class LeadsStoreManager {

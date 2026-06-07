@@ -23,7 +23,7 @@ const SnapshotCard = ({
   analyticsLabel,
 }: SnapshotCardProps) => {
   return (
-    <div className=" bg-white border border-gray-200 rounded-2xl p-5 flex-1">
+    <div className=" bg-white border border-gray-200 rounded-xl p-5 flex-1">
       {/* Header */}
       <div className="flex items-center gap-3 mb-5">
         <div

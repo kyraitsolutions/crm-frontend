@@ -19,7 +19,7 @@ interface LeadsOverTimeChartProps {
 
 const LeadsOverTimeChart = ({ data }: LeadsOverTimeChartProps) => {
   return (
-    <div className="rounded-2xl border bg-white p-5 shadow-sm h-full">
+    <div className="rounded-xl border bg-white p-5 shadow-sm h-full">
       <div className="mb-5 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Leads Over Time</h2>
       </div>

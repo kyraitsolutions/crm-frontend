@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState, type JSX } from 'react'
+import { useEffect, useState, type JSX } from 'react'
 import useDebounce from '@/hooks/useDebounce';
 import { useAccountAccessStore } from '@/stores/account-access.store';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock3, Import, Mail, Phone, Shapes, Webhook } from 'lucide-react';
+import { ArrowRightCircleIcon, Clock3, Import, Mail, Phone, Shapes, Webhook } from 'lucide-react';
 import { formatDate } from '@/utils/date-utils';
 import { useAuthStore } from '@/stores';
 import { TbManualGearbox } from 'react-icons/tb';
 import { Instagram } from '@/icons/icons';
 import { MdWhatsapp } from 'react-icons/md';
 import { FaGoogle } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LEADS_PATHS } from '@/constants/routes/leads.path';
 import { useConfigurationStore } from '@/pages/Settings/configuration/store/configuration.store';
 import { useLeadsStore } from '../store/lead.store';
@@ -33,7 +33,6 @@ const LeadTable = () => {
 
 
 
-    const isSkeletonShow = useRef(true);
     const { getConfigurations, configurationItems, activeTab } = useConfigurationStore(
         (state) => state,
     );
@@ -72,6 +71,21 @@ const LeadTable = () => {
         import: <Import className="size-4 text-muted-foreground" />,
     };
 
+    if (leads.length === 0) {
+        return (
+            <div className="flex h-[500px] w-full items-center justify-center">
+                <div className="text-center">
+                    <img src="/src/assets/nochathistoryfound_CnSlq9EOHBW59HI8RYjeSpZ_WbWyQz9RmyNcvToLwGw4g31mlf1rnCox3Y3F-6xk_.svg" rel="preload" fetchPriority="high" alt="No chats yet" className="w-75" />
+                    <h3 className="text-sm mt-2 font-semibold text-gray-800">No leads yet</h3>
+
+                    <p className="mt-1 text-xs text-gray-500 flex items-center gap-1">
+                        Start managing leads, {" "} <Link to="/dashboard/settings/webhook" className='text-blue-600 underline flex items-center gap-1'> setup webhook <ArrowRightCircleIcon size={14} /></Link>
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="overlead-hidden hide-scrollbar bg-white rounded-xl">
             <Table className='border-b'>
@@ -103,8 +117,8 @@ const LeadTable = () => {
                 <TableBody>
                     {leads?.map((lead, index) => (
                         <TableRow
-                            key={lead._id}
-                            onClick={() => navigate(LEADS_PATHS.getLeadDetail(String(accountId), lead._id))}
+                            key={lead.id}
+                            onClick={() => navigate(LEADS_PATHS.getLeadDetail(String(accountId), lead.id))}
                             className="group border-b  border-gray-200 transition-colors hover:bg-muted/20 odd:bg-gray-100/40"
                         >
                             <TableCell className="">
@@ -126,16 +140,16 @@ const LeadTable = () => {
                                 <div className="flex items-center gap-4">
                                     <div className="flex size-7 items-center justify-center text-primary rounded-2xl border bg-primary/10">
                                         {/* nb <Worklead className="size-4 text-primary" /> */}
-                                        {lead.name?.charAt(0).toUpperCase()}
+                                        {lead?.name?.charAt(0).toUpperCase()}
                                     </div>
 
                                     <div className="space-y-1">
                                         <h3 className="font-semibold">
-                                            {lead.name}
+                                            {lead?.name}
                                         </h3>
 
                                         <p className=" truncate text-xs text-muted-foreground">
-                                            {lead.message?.slice(0, 50) || "No message"}
+                                            {lead?.message?.slice(0, 50) || "No message"}
                                         </p>
                                     </div>
                                 </div>
@@ -145,7 +159,7 @@ const LeadTable = () => {
                                 <div className="flex items-center gap-2">
                                     <Phone className="size-4 text-primary" />
                                     <h3 className="font-semibold">
-                                        {lead.phone}
+                                        {lead?.phone}
                                     </h3>
                                 </div>
                             </TableCell>
@@ -155,7 +169,7 @@ const LeadTable = () => {
                                 <div className="flex items-center gap-2">
                                     <Mail className="size-4 text-primary" />
                                     <h3 className="font-medium">
-                                        {lead.email}
+                                        {lead?.email}
                                     </h3>
                                 </div>
                             </TableCell>
@@ -163,12 +177,12 @@ const LeadTable = () => {
                             {/* STATUS */}
                             <TableCell>
                                 <Select
-                                    value={lead.stage}
+                                    value={lead?.stage}
                                 //   onValueChange={(value: TChatleadStatus) =>
                                 //     handleStatusChange(lead.id, value)
                                 //   }
                                 >
-                                    <SelectTrigger className="border-none shadow-none">
+                                    <SelectTrigger className="border-none shadow-none" onClick={(e: any) => e.stopPropagation()}>
                                         <SelectValue />
                                     </SelectTrigger>
 
@@ -272,8 +286,8 @@ const LeadTable = () => {
                     }}
                 />
             </div>
-
         </div>
+
     )
 }
 

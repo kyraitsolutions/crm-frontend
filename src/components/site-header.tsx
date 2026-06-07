@@ -10,6 +10,7 @@ import Notification from "@/pages/Notification/Notification";
 import { useNotificationStore } from "@/pages/Notification/store/notification.store";
 import ButtonWithTitle from "./ui/Buttons/ButtonWithTitle";
 import GlobalSearch from "./globalSearch/GlobalSearch";
+import { SubscriptionPlan } from "@/enums/subscription.enum";
 
 export function SiteHeader() {
   const navigate = useNavigate();
@@ -29,6 +30,14 @@ export function SiteHeader() {
   useEffect(() => {
     setOpenSearch(search.trim().length > 0);
   }, [search]);
+
+
+  const now = new Date();
+  const expiryDate = new Date(user?.subscription?.expiresAt);
+
+  const totalDaysLeft = Math.ceil(
+    (expiryDate - now) / (1000 * 60 * 60 * 24)
+  );
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -56,7 +65,7 @@ export function SiteHeader() {
           <div className="flex items-center gap-4">
             {/* Trial Text */}
             <span className="text-md text-primary font-medium">
-              Trial expires in 14 days
+              {SubscriptionPlan[user?.subscription?.planId]} expires in {totalDaysLeft} days
             </span>
 
             {/* Upgrade Button */}

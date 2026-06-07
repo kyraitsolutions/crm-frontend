@@ -18,7 +18,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 const LeadsByStatusChart = ({ data }: LeadsByStatusProps) => {
   return (
-    <div className="rounded-2xl border bg-white p-5 shadow-sm h-full">
+    <div className="rounded-xl border bg-white p-5 shadow-sm h-full">
       <div className="mb-5">
         <h2 className="text-lg font-semibold">Leads By Status</h2>
       </div>
