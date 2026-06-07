@@ -5,7 +5,6 @@ import Overview from "./Overview";
 import DetailCard from "./DetailCard";
 import Sidebar from "./Sidebar";
 import LeadHeader from "./LeadHeader";
-import Timeline from "./Timeline";
 import Attachment from "./Attachment";
 import EmailEditor from "./EmailEditor";
 import { useParams } from "react-router-dom";
@@ -13,40 +12,11 @@ import { LeadService } from "@/services/lead.service";
 import { useAuthStore } from "@/stores";
 import { timeAgo } from "@/utils/date.utils";
 import type { ILead } from "../types/lead.type";
-
-
-
-// const leadData: Lead = {
-//     name: "Ms. Yvonne Tjepkema (Sample)",
-//     company: "Grayson",
-//     owner: "Abhijeet Singh",
-//     email: "yvonne-tjepkema@noemail.invalid",
-//     phone: "555-555-5555",
-//     mobile: "555-555-5555",
-//     status: "Pre-Qualified",
-//     title: "Office Assistant III",
-//     source: { name: "External Referral" },
-//     website: "http://www.feltzprintingservice.com",
-//     notes: [
-//         {
-//             message: "kya hal hein",
-//             type: "text",
-//             createdAt: "2023-10-10T10:00:00Z",
-//             updatedAt: "2023-10-10T10:00:00Z",
-//             createdBy: "Abhijeet Singh"
-//         },
-//         {
-//             message: "kuch nhi", type: "text", createdAt: "2023-10-10T10:00:00Z", updatedAt: "2023-10-10T10:00:00Z", createdBy: "Abhijeet Singh"
-//         },
-//         { message: "thik hai", type: "phone", createdAt: "2023-10-10T10:00:00Z", updatedAt: "2023-10-10T10:00:00Z", createdBy: "Abhijeet Singh" }
-
-//     ],
-//     attachments: ["kya hal hein", "kuch nhi", "thik hai"],
-//     updatedAt: "2023-10-10T10:00:00Z",
-//     createdAt: "2023-10-01T10:00:00Z",
-// };
-
-
+import AILeadSummary from "@/components/common/AILeadSummary";
+import DataLoader from "@/components/Loader/data-loader";
+import Timeline from "./Timeline";
+import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
+import { formatDate } from "@/utils/date-utils";
 
 
 const LeadDetail = () => {
@@ -77,11 +47,15 @@ const LeadDetail = () => {
     useEffect(() => {
         getLead();
         // calculateBasicNumber()
-    }, [leadId]);
+    }, [leadId,]);
 
     console.log("🚀 ~ file: LeadDetail.tsx:24 ~ LeadDetail ~ leadId:", lead)
 
-
+    if (!lead) {
+        return (
+            <DataLoader />
+        );
+    }
 
     return (
         <div className="h-screen bg-[#f4f5f8] flex flex-col hide-scrollbar ">
@@ -125,11 +99,23 @@ const LeadDetail = () => {
                                 >
                                     Timeline
                                 </button>
+                                <button
+                                    onClick={() => setActiveTab("aiSummary")}
+                                    className={`px-4 py-1 rounded-full text-sm font-medium transition ${activeTab === "aiSummary"
+                                        ? "bg-primary/10 text-primary border border-primary font-semibold"
+                                        : "text-[#64748b]"
+                                        }`}
+                                >
+                                    AI Summary
+                                </button>
                             </div>
 
                             <div className="flex items-center gap-2 text-[#64748b] text-sm">
-                                <Clock3 size={16} />
-                                Last Update : {timeAgo(lead?.updatedAt || "")}
+                                <ButtonWithTitle title={formatDate(lead.updatedAt)} position="bottom" className="flex items-center gap-1">
+                                    <Clock3 size={16} />
+                                    Last Update : {timeAgo(lead?.updatedAt || "")}
+                                </ButtonWithTitle>
+
 
                             </div>
                         </div>
@@ -144,7 +130,7 @@ const LeadDetail = () => {
                         <DetailCard lead={lead} />
 
                         {/* Notes Section */}
-                        <Notes notes={lead?.notes || []} />
+                        <Notes lead={lead} />
 
                         {/* Attachment */}
                         <Attachment />
@@ -152,6 +138,10 @@ const LeadDetail = () => {
                     {activeTab === "timeline" && <div className="flex-1 overflow-y-auto p-5 space-y-5 hide-scrollbar">
                         {/* Timeline */}
                         <Timeline />
+                    </div>}
+                    {activeTab === "aiSummary" && <div className="flex-1 overflow-y-auto p-5 space-y-5 hide-scrollbar">
+                        {/* Timeline */}
+                        <AILeadSummary leadId={String(lead?.id)} />
                     </div>}
                 </div>
             </div>

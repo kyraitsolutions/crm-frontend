@@ -364,3 +364,73 @@ body {
 .node-setting-footer-btns-save{
   @apply bg-primary text-white hover:bg-primary/90 border-none
 }
+
+
+.loading-fill {
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+
+  animation: loadingSweep 10s infinite;
+}
+
+@keyframes loadingSweep {
+  /* RED */
+  0% {
+    width: 0%;
+    color: #ef4444;
+  }
+
+  20% {
+    width: 100%;
+    color: #ef4444;
+  }
+
+  25% {
+    width: 0%;
+    color: #d1d5db;
+  }
+
+  /* GREEN */
+  26% {
+    width: 0%;
+    color: #22c55e;
+  }
+
+  45% {
+    width: 100%;
+    color: #22c55e;
+  }
+
+  50% {
+    width: 0%;
+    color: #d1d5db;
+  }
+
+  /* YELLOW */
+  51% {
+    width: 0%;
+    color: #facc15;
+  }
+
+  70% {
+    width: 100%;
+    color: #facc15;
+  }
+
+  75% {
+    width: 0%;
+    color: #d1d5db;
+  }
+
+  /* ORANGE */
+  76% {
+    width: 0%;
+    color: #f97316;
+  }
+
+  100% {
+    width: 100%;
+    color: #f97316;
+  }
+}

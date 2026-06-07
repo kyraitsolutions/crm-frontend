@@ -1,40 +1,14 @@
 import ButtonWithTitle from '@/components/ui/Buttons/ButtonWithTitle'
 import { useAuthStore } from '@/stores';
 import { ChevronLeft, ChevronRight, MoreHorizontal, Tag } from 'lucide-react'
-import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import type { ILead } from '../types/lead.type';
 
-interface Lead {
-    name: string;
-    company: string;
-    owner: string;
-    email: string;
-    phone: string;
-    mobile: string;
-    status: string;
-    title: string;
-    source: { name: string };
-    website: string;
-    profileImage?: string;
-}
-
-const leadData: Lead = {
-    name: "Ms. Yvonne Tjepkema (Sample)",
-    company: "Grayson",
-    owner: "Abhijeet Singh",
-    email: "yvonne-tjepkema@noemail.invalid",
-    phone: "555-555-5555",
-    mobile: "555-555-5555",
-    status: "Pre-Qualified",
-    title: "Office Assistant III",
-    source: { name: "External Referral" },
-    website: "http://www.feltzprintingservice.com",
-};
 
 
 interface LeadHeaderProps {
     onClick: () => void;
-    lead: Lead | null;
+    lead: ILead | null;
 }
 const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
     const { accountId } = useAuthStore((state) => state);
@@ -51,7 +25,7 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
 
                         {lead?.profileImage ? (
                             <img
-                                src={lead.profileImage}
+                                src={lead?.profileImage}
                                 alt="profile"
                                 className="w-10 h-10 rounded-md"
                             />

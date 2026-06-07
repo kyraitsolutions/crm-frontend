@@ -1329,7 +1329,7 @@ export default function LeadsCentre() {
   );
 }
 
-const Timeline = ({ items }: { items: TimelineItem[] }) => {
+export const Timeline = ({ items }: { items: TimelineItem[] }) => {
   // if (items.length === 0)
   //   return (
   //     <div>

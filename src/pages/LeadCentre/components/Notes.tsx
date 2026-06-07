@@ -1,43 +1,124 @@
-import { Clock, Link } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { formatDate, formatTime } from '@/utils/date-utils';
+import { Clock, FileText, Link, MessageCircle, Phone, Settings, UserPlus } from 'lucide-react';
 import { useState } from 'react'
+import { useLeadsStore } from '../store/lead.store';
+import { useAuthStore } from '@/stores';
+import type { ILead } from '../types/lead.type';
+import { timeAgo } from '@/utils/date.utils';
+import ButtonWithTitle from '@/components/ui/Buttons/ButtonWithTitle';
 
-const Notes = ({ notes: initialNotes }: { notes: any[] }) => {
+
+export type ActivitySource =
+    | "phone_call"
+    | "message"
+    | "note"
+    | "email"
+    | "whatsapp";
+export interface TimelineItem {
+    activitySource: ActivitySource;
+    message: string;
+    attachment: string | null;
+    createdAt: string; // ISO string from server
+    createdBy: string; // userId (string for now)
+}
+const timelineConfig = {
+    phone_call: {
+        icon: Phone,
+        bg: "bg-purple-500",
+    },
+    message: {
+        icon: MessageCircle,
+        bg: "bg-fuchsia-500",
+    },
+    note: {
+        icon: FileText,
+        bg: "bg-indigo-500",
+    },
+    whatsapp: {
+        icon: Settings,
+        bg: "bg-gray-500",
+    },
+    user: {
+        icon: UserPlus,
+        bg: "bg-gray-600",
+    },
+};
+
+const activityOptions = [
+    { value: "phone_call", label: "Phone Call", icon: Phone },
+    { value: "message", label: "Message", icon: MessageCircle },
+    { value: "note", label: "Note", icon: FileText },
+    { value: "email", label: "Email", icon: FileText },
+    { value: "whatsapp", label: "Whatsapp", icon: FileText },
+] as const;
+const activityMap = {
+    phone_call: "Phone Call",
+    message: "Message",
+    note: "Note",
+    email: "Email",
+    whatsapp: "Whatsapp",
+} as const;
+const Notes = ({ lead }: { lead: ILead }) => {
+
+    const { accountId, user } = useAuthStore((state) => state);
+    const { editingField, setEditingField, updateLeadField, updatingLead } = useLeadsStore((state) => state);
+
+    const [activitySource, setActivitySource] = useState<ActivitySource>("phone_call");
     const [showNoteEditor, setShowNoteEditor] = useState(false);
     const [noteTitle, setNoteTitle] = useState("");
     const [showNotes, setShowNotes] = useState(true);
-    // const [notes, setNotes] = useState(initialNotes);
-    // const [notes, setNotes] = useState([
-    //     {
+    const [notes, setNotes] = useState<any>([]);
+    const [sortType, setSortType] = useState<"recent_first" | "recent_last">("recent_first");
 
-    //         id: 1,
-    //         title: "gfhfg",
-    //         createdBy: "Abhijeet Singh",
-    //         time: "now",
-    //     },
-    //     {
-    //         id: 2,
-    //         title: "dfhfghfg",
-    //         createdBy: "Abhijeet Singh",
-    //         time: "now",
-    //     },
-    // ]);
+    const notePayload = {
+        activitySource: activitySource,
+        attachment: "",
+        message: noteTitle,
+        createdBy: user?.id,
+        createdAt: new Date().toISOString()
+    }
 
-    const handleSaveNote = () => {
+
+    const handleSaveNote = async () => {
         if (!noteTitle.trim()) return;
 
-        const newNote = {
-            id: Date.now(),
-            title: noteTitle,
-            createdBy: "Abhijeet Singh",
-            time: "now",
-        };
+        console.log(lead?.notes,)
 
-        // setNotes((prev) => [newNote, ...prev]);
+        const payload = [
+            ...lead.notes, notePayload
+        ]
+        await updateLeadField(String(accountId), String(lead.id), "notes",
+            payload
+        );
+
+        setNotes((prev) => [notePayload, ...prev]);
         setNoteTitle("");
         setShowNoteEditor(false);
     };
 
-    console.log("Notes", initialNotes)
+    const sortedNotes = [...(lead?.notes || [])].sort(
+        (a, b) => {
+            const aTime = new Date(
+                a.createdAt
+            ).getTime();
+
+            const bTime = new Date(
+                b.createdAt
+            ).getTime();
+
+            return sortType ===
+                "recent_first"
+                ? bTime - aTime // newest first
+                : aTime - bTime; // oldest first
+        }
+    );
+    console.log("Notes", user)
+    const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value as | "recent_first" | "recent_last";
+
+        setSortType(value);
+    };
     return (
         <div className="bg-white rounded-xl overflow-hidden">
             {/* Header */}
@@ -48,7 +129,10 @@ const Notes = ({ notes: initialNotes }: { notes: any[] }) => {
                         Notes
                     </h2>
 
-                    <select onClick={(e) => e.stopPropagation()} className="border border-second font-medium rounded-xl px-4 py-1 text-sm bg-second/10 text-second outline-none  hover:bg-second/20">
+                    <select onClick={(e) => e.stopPropagation()}
+                        value={sortType}
+                        onChange={handleSortChange}
+                        className="border border-second font-medium rounded-xl px-4 py-1 text-sm bg-second/10 text-second outline-none  hover:bg-second/20">
                         Recent Last ▾
 
                         <option value="recent_first" >Recent First</option>
@@ -61,9 +145,9 @@ const Notes = ({ notes: initialNotes }: { notes: any[] }) => {
             {showNotes && <div className="p-5">
                 {/* Existing Notes */}
                 <div className="space-y-7 mb-5">
-                    {initialNotes.map((note) => (
+                    {sortedNotes?.map((note) => (
                         <div
-                            key={note._id}
+                            key={note.message}
                             className="flex gap-4"
                         >
                             <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-medium text-md shrink-0">
@@ -72,8 +156,8 @@ const Notes = ({ notes: initialNotes }: { notes: any[] }) => {
                             <div className="flex flex-col gap-2">
                                 {/* Avatar */}
 
-                                <div className='capitalize text-xs text-gray-600 bg-gray-200 w-fit px-2 py-1 rounded-xl flex items-center gap-2'>
-                                    <span>Had conversation on</span> {note.activitySource}
+                                <div className='capitalize text-xs text-gray-600 bg-gray-200 w-fit px-2 py-1 rounded-xl flex items-center gap-1'>
+                                    <span>Had conversation on</span> {activityMap[note.activitySource]}
                                 </div>
 
                                 {/* Content */}
@@ -86,18 +170,18 @@ const Notes = ({ notes: initialNotes }: { notes: any[] }) => {
                                         <span>Lead</span>
 
                                         <span className="text-[#4f46e5] cursor-pointer hover:underline">
-                                            Yvonne Tjepkema (Sa...
+                                            {lead.name}
                                         </span>
 
                                         <span>•</span>
 
-                                        <span>Add Note</span>
+                                        <span onClick={() => setShowNoteEditor(true)}>Add Note</span>
 
                                         <span>•</span>
 
-                                        <span><Clock size={14} /></span>
+                                        <span></span>
 
-                                        <span>{note.time}</span>
+                                        <ButtonWithTitle title={formatDate(note.createdAt)} className='flex items-center gap-1'><Clock size={14} />{timeAgo(note.createdAt)}</ButtonWithTitle>
 
                                         <span>by {note.createdBy}</span>
                                     </div>
@@ -123,9 +207,33 @@ const Notes = ({ notes: initialNotes }: { notes: any[] }) => {
                     <div className="border border-second rounded-xl max-w-4xl overflow-hidden shadow-sm">
                         {/* Textarea */}
                         <div className="p-4">
-                            <label className="block text-[#8b95a7] font-medium mb-3">
-                                Title
-                            </label>
+                            <div className='flex items-center justify-between mb-3'>
+
+                                <label className="block text-[#8b95a7] font-medium">
+                                    Title
+                                </label>
+                                <Select
+                                    value={activitySource}
+                                    onValueChange={(value) =>
+                                        setActivitySource(value as ActivitySource)
+                                    }
+                                >
+                                    <SelectTrigger className="flex border-none bg-transparent px-0 h-auto shadow-none text-sm font-medium focus:ring-0 ">
+                                        <SelectValue placeholder="Select activity" />
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+                                        {activityOptions.map((opt) => (
+                                            <SelectItem key={opt.value} value={opt.value}>
+                                                <div className="flex items-center gap-2">
+                                                    {/* <opt.icon size={14} /> */}
+                                                    {opt.label}
+                                                </div>
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
 
                             <textarea
                                 value={noteTitle}

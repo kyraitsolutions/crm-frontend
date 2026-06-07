@@ -1,29 +1,9 @@
-// export interface Lead {
-//     name: string;
-//     email: string;
-//     phone: string;
-//     mobile: string;
-//     message: string;
-//     customFields: Record<string, any>;
-//     stage: string;
-//     notes: Record<string, any>[];
-//     owner: string;
-//     status: string;
-//     title: string;
-//     attachments: string[];
-//     source: {
-//         name: string;
-//     };
-//     website: string;
-//     updatedAt: string;
-//     createdAt?: string;
-// }
-
 import { z } from "zod";
 
 export const LeadSchema = z.object({
     id: z.string().min(1),
     accountId: z.string().min(1),
+    profileImage:z.string().optional(),
     name: z.string().min(1),
     email: z.string().optional(), // can be empty string
     phone: z.string().optional(),
@@ -44,7 +24,15 @@ export const LeadSchema = z.object({
     }),
     assignedTo: z.string().optional(),
     tags: z.array(z.any()).optional(), // can refine later if needed
-    notes: z.array(z.any()).optional(),
+    notes: z.array(
+        z.object({
+            activitySource: z.enum(["phone_call", "message", "note", "email", "whatsapp"]),
+            attachment: z.string(),
+            message: z.string(),
+            createdBy: z.string().optional(),
+            createdAt: z.string().refine((val) => !isNaN(Date.parse(val)), {message: "Invalid date",}),
+        })
+    ).optional(),
     attachments: z.array(z.string()).optional(),
     meta: z.object({
         ip: z.string().optional(),
