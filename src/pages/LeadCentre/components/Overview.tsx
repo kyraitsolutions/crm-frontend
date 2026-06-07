@@ -1,56 +1,52 @@
+import type { ILead } from "../types/lead.type"
 import { FieldRow } from "./FieldRow"
-interface Lead {
-    name: string;
-    company: string;
-    owner: string;
-    email: string;
-    phone: string;
-    mobile: string;
-    status: string;
-    title: string;
-    source: {
-        name: string;
-    };
-    website: string;
-}
 
-const leadData: Lead = {
-    name: "Ms. Yvonne Tjepkema (Sample)",
-    company: "Grayson",
-    owner: "Abhijeet Singh",
-    email: "yvonne-tjepkema@noemail.invalid",
-    phone: "555-555-5555",
-    mobile: "555-555-5555",
-    status: "Pre-Qualified",
-    title: "Office Assistant III",
-    source: { name: "External Referral" },
-    website: "http://www.feltzprintingservice.com",
-};
-const Overview = ({ lead }: { lead: Lead | null }) => {
+
+const Overview = ({ lead }: { lead: ILead | null }) => {
+
+    console.log("Rendering Overview with lead", lead?.id);
     return (
         <div className="bg-white rounded-xl py-8">
             <div className="max-w-4xl mx-auto">
                 <FieldRow
                     label="Lead Owner"
-                    value={lead?.owner || "Assignee--"}
+                    fieldKey="assignedTo"
+                    value={lead?.assignedTo || "Assignee--"}
+                    leadId={lead?.id}
+                />
+                <FieldRow
+                    label="Lead Name"
+                    fieldKey="name"
+                    value={lead?.name || ""}
+                    leadId={lead?.id}
                 />
                 <FieldRow
                     label="Email"
+                    fieldKey="email"
                     value={lead?.email || ""}
+                    leadId={lead?.id}
                 />
                 <FieldRow
                     label="Phone"
-                    value={lead?.phone || ""}
+                    fieldKey="phone"
                     isPhone
+                    value={lead?.phone || ""}
+                    leadId={lead?.id}
+
                 />
                 <FieldRow
                     label="Mobile"
+                    fieldKey="phone"
                     value={lead?.phone || ""}
                     isPhone
+                    leadId={lead?.id}
                 />
                 <FieldRow
+
+                    fieldKey="status"
                     label="Lead Status"
                     value={lead?.status || ""}
+                    leadId={lead?.id}
                 />
             </div>
         </div>

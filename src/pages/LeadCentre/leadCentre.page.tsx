@@ -1,15 +1,8 @@
 import LeadListHeader from "./components/LeadListHeader"
 import LeadTable from "./components/LeadTable"
-import Sort from "./components/Sort"
 import Toolbar from "./components/Toolbar"
-import { useLeadsStore } from "./store/lead.store"
 
 const LeadCenter = () => {
-    const { openSort, setOpenSort } = useLeadsStore((state) => state);
-
-    // useEffect(()=>{
-
-    // },[])
 
     return (
         <div className='py-2 relative'>
@@ -20,7 +13,7 @@ const LeadCenter = () => {
             <Toolbar />
             <LeadTable />
 
-            {openSort && <Sort />}
+            {/* {openSort && <Sort />} */}
 
         </div>
     )

@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLeadsStore } from "../store/lead.store";
 import { useAuthStore } from "@/stores";
+import Sort from "./Sort";
 
 const Toolbar = () => {
     const navigate = useNavigate();
@@ -61,10 +62,15 @@ const Toolbar = () => {
                 </ButtonWithTitle>
 
                 {/* Sort */}
-                <ButtonWithTitle onClick={() => setOpenSort(!openSort)} className="flex items-center gap-2 hover:text-black transition">
-                    <ArrowUpDown size={16} />
-                    <span className="text-sm font-medium">Sort</span>
-                </ButtonWithTitle>
+                <div className="relative">
+
+                    <ButtonWithTitle onClick={() => setOpenSort(!openSort)} className="flex items-center gap-2 hover:text-black transition">
+                        <ArrowUpDown size={16} />
+                        <span className="text-sm font-medium">Sort</span>
+                    </ButtonWithTitle>
+                    {openSort && <Sort />}
+
+                </div>
 
                 <div className="h-5 w-px bg-gray-300" />
 

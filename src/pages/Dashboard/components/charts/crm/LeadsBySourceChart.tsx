@@ -15,7 +15,7 @@ const LeadsBySourceChart = ({ data }: LeadBySourceProps) => {
   const totalLeads = data?.reduce((acc, item) => acc + item.total, 0);
 
   return (
-    <div className="rounded-2xl border bg-white p-5 shadow-sm h-full">
+    <div className="rounded-xl border bg-white p-5 shadow-sm h-full">
       <div className="mb-5">
         <h2 className="text-lg font-semibold">Leads By Source</h2>
       </div>
