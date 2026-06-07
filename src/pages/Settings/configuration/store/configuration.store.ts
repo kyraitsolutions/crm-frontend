@@ -20,6 +20,7 @@ interface ConfigurationState {
   setActiveTab: (tab: string) => void;
 
   getConfigurations: () => Promise<void>;
+  getConfigurationByType: (configType: string) => Promise<void>;
   createConfigurationItem: (payload: any) => Promise<ApiResponse<any>>;
   updateConfigurationItem: (
     itemId: string,
@@ -47,6 +48,10 @@ export const useConfigurationStore = create<ConfigurationState>((set, get) => ({
       const config =
         CONFIGURATION_MAP[activeTab as keyof typeof CONFIGURATION_MAP];
 
+      if (!config) {
+        return;
+      }
+
       const params = {
         module: config.module,
         configType: config.configType,
@@ -63,6 +68,17 @@ export const useConfigurationStore = create<ConfigurationState>((set, get) => ({
         loading: false,
       });
     }
+  },
+  getConfigurationByType: async (configType: string) => {
+    const config =
+      CONFIGURATION_MAP[configType as keyof typeof CONFIGURATION_MAP];
+
+    const response = await configurationService.getConfigurations({
+      module: config.module,
+      configType: config.configType,
+    });
+
+    return response.data.doc?.values ?? [];
   },
   createConfigurationItem: async (payload: any) => {
     const configId = get().configId as string;

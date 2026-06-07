@@ -66,6 +66,12 @@ export const API_ENDPOINT_PATH = {
     deleteConfigItemPath: (configId: string, itemId: string) =>
       `/configuration/${configId}/${itemId}`,
   },
+
+  AUTOMATIONS: {
+    GET_AUTOMATIONS: `/automation`,
+    CREATE_AUTOMATION: `/automation`,
+  },
+
   WHATSAPP: {
     CONNECT_WHATSAPP: "/whatsapp/connect",
   },

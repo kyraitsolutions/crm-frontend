@@ -13,11 +13,9 @@ const ConfigurationPage = () => {
   }, [activeTab]);
   return (
     <div>
-      {/* <ConfigurationHeader /> */}
-
-      <div className="flex">
+      <div className="flex h-f">
         {/* LEFT SIDEBAR */}
-        <div className="max-w-56 w-full border-r p-4">
+        <div className="max-w-56 w-full p-4 h-screen shadow-lg">
           <ConfigurationTabs />
         </div>
 
