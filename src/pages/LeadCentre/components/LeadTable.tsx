@@ -15,13 +15,14 @@ import { LEADS_PATHS } from '@/constants/routes/leads.path';
 import { useConfigurationStore } from '@/pages/Settings/configuration/store/configuration.store';
 import { useLeadsStore } from '../store/lead.store';
 import { Pagination } from '@/components/pagination';
+import DataLoader from '@/components/Loader/data-loader';
 const LeadTable = () => {
     const navigate = useNavigate();
 
     // new Integration using zustand
     const { accountId } = useAuthStore((state) => state)
 
-    const { leads, fetchLeads, currentPage, setCurrentPage, totalPages, loadingLeads } = useLeadsStore((state) => state);
+    const { leads, fetchLeads, currentPage, setCurrentPage, totalPages, loadingLeads, updateLeadField } = useLeadsStore((state) => state);
 
     useEffect(() => {
         fetchLeads(accountId || "")
@@ -45,6 +46,9 @@ const LeadTable = () => {
     // Filters and search query state
 
 
+    const handleStatusChange = async (leadId: string, value: string) => {
+        await updateLeadField(String(accountId), String(leadId), "stage" as any, value);
+    };
 
 
 
@@ -71,9 +75,19 @@ const LeadTable = () => {
         import: <Import className="size-4 text-muted-foreground" />,
     };
 
+    if (loadingLeads) {
+        return (
+            <div className='h-[75dvh] flex justify-center items-center'>
+                <DataLoader className='h-[75dvh]' />
+            </div>
+
+
+        )
+    }
+
     if (leads.length === 0) {
         return (
-            <div className="flex h-[500px] w-full items-center justify-center">
+            <div className="flex h-125 w-full items-center justify-center">
                 <div className="text-center">
                     <img src="/src/assets/nochathistoryfound_CnSlq9EOHBW59HI8RYjeSpZ_WbWyQz9RmyNcvToLwGw4g31mlf1rnCox3Y3F-6xk_.svg" rel="preload" fetchPriority="high" alt="No chats yet" className="w-75" />
                     <h3 className="text-sm mt-2 font-semibold text-gray-800">No leads yet</h3>
@@ -85,6 +99,8 @@ const LeadTable = () => {
             </div>
         );
     }
+
+
 
     return (
         <div className="overlead-hidden hide-scrollbar bg-white rounded-xl">
@@ -174,13 +190,13 @@ const LeadTable = () => {
                                 </div>
                             </TableCell>
 
-                            {/* STATUS */}
+                            {/* Stage */}
                             <TableCell>
                                 <Select
                                     value={lead?.stage}
-                                //   onValueChange={(value: TChatleadStatus) =>
-                                //     handleStatusChange(lead.id, value)
-                                //   }
+                                    onValueChange={(value: any) =>
+                                        handleStatusChange(lead.id, value)
+                                    }
                                 >
                                     <SelectTrigger className="border-none shadow-none" onClick={(e: any) => e.stopPropagation()}>
                                         <SelectValue />
@@ -207,7 +223,7 @@ const LeadTable = () => {
                                 </Select>
                             </TableCell>
 
-                            {/* stage */}
+                            {/* Source */}
                             <TableCell>
                                 <div className="flex items-center gap-2 capitalize font-medium">
                                     {getIconForSource[lead.source?.name || ""] || <Shapes className="size-4 text-muted-foreground" />}

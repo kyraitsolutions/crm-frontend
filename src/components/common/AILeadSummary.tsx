@@ -29,7 +29,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
         try {
             setLoading(true)
             const res = await leadService.getLeadSummary(String(accountId), leadId)
-            setAiSummary(res.data.data);
+            setAiSummary(res.data.doc);
         } catch (error) {
             console.log(error);
         } finally {
@@ -103,17 +103,17 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
                         Done
                     </button>
                 </div>}
-                <button onClick={() => generateLeadSummary(leadId)} className="bg-green-200 cursor-pointer flex items-center  gap-1 px-4 py-1 text-sm rounded-full text-dark">
+                <button onClick={() => generateLeadSummary(leadId)} className="bg-primary/20 cursor-pointer flex items-center  gap-1 px-4 py-2 text-sm rounded-full text-primary">
                     <RefreshCw size={16} className={`${loading ? "animate-spin" : ""} `} /> <span className={`${loading ? "animate-pulse" : ""}`}>Regenerate AI Summary</span></button>
 
             </div>
 
                 :
                 <div>
-                    <button onClick={() => generateLeadSummary(leadId)} className="bg-green-200 cursor-pointer flex items-center mt-4 gap-1 px-4 py-1 text-sm rounded-full text-dark">
+                    <button onClick={() => generateLeadSummary(leadId)} className="bg-primary/20 cursor-pointer flex items-center mt-4 gap-1 px-4 py-2 text-sm rounded-full text-primary">
                         {!loading ?
                             <span className="flex gap-1 items-center ">
-                                <Sparkles size={18} />
+                                <Sparkles size={16} />
                                 Click to generate AI Summary
 
                             </span>

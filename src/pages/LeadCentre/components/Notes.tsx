@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { formatDate, formatTime } from '@/utils/date-utils';
+import { formatDate } from '@/utils/date-utils';
 import { Clock, FileText, Link, MessageCircle, Phone, Settings, UserPlus } from 'lucide-react';
 import { useState } from 'react'
 import { useLeadsStore } from '../store/lead.store';
@@ -175,7 +175,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
 
                                         <span>•</span>
 
-                                        <span onClick={() => setShowNoteEditor(true)}>Add Note</span>
+                                        <span onClick={() => setShowNoteEditor(true)} className='cursor-pointer'>Add Note</span>
 
                                         <span>•</span>
 

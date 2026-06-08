@@ -1,6 +1,10 @@
-const DataLoader = () => {
+type DataLoaderProps = {
+    className?: string;
+};
+
+const DataLoader = ({ className = "h-screen" }: DataLoaderProps) => {
     return (
-        <div className="flex items-center justify-center h-screen bg-[#f4f4f4]">
+        <div className={`flex items-center justify-center ${className}`}>
             <div className="relative text-xl font-medium tracking-wide uppercase">
                 {/* Gray Base Text */}
                 <span className="text-gray-300">
