@@ -149,9 +149,16 @@ export const useLeadsStore = create<ILeadsStoreState>((set,get)=>({
 
             // Optimistic update
             set((state) => ({
-                leads: state.leads.map((lead) =>
-                    lead.id === leadId? {...lead,[field]:value,}: lead
-            ),
+                leads: state.leads.map((lead) => {
+                    if (lead.id !== leadId) {
+                        return lead;
+                    }
+
+                    return {
+                        ...lead,
+                        [field]: value,
+                    };
+                }),
             }));
 
             // Partial payload only
@@ -160,6 +167,7 @@ export const useLeadsStore = create<ILeadsStoreState>((set,get)=>({
                 [field]: value,
             };
 
+            console.log("Api payload", payload)
             await leadService.updateLead(accountId, payload);
 
             set({editingField: null,});

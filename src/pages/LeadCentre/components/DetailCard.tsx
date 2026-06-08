@@ -53,7 +53,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
 
                             <FieldRow
                                 label="Lead Source"
-                                value={lead?.source.name || ""}
+                                value={lead?.source?.name || ""}
                                 fieldKey="source.name"
                                 leadId={lead?.id}
                             />

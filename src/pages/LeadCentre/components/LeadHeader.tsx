@@ -1,46 +1,24 @@
 import ButtonWithTitle from '@/components/ui/Buttons/ButtonWithTitle'
 import { useAuthStore } from '@/stores';
-import { ChevronLeft, ChevronRight, MoreHorizontal, Tag } from 'lucide-react'
-import React from 'react'
+import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
+import type { ILead } from '../types/lead.type';
+import LeadTags from './Tag';
 
-interface Lead {
-    name: string;
-    company: string;
-    owner: string;
-    email: string;
-    phone: string;
-    mobile: string;
-    status: string;
-    title: string;
-    source: { name: string };
-    website: string;
-    profileImage?: string;
-}
-
-const leadData: Lead = {
-    name: "Ms. Yvonne Tjepkema (Sample)",
-    company: "Grayson",
-    owner: "Abhijeet Singh",
-    email: "yvonne-tjepkema@noemail.invalid",
-    phone: "555-555-5555",
-    mobile: "555-555-5555",
-    status: "Pre-Qualified",
-    title: "Office Assistant III",
-    source: { name: "External Referral" },
-    website: "http://www.feltzprintingservice.com",
-};
 
 
 interface LeadHeaderProps {
     onClick: () => void;
-    lead: Lead | null;
+    lead: ILead | null;
 }
+
+
 const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
     const { accountId } = useAuthStore((state) => state);
     const navigate = useNavigate();
+
     return (
-        <div>
+        <div className='relative'>
             <header className="bg-white border-b border-[#e5e7eb] px-3 py-2">
                 <div className="flex items-start justify-between">
                     {/* Left */}
@@ -51,7 +29,7 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
 
                         {lead?.profileImage ? (
                             <img
-                                src={lead.profileImage}
+                                src={lead?.profileImage}
                                 alt="profile"
                                 className="w-10 h-10 rounded-md"
                             />
@@ -65,7 +43,7 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
 
                         }
 
-                        <div>
+                        <div className='relative'>
                             <h1 className="text-md font-medium ">
                                 {lead?.name}
                                 <span className=" text-gray-500">
@@ -74,10 +52,7 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
                                 </span>
                             </h1>
 
-                            <button className="flex items-center gap-2 text-sm  hover:text-blue-600">
-                                <Tag size={16} />
-                                Add Tags
-                            </button>
+                            <LeadTags lead={lead} />
                         </div>
                     </div>
 
@@ -104,6 +79,8 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
                     </div>
                 </div>
             </header>
+
+
         </div>
     )
 }

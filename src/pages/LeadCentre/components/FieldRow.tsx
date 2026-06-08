@@ -50,7 +50,6 @@ export const FieldRow = ({
 
     const { accountId } = useAuthStore((state) => state)
     const { editingField, setEditingField, updateLeadField, updatingLead } = useLeadsStore((state) => state);
-    const [isHovered, setIsHovered] = useState(false);
     const [tempValue, setTempValue] = useState(value);
     const [loading, setLoading] = useState(false);
 
@@ -86,7 +85,7 @@ export const FieldRow = ({
                 {label}
             </span>
 
-            <div className="group flex items-center gap-2 max-w-[420px] w-full">
+            <div className="group flex items-center gap-2 max-w-105 w-full">
                 <div
                     className={`
                         flex items-center gap-2 rounded-md border transition w-full

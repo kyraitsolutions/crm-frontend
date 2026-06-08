@@ -7,8 +7,8 @@ const relatedList = [
     // "open Activities",
     // "closed Activities",
     // "invited Meetings",
-    "emails",
-    "campaigns",
+    // "emails",
+    // "campaigns",
     // "docial",
     // "visits",
 ];

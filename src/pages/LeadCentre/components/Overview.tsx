@@ -36,8 +36,8 @@ const Overview = ({ lead }: { lead: ILead | null }) => {
                 />
                 <FieldRow
                     label="Mobile"
-                    fieldKey="phone"
-                    value={lead?.phone || ""}
+                    fieldKey="mobile"
+                    value={lead?.mobile || ""}
                     isPhone
                     leadId={lead?.id}
                 />
