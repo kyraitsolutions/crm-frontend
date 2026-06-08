@@ -3,16 +3,16 @@ import { automationService } from "../services/automation.service";
 import type { ApiResponse } from "@/types";
 
 export type TriggerType =
-  | "lead-created"
-  | "lead-status-changed"
-  | "lead-assigned"
-  | "conversation-created"
-  | "conversation-closed";
+  | "lead_created"
+  | "lead_stage_changed"
+  | "lead_assigned"
+  | "conversation_created"
+  | "conversation_closed";
 
 export type ActionType =
-  | "assign-lead-to-user"
-  | "create-task"
-  | "send-notification";
+  | "assign_lead_to_user"
+  | "create_task"
+  | "send_notification";
 
 export interface AutomationCondition {
   field: string;

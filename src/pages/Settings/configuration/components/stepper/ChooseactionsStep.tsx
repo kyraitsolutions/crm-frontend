@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTeamsStore } from "@/stores/team.store";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ACTION_OPTIONS } from "../../constants/automation.constants";
 import type {
   ActionType,
@@ -31,8 +31,8 @@ const ACTION_CONFIG_FIELDS: Record<
     types?: string;
   }[]
 > = {
-  "assign-lead-to-user": [{ label: "Assign To", key: "user", type: "users" }],
-  "create-task": [
+  assign_lead_to_user: [{ label: "Assign To", key: "user", type: "users" }],
+  create_task: [
     {
       label: "Task Title",
       key: "title",
@@ -61,7 +61,7 @@ const ACTION_CONFIG_FIELDS: Record<
       type: "users",
     },
   ],
-  "send-notification": [
+  send_notification: [
     // { label: "Automation Name", key: "name" },
     {
       label: "Notify",
@@ -72,7 +72,7 @@ const ACTION_CONFIG_FIELDS: Record<
 };
 
 const emptyAction = (): AutomationAction => ({
-  type: "assign-lead-to-user",
+  type: "assign_lead_to_user",
   config: {},
 });
 
@@ -110,11 +110,15 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
       config: {},
     });
 
-    if (type === "assign-lead-to-user") {
+    if (type === "assign_lead_to_user") {
       const users = await getTeams();
       setUsers(users);
     }
   };
+
+  useEffect(() => {
+    handleActionTypeChange(0, "assign_lead_to_user");
+  }, []);
 
   return (
     <div>

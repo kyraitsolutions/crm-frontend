@@ -13,46 +13,46 @@ export interface ActionOption {
 
 export const TRIGGER_OPTIONS: TriggerOption[] = [
   {
-    value: "lead-created",
+    value: "lead_created",
     label: "Lead Created",
     description: "When a new lead is created",
   },
   {
-    value: "lead-status-changed",
-    label: "Lead Status Changed",
-    description: "When lead status is assigned",
+    value: "lead_stage_changed",
+    label: "Lead Stage Changed",
+    description: "When lead stage is assigned",
   },
   {
-    value: "lead-assigned",
+    value: "lead_assigned",
     label: "Lead Assigned",
     description: "When a lead is assigned",
   },
   {
-    value: "conversation-created",
+    value: "conversation_created",
     label: "Conversation Created",
     description: "When a conversation starts",
   },
   {
-    value: "conversation-closed",
+    value: "conversation_closed",
     label: "Conversation Closed",
     description: "When a conversation is closed",
   },
 ];
 
 export const TRIGGER_CONDITIONS_FIELDS = {
-  "lead-created": ["Lead Source"],
-  "lead-status-changed": ["Lead Status", "Lead Source", "Assigned User"],
-  "lead-assigned": ["Lead Status", "Lead Source", "Assigned User"],
-  "conversation-created": ["Conversation Status", "Channel", "Assigned Agent"],
-  "conversation-closed": ["Conversation Status", "Channel", "Assigned Agent"],
+  lead_created: ["Lead Source"],
+  lead_stage_changed: ["Lead Stages", "Lead Source", "Assigned User"],
+  lead_assigned: ["Lead Stages", "Lead Source", "Assigned User"],
+  conversation_created: ["Conversation Status", "Channel", "Assigned Agent"],
+  conversation_closed: ["Conversation Status", "Channel", "Assigned Agent"],
 };
 
 export const CONDITION_OPERATORS = ["Is Equal To", "Is Not Equal To"];
 
 export const CONDITION_FIELDS_VALUES = {
-  "Lead Status": {
+  "Lead Stages": {
     type: "api",
-    apiKey: "lead-status",
+    apiKey: "lead_stage",
   },
 
   "Lead Source": {
@@ -70,6 +70,10 @@ export const CONDITION_FIELDS_VALUES = {
         label: "WhatsApp",
         key: "whatsapp",
       },
+      {
+        label: "Webhook",
+        key: "webhook",
+      },
     ],
   },
 
@@ -80,7 +84,7 @@ export const CONDITION_FIELDS_VALUES = {
 
   "Conversation Status": {
     type: "api",
-    apiKey: "conversation-status",
+    apiKey: "conversation_status",
   },
 
   Channel: {
@@ -103,9 +107,9 @@ export const CONDITION_FIELDS_VALUES = {
 } as const;
 
 export const ACTION_OPTIONS: ActionOption[] = [
-  { value: "assign-lead-to-user", label: "Assign Lead To User" },
-  { value: "create-task", label: "Create Task" },
-  { value: "send-notification", label: "Send Notification" },
+  { value: "assign_lead_to_user", label: "Assign Lead To User" },
+  { value: "create_task", label: "Create Task" },
+  { value: "send_notification", label: "Send Notification" },
   // { value: "send-email", label: "Send Email" },
 ];
 

@@ -19,10 +19,10 @@ export const loadFieldData = async (
   }
 
   switch (config.apiKey) {
-    case "lead-status":
+    case "lead_stage":
       return await deps?.getConfigurationsByType?.("lead-status");
 
-    case "conversation-status":
+    case "conversation_status":
       return await deps?.getConfigurationsByType?.("conversation-status");
 
     case "users":
