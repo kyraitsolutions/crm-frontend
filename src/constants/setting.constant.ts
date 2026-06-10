@@ -59,7 +59,13 @@ export const settingSections = [
   // },
   {
     title: "Configuration",
-    items: [{ label: "Configuration", link: "/configuration" }],
+    items: [
+      { label: "Configuration", link: "/configuration" },
+      {
+        label: "Activity Logs",
+        link: "/activity-logs",
+      },
+    ],
   },
 
   {
@@ -97,7 +103,7 @@ export const settingSections = [
     title: "Plan & Subscription",
     items: [
       { label: "My plan", link: "/my-plan" },
-      { label: "Upgrade plan", link: "/subscription" }
+      { label: "Upgrade plan", link: "/subscription" },
     ],
   },
 ];

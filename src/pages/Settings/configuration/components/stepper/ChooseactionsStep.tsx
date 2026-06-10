@@ -13,6 +13,11 @@ import type {
   ActionType,
   AutomationAction,
 } from "../../store/automation.store";
+import { Plus } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ChooseActionsStepProps {
   actions: AutomationAction[];
@@ -37,23 +42,35 @@ const ACTION_CONFIG_FIELDS: Record<
       label: "Task Title",
       key: "title",
       type: "text",
+      placeholder: "Follow up with lead",
     },
     {
       label: "Description",
       key: "description",
       type: "textarea",
+      placeholder: "Add task instructions",
     },
     {
       label: "Priority",
       key: "priority",
       type: "select",
-      options: ["Low", "Medium", "High"],
+      options: [
+        { label: "Low", value: "low" },
+        { label: "Medium", value: "medium" },
+        { label: "High", value: "high" },
+      ],
     },
     {
       label: "Due In",
-      key: "dueIn",
+      key: "dueType",
       type: "select",
-      options: ["1 Day", "3 Days", "7 Days", "14 Days"],
+      options: [
+        { label: "1 Day", value: "1" },
+        { label: "3 Days", value: "3" },
+        { label: "7 Days", value: "7" },
+        { label: "14 Days", value: "14" },
+        { label: "Custom Date", value: "custom" },
+      ],
     },
     {
       label: "Assign To",
@@ -88,6 +105,26 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
 
   const [users, setUsers] = useState<{ label: string; key: string }[]>([]);
 
+  const handleDueDateChange = (index: number, value: string) => {
+    if (value === "custom") {
+      updateActionConfig(index, "dueType", value);
+      return;
+    }
+
+    const days = Number(value);
+
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + days);
+
+    updateAction(index, {
+      config: {
+        ...actions[index].config,
+        dueType: value,
+        dueDate: dueDate.toISOString(),
+      },
+    });
+  };
+
   const updateAction = (index: number, patch: Partial<AutomationAction>) => {
     onChange(actions.map((a, i) => (i === index ? { ...a, ...patch } : a)));
   };
@@ -116,9 +153,93 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
     }
   };
 
-  useEffect(() => {
+  const initializeActionTypeValue = () => {
     handleActionTypeChange(0, "assign_lead_to_user");
+  };
+
+  useEffect(() => {
+    initializeActionTypeValue();
   }, []);
+
+  const renderField = (field: any, action: AutomationAction, index: number) => {
+    switch (field.type) {
+      case "text":
+        return (
+          <Input
+            className="w-full input-field"
+            value={action.config[field.key] || ""}
+            placeholder={field.placeholder}
+            onChange={(e) =>
+              updateActionConfig(index, field.key, e.target.value)
+            }
+          />
+        );
+
+      case "textarea":
+        return (
+          <Textarea
+            className="w-full input-field"
+            value={action.config[field.key] || ""}
+            placeholder={field.placeholder}
+            onChange={(e) =>
+              updateActionConfig(index, field.key, e.target.value)
+            }
+          />
+        );
+
+      case "users":
+        return (
+          <Select
+            value={action.config[field.key] || ""}
+            onValueChange={(value) =>
+              updateActionConfig(index, field.key, value)
+            }
+          >
+            <SelectTrigger className="w-full input-field">
+              <SelectValue placeholder="Select User" />
+            </SelectTrigger>
+
+            <SelectContent>
+              {users.map((user) => (
+                <SelectItem key={user.key} value={user.key}>
+                  {user.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+
+      case "select":
+        return (
+          <Select
+            value={action.config[field.key] || ""}
+            onValueChange={(value) => {
+              if (field.key === "dueType") {
+                handleDueDateChange(index, value);
+                return;
+              }
+
+              updateActionConfig(index, field.key, value);
+            }}
+          >
+            <SelectTrigger className="w-full input-field">
+              <SelectValue placeholder={`Select ${field.label}`} />
+            </SelectTrigger>
+
+            <SelectContent>
+              {field.options?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <div>
@@ -164,81 +285,55 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
                 <label className="text-xs text-gray-500 mb-1 block">
                   Action Type
                 </label>
-                <select
+                <Select
                   value={action.type}
-                  onChange={(e) =>
-                    handleActionTypeChange(index, e.target.value as ActionType)
+                  onValueChange={(value) =>
+                    handleActionTypeChange(index, value as ActionType)
                   }
-                  className="w-full text-sm border border-gray-200 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:border-violet-400"
                 >
-                  {ACTION_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select action type" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {ACTION_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {configFields.map((field) => {
-                if (field.type === "users") {
-                  return (
-                    <div>
-                      <label className="text-xs text-gray-500 mb-1 block">
-                        {field.label}
-                      </label>
-
-                      <Select
-                        value={action.config[field.key] || ""}
-                        onValueChange={(value) =>
-                          updateActionConfig(index, field.key, value)
-                        }
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select value" />
-                        </SelectTrigger>
-
-                        <SelectContent>
-                          {users?.map((opt) => (
-                            <SelectItem key={opt.key} value={opt.key}>
-                              {opt.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  );
-                }
                 return (
                   <div key={field.key}>
                     <label className="text-xs text-gray-500 mb-1 block">
                       {field.label}
                     </label>
-                    {field.options ? (
-                      <select
-                        value={action.config[field.key] || ""}
-                        onChange={(e) =>
-                          updateActionConfig(index, field.key, e.target.value)
-                        }
-                        className="w-full text-sm border border-gray-200 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:border-violet-400"
-                      >
-                        <option value="">Select {field.label}</option>
-                        {field.options.map((o) => (
-                          <option key={o} value={o}>
-                            {o}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <input
-                        type="text"
-                        value={action.config[field.key] || ""}
-                        onChange={(e) =>
-                          updateActionConfig(index, field.key, e.target.value)
-                        }
-                        placeholder={`Enter ${field.label.toLowerCase()}`}
-                        className="w-full text-sm border border-gray-200 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:border-violet-400"
-                      />
-                    )}
+
+                    <div className="w-full">
+                      {renderField(field, action, index)}
+                    </div>
+
+                    {field.key === "dueType" &&
+                      action.config.dueType === "custom" && (
+                        <div className="mt-3 space-y-2">
+                          <Label>Custom Due Date</Label>
+
+                          <Input
+                            type="date"
+                            value={action.config.dueDate || ""}
+                            onChange={(e) =>
+                              updateActionConfig(
+                                index,
+                                "dueDate",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </div>
+                      )}
                   </div>
                 );
               })}
@@ -249,22 +344,10 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
 
       <Button
         onClick={addAction}
-        className="mt-3 flex items-center gap-1.5 text-sm text-primary/90 font-medium hover:text-primary transition-colors cursor-pointer bg-transparent hover:bg-transparent"
+        className="flex items-center gap-1.5 text-sm text-primary/90 font-medium hover:text-primary transition-colors cursor-pointer bg-transparent hover:bg-transparent underline"
       >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
-        Add Another Action
+        <Plus />
+        Add {actions.length > 0 ? "another" : ""} Action
       </Button>
 
       <div className="flex justify-between mt-6">

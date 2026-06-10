@@ -3,7 +3,7 @@ import { CONDITION_FIELDS_VALUES } from "../constants/automation.constants";
 export const loadFieldData = async (
   field: string,
   deps: {
-    getConfigurationsByType?: (type: string) => Promise<void>;
+    getConfigurationsByType?: (type: string) => Promise<any>;
     getUsers?: () => Promise<{ label: string; key: string }[]>;
   },
 ) => {

@@ -349,7 +349,7 @@ body {
 }
 
 .input-field{
-  @apply focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl
+  @apply focus-visible:ring-0 focus-visible:border-primary/40 border-primary/30 rounded-xl
 }
 
 .node-setting-header-types{

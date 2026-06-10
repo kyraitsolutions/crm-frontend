@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { useAutomationStore } from "../../store/automation.store";
-import SelectTriggerStep from "./SelecttriggerStep";
-import SetConditionStep from "./SetconditionStep";
-import ChooseActionsStep from "./ChooseactionsStep";
-import StepperHeader from "./StepperHeader";
-import ReviewStep from "./ReviewStep";
+import { ToastMessageService } from "@/services";
 import { useAuthStore } from "@/stores";
 import type { ApiError } from "@/types";
-import { ToastMessageService } from "@/services";
+import React from "react";
+import { useAutomationStore } from "../../store/automation.store";
+import ChooseActionsStep from "./ChooseactionsStep";
+import ReviewStep from "./ReviewStep";
+import SelectTriggerStep from "./SelecttriggerStep";
+import SetConditionStep from "./SetconditionStep";
+import StepperHeader from "./StepperHeader";
 
 const CreateAutomationStepper: React.FC = () => {
   const toastService = new ToastMessageService();

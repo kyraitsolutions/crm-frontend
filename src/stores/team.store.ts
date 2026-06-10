@@ -19,7 +19,7 @@ export const useTeamsStore = create<ITeamsStoreState>()(
       return (
         data?.map((team: ITeam) => ({
           label: `${team?.userProfile?.firstName} ${team?.userProfile?.lastName}`,
-          key: team.id,
+          key: team.userId,
         })) || []
       );
     },

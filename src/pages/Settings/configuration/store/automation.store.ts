@@ -26,6 +26,7 @@ export interface AutomationAction {
 }
 
 export interface Automation {
+  id: string;
   name: string;
   trigger: TriggerType;
   conditions: AutomationCondition[];

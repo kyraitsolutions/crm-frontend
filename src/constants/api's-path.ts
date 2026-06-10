@@ -75,4 +75,8 @@ export const API_ENDPOINT_PATH = {
   WHATSAPP: {
     CONNECT_WHATSAPP: "/whatsapp/connect",
   },
+
+  ACTIVITY_LOGS: {
+    getActivityLogsPath: (id: string) => `/activity-logs/${id}`,
+  },
 };

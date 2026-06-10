@@ -20,7 +20,9 @@ interface ConfigurationState {
   setActiveTab: (tab: string) => void;
 
   getConfigurations: () => Promise<void>;
-  getConfigurationByType: (configType: string) => Promise<void>;
+  getConfigurationByType: (
+    configType: string,
+  ) => Promise<ConfigurationItem[] | []>;
   createConfigurationItem: (payload: any) => Promise<ApiResponse<any>>;
   updateConfigurationItem: (
     itemId: string,
@@ -97,6 +99,7 @@ export const useConfigurationStore = create<ConfigurationState>((set, get) => ({
       itemId,
       payload,
     );
+
     await get().getConfigurations();
 
     return response;
@@ -107,12 +110,42 @@ export const useConfigurationStore = create<ConfigurationState>((set, get) => ({
     if (!configId) {
       throw new Error("Configuration id not found");
     }
-    const response = await configurationService.deleteConfigurationItem(
-      configId,
-      itemId,
-    );
-    await get().getConfigurations();
 
-    return response;
+    const previousItems = get().configurationItems;
+
+    // Optimistic update
+    set({
+      configurationItems: previousItems.filter((item) => item._id !== itemId),
+    });
+
+    try {
+      const response = await configurationService.deleteConfigurationItem(
+        configId,
+        itemId,
+      );
+
+      return response;
+    } catch (error) {
+      // Rollback
+      set({
+        configurationItems: previousItems,
+      });
+
+      throw error;
+    }
   },
+  // deleteConfigurationItem: async (itemId: string) => {
+  //   const configId = get().configId;
+
+  //   if (!configId) {
+  //     throw new Error("Configuration id not found");
+  //   }
+  //   const response = await configurationService.deleteConfigurationItem(
+  //     configId,
+  //     itemId,
+  //   );
+  //   await get().getConfigurations();
+
+  //   return response;
+  // },
 }));

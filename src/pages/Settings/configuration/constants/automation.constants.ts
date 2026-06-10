@@ -41,13 +41,22 @@ export const TRIGGER_OPTIONS: TriggerOption[] = [
 
 export const TRIGGER_CONDITIONS_FIELDS = {
   lead_created: ["Lead Source"],
-  lead_stage_changed: ["Lead Stages", "Lead Source", "Assigned User"],
-  lead_assigned: ["Lead Stages", "Lead Source", "Assigned User"],
+  lead_stage_changed: ["Lead Source", "Lead Stages", "Assigned User"],
+  lead_assigned: ["Lead Source", "Lead Stages", "Assigned User"],
   conversation_created: ["Conversation Status", "Channel", "Assigned Agent"],
   conversation_closed: ["Conversation Status", "Channel", "Assigned Agent"],
 };
 
-export const CONDITION_OPERATORS = ["Is Equal To", "Is Not Equal To"];
+export const CONDITION_OPERATORS = [
+  {
+    value: "equals",
+    label: "Equals",
+  },
+  {
+    value: "not_equals",
+    label: "Not Equals",
+  },
+];
 
 export const CONDITION_FIELDS_VALUES = {
   "Lead Stages": {

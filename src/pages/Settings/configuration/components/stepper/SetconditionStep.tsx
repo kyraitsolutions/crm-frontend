@@ -45,7 +45,7 @@ const SetConditionStep: React.FC<SetConditionStepProps> = ({
 
   const emptyCondition = (): AutomationCondition => ({
     field: trigger ? TRIGGER_CONDITIONS_FIELDS[trigger][0] : "",
-    operator: CONDITION_OPERATORS[0],
+    operator: CONDITION_OPERATORS[0].value,
     values: [],
   });
 
@@ -84,19 +84,27 @@ const SetConditionStep: React.FC<SetConditionStepProps> = ({
 
   const availableFields = trigger ? TRIGGER_CONDITIONS_FIELDS[trigger] : [];
 
-  useEffect(() => {
+  const initializeFirsFiledValue = () => {
     handleFieldChange(0, availableFields[0]);
+  };
+
+  useEffect(() => {
+    initializeFirsFiledValue();
   }, []);
+
+  console.log(conditions);
 
   return (
     <div>
-      <h2 className="text-base font-semibold text-gray-800 mb-1">
-        Lead Status Changed
-      </h2>
-      <p className="text-xs text-gray-500 mb-4">
-        Define conditions that must be met to trigger this automation
-      </p>
+      <div>
+        <h2 className="text-base font-semibold text-gray-800 mb-1">
+          Lead Status Changed
+        </h2>
 
+        <p className="text-xs text-gray-500 mb-4">
+          Define conditions that must be met to trigger this automation
+        </p>
+      </div>
       <div className="space-y-3">
         {conditions?.map((condition, index) => (
           <div
@@ -107,18 +115,20 @@ const SetConditionStep: React.FC<SetConditionStepProps> = ({
               <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Condition {index + 1}
               </span>
-              <button
-                onClick={() => removeCondition(index)}
-                className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
-              >
-                <X size={16} />
-              </button>
+              {conditions.length > 1 && (
+                <button
+                  onClick={() => removeCondition(index)}
+                  className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </div>
 
             <div>
               <label className="text-xs text-gray-500 mb-1 block">Field</label>
               <Select
-                value={condition.field}
+                value={condition.field || ""}
                 onValueChange={(value) => handleFieldChange(index, value)}
               >
                 <SelectTrigger className="w-full">
@@ -164,8 +174,8 @@ const SetConditionStep: React.FC<SetConditionStepProps> = ({
 
                 <SelectContent>
                   {CONDITION_OPERATORS.map((operator) => (
-                    <SelectItem key={operator} value={operator}>
-                      {operator}
+                    <SelectItem key={operator.value} value={operator.value}>
+                      {operator.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -244,7 +254,7 @@ const SetConditionStep: React.FC<SetConditionStepProps> = ({
             d="M12 4v16m8-8H4"
           />
         </svg>
-        Add another condition
+        Add {conditions.length > 0 ? "another" : ""} condition
       </button>
 
       <div className="flex justify-between mt-6">

@@ -25,12 +25,15 @@ import { ToastMessageService } from "@/services";
 import { useConfigurationStore } from "../../store/configuration.store";
 import type { ApiError } from "@/types";
 import { alertManager } from "@/stores/alert.store";
+import Loader from "@/components/Loader";
 
 const ConversationStatusSection = () => {
   const {
     createConfigurationItem,
     configurationItems,
+    updateConfigurationItem,
     deleteConfigurationItem,
+    loading,
   } = useConfigurationStore((state) => state);
   const toastService = new ToastMessageService();
   // const [statuses, setStatuses] = useState(INITIAL_CONVERSATION_STATUS);
@@ -54,12 +57,19 @@ const ConversationStatusSection = () => {
       title: "Delete Status",
       message: "Are you sure you want to delete this status?",
       onConfirm: async () => {
-        const response = await deleteConfigurationItem(String(id));
+        try {
+          const response = await deleteConfigurationItem(String(id));
 
-        if (response && response.status === 200) {
-          toastService.success(
-            response?.message || "Status deleted successfully!",
-          );
+          if (response && response.status === 200) {
+            toastService.success(
+              response?.message || "Status deleted successfully!",
+            );
+          }
+        } catch (error) {
+          const err = error as ApiError;
+          if (err) {
+            toastService.error(err.message || "Failed to delete status");
+          }
         }
       },
     });
@@ -70,16 +80,15 @@ const ConversationStatusSection = () => {
     try {
       const payload = { ...values, order: configurationItems.length + 1 };
       if (editingStatus) {
-        // setStatuses((prev) =>
-        //   prev.map((item) =>
-        //     item.id === editingStatus.id
-        //       ? {
-        //           ...item,
-        //           ...values,
-        //         }
-        //       : item,
-        //   ),
-        // );
+        const response = await updateConfigurationItem(
+          editingStatus._id,
+          values,
+        );
+        if (response && response?.status === 200) {
+          toastService.success(
+            response?.message || "Status updated successfully!",
+          );
+        }
       } else {
         const response = await createConfigurationItem(payload);
         if (response && response?.status === 201) {
@@ -173,8 +182,16 @@ const ConversationStatusSection = () => {
     },
   ];
 
+  if (loading) {
+    return (
+      <div className="w-full flex h-[80vh] items-center justify-center">
+        <Loader color="#353333" size={30} />
+      </div>
+    );
+  }
+
   return (
-    <>
+    <div>
       <div className="space-y-4">
         {/* TOP */}
         <div className="flex items-start justify-between">
@@ -292,7 +309,7 @@ const ConversationStatusSection = () => {
         initialData={editingStatus}
         isSubmitting={isSubmitting}
       />
-    </>
+    </div>
   );
 };
 
