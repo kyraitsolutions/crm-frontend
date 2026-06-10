@@ -45,4 +45,8 @@ export class EmailService extends ApiService {
     async getTemplates(accountId:string):Promise<any|null>{
         return await this.get(`/account/${accountId}/templates`);
     }
+    async sendEmail(accountId:string,payload:any):Promise<any|null>{
+        console.log(accountId)
+        return await this.post(`/email/${accountId}/send-email`,payload);
+    }
 }

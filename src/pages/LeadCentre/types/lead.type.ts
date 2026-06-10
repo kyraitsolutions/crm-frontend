@@ -33,6 +33,7 @@ export const LeadSchema = z.object({
             createdAt: z.string().refine((val) => !isNaN(Date.parse(val)), {message: "Invalid date",}),
         })
     ).optional(),
+    emails:z.array(z.any()).optional(),
     attachments: z.array(z.string()).optional(),
     meta: z.object({
         ip: z.string().optional(),

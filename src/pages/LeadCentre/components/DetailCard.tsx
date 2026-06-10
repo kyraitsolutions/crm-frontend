@@ -100,6 +100,33 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                 </div>
                 <div className="p-6">
                     <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
+                        Other Details
+                    </h2>
+                    <div className="grid xl:grid-cols-2 gap-x-24 max-w-4xl mx-auto">
+                        {Object.entries(lead?.customFields || {}).map(
+                            ([key, value]) => (
+                                <FieldRow
+                                    key={key}
+                                    label={key
+                                        .split("_")
+                                        .map(
+                                            (word) =>
+                                                word.charAt(0).toUpperCase() +
+                                                word.slice(1)
+                                        )
+                                        .join(" ")}
+                                    value={String(value || "-")}
+                                    fieldKey={`customFields.${key}`}
+                                    leadId={lead?.id}
+                                />
+                            )
+                        )}
+                    </div>
+
+
+                </div>
+                <div className="p-6">
+                    <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
                         Address Information
                     </h2>
                     <div className="max-w-4xl mx-auto">
@@ -128,7 +155,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
 
                 <div className="p-6">
                     <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
-                        Message Information
+                        Message
                     </h2>
                     <div className="max-w-4xl mx-auto">
                         <FieldRow
@@ -143,7 +170,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                 </div>
                 <div className="p-6">
                     <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
-                        Description Information
+                        Description
                     </h2>
                     <div className="max-w-4xl mx-auto">
                         <FieldRow

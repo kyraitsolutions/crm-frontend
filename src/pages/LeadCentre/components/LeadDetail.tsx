@@ -17,6 +17,7 @@ import DataLoader from "@/components/Loader/data-loader";
 import Timeline from "./Timeline";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { formatDate } from "@/utils/date-utils";
+import Emails from "./Emails";
 
 
 const LeadDetail = () => {
@@ -58,7 +59,7 @@ const LeadDetail = () => {
     }
 
     return (
-        <div className="h-screen bg-[#f4f5f8] flex flex-col hide-scrollbar ">
+        <div className="h-[calc(100vh-64px)] bg-[#f4f5f8] flex flex-col hide-scrollbar ">
             {/* Header */}
             <LeadHeader lead={lead} onClick={() => setOpenEmailEditor((prev) => !prev)} />
             {/* Sidebar */}
@@ -69,7 +70,7 @@ const LeadDetail = () => {
                     counts={{
                         notes: lead?.notes?.length || 0,
                         attachments: lead?.attachments?.length || 0,
-                        emails: 5,
+                        emails: lead?.emails?.length || 0,
                         campaigns: 2,
                     }}
                 />
@@ -122,7 +123,7 @@ const LeadDetail = () => {
                     </div>
 
                     {/* Scrollable Body */}
-                    {activeTab === "overview" && <div className="flex-1 overflow-y-auto p-5 space-y-5 hide-scrollbar">
+                    {activeTab === "overview" && <div className="flex-1 overflow-y-auto p-5 space-y-5 ">
                         {/* Overview Card */}
                         <Overview lead={lead} />
 
@@ -131,6 +132,10 @@ const LeadDetail = () => {
 
                         {/* Notes Section */}
                         <Notes lead={lead} />
+
+
+                        {/* Emails */}
+                        <Emails lead={lead} onCompose={() => setOpenEmailEditor((prev) => !prev)} />
 
                         {/* Attachment */}
                         <Attachment />
@@ -149,6 +154,7 @@ const LeadDetail = () => {
             <div className="">
 
                 <EmailEditor
+                    lead={lead}
                     isOpen={openEmailEditor}
                     onClose={() =>
                         setOpenEmailEditor(false)

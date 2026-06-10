@@ -9,8 +9,13 @@ import {
   Paperclip,
   Clock3,
   ChevronDown,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
+import type { ILead } from "../types/lead.type";
+import { useAuthStore } from "@/stores";
+import { EmailService } from "@/services/email.service";
 
 interface Recipient {
   label: string;
@@ -18,22 +23,30 @@ interface Recipient {
 }
 
 interface EmailEditorProps {
+  lead: ILead;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const EmailEditor = ({ isOpen, onClose }: EmailEditorProps) => {
+const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
+
+  const emailService = new EmailService()
+
+  const { accountId } = useAuthStore((state) => state)
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [ccOpen, setCcOpen] = useState(false);
   const [bccOpen, setBccOpen] = useState(false);
   const [sending, setSending] = useState(false);
   const [isMaximize, setIsMaximize] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [showAiBox, setShowAiBox] = useState(false);
 
   const [to, setTo] = useState<Recipient[]>([
     {
-      label: "Ms. Carissa Kidman (Sample)",
-      value: "carissa@gmail.com",
+      label: "Ms. Sharad",
+      value: "abhijeetsingh200222@gmail.com",
     },
   ]);
 
@@ -45,38 +58,110 @@ const EmailEditor = ({ isOpen, onClose }: EmailEditorProps) => {
     ["link", "image"],
     ["clean"],
   ];
-
-  const handleSendEmail = async () => {
+  const handleGenerateAIEmail = async (type:
+    | "generate"
+    | "rewrite"
+    | "shorten"
+    | "professional"
+    | "friendly"
+  ) => {
     try {
-      setSending(true);
+      setAiLoading(true);
 
-      const payload = {
-        to: to.map((i) => i.value),
-        subject,
-        body,
-      };
-
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "/api/ai/generate-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            prompt: aiPrompt,
+            subject,
+            body,
+            type,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       if (data.success) {
-        alert("Email Sent");
-
-        setSubject("");
-        setBody("");
-
-        onClose();
+        setSubject(data.subject);
+        setBody(data.body);
+        setShowAiBox(false);
       }
     } catch (error) {
       console.log(error);
-      alert("Failed to send email");
+      alert("AI generation failed");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+  const handleSendEmail = async () => {
+    try {
+      if (!to.length) {
+        alert("Please add recipient");
+        return;
+      }
+
+      if (!subject.trim()) {
+        alert("Subject is required");
+        return;
+      }
+
+      if (!body.trim()) {
+        alert("Email body is required");
+        return;
+      }
+
+      setSending(true);
+
+      const payload = {
+        leadId: lead.id || null, // optional
+        contactId: null, // optional
+
+        emails: to.map(
+          (recipient) =>
+            recipient.value
+        ),
+        name: "abhijeet",
+        subject,
+
+        html: body, // ReactQuill HTML
+      };
+
+      const response = await emailService.sendEmail(String(accountId), payload)
+      console.log(response)
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+          "Failed to send email"
+        );
+      }
+
+      alert(
+        "Email queued successfully"
+      );
+
+      // reset form
+      setSubject("");
+      setBody("");
+      setTo([]);
+
+      onClose();
+
+    } catch (error: any) {
+      console.log(error);
+
+      alert(
+        error.message ||
+        "Failed to send email"
+      );
     } finally {
       setSending(false);
     }
@@ -127,7 +212,23 @@ const EmailEditor = ({ isOpen, onClose }: EmailEditorProps) => {
             Abhijeet Singh {`<${senderEmail}>`}
           </div>
           {/* Template */}
-          <div className="flex justify-end px-4">
+          {/* <div className="flex justify-end px-4">
+            <button className="border border-[#5468ff] text-sm text-[#5468ff] px-3 py-1 rounded-xl flex items-center gap-2 hover:bg-[#eef1ff]">
+              Insert Template
+              <ChevronDown size={16} />
+            </button>
+          </div> */}
+          <div className="flex justify-end px-4 gap-3">
+            <button
+              onClick={() =>
+                setShowAiBox(!showAiBox)
+              }
+              className="border border-violet-500 text-violet-600 text-sm px-3 py-1 rounded-xl flex items-center gap-2 hover:bg-violet-50"
+            >
+              <Sparkles size={16} />
+              AI Write
+            </button>
+
             <button className="border border-[#5468ff] text-sm text-[#5468ff] px-3 py-1 rounded-xl flex items-center gap-2 hover:bg-[#eef1ff]">
               Insert Template
               <ChevronDown size={16} />
@@ -247,6 +348,97 @@ const EmailEditor = ({ isOpen, onClose }: EmailEditorProps) => {
           </div>
         </div>
       </div>
+      {showAiBox && (
+        <div className="border-b bg-violet-50 px-6 py-4 absolute">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-medium text-sm">
+              Generate Email with AI
+            </h3>
+
+            <button
+              onClick={() =>
+                setShowAiBox(false)
+              }
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          <textarea
+            value={aiPrompt}
+            onChange={(e) =>
+              setAiPrompt(
+                e.target.value
+              )
+            }
+            placeholder="Example: Write a follow-up email after product demo"
+            className="w-full border rounded-lg p-3 outline-none text-sm resize-none"
+            rows={3}
+          />
+
+          <div className="flex gap-2 mt-3 flex-wrap">
+            <button
+              disabled={aiLoading}
+              onClick={() =>
+                handleGenerateAIEmail(
+                  "generate"
+                )
+              }
+              className="bg-[#5468ff] text-white px-3 py-2 rounded-md text-sm"
+            >
+              {aiLoading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Generate"
+              )}
+            </button>
+
+            <button
+              onClick={() =>
+                handleGenerateAIEmail(
+                  "rewrite"
+                )
+              }
+              className="border px-3 py-2 rounded-md text-sm"
+            >
+              Rewrite
+            </button>
+
+            <button
+              onClick={() =>
+                handleGenerateAIEmail(
+                  "professional"
+                )
+              }
+              className="border px-3 py-2 rounded-md text-sm"
+            >
+              Professional
+            </button>
+
+            <button
+              onClick={() =>
+                handleGenerateAIEmail(
+                  "friendly"
+                )
+              }
+              className="border px-3 py-2 rounded-md text-sm"
+            >
+              Friendly
+            </button>
+
+            <button
+              onClick={() =>
+                handleGenerateAIEmail(
+                  "shorten"
+                )
+              }
+              className="border px-3 py-2 rounded-md text-sm"
+            >
+              Shorten
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

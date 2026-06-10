@@ -31,6 +31,7 @@ export const ProtectedOnly = () => {
 
       try {
         const res: any = await authService.getMe();
+
         const userData = res.data?.docs;
 
         authManager.setUser(userData);

@@ -22,6 +22,7 @@ interface ILeadsStoreState {
     setCurrentPage: (page: number) => void;
     fetchLeads:(accountId: string) => Promise<void>;
     updateLeadField: (accountId:string,leadId: string,field: keyof ILead,value: any) => Promise<void>;
+    addLead:(accountId:string,payload:any)=>Promise<void>;
 }
 
 
@@ -180,6 +181,9 @@ export const useLeadsStore = create<ILeadsStoreState>((set,get)=>({
             set({updatingLead: false,});
         }
     },
+    addLead: async (accountId, payload) => {
+        await leadService.createLead(accountId, payload);
+    }
 }));
 
 // export class LeadsStoreManager {
