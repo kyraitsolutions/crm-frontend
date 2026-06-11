@@ -20,7 +20,14 @@ interface ConfigurationState {
   setActiveTab: (tab: string) => void;
 
   getConfigurations: () => Promise<void>;
+  getConfigurationByType: (
+    configType: string,
+  ) => Promise<ConfigurationItem[] | []>;
   createConfigurationItem: (payload: any) => Promise<ApiResponse<any>>;
+  updateConfigurationItem: (
+    itemId: string,
+    payload: Partial<ConfigurationItem>,
+  ) => Promise<ApiResponse<any>>;
   deleteConfigurationItem: (itemId: string) => Promise<ApiResponse<any>>;
 }
 
@@ -43,6 +50,10 @@ export const useConfigurationStore = create<ConfigurationState>((set, get) => ({
       const config =
         CONFIGURATION_MAP[activeTab as keyof typeof CONFIGURATION_MAP];
 
+      if (!config) {
+        return;
+      }
+
       const params = {
         module: config.module,
         configType: config.configType,
@@ -60,6 +71,17 @@ export const useConfigurationStore = create<ConfigurationState>((set, get) => ({
       });
     }
   },
+  getConfigurationByType: async (configType: string) => {
+    const config =
+      CONFIGURATION_MAP[configType as keyof typeof CONFIGURATION_MAP];
+
+    const response = await configurationService.getConfigurations({
+      module: config.module,
+      configType: config.configType,
+    });
+
+    return response.data.doc?.values ?? [];
+  },
   createConfigurationItem: async (payload: any) => {
     const configId = get().configId as string;
     const response = await configurationService.createConfigurationsItem(
@@ -70,19 +92,60 @@ export const useConfigurationStore = create<ConfigurationState>((set, get) => ({
 
     return response;
   },
+  updateConfigurationItem: async (itemId: string, payload: any) => {
+    const configId = get().configId as string;
+    const response = await configurationService.updateConfigItem(
+      configId,
+      itemId,
+      payload,
+    );
 
+    await get().getConfigurations();
+
+    return response;
+  },
   deleteConfigurationItem: async (itemId: string) => {
     const configId = get().configId;
 
     if (!configId) {
       throw new Error("Configuration id not found");
     }
-    const response = await configurationService.deleteConfigurationItem(
-      configId,
-      itemId,
-    );
-    await get().getConfigurations();
 
-    return response;
+    const previousItems = get().configurationItems;
+
+    // Optimistic update
+    set({
+      configurationItems: previousItems.filter((item) => item._id !== itemId),
+    });
+
+    try {
+      const response = await configurationService.deleteConfigurationItem(
+        configId,
+        itemId,
+      );
+
+      return response;
+    } catch (error) {
+      // Rollback
+      set({
+        configurationItems: previousItems,
+      });
+
+      throw error;
+    }
   },
+  // deleteConfigurationItem: async (itemId: string) => {
+  //   const configId = get().configId;
+
+  //   if (!configId) {
+  //     throw new Error("Configuration id not found");
+  //   }
+  //   const response = await configurationService.deleteConfigurationItem(
+  //     configId,
+  //     itemId,
+  //   );
+  //   await get().getConfigurations();
+
+  //   return response;
+  // },
 }));

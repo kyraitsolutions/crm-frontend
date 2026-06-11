@@ -10,8 +10,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { Button } from "@/components/ui/button";
 import Loader from "@/components/Loader";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Plus, Save } from "lucide-react";
 
 interface LeadStatusModalProps {
   open: boolean;
@@ -68,7 +70,7 @@ const LeadStatusModal = ({
   }, [initialData]);
 
   const generatedKey = useMemo(() => {
-    if (initialData?.system) {
+    if (initialData?.system || initialData) {
       return initialData.key;
     }
     return generateKey(form.label);
@@ -84,7 +86,7 @@ const LeadStatusModal = ({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogOverlay className="bg-black/10 backdrop-blur-[2px]" />
-      <DialogContent className="max-w-xl! w-full rounded-3xl border-0 p-4">
+      <DialogContent className="max-w-xl! w-full rounded-xl border-0 p-4">
         {/* HEADER */}
         <DialogHeader className="border-b">
           <DialogTitle className="text-xl font-semibold text-[#111827]">
@@ -100,7 +102,7 @@ const LeadStatusModal = ({
                 Status Name
               </label>
 
-              <input
+              <Input
                 value={form.label}
                 onChange={(e) =>
                   setForm((prev) => ({
@@ -109,20 +111,7 @@ const LeadStatusModal = ({
                   }))
                 }
                 placeholder="Interested"
-                className="
-                h-11
-                w-full
-                rounded-xl
-                border
-                border-[#E5E7EB]
-                px-4
-                text-sm
-                outline-none
-                transition-all
-                focus:border-[#16A34A]
-                focus:ring-4
-                focus:ring-green-100
-              "
+                className="input-field w-full"
               />
             </div>
 
@@ -132,20 +121,7 @@ const LeadStatusModal = ({
                 Generated Key
               </label>
 
-              <div
-                className="
-                flex
-                h-11
-                items-center
-                rounded-xl
-                border
-                border-[#E5E7EB]
-                bg-[#F8FAFC]
-                px-4
-                text-sm
-                text-[#64748B]
-              "
-              >
+              <div className="flex h-10 border p-2 text-gray-400 rounded-xl">
                 {generatedKey || "status_key"}
               </div>
 
@@ -223,23 +199,7 @@ const LeadStatusModal = ({
                 "
               />
 
-              <div
-                className="
-                  flex
-                  h-11
-                  flex-1
-                  items-center
-                  rounded-xl
-                  border
-                  border-[#E5E7EB]
-                  bg-[#F8FAFC]
-                  px-4
-                  text-sm
-                  text-[#64748B]
-                "
-              >
-                {form.color}
-              </div>
+              <div className="flex border p-2 w-full">{form.color}</div>
             </div>
           </div>
 
@@ -249,7 +209,7 @@ const LeadStatusModal = ({
               Preview
             </label>
 
-            <div className="rounded-2xl border border-[#E5E7EB] bg-[#F8FAFC] p-4">
+            <div className="rounded-2xl border border-gray-200 p-4">
               <div className="flex items-center gap-3">
                 <div
                   className="size-3 rounded-full"
@@ -270,15 +230,7 @@ const LeadStatusModal = ({
             <Button
               type="button"
               onClick={onClose}
-              className="
-                rounded-xl
-                border
-                border-[#E5E7EB]
-                bg-white
-                px-5
-                text-[#475569]
-                hover:bg-[#F8FAFC]
-              "
+              className="rounded-xl actions-btn px-5!"
             >
               Cancel
             </Button>
@@ -286,14 +238,10 @@ const LeadStatusModal = ({
             <Button
               type="button"
               onClick={handleSubmit}
-              disabled={!form.label.trim()}
-              className="
-                rounded-xl
-                bg-[#16A34A]
-                px-5
-                hover:bg-[#15803D]
-              "
+              disabled={!form.label.trim() || isSubmitting}
+              className="rounded-xl"
             >
+              {initialData ? <Save /> : <Plus />}
               {initialData ? "Save Changes" : "Create Status"}
               {isSubmitting && <Loader />}
             </Button>

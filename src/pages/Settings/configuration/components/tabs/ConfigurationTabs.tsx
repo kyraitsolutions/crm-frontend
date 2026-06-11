@@ -25,7 +25,7 @@ const ConfigurationTabs = () => {
               "flex w-full items-center rounded-xl px-4 py-3 text-left text-sm font-medium transition-all",
 
               activeTab === tab.key
-                ? "bg-[#E9F7EF] text-[#15803d]"
+                ? "bg-primary/80 text-white"
                 : "text-[#4B5563] hover:bg-[#F3F4F6]",
             )}
           >

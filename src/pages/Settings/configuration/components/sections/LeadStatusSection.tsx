@@ -15,15 +15,17 @@ import { ToastMessageService } from "@/services";
 import { alertManager } from "@/stores/alert.store";
 import type { ApiError } from "@/types";
 import type { TConfigValue } from "../../types/configuration.type";
+import Loader from "@/components/Loader";
 
 const LeadStatusSection = () => {
   const {
     createConfigurationItem,
     configurationItems,
+    updateConfigurationItem,
     deleteConfigurationItem,
+    loading,
   } = useConfigurationStore((state) => state);
   const toastService = new ToastMessageService();
-  // const [statuses, setStatuses] = useState(LEAD_STATUS);
   const [openModal, setOpenModal] = useState(false);
   const [editingStatus, setEditingStatus] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -118,12 +120,19 @@ const LeadStatusSection = () => {
       title: "Delete Status",
       message: "Are you sure you want to delete this status?",
       onConfirm: async () => {
-        const response = await deleteConfigurationItem(String(id));
+        try {
+          const response = await deleteConfigurationItem(String(id));
 
-        if (response && response.status === 200) {
-          toastService.success(
-            response?.message || "Status deleted successfully!",
-          );
+          if (response && response.status === 200) {
+            toastService.success(
+              response?.message || "Status deleted successfully!",
+            );
+          }
+        } catch (error) {
+          const err = error as ApiError;
+          if (err) {
+            toastService.error(err.message || "Failed to delete status");
+          }
         }
       },
     });
@@ -133,7 +142,15 @@ const LeadStatusSection = () => {
     setIsSubmitting(true);
     try {
       if (editingStatus) {
-        console.log(values);
+        const response = await updateConfigurationItem(
+          editingStatus._id,
+          values,
+        );
+        if (response && response?.status === 200) {
+          toastService.success(
+            response?.message || "Status updated successfully!",
+          );
+        }
       } else {
         const payload = { ...values, order: configurationItems.length + 1 };
         const response = await createConfigurationItem(payload);
@@ -153,6 +170,14 @@ const LeadStatusSection = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="w-full flex h-[80vh] items-center justify-center">
+        <Loader color="#353333" size={30} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">

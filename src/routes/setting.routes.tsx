@@ -24,6 +24,7 @@ import { type RouteObject } from "react-router-dom";
 import { RequirePermission } from "./route-access/RequirePermission";
 import ConfigurationPage from "@/pages/Settings/configuration/ConfigurationPage";
 import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page";
+import ActivityLogsPage from "@/pages/Settings/activityLogs/ActivityLogsPage";
 
 export const settingRoutes: RouteObject[] = [
   {
@@ -93,6 +94,7 @@ export const settingRoutes: RouteObject[] = [
 
           // configuration
           { path: "configuration", element: <ConfigurationPage /> },
+          { path: "activity-logs", element: <ActivityLogsPage /> },
         ],
       },
     ],

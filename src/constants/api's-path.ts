@@ -60,10 +60,23 @@ export const API_ENDPOINT_PATH = {
   CONFIGURATION: {
     GET_CONFIGURATION: `/configuration`,
     createConfigItemPath: (id: string) => `/configuration/${id}`,
+
+    updateConfigItemPath: (configId: string, itemId: string) =>
+      `/configuration/${configId}/${itemId}`,
     deleteConfigItemPath: (configId: string, itemId: string) =>
       `/configuration/${configId}/${itemId}`,
   },
-  WHATSAPP:{
-    CONNECT_WHATSAPP:'/whatsapp/connect',
-  }
+
+  AUTOMATIONS: {
+    GET_AUTOMATIONS: `/automation`,
+    CREATE_AUTOMATION: `/automation`,
+  },
+
+  WHATSAPP: {
+    CONNECT_WHATSAPP: "/whatsapp/connect",
+  },
+
+  ACTIVITY_LOGS: {
+    getActivityLogsPath: (id: string) => `/activity-logs/${id}`,
+  },
 };

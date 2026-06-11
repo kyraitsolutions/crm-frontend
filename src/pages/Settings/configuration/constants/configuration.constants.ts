@@ -10,8 +10,8 @@ export const CONFIGURATION_TABS = [
   },
 
   {
-    key: "pipeline",
-    label: "Pipelines",
+    key: "automation-pipeline",
+    label: "Automation Pipelines",
   },
 ];
 
@@ -26,8 +26,8 @@ export const CONFIGURATION_MAP = {
     configType: "status",
   },
 
-  "lead-pipeline": {
-    module: "lead",
-    configType: "pipeline",
-  },
+  // "lead-pipeline": {
+  //   module: "lead",
+  //   configType: "pipeline",
+  // },
 };

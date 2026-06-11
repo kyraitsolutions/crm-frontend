@@ -77,7 +77,6 @@ class ApiService {
     if (error.response) {
       const data = error.response.data as any;
 
-      console.log(data);
       const apiError: ApiError = {
         message:
           data?.error?.responseMessage || // ✅ your backend format

@@ -1,3 +1,4 @@
+import { teamService } from "@/services/team.service";
 import type { ITeam } from "@/types/teams.type";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
@@ -5,12 +6,23 @@ import { immer } from "zustand/middleware/immer";
 interface ITeamsStoreState {
   teams: ITeam[];
   totalTeams: number | null;
+  getTeams: () => Promise<{ label: string; key: string }[]>;
 }
 
 export const useTeamsStore = create<ITeamsStoreState>()(
   immer<ITeamsStoreState>(() => ({
     teams: [],
     totalTeams: null,
+    getTeams: async () => {
+      const response = await teamService.getTeamMembers();
+      const data = response?.data?.docs || [];
+      return (
+        data?.map((team: ITeam) => ({
+          label: `${team?.userProfile?.firstName} ${team?.userProfile?.lastName}`,
+          key: team.userId,
+        })) || []
+      );
+    },
   })),
 );
 

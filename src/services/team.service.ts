@@ -32,3 +32,5 @@ export class TeamService extends ApiService {
     });
   }
 }
+
+export const teamService = new TeamService();
