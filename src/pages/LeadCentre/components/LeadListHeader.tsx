@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { TbDotsVertical, TbPin } from "react-icons/tb";
 import { useLeadsStore } from "../store/lead.store";
 import { useAuthStore } from "@/stores";
+import { getDateRange } from "@/utils/date-utils";
 
 const LeadListHeader = () => {
 
@@ -41,39 +42,6 @@ const LeadListHeader = () => {
         pinned: false,
     }]);
 
-    interface DateRangeParams {
-        days?: number;
-        startDate?: string;
-        endDate?: string;
-    }
-    const getDateRange = ({ days, startDate, endDate }: DateRangeParams) => {
-        // Custom date range
-        if (startDate && endDate) {
-            return {
-                startDate,
-                endDate,
-            };
-        }
-        // Days-based range
-        if (days) {
-            const today = new Date();
-
-            const start = new Date();
-            start.setDate(today.getDate() - (days - 1));
-
-            const end = new Date();
-            end.setDate(today.getDate() + 1);
-            return {
-                startDate: start.toISOString().split("T")[0],
-                endDate: end.toISOString().split("T")[0],
-            };
-        }
-
-        return {
-            startDate: "",
-            endDate: "",
-        };
-    };
     const handleSelectOption = (option: { name: string; value: string }) => {
         console.log("option", option)
         setShowFilter((prev) => {
@@ -187,9 +155,9 @@ const LeadListHeader = () => {
 
     }
 
-    useEffect(() => {
-        fetchLeads(String(accountId));
-    }, [leadQuery.dateRange?.startDate, leadQuery.dateRange?.endDate, currentPage]);
+    // useEffect(() => {
+    //     fetchLeads(String(accountId));
+    // }, [leadQuery.dateRange?.startDate, leadQuery.dateRange?.endDate, currentPage]);
 
     console.log("leadQuery", leadQuery)
 

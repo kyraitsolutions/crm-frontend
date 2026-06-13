@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthStore } from "@/stores";
 import { useEffect } from "react";
 import { useActivityLogStore } from "./store/activity-logs.store";
@@ -13,16 +12,15 @@ const ActivityLogsPage = () => {
   }, [accountId]);
 
   return (
-    <main className="p-4 max-w-7xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle>Activity Timeline</CardTitle>
-        </CardHeader>
+    <main className="p-4">
+      <div className="flex flex-col gap-4">
 
-        <CardContent>
-          <ActivityLogLists />
-        </CardContent>
-      </Card>
+        <h1>Activity Timeline</h1>
+
+        <ActivityLogLists />
+
+      </div>
+
     </main>
   );
 };

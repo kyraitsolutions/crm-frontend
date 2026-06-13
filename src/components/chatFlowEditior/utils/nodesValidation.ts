@@ -1,6 +1,7 @@
 import type { TButtonNodeData } from "../types/types";
 
 export const validateSendMessageNode = (payload: any) => {
+  console.log(payload)
   for (let item = 0; item < payload.length; item++) {
     if (!payload[item].content) {
       return {
@@ -25,7 +26,11 @@ export const validateSendMessageNode = (payload: any) => {
     }
   }
 
-  return null;
+  return {
+    message:"Node validate successfully",
+    isValid:true
+  };
+  // return null;
 };
 
 export const validateButtonNode = (

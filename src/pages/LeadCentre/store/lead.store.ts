@@ -108,7 +108,7 @@ export const useLeadsStore = create<ILeadsStoreState>((set,get)=>({
             const payload = {
                 page:currentPage,
                 limit:leadQuery.limit,
-                search: leadQuery.search.trim() || undefined,
+                search: leadQuery.search?.trim() || undefined,
                 filters:{
                     stage: leadQuery.stage||"",
                     status: leadQuery.status||"",
@@ -163,10 +163,7 @@ export const useLeadsStore = create<ILeadsStoreState>((set,get)=>({
             }));
 
             // Partial payload only
-            const payload = {
-                id:leadId,
-                [field]: value,
-            };
+            const payload = {id:leadId,[field]: value};
 
             console.log("Api payload", payload)
             await leadService.updateLead(accountId, payload);
@@ -182,7 +179,13 @@ export const useLeadsStore = create<ILeadsStoreState>((set,get)=>({
         }
     },
     addLead: async (accountId, payload) => {
-        await leadService.createLead(accountId, payload);
+        try {
+            console.log(payload)
+            await leadService.createLead(accountId, payload);
+        } catch (error) {
+            console.error("Error creating lead",error)
+        }
+        
     }
 }));
 

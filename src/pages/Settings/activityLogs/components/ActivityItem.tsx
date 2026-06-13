@@ -9,13 +9,13 @@ export function ActivityLogItem({ log }: { log: ActivityLog }) {
   const Icon = getActivityIcon(log.action);
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 ">
       <div className="flex h-10 w-10 items-center justify-center rounded-full border">
         <Icon className="h-4 w-4" />
       </div>
 
       <div className="flex-1">
-        <p className="font-medium">{getActivityMessage(log)}</p>
+        <p className="font-medium">{getActivityMessage(log)} → {log.entityType}</p>
 
         <p className="text-muted-foreground text-sm">
           {formatDistanceToNow(new Date(log.createdAt), {

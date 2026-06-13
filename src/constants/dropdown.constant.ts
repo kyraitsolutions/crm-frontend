@@ -12,9 +12,12 @@ export const statusOptions = [
   { label: "Active", value: "active" },
   { label: "Inactive", value: "inactive" },
 ];
+export const contactStatusOptions = [
+  { label: "Subscribed", value: "subscribed" },
+  { label: "Unsubscribed", value: "unsubscribed" },
+];
 
 export const sourceOptions = [
-  { label: "Chatbot", value: "chatbot" },
   { label: "Website", value: "website" },
   { label: "Google Ads", value: "google_ads" },
   { label: "Whatsapp", value: "whatsapp" },

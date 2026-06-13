@@ -1,4 +1,6 @@
 const relatedList = [
+    "overview",
+    "details",
     "notes",
     // "connected Records",
     // "cadences",
@@ -15,9 +17,10 @@ const relatedList = [
 
 interface SidebarProps {
     counts: Record<string, number>;
+    onTabClick: (tab: string) => void;
 }
 
-const Sidebar = ({ counts }: SidebarProps) => {
+const Sidebar = ({ onTabClick, counts }: SidebarProps) => {
     return (
         <aside className="w-60 h-screen bg-white border-r border-[#e5e7eb] overflow-y-auto">
             <div className="p-4">
@@ -29,6 +32,7 @@ const Sidebar = ({ counts }: SidebarProps) => {
                     {relatedList.map((item) => (
                         <button
                             key={item}
+                            onClick={() => onTabClick(item)}
                             className="block w-full text-left capitalize text-sm text-[#334155] hover:text-blue-600 transition"
                         >
                             {item}

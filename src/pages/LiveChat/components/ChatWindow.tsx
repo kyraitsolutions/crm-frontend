@@ -80,7 +80,7 @@ const ChatWindow = () => {
             selectedConversation?.visitorId || "",
           ),
         )}
-        platform={selectedConversation?.platform || "chatbot"}
+      // platform={selectedConversation?.platform || "chatbot"}
       />
       {loadingMessages ? (
         <ChatMessagesSkeleton />

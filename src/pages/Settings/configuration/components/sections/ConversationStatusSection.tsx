@@ -26,6 +26,7 @@ import { useConfigurationStore } from "../../store/configuration.store";
 import type { ApiError } from "@/types";
 import { alertManager } from "@/stores/alert.store";
 import Loader from "@/components/Loader";
+import DataLoader from "@/components/Loader/data-loader";
 
 const ConversationStatusSection = () => {
   const {
@@ -183,11 +184,7 @@ const ConversationStatusSection = () => {
   ];
 
   if (loading) {
-    return (
-      <div className="w-full flex h-[80vh] items-center justify-center">
-        <Loader color="#353333" size={30} />
-      </div>
-    );
+    return <DataLoader className="h-[calc(100vh-200px)]" />;
   }
 
   return (

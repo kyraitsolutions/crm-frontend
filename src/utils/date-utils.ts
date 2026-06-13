@@ -54,3 +54,43 @@ export const formatDateTime = (dateString: string): string => {
 
   return ` ${formattedTime.toUpperCase()}, ${formattedDate.replace(/,/g, "")}`;
 };
+
+
+interface DateRangeParams {
+    days?: number;
+    startDate?: string;
+    endDate?: string;
+}
+
+const toLocalISODate = (d: Date): string => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
+export  const getDateRange = ({ days, startDate, endDate }: DateRangeParams) => {
+        // Custom date range
+        if (startDate && endDate) {
+            return {
+                startDate,
+                endDate,
+            };
+        }
+        // Days-based range
+        if (days) {
+            const today = new Date();
+
+            const start = new Date();
+            start.setDate(today.getDate() - (days - 1));
+
+            return {
+                startDate: toLocalISODate(start),
+                endDate: toLocalISODate(today),
+            };
+        }
+
+        return {
+            startDate: "",
+            endDate: "",
+        };
+    };

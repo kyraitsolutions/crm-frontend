@@ -1,13 +1,13 @@
-import Loader from "@/components/Loader";
 import { useActivityLogStore } from "../store/activity-logs.store";
 import { ActivityLogItem } from "./ActivityItem";
 import ActivityLogEmpty from "./ActivityLogEmpty";
+import DataLoader from "@/components/Loader/data-loader";
 
 const ActivityLogLists = () => {
   const { logs, loading } = useActivityLogStore();
 
   if (loading) {
-    return <Loader />;
+    return <DataLoader className="h-[calc(100vh-200px)]" />;
   }
 
   if (!logs.length) {

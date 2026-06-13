@@ -172,9 +172,7 @@ const Timeline = () => {
 
             {/* Timeline */}
             <div className="max-h-150 overflow-y-auto px-5 pb-8 mt-10 hide-scrollbar">
-                {Object.entries(
-                    groupedTimeline
-                ).map(([date, items]) => (
+                {Object.entries(groupedTimeline).map(([date, items]) => (
                     <div
                         key={date}
                         className="mb-10"
@@ -203,9 +201,7 @@ const Timeline = () => {
                                             {/* Icon */}
                                             <div className="relative z-10 shrink-0">
                                                 <div className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center text-gray-700">
-                                                    {renderIcon(
-                                                        item.type
-                                                    )}
+                                                    {renderIcon(item.type)}
                                                 </div>
                                             </div>
 
@@ -217,9 +213,7 @@ const Timeline = () => {
 
                                                 {item.description && (
                                                     <p className="text-sm text-gray-800">
-                                                        {
-                                                            item.description
-                                                        }
+                                                        {item.description}
                                                     </p>
                                                 )}
 

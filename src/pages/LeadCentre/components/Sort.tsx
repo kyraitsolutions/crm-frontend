@@ -8,7 +8,7 @@ const Sort = () => {
     const { openSort, setOpenSort, currentPage, fetchLeads, leadQuery, setLeadQuery } = useLeadsStore((state) => state);
     const { accountId } = useAuthStore((state) => state);
 
-    const debouncedSearchQuery = useDebounce(leadQuery.search, 2000);
+    const debouncedSearchQuery = useDebounce(leadQuery.search, 1000);
 
     useEffect(() => {
         fetchLeads(String(accountId));
@@ -41,7 +41,7 @@ const Sort = () => {
                     {/* <div onClick={(e) => e.stopPropagation()} className=" relative top-52 left-48 w-105 rounded-xl border border-primary bg-white shadow-xl p-4 -z-20"> */}
                     <div onClick={(e) => e.stopPropagation()} className=" relative mt-10 w-105 rounded-xl border border-primary bg-white shadow-xl p-4 -z-20">
                         <div >
-                            <div className='h-5.5 w-5.5 bg-white border-l border-t border-primary rotate-45 rounded-xl -mt-6.5' />
+                            <div className='h-5.5 w-5.5 bg-white border-l border-t border-primary rotate-45 -mt-7' />
                             <h3 className="text-sm font-medium mb-3">
                                 Sort By
                             </h3>
@@ -102,12 +102,7 @@ const Sort = () => {
                                     type="text"
                                     placeholder="Search"
                                     value={leadQuery.search}
-                                    onChange={(e) =>
-                                        setLeadQuery({
-                                            search:
-                                                e.target.value,
-                                        })
-                                    }
+                                    onChange={(e) => setLeadQuery({ search: e.target.value, })}
                                     className="w-full border rounded-md outline-none pl-10 pr-4 py-2 text-sm"
                                 />
                             </div>

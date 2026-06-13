@@ -1,5 +1,4 @@
 import { useEffect, useState, type JSX } from "react";
-import useDebounce from "@/hooks/useDebounce";
 import { useAccountAccessStore } from "@/stores/account-access.store";
 import {
   Table,
@@ -53,21 +52,18 @@ const LeadTable = () => {
     totalPages,
     loadingLeads,
     updateLeadField,
+    leadQuery
   } = useLeadsStore((state) => state);
 
   useEffect(() => {
     fetchLeads(String(accountId));
-  }, [accountId, currentPage]);
+  }, [accountId, currentPage, JSON.stringify({ ...leadQuery, search: "" })]);
 
   const { getConfigurationByType } = useConfigurationStore((state) => state);
 
-  const [searchQuery, setSearchQuery] = useState("");
   const [leadStages, setLeadStages] = useState<ConfigurationItem[] | []>([]);
 
   const { permissions } = useAccountAccessStore((state) => state);
-
-  const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  // Filters and search query state
 
   const handleStatusChange = async (leadId: string, value: string) => {
     await updateLeadField(
@@ -77,11 +73,6 @@ const LeadTable = () => {
       value,
     );
   };
-
-  useEffect(() => {
-    // getLeads();
-    // calculateBasicNumber()
-  }, [currentPage, debouncedSearchQuery]);
 
   const getLeadStages = async () => {
     const values = await getConfigurationByType("lead-status");
@@ -145,7 +136,7 @@ const LeadTable = () => {
   return (
     <div className="overlead-hidden hide-scrollbar bg-white rounded-xl">
       <Table className="border-b">
-        <TableHeader className="bg-muted/30">
+        <TableHeader className="bg-muted/30 ">
           <TableRow className="hover:bg-transparent">
             <TableHead className="text-xs font-semibold uppercase tracking-wide text-white bg-primary p-3">
               #

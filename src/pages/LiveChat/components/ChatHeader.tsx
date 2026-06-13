@@ -1,12 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
-import { EllipsisVertical, Phone, Tag } from "lucide-react";
+import { EllipsisVertical, Phone } from "lucide-react";
 import { MdOutlinePeopleOutline } from "react-icons/md";
+import ChatTags from "./Tags";
 
 type ChatHeaderProps = {
   name: string;
   img?: string;
-  platform:
+  platform?:
   | "whatsapp"
   | "instagram"
   | "chatbot"
@@ -15,9 +16,9 @@ type ChatHeaderProps = {
   | "email";
 };
 
-const ChatHeader = ({ name, img, platform }: ChatHeaderProps) => {
+const ChatHeader = ({ name, img }: ChatHeaderProps) => {
   return (
-    <div className="bg-white px-3 py-2 drop-shadow-xs border-gray-200">
+    <div className="bg-white px-3 py-2 drop-shadow-xs border-gray-200 relative">
       <div className="flex items-center gap-4">
         {img ? (
           <Avatar className="h-12 w-12 flex items-center justify-center bg-gray-100">
@@ -35,15 +36,9 @@ const ChatHeader = ({ name, img, platform }: ChatHeaderProps) => {
           </div>
         )}
 
-        <div className="">
+        <div className="relative">
           <h1 className="text-sm font-semibold">{name}</h1>
-          <p className="capitalize text-xs flex items-center gap-1 mt-1 text-primary">
-            {/* <span className="bg-green-500 rounded-full w-2 h-2 mr-2" /> */}
-            {/* <span>Online</span>
-            <Dot /> */}
-            <Tag size={14} />
-            <span>{platform}</span>
-          </p>
+          <ChatTags />
         </div>
 
         <Phone size={18} className="text-gray-500 ml-auto" />

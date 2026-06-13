@@ -1,16 +1,9 @@
-import type { Option } from "@/components/filter-dropdown";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { LEADS_ROUTES } from "@/constants/routes/leads.path";
 import {
     Funnel,
     ArrowUpDown,
     List,
-    Columns2,
-    LayoutGrid,
-    PieChart,
-    SquareStack,
-    Minus,
-    MapPin,
     ChevronDown,
     RotateCw,
     Ellipsis,
@@ -20,11 +13,13 @@ import { useNavigate } from "react-router-dom";
 import { useLeadsStore } from "../store/lead.store";
 import { useAuthStore } from "@/stores";
 import Sort from "./Sort";
+import LeadFilter from "./LeadFilter";
 
 const Toolbar = () => {
     const navigate = useNavigate();
     const { accountId } = useAuthStore((state) => state)
     const { openSort, loadingLeads, setOpenSort, fetchLeads } = useLeadsStore((state) => state);
+    const [openFilter, setOpenFilter] = useState(false);
 
     const viewOptions = [
         { title: "List view", icon: List },
@@ -37,34 +32,24 @@ const Toolbar = () => {
         // { title: "More views", icon: ChevronDown },
     ];
 
-    const [filters, setFilters] = useState<Record<string, Option>>({
-        lead: { label: "All Leads", value: null },
-        campaign: { label: "All Campaigns", value: null },
-        form: { label: "All Forms", value: null },
-        date: { label: "All Dates", value: null },
-        status: { label: "All Status", value: null },
-        source: { label: "All Sources", value: null },
-        assignedTo: { label: "All Users", value: null },
-        label: { label: "All Labels", value: null },
-        stage: { label: "All Stages", value: null },
-        read: { label: "All", value: null },
-    });
-
 
     return (
         <div className="relative flex items-center justify-between gap-4 border-b px-4 py-2 bg-white text-gray-700">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
 
                 {/* Filter */}
-                <ButtonWithTitle className="flex items-center gap-2 rounded-xl px-3 py-1.5 hover:bg-gray-100 transition">
-                    <Funnel size={16} />
-                    <span className="text-sm font-medium">Filter</span>
-                </ButtonWithTitle>
+                <div className="relative">
+                    <ButtonWithTitle onClick={() => setOpenFilter(!openFilter)} className="flex items-center gap-2 rounded-xl px-3 py-1.5 hover:bg-gray-100 transition">
+                        <Funnel size={16} />
+                        <span className="text-sm font-medium">Filter</span>
+                    </ButtonWithTitle>
+                    {openFilter && <LeadFilter openFilter={openFilter} setOpenFilter={setOpenFilter} />}
+                </div>
 
                 {/* Sort */}
                 <div className="relative">
 
-                    <ButtonWithTitle onClick={() => setOpenSort(!openSort)} className="flex items-center gap-2 hover:text-black transition">
+                    <ButtonWithTitle onClick={() => setOpenSort(!openSort)} className="flex items-center gap-2 rounded-xl px-3 py-1.5 hover:text-black hover:bg-gray-100 transition">
                         <ArrowUpDown size={16} />
                         <span className="text-sm font-medium">Sort</span>
                     </ButtonWithTitle>

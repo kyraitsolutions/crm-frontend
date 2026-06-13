@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Clock3, } from "lucide-react";
 import Notes from "./Notes";
 import Overview from "./Overview";
@@ -27,6 +27,8 @@ const LeadDetail = () => {
     const [activeTab, setActiveTab] = useState("overview");
     const [openEmailEditor, setOpenEmailEditor] = useState(false);
 
+    const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+
     const [lead, setLead] = useState<ILead | null>(null);
 
     const getLead = async () => {
@@ -47,10 +49,26 @@ const LeadDetail = () => {
     };
     useEffect(() => {
         getLead();
-        // calculateBasicNumber()
     }, [leadId,]);
 
     console.log("🚀 ~ file: LeadDetail.tsx:24 ~ LeadDetail ~ leadId:", lead)
+
+    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+    const scrollToSection = (section: string) => {
+        const container = scrollContainerRef.current;
+        const target = sectionRefs.current[section];
+        if (container && target) {
+            const containerRect = container.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+            const offset = targetRect.top - containerRect.top + container.scrollTop;
+
+            container.scrollTo({
+                top: offset,
+                behavior: "smooth",
+            });
+        }
+    };
 
     if (!lead) {
         return (
@@ -67,6 +85,7 @@ const LeadDetail = () => {
 
                 {/* Side bar */}
                 <Sidebar
+                    onTabClick={scrollToSection}
                     counts={{
                         notes: lead?.notes?.length || 0,
                         attachments: lead?.attachments?.length || 0,
@@ -123,22 +142,22 @@ const LeadDetail = () => {
                     </div>
 
                     {/* Scrollable Body */}
-                    {activeTab === "overview" && <div className="flex-1 overflow-y-auto p-5 space-y-5 ">
-                        {/* Overview Card */}
-                        <Overview lead={lead} />
-
-                        {/* Details Section */}
-                        <DetailCard lead={lead} />
-
-                        {/* Notes Section */}
-                        <Notes lead={lead} />
-
-
-                        {/* Emails */}
-                        <Emails lead={lead} onCompose={() => setOpenEmailEditor((prev) => !prev)} />
-
-                        {/* Attachment */}
-                        <Attachment />
+                    {activeTab === "overview" && <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-5 space-y-5 ">
+                        <div ref={(el) => { sectionRefs.current["overview"] = el; }}>
+                            <Overview lead={lead} />
+                        </div>
+                        <div ref={(el) => { sectionRefs.current["details"] = el; }}>
+                            <DetailCard lead={lead} />
+                        </div>
+                        <div ref={(el) => { sectionRefs.current["notes"] = el; }}>
+                            <Notes lead={lead} />
+                        </div>
+                        <div ref={(el) => { sectionRefs.current["emails"] = el; }}>
+                            <Emails lead={lead} onCompose={() => setOpenEmailEditor((prev) => !prev)} />
+                        </div>
+                        <div ref={(el) => { sectionRefs.current["attachments"] = el; }}>
+                            <Attachment />
+                        </div>
                     </div>}
                     {activeTab === "timeline" && <div className="flex-1 overflow-y-auto p-5 space-y-5 hide-scrollbar">
                         {/* Timeline */}

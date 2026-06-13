@@ -1,8 +1,8 @@
-import { sourceOptions, stageOptions, statusOptions } from "@/constants";
+import { sourceOptions, statusOptions } from "@/constants";
 import { ChevronLeft, Info, MessageSquareMore, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MdInfo, MdLocationOn } from "react-icons/md";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { useConfigurationStore } from "../Settings/configuration/store/configuration.store";
 import { useLeadsStore } from "./store/lead.store";
@@ -22,6 +22,7 @@ const suggestedTags = [
 ];
 const AddLead = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { accountId } = useParams();
     const [loading, setLoading] = useState(false);
     const { addLead } = useLeadsStore((state) => state);
@@ -138,7 +139,7 @@ const AddLead = () => {
             status: form.status,
             source: {
                 name: form.source || 'manual',
-                url: form.sourceUrl || "",
+                url: form.sourceUrl || location.pathname,
             },
             tags: form.tags,
             address: form.address,
@@ -146,6 +147,8 @@ const AddLead = () => {
             state: form.state,
             country: form.country
         }
+
+        console.log(payload)
         return {
             ...payload,
             accountId,

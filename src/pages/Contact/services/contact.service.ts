@@ -8,11 +8,8 @@ export class ContactService extends ApiService {
     }
 
 
-    async getContacts(
-        payload: any,
-        // params: Record<string, any>
-    ): Promise<ApiResponse<any>> {
-       return await this.post(`/contacts`,payload);
+    async getContacts(payload: any,): Promise<ApiResponse<any>> {
+        return await this.post(`/contacts`,payload);
     }
     
     async getContact(accountId: string,subscriberId:string): Promise<ApiResponse<any>> {

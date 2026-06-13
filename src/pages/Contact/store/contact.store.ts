@@ -9,6 +9,12 @@ type TContactQuery = {
     search: string;
     source: string;
     status: string;
+    dateRange:{
+        startDate:"",
+        endDate:"",
+    },
+    sortBy:"",
+    sortOrder:"desc",
     tags: string[];
 };
 
@@ -22,6 +28,7 @@ type TContactStore = {
     contactQuery: TContactQuery;
     open: boolean;
     setOpen: (open: boolean) => void;
+    setContactQuery: (query: Partial<TContactQuery>) => void;
     setCurrentPage: (page: number) => void;
     fetchContacts: (accountId: string) => Promise<void>;
     createContact: (data: TCreateContact) => Promise<void>;
@@ -34,6 +41,12 @@ const initialContactQuery: TContactQuery = {
     search: "",
     source: "",
     status: "",
+    dateRange:{
+        startDate:"",
+        endDate:"",
+    },
+    sortBy:"",
+    sortOrder:"desc",
     tags: [],
 };
 
@@ -49,20 +62,25 @@ export const useContactStore = create<TContactStore>((set, get) => ({
     contactQuery: initialContactQuery,
 
     setOpen: (open: boolean) => {
-        set({
-            open: open
-        })
+        set({open: open})
+    },
+    setContactQuery: (query) => {
+        console.log("Query", query)
+        set((state) => ({
+            contactQuery: {
+                ...state.contactQuery,
+                ...query,
+            },
+            currentPage: 1,
+        }));
     },
     setCurrentPage: (page) => {
-        const current =
-            get().currentPage;
+        const current =get().currentPage;
 
         if (current === page)
             return;
 
-        set({
-            currentPage: page,
-        });
+        set({currentPage: page});
     },
 
 
@@ -77,10 +95,17 @@ export const useContactStore = create<TContactStore>((set, get) => ({
                 accountId,
                 pageIndex: currentPage,
                 rowPerPage: contactQuery.limit,
+                filters:{
+                    source: contactQuery.source,
+                    status: contactQuery.status,
+                },
                 search: contactQuery.search,
-                source: contactQuery.source,
-                status: contactQuery.status,
                 tags: contactQuery.tags,
+                dateRange: contactQuery.dateRange,
+                sort:{
+                    field: contactQuery.sortBy || undefined,
+                    order: contactQuery.sortOrder,
+                }
             };
 
             console.log("Fetch contacts payload:", payload);
