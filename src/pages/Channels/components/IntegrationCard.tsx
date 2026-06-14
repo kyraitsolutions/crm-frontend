@@ -1,79 +1,66 @@
-import { Button } from '@/components/ui/button'
-import { WhatsappService } from '@/services/whatsapp.service';
-import { useAuthStore } from '@/stores';
-import { Link } from 'react-router-dom'
+import { Button } from "@/components/ui/button";
+import { WhatsappService } from "@/services/whatsapp.service";
+import { useAuthStore } from "@/stores";
+import { Link } from "react-router-dom";
 const IntegrationCard = ({ data }: any) => {
-    const { accountId } = useAuthStore((state) => state)
-    const whatsappService = new WhatsappService();
-    const Icon = data.icon
+  const { accountId } = useAuthStore((state) => state);
+  const whatsappService = new WhatsappService();
+  const Icon = data.icon;
 
-    const handleWhatsapp = async () => {
-        try {
-            const response = await whatsappService.connectWhatsapp(accountId || "");
+  const handleWhatsapp = async () => {
+    try {
+      const response = await whatsappService.connectWhatsapp(accountId || "");
 
-            window.open(response?.data?.docs?.signupUrl)
-            console.log(response?.data?.docs?.signupUrl)
-        } catch (error) { }
-    };
+      window.open(response?.data?.docs?.signupUrl);
+      console.log(response?.data?.docs?.signupUrl);
+    } catch (error) {}
+  };
 
-
-
-    return (
-        <div className=" mt-5 bg-gray-100 min-h-screen">
-            <div className="w-full rounded-xl">
-                <div className="p-6">
-
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className={`${data.color} p-2 rounded-xl`}>
-                                <Icon className="text-white w-6 h-6" />
-                            </div>
-                            <h2 className="text-xl font-semibold">
-                                {data.name}
-                            </h2>
-                        </div>
-
-                        <Button onClick={handleWhatsapp} className={`${data.buttonColor} text-white`}>
-                            Integrate
-                        </Button>
-                    </div>
-
-                    <p className="mt-4 text-gray-600 text-sm leading-relaxed">
-                        {data.description}
-                    </p>
-
-                    <div className="mt-6">
-                        <h3 className="font-semibold text-gray-800 mb-3">
-                            Key Features
-                        </h3>
-
-
-                        <ul className="list-disc pl-5 space-y-2 text-gray-600 text-sm">
-                            {data.features.map((feature: string) => (
-                                <li>
-                                    {feature}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="mt-6">
-                        <h3 className="font-semibold text-gray-800 mb-2">
-                            Resources
-                        </h3>
-
-                        <Link
-                            to="#"
-                            className="text-blue-600 text-sm hover:underline"
-                        >
-                            {data.resourceText}
-                        </Link>
-                    </div>
-
-                </div>
+  return (
+    <div className=" mt-5 bg-gray-100 min-h-screen">
+      <div className="w-full rounded-xl">
+        <div className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`${data.color} p-2 rounded-xl`}>
+                <Icon className="text-white w-6 h-6" />
+              </div>
+              <h2 className="text-xl font-semibold">{data.name}</h2>
             </div>
-        </div>
-    )
-}
 
-export default IntegrationCard
+            <Button
+              onClick={handleWhatsapp}
+              className={`${data.buttonColor} text-white`}
+            >
+              Integrate
+            </Button>
+          </div>
+
+          <p className="mt-4 text-gray-600 text-sm leading-relaxed">
+            {data.description}
+          </p>
+
+          <div className="mt-6">
+            <h3 className="font-semibold text-gray-800 mb-3">Key Features</h3>
+
+            <ul className="list-disc pl-5 space-y-2 text-gray-600 text-sm">
+              {data.features.map((feature: string) => (
+                <li>{feature}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="font-semibold text-gray-800 mb-2">Resources</h3>
+
+            <Link to="#" className="text-blue-600 text-sm hover:underline">
+              {data.resourceText}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default IntegrationCard;
