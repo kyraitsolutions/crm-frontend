@@ -16,7 +16,7 @@ const AppLoader = () => {
 
         {/* Spinner */}
         <div className="">
-          <Loader size={40} color="#16A34A" className="border-4" />
+          <Loader color="#1e2225" size={40} className="border-4 text-primary" />
         </div>
 
         {/* Text */}

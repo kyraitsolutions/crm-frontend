@@ -72,8 +72,16 @@ export const API_ENDPOINT_PATH = {
     CREATE_AUTOMATION: `/automation`,
   },
 
+  INTEGRATION: {
+    getIntegrationPath: (accountId: string, provider: string) =>
+      `/integration/${accountId}/${provider}`,
+    WHATSAPP: {
+      CONNECT_WHATSAPP: "integration/whatsapp/connect",
+    },
+  },
+
   WHATSAPP: {
-    CONNECT_WHATSAPP: "/whatsapp/connect",
+    REGISTER_PHONE_NUMBER: "whatsapp/phone-number/register",
   },
 
   ACTIVITY_LOGS: {
