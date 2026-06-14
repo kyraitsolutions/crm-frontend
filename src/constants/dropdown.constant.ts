@@ -21,7 +21,7 @@ export const sourceOptions = [
   { label: "Website", value: "website" },
   { label: "Google Ads", value: "google_ads" },
   { label: "Whatsapp", value: "whatsapp" },
-  { label: "Facebook", value: "facebook" },
+  { label: "Meta", value: "facebook" },
   { label: "Instagram", value: "instagram" },
   { label: "Webform", value: "webform" },
   { label: "Manual", value: "manual" },

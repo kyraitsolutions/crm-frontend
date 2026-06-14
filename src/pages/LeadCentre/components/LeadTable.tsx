@@ -27,7 +27,7 @@ import {
 import { formatDate } from "@/utils/date-utils";
 import { useAuthStore } from "@/stores";
 import { TbManualGearbox } from "react-icons/tb";
-import { Instagram } from "@/icons/icons";
+import { Facebook, Google, ImportIcon, Instagram, Manual, WebForm, WebHook, Website, Whatsapp } from "@/icons/icons";
 import { MdWhatsapp } from "react-icons/md";
 import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -84,15 +84,15 @@ const LeadTable = () => {
   }, []);
 
   const getIconForSource: Record<string, JSX.Element> = {
-    website: <Shapes className="size-4 text-muted-foreground" />,
-    google_ads: <FaGoogle className="size-4 text-muted-foreground" />,
-    whatsapp: <MdWhatsapp className="size-4 text-muted-foreground" />,
-    facebook: <Shapes className="size-4 text-muted-foreground" />,
+    website: <Website />,
+    google_ads: <Google />,
+    whatsapp: <Whatsapp />,
+    facebook: <Facebook />,
     instagram: <Instagram />,
-    webform: <Shapes className="size-4 text-muted-foreground" />,
-    manual: <TbManualGearbox className="size-4 text-muted-foreground" />,
-    webhook: <Webhook className="size-4 text-muted-foreground" />,
-    import: <Import className="size-4 text-muted-foreground" />,
+    webform: <WebForm />,
+    manual: <Manual />,
+    webhook: <WebHook />,
+    import: <ImportIcon />,
   };
 
   if (loadingLeads) {

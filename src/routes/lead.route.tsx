@@ -5,6 +5,7 @@ import { PERMISSIONS } from "@/rbac";
 import AddLead from "@/pages/LeadCentre/AddLead";
 import LeadDetail from "@/pages/LeadCentre/components/LeadDetail";
 import LeadCenter from "@/pages/LeadCentre/leadCentre.page";
+import ImportLead from "@/pages/LeadCentre/importLead.page";
 // import LeadsCentre from "@/pages/leads-center.page";
 export const leadRoutes: RouteObject[] = [
   {
@@ -27,6 +28,14 @@ export const leadRoutes: RouteObject[] = [
           </RequirePermission>
         ),
         path: "create",
+      },
+      {
+        element: (
+          <RequirePermission permission={PERMISSIONS.LEADS.CREATE}>
+            <ImportLead />
+          </RequirePermission>
+        ),
+        path: "import",
       },
       {
         element: (

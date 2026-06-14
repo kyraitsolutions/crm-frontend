@@ -64,7 +64,7 @@ const Contacts = () => {
                         <div className="relative w-full max-w-sm">
                             <input
                                 type="text"
-                                placeholder="Search contacts..."
+                                placeholder="Search name, phone, email"
                                 value={contactQuery.search}
                                 onChange={(e) => setContactQuery({ search: e.target.value, })}
                                 className="w-full bg-gray-100 rounded-xl! px-4 border-gray-300 py-2.5 pr-8 text-sm text-[#37322F] placeholder:text-[#847971] focus:outline-none focus:border-gray-300 transition"

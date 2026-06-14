@@ -63,5 +63,38 @@ export const BasicNumberSchema=z.object({
     convertedLeads:z.number()
 })
 
+
+
+export const CreateLeadSchema=z.object({
+    name: z.string().min(1).optional(),
+    email: z.string().optional(), // can be empty string
+    phone: z.string().optional(),
+    message: z.string().optional(),
+    description: z.string().optional(),
+    company: z.string().optional(),
+    title: z.string().optional(),
+    website: z.string().optional(),
+    mobile: z.string().optional(),
+    customFields: z.record(z.string(), z.any()).optional(), // empty object allowed
+    stage: z.string().min(1).optional(),
+    status: z.string().min(1).optional(),
+    source: z.object({
+        name: z.string().min(1).optional(),
+        url: z.string().optional(),
+        formId: z.string().optional(),
+        chatbotId: z.string().optional(),
+    }).optional(),
+    tags: z.array(z.any()).optional(),
+    notes: z.array(
+        z.object({
+            activitySource: z.enum(["phone_call", "message", "note", "email", "whatsapp"]).optional(),
+            attachment: z.string().optional(),
+            message: z.string().optional(),
+            createdBy: z.string().optional(),
+            createdAt: z.string().refine((val) => !isNaN(Date.parse(val)), {message: "Invalid date",}).optional(),
+        })
+    ).optional(),
+})
 export type ILead = z.infer<typeof LeadSchema>;
 export type BasicNumber=z.infer<typeof BasicNumberSchema>;
+export type ICreateLead=z.infer<typeof CreateLeadSchema>;
