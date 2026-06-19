@@ -109,7 +109,7 @@ const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setS
 
                     <div className="mt-20 flex justify-center">
                         <button className="rounded-xl bg-[#2c3348] px-4 py-1.5 text-white shadow-md hover:opacity-90">
-                            Zoho CRM
+                            Kyra CRM
                         </button>
                     </div>
 

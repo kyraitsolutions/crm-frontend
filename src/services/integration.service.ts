@@ -18,9 +18,7 @@ export class IntegrationService extends ApiService {
     const queryParams = new URLSearchParams();
     if (accountId) queryParams.set("accountId", accountId);
 
-    const response = await this.post(
-      `${API_ENDPOINT_PATH.INTEGRATION.WHATSAPP.CONNECT_WHATSAPP}?${queryParams.toString()}`,
-    );
+    const response = await this.post(`${API_ENDPOINT_PATH.INTEGRATION.WHATSAPP.CONNECT_WHATSAPP}?${queryParams.toString()}`);
     return response.data;
   }
 }

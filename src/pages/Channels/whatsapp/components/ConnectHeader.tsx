@@ -23,8 +23,8 @@ export default function ConnectHeader({ onConnect }: ConnectHeaderProps) {
         </div>
       </div>
 
-      <h1 className="flex flex-col text-3xl font-bold text-gray-600 leading-snug">
-        <span className="text-base">Connect WhatsApp</span>
+      <h1 className="flex flex-col text-3xl font-semibold text-gray-600 leading-snug">
+        {/* <span className="text-base">Connect WhatsApp</span> */}
         Business Platform
       </h1>
 

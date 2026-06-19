@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import Select from "react-select";
@@ -16,6 +16,7 @@ import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import type { ILead } from "../types/lead.type";
 import { useAuthStore } from "@/stores";
 import { EmailService } from "@/services/email.service";
+import { useAccountsStore } from "@/stores/accounts.store";
 
 interface Recipient {
   label: string;
@@ -32,7 +33,8 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
 
   const emailService = new EmailService()
 
-  const { accountId } = useAuthStore((state) => state)
+  const { user, accountId } = useAuthStore((state) => state);
+  const { accounts } = useAccountsStore((state) => state);
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [ccOpen, setCcOpen] = useState(false);
@@ -45,8 +47,8 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
 
   const [to, setTo] = useState<Recipient[]>([
     {
-      label: "Ms. Sharad",
-      value: "abhijeetsingh200222@gmail.com",
+      label: lead?.name ?? "",
+      value: lead?.email ?? "",
     },
   ]);
 
@@ -73,8 +75,7 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
         {
           method: "POST",
           headers: {
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             prompt: aiPrompt,
@@ -122,10 +123,7 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
         leadId: lead.id || null, // optional
         contactId: null, // optional
 
-        emails: to.map(
-          (recipient) =>
-            recipient.value
-        ),
+        emails: to.map((recipient) => recipient.value),
         name: "abhijeet",
         subject,
 
@@ -167,7 +165,12 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
     }
   };
 
-  const [senderEmail, setSenderEmail] = useState("abhijeetsingh5631@gmail.com");
+
+  console.log("User AuthUser", user, accounts);
+  const getCurrentAccount = accounts?.find(acc => acc.id === accountId);
+
+  console.log(getCurrentAccount)
+  const [sender, setSender] = useState(getCurrentAccount);
 
   if (!isOpen) return null;
 
@@ -207,17 +210,11 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
           {/* Sender */}
           <div className="px-7 text-sm flex items-center  gap-4">
             <div className="font-semibold h-8 w-8  capitalize flex text-white items-center justify-center bg-second/80 rounded-full">
-              {senderEmail.charAt(0)}
+              {sender?.email?.charAt(0)}
             </div>{" "}
-            Abhijeet Singh {`<${senderEmail}>`}
+            {sender?.accountName} {`<${sender?.email}>`}
           </div>
           {/* Template */}
-          {/* <div className="flex justify-end px-4">
-            <button className="border border-[#5468ff] text-sm text-[#5468ff] px-3 py-1 rounded-xl flex items-center gap-2 hover:bg-[#eef1ff]">
-              Insert Template
-              <ChevronDown size={16} />
-            </button>
-          </div> */}
           <div className="flex justify-end px-4 gap-3">
             <button
               onClick={() =>

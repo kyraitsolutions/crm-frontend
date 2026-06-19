@@ -20,7 +20,7 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
     return (
         <div className='relative'>
             <header className="bg-white border-b border-[#e5e7eb] px-3 py-2">
-                <div className="flex items-start justify-between">
+                <div className="flex items-center justify-between">
                     {/* Left */}
                     <div className="flex items-center gap-4">
                         <ButtonWithTitle onClick={() => navigate(`/dashboard/account/${accountId}/leads`)} title="Go back to leads" className="flex items-center">
@@ -52,7 +52,7 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
                                 </span>
                             </h1>
 
-                            <LeadTags lead={lead} />
+                            {lead && <LeadTags lead={lead} />}
                         </div>
                     </div>
 
@@ -62,13 +62,13 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
                             Send Email
                         </ButtonWithTitle>
 
-                        <ButtonWithTitle title="Convert lead into booking" className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-xl text-sm">
+                        {/* <ButtonWithTitle title="Convert lead into booking" className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-xl text-sm">
                             Convert
                         </ButtonWithTitle>
 
                         <ButtonWithTitle title="Convert lead into booking" className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-xl text-sm">
                             Edit
-                        </ButtonWithTitle>
+                        </ButtonWithTitle> */}
 
                         <button className="">
                             <MoreHorizontal size={18} />

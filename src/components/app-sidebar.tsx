@@ -66,12 +66,12 @@ export function AppSidebar() {
       //   icon: IconMessageCircle,
       //   active: hasPermission(permissions, PERMISSIONS.CHATBOTS.VIEW),
       // },
-      {
-        title: "Lead Forms",
-        url: `${ACCOUNT_PATHS.byId(String(accountId))}/lead-forms`,
-        icon: IconFileText,
-        active: hasPermission(permissions, PERMISSIONS.LEADS_FORMS.VIEW),
-      },
+      // {
+      //   title: "Lead Forms",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/lead-forms`,
+      //   icon: IconFileText,
+      //   active: hasPermission(permissions, PERMISSIONS.LEADS_FORMS.VIEW),
+      // },
       // {
       //   title: "Broadcast",
       //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast`,

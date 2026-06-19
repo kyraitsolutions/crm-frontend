@@ -110,7 +110,7 @@ const LeadDetail = () => {
                                 >
                                     Overview
                                 </button>
-                                <button
+                                {/* <button
                                     onClick={() => setActiveTab("timeline")}
                                     className={`px-4 py-1 rounded-full text-sm font-medium transition ${activeTab === "timeline"
                                         ? "bg-primary/10 text-primary border border-primary font-semibold"
@@ -127,7 +127,7 @@ const LeadDetail = () => {
                                         }`}
                                 >
                                     AI Summary
-                                </button>
+                                </button> */}
                             </div>
 
                             <div className="flex items-center gap-2 text-[#64748b] text-sm">

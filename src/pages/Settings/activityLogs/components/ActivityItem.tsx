@@ -25,19 +25,62 @@ export function ActivityLogItem({ log }: { log: ActivityLog }) {
 
         {Object.keys(log.changes || {}).length > 0 && (
           <div className="mt-3 rounded-md border bg-muted/30 p-3">
-            {Object.entries(log.changes).map(([key, value]: any) => (
-              <div key={key} className="flex gap-2 text-sm">
-                <span className="font-medium">{key}</span>
+            {Object.entries(log.changes).map(([key, value]: any) => {
+              if (key === "_id") return null;
 
-                {value.from && (
-                  <>
-                    <span>{String(value.from)}</span>→
-                  </>
-                )}
+              if (key === "notes") {
+                const oldNotes = value.from || [];
+                const newNotes = value.to || [];
 
-                <span>{String(value.to)}</span>
-              </div>
-            ))}
+                const addedNotes = newNotes.filter(
+                  (note: any) =>
+                    !oldNotes.some((old: any) => old._id === note._id)
+                );
+
+                return (
+                  <div key={key} className="space-y-2">
+                    <div className="font-medium">Notes</div>
+
+                    {addedNotes.map((note: any) => (
+                      <div
+                        key={note._id}
+                        className="rounded border bg-white p-2 text-sm"
+                      >
+                        <div>
+                          <span className="font-medium">Type:</span>{" "}
+                          {note.activitySource}
+                        </div>
+
+                        <div>
+                          <span className="font-medium">Message:</span>{" "}
+                          {note.message}
+                        </div>
+
+                        <div>
+                          <span className="font-medium">Created:</span>{" "}
+                          {new Date(note.createdAt).toLocaleString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              }
+
+              return (
+                <div key={key} className="flex gap-2 text-sm">
+                  <span className="font-medium">{key}</span>
+
+                  {value.from && (
+                    <>
+                      <span>{String(value.from)}</span>
+                      <span>→</span>
+                    </>
+                  )}
+
+                  <span>{String(value.to)}</span>
+                </div>
+              );
+            })}
           </div>
         )}
 
