@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import WhatsappConnect from "./sections/WhatsAppConnect";
 import WhatsAppWorkspace from "./sections/WhatsAppWorkspace";
 import { useWhatsAppStore } from "./store/whatsapp.store";
+import DataLoader from "@/components/Loader/data-loader";
 
 export default function Whatsapp() {
   const { accountId } = useAuthStore();
@@ -30,7 +31,7 @@ export default function Whatsapp() {
   }, [accountId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><DataLoader className="h-[80vh]" /></div>;
   }
 
   return (
