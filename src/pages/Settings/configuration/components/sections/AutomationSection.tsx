@@ -76,7 +76,7 @@ const AutomationSection: React.FC = () => {
               key={automation.id}
               automation={automation}
               onToggle={toggleAutomation}
-              onDelete={deleteAutomation}
+              onDelete={(id) => deleteAutomation?.(id)}
             />
           ))}
         </div>

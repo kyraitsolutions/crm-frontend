@@ -9,20 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 // import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
 import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { Link } from "react-router-dom";
 
 export function Register() {
-
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-6 dark:from-gray-900 dark:to-gray-950">
-
       <Card className="max-w-sm w-full border-none shadow-xl backdrop-blur-md bg-white/80 dark:bg-gray-900/80">
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-2xl font-semibold tracking-tight">
@@ -47,11 +41,10 @@ export function Register() {
                   "http://localhost:3000/api/auth/google";
               }}
               className={cn(
-                "w-full flex items-center justify-center gap-2 hover:bg-gray-50"
+                "w-full flex items-center justify-center gap-2 hover:bg-gray-50",
               )}
             >
               <div>
-
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -64,7 +57,6 @@ export function Register() {
                 </svg>
                 Continue with Google
               </div>
-
             </Button>
 
             {/* Apple Login */}

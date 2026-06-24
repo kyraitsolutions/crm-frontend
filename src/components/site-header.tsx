@@ -31,12 +31,11 @@ export function SiteHeader() {
     setOpenSearch(search.trim().length > 0);
   }, [search]);
 
-
   const now = new Date();
-  const expiryDate = new Date(user?.subscription?.expiresAt);
+  const expiryDate = new Date(user?.subscription?.expiresAt as any);
 
   const totalDaysLeft = Math.ceil(
-    (expiryDate - now) / (1000 * 60 * 60 * 24)
+    (Number(expiryDate) - Number(now)) / (1000 * 60 * 60 * 24),
   );
 
   return (
@@ -65,7 +64,12 @@ export function SiteHeader() {
           <div className="flex items-center gap-4">
             {/* Trial Text */}
             <span className="text-md text-primary font-medium">
-              {SubscriptionPlan[user?.subscription?.planId]} expires in {totalDaysLeft} days
+              {
+                SubscriptionPlan[
+                  user?.subscription?.planId as keyof typeof SubscriptionPlan
+                ]
+              }{" "}
+              expires in {totalDaysLeft} days
             </span>
 
             {/* Upgrade Button */}
@@ -80,10 +84,11 @@ export function SiteHeader() {
             </button>
             {searchEnable && (
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${searchEnable
-                  ? "opacity-100 translate-x-0 w-64"
-                  : "opacity-0 translate-x-full w-0"
-                  }`}
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                  searchEnable
+                    ? "opacity-100 translate-x-0 w-64"
+                    : "opacity-0 translate-x-full w-0"
+                }`}
               >
                 <input
                   type="text"
@@ -154,7 +159,11 @@ export function SiteHeader() {
       </div>
 
       <Notification open={open} setOpen={setOpen} />
-      <GlobalSearch search={search} openSearch={openSearch} setOpenSearch={setOpenSearch} />
+      <GlobalSearch
+        search={search}
+        openSearch={openSearch}
+        setOpenSearch={setOpenSearch}
+      />
       {/* <Notification open={open} setOpen={setOpen} /> */}
     </header>
   );

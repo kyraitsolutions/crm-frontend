@@ -20,7 +20,7 @@ export class LeadFormService extends ApiService {
   async getLeadFormById(
     accountId: string,
     formId: string,
-  ): Promise<ApiResponse<any | null>> {
+  ): Promise<ApiResponse<any>> {
     return await this.get(`/account/${accountId}/form/${formId}`);
   }
 

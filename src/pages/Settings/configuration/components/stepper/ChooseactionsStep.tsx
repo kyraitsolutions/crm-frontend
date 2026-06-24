@@ -14,7 +14,7 @@ import type {
   AutomationAction,
 } from "../../store/automation.store";
 import { Plus } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+// import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,7 +31,8 @@ const ACTION_CONFIG_FIELDS: Record<
   {
     label: string;
     key: string;
-    options?: string[];
+    placeholder?: string;
+    options?: string[] | { label: string; value: string }[];
     type?: string;
     types?: string;
   }[]
@@ -227,7 +228,7 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
             </SelectTrigger>
 
             <SelectContent>
-              {field.options?.map((option) => (
+              {field.options?.map((option: any) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>

@@ -108,7 +108,9 @@ const NotificationConfigCard = ({
   return (
     <div className="flex items-center justify-between bg-v">
       <div className="flex items-center gap-5">
-        <div className={` ${color[title]} p-3 text-white rounded`}>
+        <div
+          className={` ${color[title as keyof typeof color]} p-3 text-white rounded`}
+        >
           <Icon className="w-5 h-5 text-white" />
         </div>
         <div>

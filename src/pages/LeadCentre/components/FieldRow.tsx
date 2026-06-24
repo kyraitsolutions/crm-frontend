@@ -26,77 +26,75 @@
 //     );
 // };
 
-
 import { useEffect, useState } from "react";
 import { Check, Pencil, Phone, X } from "lucide-react";
 import { useLeadsStore } from "../store/lead.store";
 import { useAuthStore } from "@/stores";
 
 interface FieldRowProps {
-    label: string;
-    value: string;
-    fieldKey: string;
-    leadId?: string;
-    isPhone?: boolean;
+  label: string;
+  value: string;
+  fieldKey: string;
+  leadId?: string;
+  isPhone?: boolean;
 }
 
 export const FieldRow = ({
-    label,
-    value,
-    fieldKey,
-    leadId,
-    isPhone,
+  label,
+  value,
+  fieldKey,
+  leadId,
+  isPhone,
 }: FieldRowProps) => {
+  const { accountId } = useAuthStore((state) => state);
+  const { editingField, setEditingField, updateLeadField, updatingLead } =
+    useLeadsStore((state) => state);
+  const [tempValue, setTempValue] = useState(value);
+  //   const [loading, setLoading] = useState(false);
 
-    const { accountId } = useAuthStore((state) => state)
-    const { editingField, setEditingField, updateLeadField, updatingLead } = useLeadsStore((state) => state);
-    const [tempValue, setTempValue] = useState(value);
-    const [loading, setLoading] = useState(false);
+  const isEditing = editingField === fieldKey;
+  //   const isAssignedField = fieldKey === "assignedTo";
 
+  useEffect(() => {
+    setTempValue(value);
+    setEditingField(null);
+  }, [value]);
 
-    const isEditing = editingField === fieldKey;
-    const isAssignedField = fieldKey === "assignedTo";
+  const handleSave = async () => {
+    if (tempValue === value) {
+      setEditingField(null);
+      return;
+    }
+    await updateLeadField(
+      String(accountId),
+      String(leadId),
+      fieldKey as any,
+      tempValue,
+    );
+  };
 
+  const handleCancel = () => {
+    setTempValue(value);
+    setEditingField(null);
+  };
 
-    useEffect(() => {
-        setTempValue(value);
-        setEditingField(null);
-    }, [value]);
+  return (
+    <div className="grid grid-cols-[160px_1fr] items-center">
+      <span className="text-[#5b6b82] text-sm">{label}</span>
 
-    const handleSave = async () => {
-        if (tempValue === value) {
-            setEditingField(null);
-            return;
-        }
-        await updateLeadField(String(accountId), String(leadId), fieldKey as any, tempValue);
-    };
-
-
-    const handleCancel = () => {
-        setTempValue(value);
-        setEditingField(null);
-    };
-
-
-    console.log("Rendering FieldRow")
-    return (
-        <div className="grid grid-cols-[160px_1fr] items-center">
-            <span className="text-[#5b6b82] text-sm">
-                {label}
-            </span>
-
-            <div className="group flex items-center gap-2 max-w-105 w-full">
-                <div
-                    className={`
+      <div className="group flex items-center gap-2 max-w-105 w-full">
+        <div
+          className={`
                         flex items-center gap-2 rounded-md border transition w-full
-                        ${isEditing
+                        ${
+                          isEditing
                             ? "border-second shadow-md rounded-xl"
                             : "border-transparent hover:border-gray-300"
                         }
                     `}
-                >
-                    {/* Assigned To Dropdown */}
-                    {/* {isAssignedField && isEditing ? (
+        >
+          {/* Assigned To Dropdown */}
+          {/* {isAssignedField && isEditing ? (
                         <select
                             value={tempValue}
                             onChange={(e) =>
@@ -120,17 +118,15 @@ export const FieldRow = ({
                             ))}
                         </select>
                     ) : ( */}
-                    <input
-                        type="text"
-                        value={tempValue}
-                        readOnly={!isEditing}
-                        onChange={(e) =>
-                            setTempValue(e.target.value)
-                        }
-                        className="w-full px-2 py-2 bg-transparent outline-none text-sm"
-                    />
-                    {/*  )} */}
-                    {/* <input
+          <input
+            type="text"
+            value={tempValue}
+            readOnly={!isEditing}
+            onChange={(e) => setTempValue(e.target.value)}
+            className="w-full px-2 py-2 bg-transparent outline-none text-sm"
+          />
+          {/*  )} */}
+          {/* <input
                         type="text"
                         value={tempValue}
                         readOnly={!isEditing}
@@ -138,38 +134,38 @@ export const FieldRow = ({
                         className="w-full px-2 py-2 bg-transparent outline-none text-sm"
                     /> */}
 
-                    {isPhone &&
-                        !isEditing && (
-                            <button className="bg-primary/10 p-1.5 rounded-md mr-2">
-                                <Phone className="text-primary" size={14} />
-                            </button>
-                        )}
-                </div>
-
-                {!isEditing && (
-                    <button
-                        onClick={() => setEditingField(fieldKey)}
-                        className="opacity-0 group-hover:opacity-100 transition"
-                    >
-                        <Pencil size={16} />
-                    </button>
-                )}
-
-                {isEditing && (
-                    <div className="flex items-center gap-2">
-                        <button disabled={updatingLead}
-                            onClick={handleSave}
-                            className="text-blue-500"
-                        >
-                            <Check size={18} />
-                        </button>
-
-                        <button onClick={handleCancel}>
-                            <X size={18} />
-                        </button>
-                    </div>
-                )}
-            </div>
+          {isPhone && !isEditing && (
+            <button className="bg-primary/10 p-1.5 rounded-md mr-2">
+              <Phone className="text-primary" size={14} />
+            </button>
+          )}
         </div>
-    );
+
+        {!isEditing && (
+          <button
+            onClick={() => setEditingField(fieldKey)}
+            className="opacity-0 group-hover:opacity-100 transition"
+          >
+            <Pencil size={16} />
+          </button>
+        )}
+
+        {isEditing && (
+          <div className="flex items-center gap-2">
+            <button
+              disabled={updatingLead}
+              onClick={handleSave}
+              className="text-blue-500"
+            >
+              <Check size={18} />
+            </button>
+
+            <button onClick={handleCancel}>
+              <X size={18} />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };

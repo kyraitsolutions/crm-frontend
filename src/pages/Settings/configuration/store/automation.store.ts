@@ -58,7 +58,7 @@ interface AutomationStore {
     accountId: string,
   ) => Promise<ApiResponse<Automation>>;
   toggleAutomation: (id: string) => void;
-  deleteAutomation: (id: string) => void;
+  deleteAutomation?: (id: string) => void;
 }
 
 const defaultDraft: AutomationDraft = {
@@ -71,13 +71,13 @@ const sampleAutomations: Automation[] = [
   {
     id: "1",
     name: "Qualified Lead Assignment",
-    trigger: "lead-status-changed",
+    trigger: "lead_stage_changed",
     conditions: [
-      { field: "Lead Status", operator: "Is Equal To", value: "Qualified" },
+      { field: "Lead Status", operator: "Is Equal To", values: ["Qualified"] },
     ],
     actions: [
-      { type: "assign-lead-to-user", config: { user: "Rahul Sharma" } },
-      { type: "create-task", config: { title: "Follow up with lead" } },
+      { type: "assign_lead_to_user", config: { user: "Rahul Sharma" } },
+      { type: "create_task", config: { title: "Follow up with lead" } },
     ],
     isActive: true,
     createdAt: "2024-01-15",
@@ -126,8 +126,8 @@ export const useAutomationStore = create<AutomationStore>((set, get) => ({
       ),
     })),
 
-  deleteAutomation: (id) =>
-    set((state) => ({
-      // automations: state.automations.filter((a) => a.id !== id),
-    })),
+  // deleteAutomation: (id) =>
+  //   set((state) => ({
+  //     // automations: state.automations.filter((a) => a.id !== id),
+  //   })),
 }));

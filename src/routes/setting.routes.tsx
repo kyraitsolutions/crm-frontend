@@ -3,7 +3,6 @@ import { SettingLayout } from "@/layouts/setting.layout";
 import { ChatBotPage, DashboardPage } from "@/pages";
 import Instagram from "@/pages/Channels/instagram.page";
 import Telegram from "@/pages/Channels/telegram.page";
-import Whatsapp from "@/pages/Channels/whatsapp/whatsapp.page";
 import ChatFlows from "@/pages/ChatFlows/ChatFlows";
 import Recyclebin from "@/pages/DataAdministration/recyclebin.page";
 import Storage from "@/pages/DataAdministration/storage.page";
@@ -25,6 +24,7 @@ import { RequirePermission } from "./route-access/RequirePermission";
 import ConfigurationPage from "@/pages/Settings/configuration/ConfigurationPage";
 import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page";
 import ActivityLogsPage from "@/pages/Settings/activityLogs/ActivityLogsPage";
+import { Whatsapp } from "@/pages/Channels/whatsapp/pages/WhatsAppPage";
 
 export const settingRoutes: RouteObject[] = [
   {

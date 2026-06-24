@@ -1,10 +1,9 @@
-import React from "react";
-import { MessageCircleMore, Bot, Facebook, Phone } from "lucide-react";
+import { Bot, Facebook, MessageCircleMore } from "lucide-react";
 
-import { useDashboardStore } from "../../store/dashboard.store";
-import CustomBadge from "../CustomBadge";
 import { timeAgo } from "@/utils/date.utils";
 import { FaWhatsapp } from "react-icons/fa";
+import { useDashboardStore } from "../../store/dashboard.store";
+import CustomBadge from "../CustomBadge";
 
 const platformIcons = {
   chatbot: (
@@ -52,7 +51,7 @@ const RecentConversation = () => {
 
       {/* Conversation List */}
       <div>
-        {recentConversations.map((conversation, index) => (
+        {recentConversations.map((conversation: any, index: number) => (
           <div
             key={index}
             className="flex items-center justify-between gap-6 border-b border-gray-100 px-4 py-3 last:border-0"
@@ -61,8 +60,9 @@ const RecentConversation = () => {
             <div className="flex flex-1 items-center gap-3">
               {/* Icon */}
               <div className="shrink-0">
-                {platformIcons?.[conversation.platform] ||
-                  platformIcons.default}
+                {platformIcons?.[
+                  conversation.platform as keyof typeof platformIcons
+                ] || platformIcons.default}
               </div>
 
               {/* Contact */}

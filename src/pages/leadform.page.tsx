@@ -114,7 +114,7 @@ export function LeadFormPage() {
         String(accountId),
       );
       if (response?.status === 200) {
-        leadStoreManager.setLeadForm(response?.data.docs || []);
+        leadStoreManager.setLeadForm(response?.data.doc);
       }
     } catch (error) {
       toastMessageService.apiError(error as any);

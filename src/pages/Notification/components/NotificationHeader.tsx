@@ -1,8 +1,8 @@
+import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { Settings } from "@/icons/icons";
-import { CheckCheck, LucideMailOpen, LucideSettings2 } from "lucide-react";
+import { CheckCheck, LucideSettings2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useNotificationStore } from "../store/notification.store";
-import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 
 const NotificationHeader = () => {
   const { markAllAsRead, markAllRead } = useNotificationStore((state) => state);
@@ -13,7 +13,6 @@ const NotificationHeader = () => {
       <div className="py-4 flex justify-between items-center">
         <h1 className="text-xl font-semibold">Notifications</h1>
         <div className="flex gap-2 items-center">
-
           <ButtonWithTitle
             title="Open Filters"
             position="bottom"

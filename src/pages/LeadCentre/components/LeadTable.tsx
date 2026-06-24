@@ -1,6 +1,12 @@
-import { useEffect, useState, type JSX } from "react";
-import useDebounce from "@/hooks/useDebounce";
-import { useAccountAccessStore } from "@/stores/account-access.store";
+import DataLoader from "@/components/Loader/data-loader";
+import { Pagination } from "@/components/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -9,13 +15,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { LEADS_PATHS } from "@/constants/routes/leads.path";
+import useDebounce from "@/hooks/useDebounce";
+import { Instagram } from "@/icons/icons";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  useConfigurationStore,
+  type ConfigurationItem,
+} from "@/pages/Settings/configuration/store/configuration.store";
+import { useAuthStore } from "@/stores";
+import { formatDate } from "@/utils/date-utils";
 import {
   ArrowRightCircleIcon,
   Clock3,
@@ -25,21 +33,12 @@ import {
   Shapes,
   Webhook,
 } from "lucide-react";
-import { formatDate } from "@/utils/date-utils";
-import { useAuthStore } from "@/stores";
-import { TbManualGearbox } from "react-icons/tb";
-import { Instagram } from "@/icons/icons";
-import { MdWhatsapp } from "react-icons/md";
+import { useEffect, useState, type JSX } from "react";
 import { FaGoogle } from "react-icons/fa";
+import { MdWhatsapp } from "react-icons/md";
+import { TbManualGearbox } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
-import { LEADS_PATHS } from "@/constants/routes/leads.path";
-import {
-  useConfigurationStore,
-  type ConfigurationItem,
-} from "@/pages/Settings/configuration/store/configuration.store";
 import { useLeadsStore } from "../store/lead.store";
-import { Pagination } from "@/components/pagination";
-import DataLoader from "@/components/Loader/data-loader";
 const LeadTable = () => {
   const navigate = useNavigate();
   // new Integration using zustand
@@ -61,12 +60,12 @@ const LeadTable = () => {
 
   const { getConfigurationByType } = useConfigurationStore((state) => state);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   const [leadStages, setLeadStages] = useState<ConfigurationItem[] | []>([]);
 
-  const { permissions } = useAccountAccessStore((state) => state);
+  // const { permissions } = useAccountAccessStore((state) => state);
 
-  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  const debouncedSearchQuery = useDebounce("", 500);
   // Filters and search query state
 
   const handleStatusChange = async (leadId: string, value: string) => {

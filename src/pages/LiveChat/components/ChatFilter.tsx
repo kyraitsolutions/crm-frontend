@@ -1,9 +1,9 @@
+import { Input } from "@/components/ui/input";
+import useDebounce from "@/hooks/useDebounce";
 import { Filter } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { useConversationStore } from "../store/conversation.store";
-import useDebounce from "@/hooks/useDebounce";
-import { Input } from "@/components/ui/input";
 
 const ChatFilter = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -126,10 +126,11 @@ const ChatFilter = () => {
                       onClick={() => handleAddFilter(i)}
                       className={`
                                                     text-xs py-1 px-3 border rounded-full capitalize cursor-pointer transition
-                                                    ${appliedFilter.includes(i)
-                          ? "bg-second text-white border-second"
-                          : "bg-white hover:bg-gray-100"
-                        }
+                                                    ${
+                                                      appliedFilter.includes(i)
+                                                        ? "bg-second text-white border-second"
+                                                        : "bg-white hover:bg-gray-100"
+                                                    }
                                                 `}
                     >
                       {i}

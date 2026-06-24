@@ -43,7 +43,12 @@ export const extractSharedMedia = (messages: TMessage[]) => {
       INTERACTIVE HEADER MEDIA
     */
     if (message.type === "interactive") {
-      const header = message.interactive?.header;
+      const header =
+        message.interactive?.type === "button"
+          ? message.interactive?.header
+          : message?.interactive?.type === "list"
+            ? message.interactive?.header
+            : null;
 
       if (header?.type === "image") {
         media.push({

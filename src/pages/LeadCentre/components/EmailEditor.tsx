@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
-import Select from "react-select";
+import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import {
-  X,
+  ChevronDown,
+  Clock3,
   Maximize2,
   Minimize2,
   Paperclip,
-  Clock3,
-  ChevronDown,
+  X,
 } from "lucide-react";
-import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
+import { useState } from "react";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import Select from "react-select";
 
 interface Recipient {
   label: string;
@@ -82,7 +82,8 @@ const EmailEditor = ({ isOpen, onClose }: EmailEditorProps) => {
     }
   };
 
-  const [senderEmail, setSenderEmail] = useState("abhijeetsingh5631@gmail.com");
+  // const [senderEmail, setSenderEmail] = useState("abhijeetsingh5631@gmail.com");
+  const senderEmail = "abhijeetsingh5631@gmail.com";
 
   if (!isOpen) return null;
 

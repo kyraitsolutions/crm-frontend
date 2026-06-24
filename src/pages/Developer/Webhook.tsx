@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Copy, Send, Plus, Trash, Code } from "lucide-react";
-import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { COOKIES_STORAGE } from "@/constants";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
+import { Code, Copy, Send } from "lucide-react";
+import { useState } from "react";
 
 export default function Webhook() {
   const accountId = CookieUtils.getItem(COOKIES_STORAGE.accountId);
@@ -9,22 +9,20 @@ export default function Webhook() {
   const webhookUrl = `http://localhost:3000/api/account/${accountId}/lead/webhook/create`;
   const copyWebhookUrl = `http://localhost:3000/api/account/<app_secret>/lead/webhook/create`;
 
-  const [formData, setFormData] = useState({
+  const [formData] = useState({
     name: "Abhijeet Doe",
     email: "john@example.com",
     phone: "+911234567890",
     message: "Interested in your service",
   });
 
-  const [customFields, setCustomFields] = useState([
-    { key: "city", value: "Delhi" },
-  ]);
+  const [customFields] = useState([{ key: "city", value: "Delhi" }]);
 
   const [devTab, setDevTab] = useState("fetch");
 
   const generatePayload = () => {
-    const custom = {};
-    customFields.forEach((f: any) => {
+    const custom: Record<string, string> = {};
+    customFields.forEach((f: { key: string; value: string }) => {
       if (f.key) custom[f.key] = f.value;
     });
 

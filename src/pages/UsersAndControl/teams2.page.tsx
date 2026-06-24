@@ -147,6 +147,8 @@ const Teams = () => {
     );
   }
 
+  console.log(user);
+
   return (
     <React.Fragment>
       {!teams || teams.length === 0 ? (

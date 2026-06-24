@@ -1,4 +1,4 @@
-import { ACCOUNT_PATHS } from "./account.path";
+// import { ACCOUNT_PATHS } from "./account.path";
 import { withAccount } from "./helper";
 
 // ${DASHBOARD_PATH.getAccountPath(accountId)}/lead-forms/${row.id}/view

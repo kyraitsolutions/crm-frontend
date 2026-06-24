@@ -1,13 +1,13 @@
-import type { ApiResponse } from "@/types";
-import { ApiService } from "./api.service";
-import type { createUserprofile } from "@/types/userprofile.type";
+// import type { ApiResponse } from "@/types";
+// import { ApiService } from "./api.service";
+// import type { createUserprofile } from "@/types/userprofile.type";
 
-export class UserprofileService extends ApiService {
-  async createUserProfile(data: createUserprofile): Promise<ApiResponse<any>> {
-    return await this.post("/user/profile", data);
-  }
+// export class UserprofileService extends ApiService {
+//   async createUserProfile(data: createUserprofile): Promise<ApiResponse<any>> {
+//     return await this.post("/user/profile", data);
+//   }
 
-  async getUserProfileById(id: string): Promise<ApiResponse<any>> {
-    return await this.get("/user/profile");
-  }
-}
+//   async getUserProfileById(): Promise<ApiResponse<any>> {
+//     return await this.get("/user/profile");
+//   }
+// }
