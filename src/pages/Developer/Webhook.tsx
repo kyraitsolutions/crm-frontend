@@ -6,8 +6,8 @@ import { useState } from "react";
 export default function Webhook() {
   const accountId = CookieUtils.getItem(COOKIES_STORAGE.accountId);
 
-  const webhookUrl = `http://localhost:3000/api/account/${accountId}/lead/webhook/create`;
-  const copyWebhookUrl = `http://localhost:3000/api/account/<app_secret>/lead/webhook/create`;
+  const webhookUrl = `https://crm-backend-7lf9.onrender.com/api/account/${accountId}/lead/webhook/create`;
+  const copyWebhookUrl = `https://crm-backend-7lf9.onrender.com/api/account/<app_secret>/lead/webhook/create`;
 
   const [formData] = useState({
     name: "Abhijeet Doe",
@@ -105,9 +105,8 @@ export default function Webhook() {
               <button
                 key={tab}
                 onClick={() => setDevTab(tab)}
-                className={`px-3 py-1 rounded-lg text-sm ${
-                  devTab === tab ? "bg-primary text-white" : "bg-gray-100"
-                }`}
+                className={`px-3 py-1 rounded-lg text-sm ${devTab === tab ? "bg-primary text-white" : "bg-gray-100"
+                  }`}
               >
                 {tab.toUpperCase()}
               </button>
