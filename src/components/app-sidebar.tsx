@@ -7,23 +7,16 @@ import { useAccountsStore } from "@/stores/accounts.store";
 import {
   IconChevronLeft,
   IconChevronRight,
-  // IconDashboard,
-  // IconFileText,
   IconUsers,
 } from "@tabler/icons-react";
+import { Gauge, MessagesSquare } from "lucide-react";
 import { useState } from "react";
-import {
-  MdOutlineContacts,
-} from "react-icons/md";
+import { MdOutlineContacts } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { SidebarFooter } from "./ui/sidebar";
-import {
-  // Book,
-  Gauge, MessagesSquare
-} from "lucide-react";
 
 export function AppSidebar() {
   const navigate = useNavigate();

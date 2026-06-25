@@ -26,6 +26,7 @@ const priorityColor = (priority?: string) => {
 const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
     // const { accountId } = useParams();
     // const leadService = new LeadService();
+    console.log(leadId)
     const [aiSummary,
         //  setAiSummary
     ] = useState<Record<string, any> | null>(
@@ -111,7 +112,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
 
     const assessment = aiSummary.assessment ?? {};
     const contactInfo = aiSummary.contactInformation ?? {};
-    const leadDetails = aiSummary.leadDetails ?? {};
+    // const leadDetails = aiSummary.leadDetails ?? {};
     // const profile = aiSummary.profile ?? {};
 
     const summaryText =
@@ -123,10 +124,11 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
     const priorityStyle = priorityColor(priority);
 
     // Build small stat chips from leadDetails (excluding ids/long values)
-    const statChips = Object.entries(leadDetails)
-        .filter(([key, val]) => (typeof val === "string" || typeof val === "number"))
-        .filter(([key]) => !["assignedTo", "id", "_id"].includes(key))
-        .slice(0, 3);
+    // const statChips = 
+    // Object.entries(leadDetails)
+    //     .filter(([key, val]) => (typeof val === "string" || typeof val === "number"))
+    //     .filter(([key]) => !["assignedTo", "id", "_id"].includes(key))
+    //     .slice(0, 3);
 
     // Contact flags
     const contactFlags = Object.entries(contactInfo)
@@ -155,7 +157,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
             </p>
 
             {/* Stat chips */}
-            {statChips.length > 0 && (
+            {/* {statChips.length > 0 && (
                 <div className="grid grid-cols-3 gap-2">
                     {statChips.map(([key, val]) => (
                         <div key={key} className="bg-gray-50 rounded-xl px-3 py-2">
@@ -164,7 +166,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
                         </div>
                     ))}
                 </div>
-            )}
+            )} */}
 
             {/* Contact info badges */}
             {contactFlags.length > 0 && (

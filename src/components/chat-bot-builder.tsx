@@ -2,13 +2,9 @@ import { ChatBotService, ToastMessageService } from "@/services";
 import { type ApiError, type ChatBotFormData } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ChatBotBuilderInfo from "./chat-bot-builder-info";
 import ChatBotBuilderInfoTabs from "./chat-bot-builder-info-tabs";
-import {
-  mandatoryEdges,
-  mandatoryNodes,
-} from "./chatFlowEditior/ChatbotFlowEditor";
 
 
 const defaultValues: ChatBotFormData = {
@@ -68,10 +64,10 @@ const defaultValues: ChatBotFormData = {
 };
 
 export const ChatBotBuilder = () => {
-  const chatbot = new ChatBotService();
+  // const chatbot = new ChatBotService();
   const { accountId, chatBotId } = useParams();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toastMessageService = new ToastMessageService();
 
@@ -82,34 +78,33 @@ export const ChatBotBuilder = () => {
     defaultValues,
   });
 
-  const { handleSubmit, reset } = form;
+  const { handleSubmit } = form;
 
   const handleFormSubmit = useCallback(
     async (data: any) => {
       try {
         setIsSubmitting(true);
-        console.log(data);
 
         const response = !chatBotId
           ? await chatBotService?.createChatBot(String(accountId), data)
           : await chatBotService.updateChatBot(
-            String(accountId),
-            String(chatBotId),
-            data,
-          );
+              String(accountId),
+              String(chatBotId),
+              data,
+            );
 
         if (!chatBotId) {
-          const chatbotId = response?.data.docs?.id;
-          createChatbotWithMandatoryNodes(chatbotId);
+          // const chatbotId = response?.data.docs?.id;
+          // createChatbotWithMandatoryNodes(chatbotId);
         }
 
         if (response.status === 200 || response.status === 201) {
           toastMessageService.apiSuccess(response.message);
 
-          if (!chatBotId)
-            navigate(
-              `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`,
-            );
+          // if (!chatBotId)
+          //   navigate(
+          //     `${DASHBOARD_PATH.getAccountPath(String(accountId))}/chatbot`,
+          //   );
         }
       } catch (error) {
         const err = error as ApiError;
@@ -121,21 +116,17 @@ export const ChatBotBuilder = () => {
     [form.getValues()],
   );
 
-  const createChatbotWithMandatoryNodes = async (chatbotId: string) => {
-    const payloadData = {
-      nodes: mandatoryNodes,
-      edges: mandatoryEdges,
-    };
-    try {
-      await chatbot.createChatBotFlow(
-        String(accountId),
-        String(chatbotId),
-        payloadData,
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const createChatbotWithMandatoryNodes = async () => {
+  //   const payloadData = {
+  //     nodes: mandatoryNodes,
+  //     edges: mandatoryEdges,
+  //   };
+  //   try {
+  //     await chatbot.createChatBot(String(accountId), payloadData);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const getChatBotData = async () => {
     try {
@@ -145,7 +136,7 @@ export const ChatBotBuilder = () => {
       );
 
       if (response.status === 200 || response.status === 201) {
-        reset(response.data?.docs);
+        // reset(response.data?.docs);
       }
     } catch (error) {
       console.log(error);

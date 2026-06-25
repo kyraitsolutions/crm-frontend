@@ -21,7 +21,8 @@ export class ChatBotService extends ApiService {
 
   async createChatBot(
     accountId: string,
-    data: ChatBotFormData,
+    // data: ChatBotFormData,
+    data: any,
   ): Promise<
     ApiResponse<{
       docs: ChatbotListItem;

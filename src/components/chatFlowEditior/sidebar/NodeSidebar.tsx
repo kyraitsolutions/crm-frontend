@@ -8,9 +8,10 @@ import {
   Phone,
 } from "lucide-react";
 import { NODE_LIBRARY } from "../config";
+import type { TNodeType } from "../types/types";
 
 type NodeSidebarProps = {
-  onAddNode: (type: string, label: string) => void;
+  onAddNode: (type: TNodeType, label: string) => void;
   onClose: () => void;
 };
 
@@ -85,7 +86,7 @@ const NodeSidebar = ({ onAddNode, onClose }: NodeSidebarProps) => {
           return (
             <div
               key={index}
-              onClick={() => onAddNode(item.type, item.label)}
+              onClick={() => onAddNode(item.type as TNodeType, item.label)}
               className={`
                 group cursor-pointer rounded-xl p-4 flex flex-col items-center gap-3
                 transition-all duration-200

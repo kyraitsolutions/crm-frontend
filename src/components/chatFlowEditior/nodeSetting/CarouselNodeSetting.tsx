@@ -305,7 +305,9 @@ const CarouselNodeSetting = ({
         <CarouselCards
           cards={cards}
           mode={mode}
-          updateCard={updateCard}
+          updateCard={(cardIndex, key, value) =>
+            updateCard(cardIndex, key, value)
+          }
           removeCard={removeCard}
         />
 
@@ -585,51 +587,58 @@ const CarouselCardItem = ({
         </label>
 
         {/* URL MODE */}
-        {mode === "url" && isUrl && (
-          <div className="space-y-2">
-            <Input
-              placeholder="Button text"
-              value={card.action.parameters.display_text}
-              className="input-field bg-white/5 border-white/15! text-white"
-              onChange={(e) =>
-                onUpdateCard(card.card_index, "action", {
-                  ...card.action,
-                  parameters: {
-                    ...card.action.parameters,
-                    display_text: e.target.value,
-                  },
-                })
-              }
-            />
+        {mode === "url" &&
+          isUrl &&
+          "parameters" in card.action &&
+          (() => {
+            const action = card.action;
 
-            <Input
-              placeholder="https://example.com"
-              value={card.action?.parameters.url}
-              className="input-field bg-white/5 border-white/15! text-white"
-              onChange={(e) =>
-                onUpdateCard(card.card_index, "action", {
-                  ...card.action,
-                  parameters: {
-                    ...card.action?.parameters,
-                    url: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-        )}
+            return (
+              <div className="space-y-2">
+                <Input
+                  placeholder="Button text"
+                  value={action.parameters.display_text}
+                  className="input-field bg-white/5 border-white/15! text-white"
+                  onChange={(e) =>
+                    onUpdateCard(card.card_index, "action", {
+                      ...action,
+                      parameters: {
+                        ...action.parameters,
+                        display_text: e.target.value,
+                      },
+                    })
+                  }
+                />
+
+                <Input
+                  placeholder="https://example.com"
+                  value={action.parameters.url}
+                  className="input-field bg-white/5 border-white/15! text-white"
+                  onChange={(e) =>
+                    onUpdateCard(card.card_index, "action", {
+                      ...action,
+                      parameters: {
+                        ...action.parameters,
+                        url: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            );
+          })()}
 
         {/* QUICK REPLY MODE */}
         {mode === "quick_reply" &&
           "buttons" in card.action &&
           card.action.buttons.map((btn, i) => {
             const btnData = btn.type === "quick_reply" ? btn.quick_reply : null;
+
             return (
-              <div>
+              <div key={btnData?.id ?? i}>
                 <Input
-                  key={btnData?.id}
                   placeholder={`Option ${i + 1}`}
-                  value={btnData?.title}
+                  value={btnData?.title ?? ""}
                   className="input-field bg-white/5 border-white/15! text-white"
                 />
               </div>
@@ -649,3 +658,71 @@ const CarouselCardItem = ({
     </div>
   );
 };
+
+{
+  /* <div className="space-y-2 bg-white/6 p-3 rounded-xl">
+  <label className="text-sm text-gray-400 inline-block">
+    {mode === "url" ? "CTA Button" : "Quick Replies"}
+  </label>
+
+  URL MODE
+  {mode === "url" &&
+    isUrl &&
+    "parameters" in card.action &&
+    (() => {
+      const action = card.action;
+
+      return (
+        <div className="space-y-2">
+          <Input
+            placeholder="Button text"
+            value={action.parameters.display_text}
+            className="input-field bg-white/5 border-white/15! text-white"
+            onChange={(e) =>
+              onUpdateCard(card.card_index, "action", {
+                ...action,
+                parameters: {
+                  ...action.parameters,
+                  display_text: e.target.value,
+                },
+              })
+            }
+          />
+
+          <Input
+            placeholder="https://example.com"
+            value={action.parameters.url}
+            className="input-field bg-white/5 border-white/15! text-white"
+            onChange={(e) =>
+              onUpdateCard(card.card_index, "action", {
+                ...action,
+                parameters: {
+                  ...action.parameters,
+                  url: e.target.value,
+                },
+              })
+            }
+          />
+        </div>
+      );
+    })()}
+
+  QUICK REPLY MODE
+  {mode === "quick_reply" &&
+    "buttons" in card.action &&
+    card.action.buttons.map((btn, i) => {
+      const btnData =
+        btn.type === "quick_reply" ? btn.quick_reply : null;
+
+      return (
+        <div key={btnData?.id ?? i}>
+          <Input
+            placeholder={`Option ${i + 1}`}
+            value={btnData?.title ?? ""}
+            className="input-field bg-white/5 border-white/15! text-white"
+          />
+        </div>
+      );
+    })}
+</div> */
+}

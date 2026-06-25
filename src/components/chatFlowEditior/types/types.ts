@@ -1,5 +1,12 @@
 import type { Node } from "reactflow";
 
+export type TNodeType =
+  | "send_message"
+  | "button"
+  | "list"
+  | "carousel"
+  | "question";
+
 export type TMessageType = "text" | "image" | "video" | "document";
 export type TMode = "url" | "quick_reply";
 
@@ -41,7 +48,7 @@ type TBaseNodeData<TType, TPayload> = {
 };
 
 // ======================== Send message types start ==========================
-type TSendMessageNodeDataPayload = Array<
+export type TSendMessageNodeDataPayload = Array<
   | {
       id: string;
       type: "text";
@@ -197,9 +204,15 @@ type TSendMessageNodeData = TBaseNodeData<
   TSendMessageNodeDataPayload
 >;
 export type TButtonNodeData = TBaseNodeData<"button", TButtonNodeDataPayload>;
-type TListNodeData = TBaseNodeData<"list", TListNodeDataPayload>;
-type TCarouselNodeData = TBaseNodeData<"carousel", TCarouselNodeDataPayload>;
-type TQuestionNodeData = TBaseNodeData<"question", TQuestionNodeDataPayload>;
+export type TListNodeData = TBaseNodeData<"list", TListNodeDataPayload>;
+export type TCarouselNodeData = TBaseNodeData<
+  "carousel",
+  TCarouselNodeDataPayload
+>;
+export type TQuestionNodeData = TBaseNodeData<
+  "question",
+  TQuestionNodeDataPayload
+>;
 
 export type TAppNodeData =
   | TSendMessageNodeData
