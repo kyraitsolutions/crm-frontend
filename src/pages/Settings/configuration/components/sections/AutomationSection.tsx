@@ -25,7 +25,7 @@ const AutomationSection: React.FC = () => {
         </div>
         <button
           onClick={() => setIsCreating(true)}
-          className="flex items-center gap-1.5 px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-lg hover:bg-violet-700 transition-colors shadow-sm shadow-violet-200"
+          className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-sm shadow-violet-200"
         >
           <svg
             className="w-4 h-4"

@@ -109,7 +109,7 @@ const SetConditionStep: React.FC<SetConditionStepProps> = ({
         {conditions?.map((condition, index) => (
           <div
             key={index}
-            className="border border-gray-200 rounded-lg p-3 bg-gray-50 space-y-2"
+            className="border border-gray-200 rounded-xl p-3 bg-gray-50 space-y-2"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
@@ -239,7 +239,7 @@ const SetConditionStep: React.FC<SetConditionStepProps> = ({
 
       <button
         onClick={addCondition}
-        className="mt-3 flex items-center gap-1.5 text-sm text-violet-600 font-medium hover:text-violet-700 transition-colors"
+        className="mt-3 flex items-center gap-1.5 text-sm text-primary font-medium hover:text-primary transition-colors"
       >
         <svg
           className="w-4 h-4"
@@ -260,7 +260,7 @@ const SetConditionStep: React.FC<SetConditionStepProps> = ({
       <div className="flex justify-between mt-6">
         <button
           onClick={onBack}
-          className="px-5 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-5 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
         >
           Back
         </button>
@@ -268,7 +268,7 @@ const SetConditionStep: React.FC<SetConditionStepProps> = ({
         <Button
           disabled={!conditions.length}
           onClick={onNext}
-          className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-lg hover:bg-primary transition-colors cursor-pointer disabled:cursor-not-allowed!"
+          className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-xl hover:bg-primary transition-colors cursor-pointer disabled:cursor-not-allowed!"
         >
           Next
         </Button>

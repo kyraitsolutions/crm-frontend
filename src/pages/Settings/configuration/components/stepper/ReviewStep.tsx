@@ -108,14 +108,14 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
       <div className="flex justify-between mt-6">
         <button
           onClick={onBack}
-          className="px-5 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-5 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
         >
           Back
         </button>
         <button
           onClick={() => name.trim() && onSave(name.trim())}
           disabled={!name.trim() || loading}
-          className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-lg hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-xl hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
         >
           Save Automation {loading && <Loader />}
         </button>

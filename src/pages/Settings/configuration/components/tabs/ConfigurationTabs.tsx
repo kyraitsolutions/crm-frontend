@@ -10,11 +10,11 @@ const ConfigurationTabs = () => {
 
   return (
     <div className="space-y-3 ">
-      <div className="px-3 border-b pb-2">
+      {/* <div className="px-3 border-b pb-2">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-[#9CA3AF]">
           CRM Configuration
         </h2>
-      </div>
+      </div> */}
 
       <div className="space-y-1">
         {CONFIGURATION_TABS.map((tab) => (

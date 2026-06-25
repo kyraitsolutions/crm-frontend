@@ -92,7 +92,9 @@ const Toolbar = () => {
                         Create Lead
                     </button>
 
-                    <button onClick={() => setOpenDropdown((prev) => !prev)} className="bg-blue-600 rounded-r-xl hover:bg-blue-700 text-white px-3 transition">
+                    <button
+                        // onClick={() => setOpenDropdown((prev) => !prev)} 
+                        className="bg-blue-600 rounded-r-xl hover:bg-blue-700 text-white px-3 transition">
                         <ChevronDown size={16} />
                     </button>
 

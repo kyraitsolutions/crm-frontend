@@ -20,7 +20,7 @@ import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { SidebarFooter } from "./ui/sidebar";
-import { Gauge, MessagesSquare } from "lucide-react";
+import { Book, Gauge, MessagesSquare } from "lucide-react";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -61,10 +61,10 @@ export function AppSidebar() {
         active: hasPermission(permissions, PERMISSIONS.LEADS.VIEW),
       },
       // {
-      //   title: "Chat bot",
-      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/chatbot`,
-      //   icon: IconMessageCircle,
-      //   active: hasPermission(permissions, PERMISSIONS.CHATBOTS.VIEW),
+      //   title: "Deals",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/deals`,
+      //   icon: Book,
+      //   active: true,
       // },
       // {
       //   title: "Lead Forms",

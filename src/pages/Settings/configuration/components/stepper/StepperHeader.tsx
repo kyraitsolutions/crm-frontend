@@ -23,13 +23,12 @@ const StepperHeader: React.FC<StepperHeaderProps> = ({
               onClick={() => isCompleted && onStepClick?.(step.id)}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200
-                  ${
-                    isCompleted
-                      ? "bg-violet-600 text-white"
-                      : isActive
-                        ? "bg-violet-600 text-white ring-4 ring-violet-100"
-                        : "bg-gray-100 text-gray-400 border-2 border-gray-200"
+                className={`w-8 h-8 rounded flex items-center justify-center text-sm font-semibold transition-all duration-200
+                  ${isCompleted
+                    ? "bg-primary text-white"
+                    : isActive
+                      ? "bg-primary text-white ring-4 ring-primary/30"
+                      : "bg-gray-100 text-gray-400 border-2 border-gray-200"
                   }`}
               >
                 {isCompleted ? (
@@ -52,7 +51,7 @@ const StepperHeader: React.FC<StepperHeaderProps> = ({
               </div>
               <span
                 className={`mt-1.5 text-xs font-medium whitespace-nowrap transition-colors
-                  ${isActive ? "text-violet-600" : isCompleted ? "text-violet-500" : "text-gray-400"}`}
+                  ${isActive ? "text-primary" : isCompleted ? "text-primary/90" : "text-gray-400"}`}
               >
                 {step.label}
               </span>
