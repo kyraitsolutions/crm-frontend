@@ -12,7 +12,7 @@ import "reactflow/dist/style.css";
 import FlowModal from "@/pages/ChatFlows/components/FlowModal";
 import { chatflowService } from "@/pages/ChatFlows/services/chatflow.service";
 import { hasPermission, PERMISSIONS } from "@/rbac";
-import { ChatBotService, ToastMessageService } from "@/services";
+import { ToastMessageService } from "@/services";
 import { useAuthStore } from "@/stores";
 import { useAccountAccessStore } from "@/stores/account-access.store";
 import type { ApiError } from "@/types";
@@ -34,12 +34,13 @@ import type {
   TAppNode,
   TAppNodeData,
   TButtonNodeData,
+  TNodeType,
 } from "./types/types";
-import { createInitialElementsData } from "./utils/utils";
 import {
   validateButtonNode,
   validateSendMessageNode,
 } from "./utils/nodesValidation";
+import { createInitialElementsData } from "./utils/utils";
 
 export const mandatoryNodes = [
   {
@@ -185,7 +186,7 @@ export const mandatoryEdges = [
 
 export default function ChatbotFlowEditor() {
   const navigate = useNavigate();
-  const chatbot = new ChatBotService();
+  // const chatbot = new ChatBotService();
   const { chatflowId } = useParams();
   const toastMessageService = new ToastMessageService();
 
@@ -248,17 +249,15 @@ export default function ChatbotFlowEditor() {
       }
     }
 
-    console.log(validateObj);
-
-    if (!validateObj?.isValid) {
-      toastMessageService.error(validateObj.message);
+    if (validateObj && !validateObj?.isValid) {
+      toastMessageService.error(validateObj?.message);
       return false;
     }
 
     return true;
   };
 
-  const addNewNode = (type: string, label: string) => {
+  const addNewNode = (type: TNodeType, label: string) => {
     const newNode = {
       id: crypto.randomUUID(),
       type: type,
@@ -267,7 +266,7 @@ export default function ChatbotFlowEditor() {
         label,
         type,
         payload: createInitialElementsData(type),
-      },
+      } as TAppNodeData,
     };
     setNodes((nds) => [...nds, newNode]);
   };
@@ -486,7 +485,10 @@ export default function ChatbotFlowEditor() {
 
       {/* RIGHT: NODES SIDEBAR */}
       {fieldOpen && (
-        <NodeSidebar onAddNode={addNewNode} onClose={handleCloseSidebar} />
+        <NodeSidebar
+          onAddNode={(type, label) => addNewNode(type, label)}
+          onClose={handleCloseSidebar}
+        />
       )}
 
       <FlowModal

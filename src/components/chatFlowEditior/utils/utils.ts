@@ -1,14 +1,24 @@
-export const createInitialElementsData = (type: string) => {
-  switch (type) {
-    case "date":
-      return [
-        {
-          id: createId(),
-          type: "date",
-          content: "",
-        },
-      ];
+import type {
+  TButtonNodeDataPayload,
+  TCarouselNodeDataPayload,
+  TListNodeDataPayload,
+  TNodeType,
+  TQuestionNodeDataPayload,
+  TSendMessageNodeDataPayload,
+} from "../types/types";
 
+export type TPayloadMap = {
+  send_message: TSendMessageNodeDataPayload;
+  button: TButtonNodeDataPayload;
+  list: TListNodeDataPayload;
+  carousel: TCarouselNodeDataPayload;
+  question: TQuestionNodeDataPayload;
+};
+
+export const createInitialElementsData = <T extends TNodeType>(
+  type: T,
+): TPayloadMap[T] => {
+  switch (type) {
     case "send_message":
       return [
         {
@@ -16,7 +26,7 @@ export const createInitialElementsData = (type: string) => {
           type: "text",
           content: "",
         },
-      ];
+      ] as TPayloadMap[T];
 
     case "button":
       return {
@@ -45,7 +55,7 @@ export const createInitialElementsData = (type: string) => {
             ],
           },
         },
-      };
+      } as TPayloadMap[T];
 
     case "list":
       return {
@@ -62,7 +72,6 @@ export const createInitialElementsData = (type: string) => {
           footer: {
             text: "",
           },
-
           action: {
             button: "Button Text",
             sections: [
@@ -79,7 +88,7 @@ export const createInitialElementsData = (type: string) => {
             ],
           },
         },
-      };
+      } as TPayloadMap[T];
 
     case "carousel":
       return {
@@ -111,30 +120,10 @@ export const createInitialElementsData = (type: string) => {
                   },
                 },
               },
-              {
-                card_index: 1,
-                type: "cta_url",
-                header: {
-                  type: "image",
-                  image: {
-                    link: "",
-                  },
-                },
-                body: {
-                  text: "",
-                },
-                action: {
-                  name: "cta_url",
-                  parameters: {
-                    display_text: "Buy Now",
-                    url: "",
-                  },
-                },
-              },
             ],
           },
         },
-      };
+      } as TPayloadMap[T];
 
     case "question":
       return {
@@ -143,12 +132,155 @@ export const createInitialElementsData = (type: string) => {
           text: "",
           inputType: "text",
         },
-      };
+      } as TPayloadMap[T];
 
     default:
-      return [];
+      throw new Error(`Unsupported node type: ${type}`);
   }
 };
+
+// export const createInitialElementsData = (type: TNodeType) => {
+//   switch (type) {
+//     case "send_message":
+//       return [
+//         {
+//           id: createId(),
+//           type: "text",
+//           content: "",
+//         },
+//       ];
+
+//     case "button":
+//       return {
+//         type: "interactive",
+//         interactive: {
+//           type: "button",
+//           header: {
+//             type: "text",
+//             text: "",
+//           },
+//           body: {
+//             text: "",
+//           },
+//           footer: {
+//             text: "",
+//           },
+//           action: {
+//             buttons: [
+//               {
+//                 type: "reply",
+//                 reply: {
+//                   id: `btn_1_${createId()}`,
+//                   title: "Button 1",
+//                 },
+//               },
+//             ],
+//           },
+//         },
+//       };
+
+//     case "list":
+//       return {
+//         type: "interactive",
+//         interactive: {
+//           type: "list",
+//           header: {
+//             type: "text",
+//             text: "",
+//           },
+//           body: {
+//             text: "",
+//           },
+//           footer: {
+//             text: "",
+//           },
+
+//           action: {
+//             button: "Button Text",
+//             sections: [
+//               {
+//                 title: "Section Title",
+//                 rows: [
+//                   {
+//                     id: `section_1_row_1_${createId()}`,
+//                     title: "Row Title",
+//                     description: "",
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         },
+//       };
+
+//     case "carousel":
+//       return {
+//         type: "interactive",
+//         interactive: {
+//           type: "carousel",
+//           body: {
+//             text: "",
+//           },
+//           action: {
+//             cards: [
+//               {
+//                 card_index: 0,
+//                 type: "cta_url",
+//                 header: {
+//                   type: "image",
+//                   image: {
+//                     link: "",
+//                   },
+//                 },
+//                 body: {
+//                   text: "",
+//                 },
+//                 action: {
+//                   name: "cta_url",
+//                   parameters: {
+//                     display_text: "Buy Now",
+//                     url: "",
+//                   },
+//                 },
+//               },
+//               {
+//                 card_index: 1,
+//                 type: "cta_url",
+//                 header: {
+//                   type: "image",
+//                   image: {
+//                     link: "",
+//                   },
+//                 },
+//                 body: {
+//                   text: "",
+//                 },
+//                 action: {
+//                   name: "cta_url",
+//                   parameters: {
+//                     display_text: "Buy Now",
+//                     url: "",
+//                   },
+//                 },
+//               },
+//             ],
+//           },
+//         },
+//       };
+
+//     case "question":
+//       return {
+//         type: "question",
+//         question: {
+//           text: "",
+//           inputType: "text",
+//         },
+//       };
+
+//     default:
+//       return [];
+//   }
+// };
 
 export const createId = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto

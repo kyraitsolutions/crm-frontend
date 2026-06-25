@@ -84,7 +84,7 @@ export default function QuestionNode({ id, data }: TQuestionNodeProps) {
             value={payload?.question.inputType}
             onValueChange={(value: "text" | "email" | "phone" | "date") =>
               updatePayload({
-                ...payload,
+                type: "question",
                 question: {
                   text: payload?.question.text ?? null,
                   inputType: value,
@@ -115,9 +115,10 @@ export default function QuestionNode({ id, data }: TQuestionNodeProps) {
               if (e.target.value.length > MAX_TEXT_LENGTH) return;
               updatePayload({
                 ...payload,
+                type: "question",
                 question: {
-                  ...payload?.question,
                   text: e.target.value,
+                  inputType: payload?.question?.inputType ?? "text",
                 },
               });
             }}
