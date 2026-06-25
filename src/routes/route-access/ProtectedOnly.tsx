@@ -30,7 +30,7 @@ export const ProtectedOnly = () => {
 
     try {
       const res: any = await authService.getMe();
-      const userData = res.data?.doc;
+      const userData = res.data?.docs;
 
       authManager.setUser(userData);
     } catch (err) {
