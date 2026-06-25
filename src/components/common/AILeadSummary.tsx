@@ -1,7 +1,7 @@
-import { LeadService } from "@/services/lead.service";
+// import { LeadService } from "@/services/lead.service";
 import { RefreshCw, Sparkles, Mail, Phone, Target } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 interface AILeadSummaryProps {
     leadId: string;
@@ -24,9 +24,11 @@ const priorityColor = (priority?: string) => {
 };
 
 const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
-    const { accountId } = useParams();
-    const leadService = new LeadService();
-    const [aiSummary, setAiSummary] = useState<Record<string, any> | null>(
+    // const { accountId } = useParams();
+    // const leadService = new LeadService();
+    const [aiSummary,
+        //  setAiSummary
+    ] = useState<Record<string, any> | null>(
         {
             assessment: {
                 priority: "Medium-Low",
@@ -67,26 +69,29 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
             status: 200,
         },
     );
-    const [loading, setLoading] = useState(false);
+    const [loading,
+        // setLoading
+    ] = useState(false);
 
-    const generateLeadSummary = async (leadId: string) => {
-        try {
-            setLoading(true);
-            const res = await leadService.getLeadSummary(String(accountId), leadId);
-            const doc = res?.data?.data?.leadSummary ?? res?.data?.doc ?? res?.data;
-            setAiSummary(doc ?? null);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const generateLeadSummary = async (leadId: string) => {
+    //     console.log(leadId)
+    //     try {
+    //         setLoading(true);
+    //         const res = await leadService.getLeadSummary(String(accountId), leadId);
+    //         const doc = res?.data?.data?.leadSummary ?? res?.data?.doc ?? res?.data;
+    //         setAiSummary(doc ?? null);
+    //     } catch (error) {
+    //         console.log(error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     if (!aiSummary) {
         return (
             <div>
                 <button
-                    onClick={() => generateLeadSummary(leadId)}
+                    // onClick={() => generateLeadSummary(leadId)}
                     className="bg-primary/10 hover:bg-primary/20 cursor-pointer flex items-center mt-4 gap-2 px-4 py-2 text-sm rounded-xl text-primary transition-colors"
                 >
                     {!loading ? (
@@ -107,7 +112,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
     const assessment = aiSummary.assessment ?? {};
     const contactInfo = aiSummary.contactInformation ?? {};
     const leadDetails = aiSummary.leadDetails ?? {};
-    const profile = aiSummary.profile ?? {};
+    // const profile = aiSummary.profile ?? {};
 
     const summaryText =
         aiSummary.summary ??
@@ -119,7 +124,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
 
     // Build small stat chips from leadDetails (excluding ids/long values)
     const statChips = Object.entries(leadDetails)
-        .filter(([key, val]) => typeof val === "string" || typeof val === "number")
+        .filter(([key, val]) => (typeof val === "string" || typeof val === "number"))
         .filter(([key]) => !["assignedTo", "id", "_id"].includes(key))
         .slice(0, 3);
 
@@ -212,7 +217,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
 
             {/* Regenerate button */}
             <button
-                onClick={() => generateLeadSummary(leadId)}
+                // onClick={() => generateLeadSummary(leadId)}
                 className="w-full flex items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 cursor-pointer px-4 py-2 text-sm rounded-xl text-gray-700 transition-colors"
             >
                 <RefreshCw size={15} className={loading ? "animate-spin" : ""} />

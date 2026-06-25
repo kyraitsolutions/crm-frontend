@@ -38,6 +38,7 @@ import { ComparisonMetricCard } from "@/components/common/ComparisonMetricCard";
 import { StatCard } from "@/components/email/StatCard";
 import { exportToCSV, exportToPDF } from "@/lib/exportUtils";
 import { AnalyticsService } from "@/services/analytics.service";
+import { useAuthStore } from "@/stores";
 import {
   differenceInDays,
   isWithinInterval,
@@ -45,10 +46,7 @@ import {
   subDays,
 } from "date-fns";
 import type { DateRange } from "react-day-picker";
-import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { DatePicker } from "@/components/ui/DatePicker/DatePicker";
-import { useAuthStore } from "@/stores";
 
 interface AnalyticsData {
   totalLeads: number;
@@ -134,7 +132,7 @@ const DashboardAccount = () => {
     "daily" | "weekly" | "monthly" | "yearly"
   >("weekly");
   const [dateRange] = useState<DateRange | undefined>(undefined);
-  const [comparisonMode, setComparisonMode] = useState(false);
+  const [comparisonMode] = useState(false);
   const [fullAnalytics, setFullAnalytics] = useState<AnalyticsData | null>(
     null,
   );
@@ -354,10 +352,11 @@ const DashboardAccount = () => {
               text-xs font-medium
               max-md:w-full
               transition
-              ${active
-                          ? "bg-primary text-[#FBFAF9]"
-                          : "text-[#37322F] hover:bg-[#EFEDEB]"
-                        }
+              ${
+                active
+                  ? "bg-primary text-[#FBFAF9]"
+                  : "text-[#37322F] hover:bg-[#EFEDEB]"
+              }
             `}
                     >
                       {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -707,8 +706,9 @@ const DashboardAccount = () => {
                       <div
                         className="h-full transition-all"
                         style={{
-                          width: `${(source.count / (data?.totalLeads || 1)) * 100
-                            }%`,
+                          width: `${
+                            (source.count / (data?.totalLeads || 1)) * 100
+                          }%`,
                           backgroundColor: source.color,
                         }}
                       />
@@ -716,10 +716,11 @@ const DashboardAccount = () => {
                     <div className="flex min-w-20 items-center gap-2 text-sm">
                       <span className="font-semibold">{source.count}</span>
                       <span
-                        className={`flex items-center gap-0.5 ${source.trend >= 0
+                        className={`flex items-center gap-0.5 ${
+                          source.trend >= 0
                             ? "text-[#21733F]"
                             : "text-destructive"
-                          }`}
+                        }`}
                       >
                         {source.trend >= 0 ? (
                           <TrendingUp className="h-3 w-3" />
@@ -750,7 +751,7 @@ const DashboardAccount = () => {
                 <LineChart data={data?.monthlyEngagement}>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                  // stroke="hsl(var(--border))"
+                    // stroke="hsl(var(--border))"
                   />
                   <XAxis
                     dataKey="month"

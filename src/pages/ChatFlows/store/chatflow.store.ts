@@ -41,7 +41,7 @@ export const useChatFlowStore = create<TChatFlowStore>((set) => ({
       });
 
       const response = await chatflowService.getAllChatFlow(accountId);
-      const data = response?.data?.docs || [];
+      const data = (response?.data?.docs as TChatFlow[]) || [];
 
       set({
         flows: data,
@@ -79,7 +79,7 @@ export const useChatFlowStore = create<TChatFlowStore>((set) => ({
   updateFlow: (flowId, updatedFlow) => {
     set((state) => ({
       flows: state.flows.map((flow) =>
-        flow._id === flowId
+        flow.id === flowId
           ? {
               ...flow,
               ...updatedFlow,
@@ -88,7 +88,7 @@ export const useChatFlowStore = create<TChatFlowStore>((set) => ({
       ),
 
       selectedFlow:
-        state.selectedFlow?._id === flowId
+        state.selectedFlow?.id === flowId
           ? {
               ...state.selectedFlow,
               ...updatedFlow,

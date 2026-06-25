@@ -1,9 +1,10 @@
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand";
-import type { ChatBotListItem } from "@/types";
+import type { ChatbotListItem } from "@/types";
+// import type { ChatBotListItem } from "@/types";
 
 interface IChatBotStoreState {
-  chatBotsList: ChatBotListItem[];
+  chatBotsList: ChatbotListItem[];
 }
 
 export const useChatBotStore = create<IChatBotStoreState>()(
@@ -19,7 +20,7 @@ export class ChatBotManager {
     this.store = useChatBotStore;
   }
 
-  setChatBotsList(chatBotsList: ChatBotListItem[]) {
+  setChatBotsList(chatBotsList: ChatbotListItem[]) {
     this.store.setState({ chatBotsList });
   }
   updateChatBotStatus(chatbotId: string, newStatus: boolean) {

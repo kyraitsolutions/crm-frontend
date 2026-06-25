@@ -7,7 +7,9 @@ import { sourceOptions, stageOptions, statusOptions } from "@/constants";
 const LeadFilter = ({ openFilter, setOpenFilter }: { openFilter: boolean, setOpenFilter: (open: boolean) => void }) => {
     const { setLeadQuery, leadQuery, } = useLeadsStore((state) => state);
 
-    const [enable, setEnable] = useState<{ stage: boolean, read: boolean }>({
+    const [enable,
+        //  setEnable
+    ] = useState<{ stage: boolean, read: boolean }>({
         stage: true,
         read: true,
     });

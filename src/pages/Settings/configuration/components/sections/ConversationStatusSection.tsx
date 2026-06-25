@@ -25,7 +25,7 @@ import { ToastMessageService } from "@/services";
 import { useConfigurationStore } from "../../store/configuration.store";
 import type { ApiError } from "@/types";
 import { alertManager } from "@/stores/alert.store";
-import Loader from "@/components/Loader";
+// import Loader from "@/components/Loader";
 import DataLoader from "@/components/Loader/data-loader";
 
 const ConversationStatusSection = () => {

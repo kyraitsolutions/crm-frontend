@@ -1,5 +1,5 @@
 import FooterSection from "@/components/footer-section";
-import Header from "@/components/website/Header";
+import { Header } from "@/components/header";
 
 const TermsPage = () => {
   return (

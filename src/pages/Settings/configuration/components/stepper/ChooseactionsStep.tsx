@@ -30,7 +30,8 @@ const ACTION_CONFIG_FIELDS: Record<
   {
     label: string;
     key: string;
-    options?: string[];
+    placeholder?: string;
+    options?: string[] | { label: string; value: string }[];
     type?: string;
     types?: string;
   }[]
@@ -226,7 +227,7 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
             </SelectTrigger>
 
             <SelectContent>
-              {field.options?.map((option) => (
+              {field.options?.map((option: any) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>

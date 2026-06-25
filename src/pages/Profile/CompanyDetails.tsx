@@ -50,7 +50,7 @@ const CompanyDetails = () => {
         );
 
       if (res.status === 200) {
-        setOrganizationDetails(res.data?.docs);
+        setOrganizationDetails(res.data?.doc);
       }
     } catch (err) {
       console.log(err);

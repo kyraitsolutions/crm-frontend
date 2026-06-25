@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useMemo, useState } from "react";
 import type { TMessage } from "../../types/message.type";
 
 type TInteractiveListMessage = {

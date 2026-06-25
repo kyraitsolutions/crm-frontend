@@ -16,7 +16,7 @@ interface PremiumPopupProps {
 }
 
 export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
-  const { accountName, r } = useAuthStore((state) => state);
+  const { accountName } = useAuthStore((state) => state);
   //   const organizationName = user?.userprofile?.organizationName;
 
   const baseUrl = `${ROUTES}/settings`;

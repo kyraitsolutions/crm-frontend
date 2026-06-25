@@ -15,7 +15,9 @@ const ContactFilter = ({ openFilter, setOpenFilter }: { openFilter: boolean, set
         // totalPages,
         // setCurrentPage
     } = useContactStore((state) => state);
-    const [enable, setEnable] = useState<{ stage: boolean, read: boolean }>({
+    const [enable,
+        // setEnable
+    ] = useState<{ stage: boolean, read: boolean }>({
         stage: false,
         read: false,
     });

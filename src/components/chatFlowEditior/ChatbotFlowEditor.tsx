@@ -12,7 +12,10 @@ import "reactflow/dist/style.css";
 import FlowModal from "@/pages/ChatFlows/components/FlowModal";
 import { chatflowService } from "@/pages/ChatFlows/services/chatflow.service";
 import { hasPermission, PERMISSIONS } from "@/rbac";
-import { ChatBotService, ToastMessageService } from "@/services";
+import {
+  //  ChatBotService,
+  ToastMessageService
+} from "@/services";
 import { useAuthStore } from "@/stores";
 import { useAccountAccessStore } from "@/stores/account-access.store";
 import type { ApiError } from "@/types";
@@ -185,14 +188,14 @@ export const mandatoryEdges = [
 
 export default function ChatbotFlowEditor() {
   const navigate = useNavigate();
-  const chatbot = new ChatBotService();
+  // const chatbot = new ChatBotService();
   const { chatflowId } = useParams();
   const toastMessageService = new ToastMessageService();
 
   const { user: authUser, accountId } = useAuthStore((state) => state);
   const { permissions } = useAccountAccessStore((state) => state);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<TAppNodeData>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<TAppNodeData | any>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<TAppEdge>([]);
   const [selectedNode, setSelectedNode] = useState<TAppNode | null>(null);
   const [nodeSettingOpen, setNodeSettingOpen] = useState(false);

@@ -7,8 +7,8 @@ import { useAccountsStore } from "@/stores/accounts.store";
 import {
   IconChevronLeft,
   IconChevronRight,
-  IconDashboard,
-  IconFileText,
+  // IconDashboard,
+  // IconFileText,
   IconUsers,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -20,7 +20,10 @@ import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { SidebarFooter } from "./ui/sidebar";
-import { Book, Gauge, MessagesSquare } from "lucide-react";
+import {
+  // Book,
+  Gauge, MessagesSquare
+} from "lucide-react";
 
 export function AppSidebar() {
   const navigate = useNavigate();

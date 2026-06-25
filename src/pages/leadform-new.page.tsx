@@ -126,7 +126,7 @@ export default function LeadFormNew() {
         );
 
         if (response.status === 200) {
-          toastMessageService.apiSuccess(response.data.responseMessage);
+          toastMessageService.apiSuccess(response.message);
           navigate(`${LEAD_FORM_PATHS.getList(String(accountId))}`);
         }
         return;
@@ -138,7 +138,7 @@ export default function LeadFormNew() {
       );
 
       if (response.status === 200 || response.status === 201) {
-        toastMessageService.apiSuccess(response.data.responseMessage);
+        toastMessageService.apiSuccess(response.message);
         navigate(`${LEAD_FORM_PATHS.getList(String(accountId))}`);
       }
     } catch (err) {
@@ -156,24 +156,24 @@ export default function LeadFormNew() {
         leadFormId,
       );
       if (response.status === 200 || response.status === 201) {
-        setFormTitle(response?.data?.docs?.formTitle);
-        setFormDescription(response?.data?.docs?.formDescription);
+        setFormTitle(response?.data?.doc?.formTitle);
+        setFormDescription(response?.data?.doc?.formDescription);
         setFormFields((prev) => ({
           ...prev,
-          name: response?.data?.docs?.formFields?.name,
-          phoneNumber: response?.data?.docs?.formFields?.phoneNumber,
-          email: response?.data?.docs?.formFields?.email,
-          message: response?.data?.docs?.formFields?.message,
+          name: response?.data?.doc?.formFields?.name,
+          phoneNumber: response?.data?.doc?.formFields?.phoneNumber,
+          email: response?.data?.doc?.formFields?.email,
+          message: response?.data?.doc?.formFields?.message,
         }));
-        setFormName(response?.data?.docs?.formName);
-        setCustomFields(response?.data?.docs?.formFields?.customFields || []);
-        setSuccessCTA(response?.data?.docs?.successCTA);
-        setSuccessCTADestinatlead -
-          formsion(response?.data?.docs?.successCTADestination);
-        setHeaderImage(response?.data?.docs?.headerImage);
+        setFormName(response?.data?.doc?.formName);
+        setCustomFields(response?.data?.doc?.formFields?.customFields || []);
+        setSuccessCTA(response?.data?.doc?.successCTA);
+        // setSuccessCTADestinatlead -
+        // formsion(response?.data?.doc?.successCTADestination);
+        setHeaderImage(response?.data?.doc?.headerImage);
 
         const isCustomFieldToggleTrue =
-          response?.data?.docs?.formFields?.customFields?.some(
+          response?.data?.doc?.formFields?.customFields?.some(
             (field: CustomField) => field.required === true,
           );
 

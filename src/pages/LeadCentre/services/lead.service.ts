@@ -55,7 +55,7 @@ export class LeadService extends ApiService {
     return payload;
   }
 
-  async buildAllLeadPayloads(accountId:string,csvRows: Record<string, any>[],mapping: Record<string, string>): Promise<ICreateLead[]> {
+  async buildAllLeadPayloads(accountId:string,csvRows: Record<string, any>[],mapping: Record<string, string>): Promise<ICreateLead[]|any> {
     // buildLeadPayload is async so use Promise.all, not .map + filter directly
     const payloads = await Promise.all(
       csvRows.map((row) => this.buildLeadPayload(row, mapping))

@@ -3,7 +3,6 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import Select from "react-select";
 import {
-  X,
   Maximize2,
   Minimize2,
   Paperclip,
@@ -11,6 +10,7 @@ import {
   ChevronDown,
   Sparkles,
   Loader2,
+  X,
 } from "lucide-react";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import type { ILead } from "../types/lead.type";
@@ -170,7 +170,9 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
   const getCurrentAccount = accounts?.find(acc => acc.id === accountId);
 
   console.log(getCurrentAccount)
-  const [sender, setSender] = useState(getCurrentAccount);
+  const [sender,
+    //  setSender
+  ] = useState(getCurrentAccount);
 
   if (!isOpen) return null;
 

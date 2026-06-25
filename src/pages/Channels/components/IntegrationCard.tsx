@@ -1,19 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { WhatsappService } from "@/services/whatsapp.service";
-import { useAuthStore } from "@/stores";
+// import { useAuthStore } from "@/stores";
 import { Link } from "react-router-dom";
 const IntegrationCard = ({ data }: any) => {
-  const { accountId } = useAuthStore((state) => state);
+  // const { accountId } = useAuthStore((state) => state);
   const whatsappService = new WhatsappService();
   const Icon = data.icon;
 
   const handleWhatsapp = async () => {
     try {
-      const response = await whatsappService.connectWhatsapp(accountId || "");
+      const response = await whatsappService.connectWhatsapp();
+      console.log(response);
 
-      window.open(response?.data?.docs?.signupUrl);
-      console.log(response?.data?.docs?.signupUrl);
-    } catch (error) {}
+      // window.open(response?.data?.docs?.signupUrl);
+      // console.log(response?.data?.docs?.signupUrl);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

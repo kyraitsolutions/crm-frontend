@@ -1,4 +1,4 @@
-import type { ApiResponse, ChatBotFormData, ChatBotListItem } from "@/types";
+import type { ApiResponse, ChatBotFormData, ChatbotListItem } from "@/types";
 import { ApiService } from "./api.service";
 
 export class ChatBotService extends ApiService {
@@ -8,7 +8,7 @@ export class ChatBotService extends ApiService {
 
   async getChatBotsList(
     accountId: string,
-  ): Promise<ApiResponse<ChatBotListItem[]>> {
+  ): Promise<ApiResponse<ChatbotListItem[]>> {
     return await this.get(`/account/${accountId}/chatbots`);
   }
 
@@ -24,7 +24,7 @@ export class ChatBotService extends ApiService {
     data: ChatBotFormData,
   ): Promise<
     ApiResponse<{
-      docs: ChatBotListItem;
+      docs: ChatbotListItem;
     }>
   > {
     return await this.post(`/account/${accountId}/chatbot`, data);
@@ -51,10 +51,10 @@ export class ChatBotService extends ApiService {
   async updateChatBot(
     accountId: string,
     chatbotId: string,
-    data: { flowId: string },
+    data: { flowId?: string; status?: boolean },
   ): Promise<
     ApiResponse<{
-      docs: ChatBotListItem;
+      docs: ChatbotListItem;
     }>
   > {
     return await this.put(`/account/${accountId}/chatbot/${chatbotId}`, data);
@@ -63,7 +63,7 @@ export class ChatBotService extends ApiService {
   async deleteChatBot(
     accountId: string,
     chatbotId: string,
-  ): Promise<ApiResponse<ChatBotListItem>> {
+  ): Promise<ApiResponse<ChatbotListItem>> {
     return await this.delete(
       `account/${String(accountId)}/chatbot/${chatbotId}`,
     );

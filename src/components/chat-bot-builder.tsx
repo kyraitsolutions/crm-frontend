@@ -10,6 +10,7 @@ import {
   mandatoryNodes,
 } from "./chatFlowEditior/ChatbotFlowEditor";
 
+
 const defaultValues: ChatBotFormData = {
   name: "",
   description: "",

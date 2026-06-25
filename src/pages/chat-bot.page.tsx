@@ -16,7 +16,7 @@ import { ChatBotService, ToastMessageService } from "@/services";
 import { ChatBotManager, useChatBotStore } from "@/stores";
 import { useAccountAccessStore } from "@/stores/account-access.store";
 import { alertManager } from "@/stores/alert.store";
-import type { ApiError, ChatBotListItem } from "@/types";
+import type { ApiError, ChatbotListItem } from "@/types";
 import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { Plus, Trash2 } from "lucide-react";
 import moment from "moment";
@@ -39,7 +39,7 @@ export function ChatBotPage() {
 
   const [loading, setLoading] = useState(false);
 
-  const columns: Column<ChatBotListItem>[] = [
+  const columns: Column<ChatbotListItem>[] = [
     {
       key: "name",
       header: "Chatbot",
@@ -318,7 +318,7 @@ export function ChatBotPage() {
 
       {chatBotLists.length > 0 ? (
         <div className="">
-          <DataTable<ChatBotListItem>
+          <DataTable<ChatbotListItem>
             data={chatBotLists}
             columns={columns}
             pageSize={20}

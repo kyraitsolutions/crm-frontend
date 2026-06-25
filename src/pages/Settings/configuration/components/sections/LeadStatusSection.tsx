@@ -15,7 +15,7 @@ import { ToastMessageService } from "@/services";
 import { alertManager } from "@/stores/alert.store";
 import type { ApiError } from "@/types";
 import type { TConfigValue } from "../../types/configuration.type";
-import Loader from "@/components/Loader";
+// import Loader from "@/components/Loader";
 import DataLoader from "@/components/Loader/data-loader";
 
 const LeadStatusSection = () => {

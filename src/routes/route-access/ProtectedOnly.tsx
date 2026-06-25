@@ -17,31 +17,30 @@ export const ProtectedOnly = () => {
   const authService = new AuthService();
   const authManager = new AuthStoreManager();
 
+  const fetchUser = async () => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    if (user) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res: any = await authService.getMe();
+      const userData = res.data?.doc;
+
+      authManager.setUser(userData);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUser = async () => {
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
-      if (user) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const res: any = await authService.getMe();
-
-        const userData = res.data?.docs;
-
-        authManager.setUser(userData);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUser();
   }, []);
 

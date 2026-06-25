@@ -1,6 +1,6 @@
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TbDotsVertical, TbPin } from "react-icons/tb";
 import { useLeadsStore } from "../store/lead.store";
 import { useAuthStore } from "@/stores";
@@ -8,8 +8,12 @@ import { getDateRange } from "@/utils/date-utils";
 
 const LeadListHeader = () => {
 
-    const { currentPage, fetchLeads, leadQuery, setLeadQuery } = useLeadsStore((state) => state);
-    const { accountId } = useAuthStore((state) => state);
+    const {
+        // currentPage, fetchLeads, 
+        leadQuery, setLeadQuery } = useLeadsStore((state) => state);
+    const {
+        //  accountId 
+    } = useAuthStore((state) => state);
 
     const StatusFilter = [
         { name: "All Leads", value: "all_leads" },

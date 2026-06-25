@@ -56,7 +56,9 @@ type Props = {
     onPrevious?: () => void;
 };
 
-const FieldMappingStep = ({ csvHeaders, sampleRows, onComplete, onPrevious }: Props) => {
+const FieldMappingStep = ({ csvHeaders, sampleRows, onComplete,
+    //  onPrevious 
+}: Props) => {
     const [mapping, setMapping] = useState<Record<string, string>>({});
     const [customFields, setCustomFields] = useState<string[]>(DEFAULT_CUSTOM_FIELDS);
     const [filter, setFilter] = useState<FilterType>("all");

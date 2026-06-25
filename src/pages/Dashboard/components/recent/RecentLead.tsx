@@ -26,18 +26,18 @@ const tableHeaders = [
   },
 ];
 
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-};
+// const formatDate = (date) => {
+//   return new Date(date).toLocaleDateString("en-US", {
+//     month: "short",
+//     day: "numeric",
+//     year: "numeric",
+//   });
+// };
 
 const RecentLeads = () => {
   const { dashboardOverview } = useDashboardStore((state) => state);
 
-  const recentLeads = dashboardOverview?.recentLeads || [];
+  const recentLeads = (dashboardOverview?.recentLeads as any) || [];
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white">
@@ -67,7 +67,7 @@ const RecentLeads = () => {
           </thead>
 
           <tbody>
-            {recentLeads.map((lead, index) => (
+            {recentLeads.map((lead: any, index: number) => (
               <tr
                 key={index}
                 className="border-b border-gray-100 last:border-0"

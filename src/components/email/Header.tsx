@@ -1,50 +1,51 @@
 import { NavLink } from "react-router-dom";
 
-import { MdCollections, MdInsights, MdOutlineCampaign, MdWbAuto } from "react-icons/md";
+import { MdInsights, MdOutlineCampaign, MdWbAuto } from "react-icons/md";
 
-interface NavItem{
-    label:string,
-    path:string,
-    icon:React.ElementType
+interface NavItem {
+  label: string;
+  path: string;
+  icon: React.ElementType;
 }
 const Header = () => {
+  const NAV_ITEMS: NavItem[] = [
+    { label: "Insights", path: "", icon: MdInsights },
+    { label: "Campaigns", path: "campaigns", icon: MdOutlineCampaign },
+    { label: "Automations", path: "automations", icon: MdWbAuto },
+  ];
 
-    const NAV_ITEMS:NavItem[] = [
-        { label: "Insights", path: "",icon:MdInsights },
-        { label: "Campaigns", path: "campaigns",icon:MdOutlineCampaign },
-        { label: "Automations", path: "automations",icon:MdWbAuto },
-    ];
+  return (
+    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+        <div className="flex items-center gap-5">
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `text-sm font-medium  flex  items-center gap-1 transition-colors 
+                            ${
+                              isActive
+                                ? "text-primary border-b-2 border-primary"
+                                : "text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-trasparent"
+                            }`
+                }
+              >
+                <Icon />
+                {item.label}
+              </NavLink>
+            );
+          })}
+        </div>
 
-    return (
-        <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
-            <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
-
-                <div className="flex items-center gap-5">
-                    {NAV_ITEMS.map((item) => {
-                        const Icon=item.icon
-                        return(
-                        <NavLink
-                            key={item.path}
-                            to={item.path}
-                            className={({ isActive }) =>
-                                `text-sm font-medium  flex  items-center gap-1 transition-colors 
-                            ${isActive
-                                    ? "text-primary border-b-2 border-primary"
-                                    : "text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-trasparent"}`
-                            }
-                        >
-                            <Icon/>{item.label}
-                        </NavLink>
-                    )})}
-                </div>
-
-
-                {/* <div className="ml-auto flex items-center gap-2">
+        {/* <div className="ml-auto flex items-center gap-2">
                     <Button className=""><Plus size={20} color="#ffffff" /> Create New Campaign</Button>
                 </div> */}
-            </div>
-        </header>
-    )
-}
+      </div>
+    </header>
+  );
+};
 
-export default Header
+export default Header;

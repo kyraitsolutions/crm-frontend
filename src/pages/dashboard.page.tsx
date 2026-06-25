@@ -75,7 +75,7 @@ export const DashboardPage = () => {
         accountStoreManager.setAccountTop({
           accountName,
           email,
-          id: response?.data?.docs?.id,
+          id: response?.data?.doc?.id,
           createdAt: new Date().toISOString(),
           status: "active",
         });
@@ -122,7 +122,7 @@ export const DashboardPage = () => {
       });
 
       // authManager.setAccountSelected(true);
-      console.log("auth", accounts[index]?.accountName)
+      console.log("auth", accounts[index]?.accountName);
       authManager.setAccountName(accounts[index]?.accountName);
       authManager.setAccountId(accounts[index]?.id);
     }
@@ -263,12 +263,13 @@ export const DashboardPage = () => {
                 <span
                   className={`
             px-2 py-0.5 rounded-full capitalize text-xs font-medium
-            ${account.status === "active"
-                      ? "bg-primary/10 text-primary"
-                      : account.status === "inactive"
-                        ? "bg-destructive/10 text-destructive"
-                        : "bg-primary/10 text-primary"
-                    }
+            ${
+              account.status === "active"
+                ? "bg-primary/10 text-primary"
+                : account.status === "inactive"
+                  ? "bg-destructive/10 text-destructive"
+                  : "bg-primary/10 text-primary"
+            }
           `}
                 >
                   {account.status}

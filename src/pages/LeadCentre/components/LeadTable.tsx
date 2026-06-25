@@ -1,5 +1,4 @@
 import { useEffect, useState, type JSX } from "react";
-import { useAccountAccessStore } from "@/stores/account-access.store";
 import {
   Table,
   TableBody,
@@ -8,37 +7,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  ArrowRightCircleIcon,
-  Clock3,
-  Import,
-  Mail,
-  Phone,
-  Shapes,
-  Webhook,
-} from "lucide-react";
-import { formatDate } from "@/utils/date-utils";
-import { useAuthStore } from "@/stores";
-import { TbManualGearbox } from "react-icons/tb";
-import { Facebook, Google, ImportIcon, Instagram, Manual, WebForm, WebHook, Website, Whatsapp } from "@/icons/icons";
-import { MdWhatsapp } from "react-icons/md";
-import { FaGoogle } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
 import { LEADS_PATHS } from "@/constants/routes/leads.path";
 import {
   useConfigurationStore,
   type ConfigurationItem,
 } from "@/pages/Settings/configuration/store/configuration.store";
+import {
+  ArrowRightCircleIcon,
+  Clock3,
+  Mail,
+  Phone,
+  Shapes,
+} from "lucide-react";
+import { formatDate } from "@/utils/date-utils";
+import { useAuthStore } from "@/stores";
+import { Facebook, Google, ImportIcon, Instagram, Manual, WebForm, WebHook, Website, Whatsapp } from "@/icons/icons";
+import { Link, useNavigate } from "react-router-dom";
 import { useLeadsStore } from "../store/lead.store";
-import { Pagination } from "@/components/pagination";
 import DataLoader from "@/components/Loader/data-loader";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Pagination } from "@/components/pagination";
 const LeadTable = () => {
   const navigate = useNavigate();
   // new Integration using zustand
@@ -63,7 +51,7 @@ const LeadTable = () => {
 
   const [leadStages, setLeadStages] = useState<ConfigurationItem[] | []>([]);
 
-  const { permissions } = useAccountAccessStore((state) => state);
+  // const { permissions } = useAccountAccessStore((state) => state);
 
   const handleStatusChange = async (leadId: string, value: string) => {
     await updateLeadField(
