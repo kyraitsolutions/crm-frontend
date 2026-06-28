@@ -1,10 +1,5 @@
 import { AppLayout, RootLayout } from "@/layouts";
-import {
-  AuthCallbackPage,
-  LoginPage,
-  OnBoardingPage,
-  Register,
-} from "@/pages";
+import { AuthCallbackPage, LoginPage, OnBoardingPage, Register } from "@/pages";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 // import { builderRoutes } from "./builder.routes";
 import { dashboardRoutes } from "./dashboard.routes";
@@ -43,7 +38,7 @@ export const appRoutes = createBrowserRouter([
 
       //PROTECTED (logged in)
       {
-        element: <ProtectedOnly />,
+        // element: <ProtectedOnly />,
         children: [
           {
             element: <AppLayout />,

@@ -13,7 +13,7 @@ const ActivityLogsPage = () => {
   }, [accountId]);
 
   return (
-    <main className="p-4 max-w-7xl mx-auto">
+    <main className="p-4">
       <Card>
         <CardHeader>
           <CardTitle>Activity Timeline</CardTitle>

@@ -79,13 +79,13 @@ export function AppLayout() {
 
   return (
     <SocketProvider accountId={String(accountId)}>
-      <div className="flex h-screen w-screen ">
+      <div className="flex h-screen w-full">
         <AppSidebar />
 
         <main className="w-full flex flex-col">
           <SiteHeader />
 
-          <div className="flex-1 h-[calc(100vh-64px)] w-full overflow-y-auto hide-scrollbar ">
+          <div className="flex-1 h-[calc(100vh-64px)] w-full overflow-y-auto hide-scrollbar">
             <Outlet />
           </div>
         </main>
