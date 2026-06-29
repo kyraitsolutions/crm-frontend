@@ -1,4 +1,3 @@
-import { AnalyticsService } from "@/services/analytics.service";
 import { useAuthStore } from "@/stores";
 import { useEffect, useState } from "react";
 
@@ -9,7 +8,6 @@ interface SearchProps {
 }
 const GlobalSearch = ({ search, openSearch, setOpenSearch }: SearchProps) => {
   const { accountId } = useAuthStore((state) => state);
-  const analyticsService = new AnalyticsService();
 
   const [searchResult, setSearchResult] = useState<{
     leads: any[];
@@ -27,15 +25,15 @@ const GlobalSearch = ({ search, openSearch, setOpenSearch }: SearchProps) => {
     if (!search.trim()) return;
     try {
       setLoading(true);
-      const response = await analyticsService.getSearch(
-        String(accountId),
-        search,
-      );
-      console.log("response", response.data);
-      setSearchResult({
-        leads: response?.data?.doc?.leads || [],
-        contacts: response?.data?.doc?.contacts || [],
-      });
+      // const response = await analyticsService.getSearch(
+      //   String(accountId),
+      //   search,
+      // );
+      // console.log("response", response.data);
+      // setSearchResult({
+      //   leads: response?.data?.doc?.leads || [],
+      //   contacts: response?.data?.doc?.contacts || [],
+      // });
     } catch (error) {
       console.log("Error", error);
     } finally {
@@ -69,7 +67,7 @@ const GlobalSearch = ({ search, openSearch, setOpenSearch }: SearchProps) => {
                 <h3 className="font-semibold text-gray-700 mb-3">Leads</h3>
 
                 <div className="space-y-2">
-                  {searchResult.leads.map((lead: any) => (
+                  {searchResult?.leads?.map((lead: any) => (
                     <div
                       key={lead._id}
                       className="border rounded-xl p-3 hover:bg-gray-50 cursor-pointer transition"
@@ -92,12 +90,12 @@ const GlobalSearch = ({ search, openSearch, setOpenSearch }: SearchProps) => {
             )}
 
             {/* Contacts */}
-            {searchResult.contacts.length > 0 && (
+            {searchResult?.contacts?.length > 0 && (
               <div>
                 <h3 className="font-semibold text-gray-700 mb-3">Contacts</h3>
 
                 <div className="space-y-2">
-                  {searchResult.contacts.map((contact: any) => (
+                  {searchResult?.contacts?.map((contact: any) => (
                     <div
                       key={contact._id}
                       className="border rounded-xl p-3 hover:bg-gray-50 cursor-pointer transition"

@@ -20,12 +20,12 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                     <div className="grid xl:grid-cols-2 gap-x-24 max-w-4xl mx-auto">
                         {/* Left */}
                         <div>
-                            <FieldRow
+                            {/* <FieldRow
                                 label="Lead Owner"
                                 fieldKey="assignedTo"
                                 value={lead?.assignedTo || "Assignee--"}
                                 leadId={lead?.id}
-                            />
+                            /> */}
 
                             <FieldRow
                                 label="Title"
@@ -89,12 +89,12 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                                 leadId={lead?.id}
                             />
 
-                            <FieldRow
+                            {/* <FieldRow
                                 label="Lead Status"
                                 value={lead?.status || ""}
                                 fieldKey="status"
                                 leadId={lead?.id}
-                            />
+                            /> */}
                         </div>
                     </div>
                 </div>
@@ -240,8 +240,6 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                     </div>
                 </div> */}
             </div>}
-
-
         </div>
     )
 }

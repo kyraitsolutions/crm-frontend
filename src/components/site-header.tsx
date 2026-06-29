@@ -66,7 +66,7 @@ export function SiteHeader() {
             <span className="text-md text-primary font-medium">
               {
                 SubscriptionPlan[
-                  user?.subscription?.planId as keyof typeof SubscriptionPlan
+                user?.subscription?.planId as keyof typeof SubscriptionPlan
                 ]
               }{" "}
               expires in {totalDaysLeft} days
@@ -84,11 +84,10 @@ export function SiteHeader() {
             </button>
             {searchEnable && (
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                  searchEnable
-                    ? "opacity-100 translate-x-0 w-64"
-                    : "opacity-0 translate-x-full w-0"
-                }`}
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${searchEnable
+                  ? "opacity-100 translate-x-0 w-64"
+                  : "opacity-0 translate-x-full w-0"
+                  }`}
               >
                 <input
                   type="text"
@@ -140,7 +139,6 @@ export function SiteHeader() {
             </ButtonWithTitle>
             <div className="h-5 w-0.5 bg-gray-300"></div>
           </div>
-
           <Link to={`${baseUrl}/profile`}>
             <Avatar className="">
               {user?.userprofile?.profilePicture && (
