@@ -8,6 +8,7 @@ export class AuthService extends ApiService {
   }
 
   async getMe(): Promise<ApiResponse<IUser>> {
+    console.log("called")
     return await this.get(
       `${API_ENDPOINT_PATH.AUTH_USER.ME}?includes=organization,permissions`,
     );

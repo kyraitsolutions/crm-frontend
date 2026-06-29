@@ -26,14 +26,22 @@ const CreateAutomationStepper: React.FC = () => {
   const handleNext = () => setCurrentStep(currentStep + 1);
   const handleBack = () => setCurrentStep(currentStep - 1);
 
-  const handleSaveAutomation = async (name: string) => {
+  const handleSaveAutomation = async ({
+    name,
+    status,
+  }: {
+    name: string;
+    status: "published" | "draft";
+  }) => {
     try {
-      const response = await saveAutomation(name, String(accountId));
+      const data = { name, status };
+      const response = await saveAutomation(String(accountId), data);
 
-      if (response && response?.status === 201) {
+      if ((response && response?.status === 201) || response?.status === 200) {
         toastService.success(
           response?.message || "Automation created successfully!",
         );
+        setIsCreating(false);
       }
     } catch (error) {
       const err = error as ApiError;

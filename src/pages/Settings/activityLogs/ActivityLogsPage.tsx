@@ -13,14 +13,15 @@ const ActivityLogsPage = () => {
 
   return (
     <main className="p-4">
+      {/* <Card>
+        <CardHeader>
+          <CardTitle>Activity Timeline</CardTitle>
+        </CardHeader> */}
       <div className="flex flex-col gap-4">
-
         <h1>Activity Timeline</h1>
 
         <ActivityLogLists />
-
       </div>
-
     </main>
   );
 };

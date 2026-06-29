@@ -1,3 +1,4 @@
+import { AnalyticsService } from "@/services/analytics.service";
 import { useAuthStore } from "@/stores";
 import { useEffect, useState } from "react";
 
@@ -8,6 +9,7 @@ interface SearchProps {
 }
 const GlobalSearch = ({ search, openSearch, setOpenSearch }: SearchProps) => {
   const { accountId } = useAuthStore((state) => state);
+  const analyticsService = new AnalyticsService()
 
   const [searchResult, setSearchResult] = useState<{
     leads: any[];
@@ -25,15 +27,15 @@ const GlobalSearch = ({ search, openSearch, setOpenSearch }: SearchProps) => {
     if (!search.trim()) return;
     try {
       setLoading(true);
-      // const response = await analyticsService.getSearch(
-      //   String(accountId),
-      //   search,
-      // );
-      // console.log("response", response.data);
-      // setSearchResult({
-      //   leads: response?.data?.doc?.leads || [],
-      //   contacts: response?.data?.doc?.contacts || [],
-      // });
+      const response = await analyticsService.getSearch(
+        String(accountId),
+        search,
+      );
+      console.log("response", response.data);
+      setSearchResult({
+        leads: response?.data?.doc?.leads || [],
+        contacts: response?.data?.doc?.contacts || [],
+      });
     } catch (error) {
       console.log("Error", error);
     } finally {

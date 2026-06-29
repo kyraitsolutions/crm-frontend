@@ -1,16 +1,104 @@
-import React from "react";
-import AutomationCard from "../cards/AutomationCard";
+import Loader from "@/components/Loader";
+import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/stores";
+import { Plus } from "lucide-react";
+import React, { useEffect } from "react";
 import { useAutomationStore } from "../../store/automation.store";
+import AutomationCard from "../cards/AutomationCard";
+import EmptyAutomation from "../Empty/EmptyAutomation";
 import CreateAutomationStepper from "../stepper/CreateAutomationStepper";
+import { ToastMessageService } from "@/services";
+import type { ApiError } from "@/types";
+import { alertManager } from "@/stores/alert.store";
 
 const AutomationSection: React.FC = () => {
+  const toastService = new ToastMessageService();
+  const { accountId } = useAuthStore((state) => state);
   const {
+    loading,
     automations,
+    fetchAutomations,
     isCreating,
     setIsCreating,
     toggleAutomation,
+    updateStatus,
     deleteAutomation,
   } = useAutomationStore();
+
+  const handleUpdateStatus = async (
+    id: string,
+    status: "published" | "draft",
+  ) => {
+    try {
+      const response = await updateStatus(String(accountId), id, status);
+      if (response?.status === 200) {
+        toastService.success(
+          response?.message || "Automation updated successfully!",
+        );
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastService.error(err.message);
+      }
+    }
+  };
+
+  const handleToggleActiveAndInactive = async (id: string, active: boolean) => {
+    try {
+      const response = await toggleAutomation(String(accountId), id, active);
+      if (response?.status === 200) {
+        toastService.success(
+          response?.message || "Automation updated successfully!",
+        );
+      }
+    } catch (error) {
+      console.log("erro hai kya", error);
+      const err = error as ApiError;
+      if (err) {
+        toastService.error(err.message);
+      }
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    alertManager.show({
+      type: "warning",
+      title: "Delete Automation",
+      message: "Are you sure you want to delete this automation?",
+      onConfirm: async () => {
+        try {
+          const response = await deleteAutomation(String(accountId), id);
+          if (response?.status === 200) {
+            toastService.success(
+              response?.message || "Automation deleted successfully!",
+            );
+          }
+        } catch (error) {
+          const err = error as ApiError;
+          if (err) {
+            toastService.error(err.message);
+          }
+        }
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (!accountId) return;
+    fetchAutomations(accountId);
+  }, []);
+
+  if (loading)
+    return (
+      <div className="flex justify-center mt-4">
+        <Loader size={25} color="gray" className="border-3" />
+      </div>
+    );
+
+  // if (automations.length === 0) {
+  //   return <EmptyAutomation />;
+  // }
 
   return (
     <div className="w-full h-full space-y-4">
@@ -23,64 +111,31 @@ const AutomationSection: React.FC = () => {
             configured
           </p>
         </div>
-        <button
+        <Button
           onClick={() => setIsCreating(true)}
-          className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-sm shadow-violet-200"
+          className="actions-btn py-2! px-4!"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Create Automation
-        </button>
+          <Plus className="size-4" /> Create Automation
+        </Button>
       </div>
 
       {/* Empty state */}
-      {automations.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-gray-200 rounded-xl">
-          <div className="w-12 h-12 rounded-full bg-violet-50 flex items-center justify-center mb-3">
-            <svg
-              className="w-6 h-6 text-violet-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-          </div>
-          <p className="text-sm font-medium text-gray-600">
-            No automations yet
-          </p>
-          <p className="text-xs text-gray-400 mt-1">
-            Create your first automation to get started
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {automations.map((automation) => (
-            <AutomationCard
-              key={automation.id}
-              automation={automation}
-              onToggle={toggleAutomation}
-              onDelete={(id) => deleteAutomation?.(id)}
-            />
-          ))}
-        </div>
-      )}
+
+      <div className="space-y-2">
+        {automations.length != 0 ? automations.map((automation) => (
+          <AutomationCard
+            key={automation.id}
+            automation={automation}
+            onToggle={(id, active) => handleToggleActiveAndInactive(id, active)}
+            onStatusChange={(id, status) => {
+              handleUpdateStatus(id, status);
+            }}
+            onDelete={(id) => handleDelete(id)}
+          />
+        )) :
+
+          <EmptyAutomation />}
+      </div>
 
       {/* Stepper modal */}
       {isCreating && <CreateAutomationStepper />}

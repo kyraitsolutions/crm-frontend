@@ -1,13 +1,20 @@
 import { useActivityLogStore } from "../store/activity-logs.store";
-import { ActivityLogItem } from "./ActivityItem";
+
 import ActivityLogEmpty from "./ActivityLogEmpty";
-import DataLoader from "@/components/Loader/data-loader";
+import { ActivityLogItem } from "./ActivityItem";
+import Loader from "@/components/Loader";
+// import { ActivityLogItem } from "./ActivityItem";
+// import { ActivityItem } from "./ActivityItem";
 
 const ActivityLogLists = () => {
   const { logs, loading } = useActivityLogStore();
 
   if (loading) {
-    return <DataLoader className="h-[calc(100vh-200px)]" />;
+    return (
+      <div className="flex justify-center">
+        <Loader size={25} color="gray" />
+      </div>
+    );
   }
 
   if (!logs.length) {
@@ -15,10 +22,13 @@ const ActivityLogLists = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {" "}
-      {logs.map((log) => (
-        <ActivityLogItem key={log._id} log={log} />
+    <div className="space-y-2">
+      {logs.map((log, index) => (
+        <ActivityLogItem
+          key={log.id}
+          log={log}
+          isLast={index === logs.length - 1}
+        />
       ))}
     </div>
   );

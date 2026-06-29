@@ -21,11 +21,27 @@ import {
 } from "lucide-react";
 import { formatDate } from "@/utils/date-utils";
 import { useAuthStore } from "@/stores";
-import { Facebook, Google, ImportIcon, Instagram, Manual, WebForm, WebHook, Website, Whatsapp } from "@/icons/icons";
+import {
+  Facebook,
+  Google,
+  ImportIcon,
+  Instagram,
+  Manual,
+  WebForm,
+  WebHook,
+  Website,
+  Whatsapp,
+} from "@/icons/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useLeadsStore } from "../store/lead.store";
 import DataLoader from "@/components/Loader/data-loader";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Pagination } from "@/components/pagination";
 const LeadTable = () => {
   const navigate = useNavigate();
@@ -40,7 +56,7 @@ const LeadTable = () => {
     totalPages,
     loadingLeads,
     updateLeadField,
-    leadQuery
+    leadQuery,
   } = useLeadsStore((state) => state);
 
   useEffect(() => {
