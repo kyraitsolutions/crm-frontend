@@ -15,16 +15,12 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative">
+    <div className='relative'>
       <header className="bg-white border-b border-[#e5e7eb] px-3 py-2">
-        <div className="flex items-start justify-between">
+        <div className="flex items-center justify-between">
           {/* Left */}
           <div className="flex items-center gap-4">
-            <ButtonWithTitle
-              onClick={() => navigate(`/dashboard/account/${accountId}/leads`)}
-              title="Go back to leads"
-              className="flex items-center"
-            >
+            <ButtonWithTitle onClick={() => navigate(`/dashboard/account/${accountId}/leads`)} title="Go back to leads" className="flex items-center">
               <ChevronLeft className="text-slate-600" />
             </ButtonWithTitle>
 
@@ -72,12 +68,13 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
               Convert
             </ButtonWithTitle>
 
-            <ButtonWithTitle
-              title="Convert lead into booking"
-              className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-xl text-sm"
-            >
-              Edit
-            </ButtonWithTitle>
+            {/* <ButtonWithTitle title="Convert lead into booking" className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-xl text-sm">
+                            Convert
+                        </ButtonWithTitle>
+
+                        <ButtonWithTitle title="Convert lead into booking" className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-xl text-sm">
+                            Edit
+                        </ButtonWithTitle> */}
 
             <button className="">
               <MoreHorizontal size={18} />

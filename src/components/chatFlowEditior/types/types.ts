@@ -34,9 +34,11 @@ type TUrlButton = {
   };
 };
 export type TAction =
+
   | TUrlButton
   | {
       buttons: TQuickReplyButton[];
+      parameters?:any
     };
 
 type TBaseNodeData<TType, TPayload> = {
@@ -192,7 +194,7 @@ export type TQuestionNodeDataPayload = {
   type: "question";
   question: {
     text?: string | null;
-    inputType: "text" | "number" | "email" | "phone" | "date";
+    inputType?: "text" | "number" | "email" | "phone" | "date";
   };
 };
 // ========================= Question types end ==========================

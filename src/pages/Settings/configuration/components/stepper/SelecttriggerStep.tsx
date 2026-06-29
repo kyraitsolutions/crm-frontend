@@ -33,11 +33,10 @@ const SelectTriggerStep: React.FC<SelectTriggerStepProps> = ({
             <div
               key={option.value}
               onClick={() => onSelect(option.value)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg border cursor-pointer transition-all duration-150
-                ${
-                  isSelected
-                    ? "border-primary/20 bg-primary/6"
-                    : "border-gray-200 bg-white hover:border-primary/40 hover:bg-violet-50/40"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all duration-150
+                ${isSelected
+                  ? "border-primary/20 bg-primary/6"
+                  : "border-gray-200 bg-white hover:border-primary/40 hover:bg-violet-50/40"
                 }`}
             >
               <div
@@ -65,7 +64,7 @@ const SelectTriggerStep: React.FC<SelectTriggerStepProps> = ({
         <Button
           onClick={onNext}
           disabled={!selectedTrigger}
-          className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-lg hover:bg-primary disabled:cursor-not-allowed disabled:opacity-40 transition-colors"
+          className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-xl hover:bg-primary disabled:cursor-not-allowed disabled:opacity-40 transition-colors"
         >
           Next
         </Button>

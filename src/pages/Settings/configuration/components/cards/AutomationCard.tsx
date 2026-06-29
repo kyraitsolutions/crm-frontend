@@ -1,92 +1,106 @@
 import React from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TRIGGER_OPTIONS } from "../../constants/automation.constants";
 import type { Automation } from "../../store/automation.store";
+import { Trash2, Workflow } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface AutomationCardProps {
   automation: Automation;
-  onToggle: (id: string) => void;
+  onToggle: (id: string, active: boolean) => void;
   onDelete: (id: string) => void;
+  onStatusChange: (id: string, status: "draft" | "published") => void;
 }
 
 const AutomationCard: React.FC<AutomationCardProps> = ({
   automation,
   onToggle,
   onDelete,
+  onStatusChange,
 }) => {
   const triggerLabel =
-    TRIGGER_OPTIONS.find((t) => t.value === automation.trigger)?.label ||
+    TRIGGER_OPTIONS.find((t) => t.value === automation.trigger)?.label ??
     automation.trigger;
 
+  const statusClasses =
+    automation.status === "published"
+      ? "border-green-200 bg-green-50 text-green-700"
+      : "border-amber-200 bg-amber-50 text-amber-700";
+
   return (
-    <div className="flex items-center justify-between px-4 py-3 bg-white border border-gray-100 rounded-xl hover:border-gray-200 hover:shadow-sm transition-all duration-150 group">
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
-          <svg
-            className="w-4 h-4 text-violet-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.8}
-              d="M13 10V3L4 14h7v7l9-11h-7z"
-            />
-          </svg>
+    <div className="group flex items-center justify-between rounded-xl border border-primary/15 bg-white px-4 py-3 transition-all duration-150 hover:bg-gray-100">
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-50">
+          <Workflow size={12} />
         </div>
+
         <div className="min-w-0">
-          <p className="text-sm font-medium text-gray-800 truncate">
+          <p className="truncate text-sm font-medium text-gray-900">
             {automation.name}
           </p>
-          <p className="text-xs text-gray-400 truncate">{triggerLabel}</p>
+
+          <p className="truncate text-xs text-gray-500">{triggerLabel}</p>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 shrink-0 ml-3">
-        {/* Active/Inactive badge */}
+      <div className="ml-4 flex items-center gap-3">
+        {/* Status */}
+        <Select
+          value={automation.status}
+          onValueChange={(value) =>
+            onStatusChange(automation.id, value as "draft" | "published")
+          }
+        >
+          <SelectTrigger
+            className={`text-xs rounded-full h-6! ${statusClasses}`}
+          >
+            <SelectValue />
+          </SelectTrigger>
+
+          <SelectContent>
+            <SelectItem value="draft">Draft</SelectItem>
+            <SelectItem value="published">Published</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Active */}
         <span
-          className={`text-xs font-medium px-2 py-0.5 rounded-full
-            ${
-              automation.isActive
-                ? "bg-emerald-50 text-emerald-600"
-                : "bg-gray-100 text-gray-400"
-            }`}
+          className={`rounded-full px-2 py-1 text-xs font-medium ${
+            automation.isActive
+              ? "bg-emerald-50 text-emerald-600"
+              : "bg-gray-100 text-gray-500"
+          }`}
         >
           {automation.isActive ? "Active" : "Inactive"}
         </span>
 
         {/* Toggle */}
-        <button
-          onClick={() => onToggle(automation.id)}
-          className={`relative w-9 h-5 rounded-full transition-colors duration-200 focus:outline-none
-            ${automation.isActive ? "bg-primary" : "bg-gray-200"}`}
+        <Button
+          onClick={() => onToggle(automation.id, !automation.isActive)}
+          className={`relative h-5! w-9 py-1! rounded-full transition-colors ${
+            automation.isActive ? "bg-primary" : "bg-gray-300"
+          }`}
         >
           <span
-            className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200
-              ${automation.isActive ? "translate-x-4" : "translate-x-0"}`}
+            className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+              automation.isActive ? "translate-x-4" : "translate-x-0"
+            }`}
           />
-        </button>
+        </Button>
 
         {/* Delete */}
-        <button
+        <Button
           onClick={() => onDelete(automation.id)}
-          className="text-gray-300 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+          className="bg-transparent! transition-colors group-hover:opacity-100 hover:text-red-500"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </svg>
-        </button>
+          <Trash2 />
+        </Button>
       </div>
     </div>
   );

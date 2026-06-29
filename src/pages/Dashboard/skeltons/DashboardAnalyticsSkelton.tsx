@@ -6,7 +6,7 @@ const DashboardAnalyticsSkeleton = () => {
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="rounded-2xl border bg-white p-5 shadow-sm"
+            className="rounded-xl border bg-white p-5 shadow-sm"
           >
             <div className="mb-4 h-2 w-24 rounded bg-gray-200" />
             <div className="mb-3 h-5 w-20 rounded bg-gray-300" />
@@ -20,7 +20,7 @@ const DashboardAnalyticsSkeleton = () => {
         {Array.from({ length: 3 }).map((_, index) => (
           <div
             key={index}
-            className="rounded-2xl border bg-white p-5 shadow-sm"
+            className="rounded-xl border bg-white p-5 shadow-sm"
           >
             <div className="mb-5 flex items-center justify-between">
               <div className="h-5 w-40 rounded bg-gray-200" />
@@ -42,7 +42,7 @@ const DashboardAnalyticsSkeleton = () => {
       </div>
 
       {/* Tables */}
-      <div className="rounded-2xl border bg-white p-5 shadow-sm">
+      <div className="rounded-xl border bg-white p-5 shadow-sm">
         <div className="mb-5 flex items-center justify-between">
           <div className="h-5 w-40 rounded bg-gray-200" />
 

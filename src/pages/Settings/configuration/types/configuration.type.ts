@@ -11,5 +11,4 @@ export const ConfigValueSchema = z.object({
   isDefault: z.boolean().default(false),
   metadata: z.record(z.string(), z.any()).default({}),
 });
-
 export type TConfigValue = z.infer<typeof ConfigValueSchema>;

@@ -16,6 +16,7 @@ import { ProtectedOnly } from "./route-access/ProtectedOnly";
 import Teams from "@/pages/UsersAndControl/teams2.page";
 import { liveChatRoutes } from "./livechat.routes";
 import { chatBotRoutes } from "@/rbac/chat-bot.routes";
+// import { dealsRoutes } from "./deal.routes";
 
 export const appRoutes = createBrowserRouter([
   {
@@ -52,6 +53,7 @@ export const appRoutes = createBrowserRouter([
               ...broadcastRoutes,
               ...contactRoutes,
               ...settingRoutes,
+              // ...dealsRoutes,
 
               {
                 path: "/teams",

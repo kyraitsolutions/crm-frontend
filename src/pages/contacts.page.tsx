@@ -1,41 +1,43 @@
-import { Pagination } from "@/components/pagination";
-import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
-import { useAuthStore } from "@/stores";
 import { formatDateTime } from "@/utils/date-utils";
-import { Filter, Plus, Search, X } from "lucide-react";
+import { Funnel, Plus, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import ContactPopup from "./Contact/components/ContactPopup";
 import { useContactStore } from "./Contact/store/contact.store";
+import { useAuthStore } from "@/stores";
+import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
+import ContactPopup from "./Contact/components/ContactPopup";
+import { Pagination } from "@/components/pagination";
+import ContactFilter from "./Contact/components/ContactFilter";
+import DataLoader from "@/components/Loader/data-loader";
+import useDebounce from "@/hooks/useDebounce";
+
 
 const Contacts = () => {
   const {
+    loadingContacts,
+    contactQuery,
+    setContactQuery,
     contacts,
     fetchContacts,
     setOpen,
     currentPage,
     totalPages,
-    setCurrentPage,
+    setCurrentPage
   } = useContactStore((state) => state);
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
   const { accountId } = useAuthStore((state) => state);
+  const [openFilter, setOpenFilter] = useState(false);
 
-  //   const [showFilters, setShowFilters] = useState(true);
+
+  const debouncedSearchQuery = useDebounce(contactQuery.search, 1000);
+
+
+
   const [searchQuery, setSearchQuery] = useState("");
-  //   const [filters, setFilters] = useState<Record<string, Option>>({
-  //     lead: { label: "All Leads", value: null },
-  //     campaign: { label: "All Campaigns", value: null },
-  //     form: { label: "All Forms", value: null },
-  //     date: { label: "All Dates", value: null },
-  //     status: { label: "All Status", value: null },
-  //     source: { label: "All Sources", value: null },
-  //     assignedTo: { label: "All Users", value: null },
-  //     label: { label: "All Labels", value: null },
-  //     stage: { label: "All Stages", value: null },
-  //     read: { label: "All", value: null },
-  //   });
+
   useEffect(() => {
-    fetchContacts(accountId || "");
-  }, [accountId, currentPage]);
+    fetchContacts(String(accountId || ""))
+  }, [accountId, currentPage, JSON.stringify({ ...contactQuery, search: "" }), debouncedSearchQuery])
+
 
   const statusColor = {
     subscribed: "bg-green-100 text-green-700",
@@ -45,40 +47,27 @@ const Contacts = () => {
 
   const handleSelectedContact = (id: string) => {
     setSelectedContacts((prev) =>
-      prev.includes(id)
-        ? prev.filter((contactId) => contactId !== id)
-        : [...prev, id],
+      prev.includes(id) ? prev.filter((contactId) =>
+        contactId !== id)
+        : [...prev, id,]
     );
   };
   return (
     <div className="px-6 py-2 ">
+
       <div className="flex justify-between gap-2 items-center my-5">
         <div className="flex items-center gap-3 w-full">
+
           {/* <h2 className="text-xl font-semibold">Contacts</h2> */}
           <div className="flex gap-2 items-center w-full">
             {/* Search */}
             <div className="relative w-full max-w-sm">
               <input
                 type="text"
-                placeholder="Search contacts..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  // setCurrentPage(1);
-                }}
-                className="
-                                w-full
-                                bg-gray-100 rounded-xl!
-                                px-4
-                                border-gray-300
-                                py-2.5 pr-8
-                                text-sm
-                                text-[#37322F]
-                                placeholder:text-[#847971]
-                                focus:outline-none
-                                focus:border-gray-300
-                                transition
-                            "
+                placeholder="Search name, phone, email"
+                value={contactQuery.search}
+                onChange={(e) => setContactQuery({ search: e.target.value, })}
+                className="w-full bg-gray-100 rounded-xl! px-4 border-gray-300 py-2.5 pr-8 text-sm text-[#37322F] placeholder:text-[#847971] focus:outline-none focus:border-gray-300 transition"
               />
 
               {/* Right icon */}
@@ -98,42 +87,41 @@ const Contacts = () => {
                 )}
               </div>
             </div>
-            <ButtonWithTitle
-              title="Contact filter"
-              className="flex items-center gap-1 text-primary font-medium"
-            >
-              <Filter className="h-4.5 w-4.5 text-primary" /> Filter
-            </ButtonWithTitle>
+            <div className="relative">
+              <ButtonWithTitle onClick={() => setOpenFilter(!openFilter)} className="flex items-center gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-100 transition">
+                <Funnel size={16} />
+                <span className="text-sm font-medium">Filter</span>
+              </ButtonWithTitle>
+              {openFilter && <ContactFilter openFilter={openFilter} setOpenFilter={setOpenFilter} />}
+
+            </div>
           </div>
         </div>
 
         <div className="flex whitespace-normal items-center justify-end gap-2 w-full">
           <ButtonWithTitle
             disabled={true}
-            title={
-              selectedContacts.length < 1 ? "Select atleast one contact" : ""
-            }
-            className={`${selectedContacts.length < 1 ? "border border-gray-300 bg-gray-300 text-gray-500" : "border border-primary bg-primary hover:bg-primary/90 text-white"}  text-sm px-3 py-1.5 rounded font-medium transition`}
-          >
+            title={selectedContacts.length < 1 ? "Select atleast one contact" : ""}
+            className={`${selectedContacts.length < 1 ? "border border-gray-300 bg-gray-300 text-gray-500" : "border border-primary bg-primary hover:bg-primary/90 text-white"}  text-sm px-3 py-1.5 rounded font-medium transition`}>
             BROADCAST
           </ButtonWithTitle>
           <ButtonWithTitle
             title="Add Single Contact"
             onClick={() => setOpen(true)}
-            className="border flex  items-center  gap-2 border-primary hover:bg-primary/10 text-primary text-sm px-3 py-1.5 rounded font-medium transition"
-          >
+            className="border flex  items-center  gap-2 border-primary hover:bg-primary/10 text-primary text-sm px-3 py-1.5 rounded font-medium transition">
             <Plus size={16} /> Add Contact
           </ButtonWithTitle>
           <ButtonWithTitle
             title="Import contact using sheet"
-            className="border border-primary hover:bg-primary/10 text-primary text-sm px-3 py-1.5 rounded font-medium transition"
-          >
+            className="border border-primary hover:bg-primary/10 text-primary text-sm px-3 py-1.5 rounded font-medium transition">
             Import Contact
           </ButtonWithTitle>
         </div>
+
       </div>
 
-      <div className="border rounded-xl! overflow-">
+
+      {!loadingContacts ? <div className="border rounded-xl! overflow-">
         <table className="w-full text-sm ">
           <thead className="bg-muted text-muted-foreground">
             <tr className="text-primary">
@@ -155,16 +143,19 @@ const Contacts = () => {
             {contacts?.map((contact) => (
               <tr key={contact._id} className="even:bg-muted capitalize">
                 <td className="p-3">
-                  <input
-                    type="checkbox"
-                    checked={selectedContacts.includes(contact._id)}
-                    onChange={() => handleSelectedContact(contact._id)}
+                  <input type="checkbox"
+                    checked={selectedContacts.includes(
+                      contact._id
+                    )}
+                    onChange={() =>
+                      handleSelectedContact(
+                        contact._id
+                      )
+                    }
                   />
                 </td>
                 <td className="p-3 font-medium capitalize">{contact.name}</td>
-                <td className="p-3 font-medium capitalize whitespace-nowrap">
-                  {contact.phone}
-                </td>
+                <td className="p-3 font-medium capitalize whitespace-nowrap">{contact.phone}</td>
                 <td className="p-3 lowercase">{contact.email}</td>
                 <td className="p-3">
                   <span
@@ -204,7 +195,8 @@ const Contacts = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> :
+        <DataLoader />}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -213,9 +205,11 @@ const Contacts = () => {
         }}
       />
 
+
+
       <ContactPopup />
     </div>
-  );
-};
+  )
+}
 
-export default Contacts;
+export default Contacts

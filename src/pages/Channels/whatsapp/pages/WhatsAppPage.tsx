@@ -3,6 +3,7 @@ import { useIntegrationStore } from "@/stores/integration.store";
 import { useEffect } from "react";
 // import { useWhatsAppStore } from "../store/whatsapp.store";
 import TemplatesPage from "./TemplatesPage";
+import DataLoader from "@/components/Loader/data-loader";
 
 export const Whatsapp = () => {
   const { accountId } = useAuthStore();
@@ -27,7 +28,7 @@ export const Whatsapp = () => {
   }, [accountId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><DataLoader className="h-[80vh]" /></div>;
   }
 
   return (

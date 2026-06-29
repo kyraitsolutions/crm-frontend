@@ -5,11 +5,19 @@ import {
   TRIGGER_OPTIONS,
 } from "../../constants/automation.constants";
 import Loader from "@/components/Loader";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 interface ReviewStepProps {
   draft: AutomationDraft;
   onBack: () => void;
-  onSave: (name: string) => void;
+  onSave: ({
+    name,
+    status,
+  }: {
+    name: string;
+    status: "published" | "draft";
+  }) => void;
   loading?: boolean;
 }
 
@@ -20,6 +28,9 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
   loading,
 }) => {
   const [name, setName] = useState("");
+  const [currentButton, setCurrentButton] = useState<
+    "draft" | "published" | null
+  >(null);
 
   const triggerLabel =
     TRIGGER_OPTIONS.find((t) => t.value === draft.trigger)?.label || "";
@@ -106,19 +117,46 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
       </div>
 
       <div className="flex justify-between mt-6">
-        <button
-          onClick={onBack}
-          className="px-5 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Back
-        </button>
-        <button
-          onClick={() => name.trim() && onSave(name.trim())}
-          disabled={!name.trim() || loading}
-          className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-lg hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-        >
-          Save Automation {loading && <Loader />}
-        </button>
+        <Button onClick={onBack} className="actions-btn px-2!">
+          <ArrowLeft /> Back
+        </Button>
+
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              if (!name.trim()) return;
+              setCurrentButton("draft");
+
+              onSave({
+                name: name.trim(),
+                status: "draft",
+              });
+            }}
+            disabled={!name.trim() || loading}
+            className="actions-btn px-4!"
+          >
+            Save Draft
+            {loading && currentButton === "draft" && <Loader color="gray" />}
+          </Button>
+
+          <Button
+            onClick={() => {
+              if (!name.trim()) return;
+
+              setCurrentButton("published");
+
+              onSave({
+                name: name.trim(),
+                status: "published",
+              });
+            }}
+            disabled={!name.trim() || loading}
+            className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-xl hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          >
+            Save Automation{" "}
+            {loading && currentButton === "published" && <Loader />}
+          </Button>
+        </div>
       </div>
     </div>
   );

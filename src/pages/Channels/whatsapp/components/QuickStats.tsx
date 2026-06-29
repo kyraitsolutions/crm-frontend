@@ -22,7 +22,7 @@ export function QuickStats({ data }: Props) {
   const quality = data.qualityRating ?? "UNKNOWN";
 
   return (
-    <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
       {/* Phone Number */}
       <StatCard
         title="Phone Number"
@@ -75,9 +75,9 @@ export function QuickStats({ data }: Props) {
         badge={
           quality === "UNKNOWN"
             ? {
-                label: "Review Pending",
-                color: "bg-yellow-100 text-yellow-600",
-              }
+              label: "Review Pending",
+              color: "bg-yellow-100 text-yellow-600",
+            }
             : quality === "GREEN"
               ? { label: "Good", color: "bg-green-500/15 text-green-400" }
               : { label: "At Risk", color: "bg-red-500/15 text-red-400" }

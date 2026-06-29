@@ -349,15 +349,15 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
     const action =
       mode === "url"
         ? {
-            name: "cta_url",
-            parameters: {
-              display_text: urlButton.text,
-              url: urlButton.url,
-            },
-          }
+          name: "cta_url",
+          parameters: {
+            display_text: urlButton.text,
+            url: urlButton.url,
+          },
+        }
         : {
-            buttons: buttons,
-          };
+          buttons: buttons,
+        };
 
     const payloadData = {
       type: data?.type,
@@ -539,11 +539,10 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
                     e.stopPropagation();
                     toggleVideo();
                   }}
-                  className={` relative size-10 flex items-center justify-center rounded-full cursor-pointer z-50 transition-all duration-300 ease-out shadow-xl border backdrop-blur-xl hover:scale-110 active:scale-95 ${
-                    isPlaying
+                  className={` relative size-10 flex items-center justify-center rounded-full cursor-pointer z-50 transition-all duration-300 ease-out shadow-xl border backdrop-blur-xl hover:scale-110 active:scale-95 ${isPlaying
                       ? "bg-red-500/90 border-red-300/40 text-white hover:bg-red-500"
                       : "bg-white/90 border-white/30 text-black hover:bg-white"
-                  }`}
+                    }`}
                 >
                   {/* Icon */}
                   <span className="relative flex items-center justify-center">
@@ -606,7 +605,7 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-ternary text-white">
+    <div className="h-full flex flex-col bg-slate-900 text-white">
       {/* HEADER */}
       <div className="px-5 py-4 border-b border-white/10 flex justify-between items-center">
         <div>
@@ -629,11 +628,10 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
               <Button
                 key={type}
                 onClick={() => handleHeaderType(type.toLowerCase())}
-                className={`node-setting-header-types ${
-                  header.type === type.toLowerCase()
+                className={`node-setting-header-types ${header.type === type.toLowerCase()
                     ? "bg-emerald-500 text-white"
                     : "bg-white/5 text-gray-400 hover:bg-white/10"
-                }`}
+                  }`}
               >
                 {type}
               </Button>
@@ -696,9 +694,8 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
                 <Button
                   key={m}
                   onClick={() => handleButtonModeSwitch(m as TMode)}
-                  className={`px-3 py-1! text-xs rounded cursor-pointer hover:bg-emerald-500 hover:text-white ${
-                    mode === m ? "bg-emerald-500" : "bg-white/5 text-gray-400"
-                  }`}
+                  className={`px-3 py-1! text-xs rounded cursor-pointer hover:bg-emerald-500 hover:text-white ${mode === m ? "bg-emerald-500" : "bg-white/5 text-gray-400"
+                    }`}
                 >
                   {m}
                 </Button>
@@ -759,12 +756,12 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
                                   if (b.type === "reply") {
                                     return b.reply.id === btnData?.id
                                       ? {
-                                          ...b,
-                                          reply: {
-                                            ...b.reply,
-                                            title: e.target.value,
-                                          },
-                                        }
+                                        ...b,
+                                        reply: {
+                                          ...b.reply,
+                                          title: e.target.value,
+                                        },
+                                      }
                                       : b;
                                   }
 

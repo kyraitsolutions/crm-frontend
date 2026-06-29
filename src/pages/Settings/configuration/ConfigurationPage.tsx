@@ -15,7 +15,7 @@ const ConfigurationPage = () => {
     <div>
       <div className="flex h-f">
         {/* LEFT SIDEBAR */}
-        <div className="max-w-56 w-full p-4 h-screen shadow-lg">
+        <div className="max-w-56 w-full p-4 h-[calc(100vh-64px)] shadow-lg">
           <ConfigurationTabs />
         </div>
 

@@ -6,6 +6,7 @@ import { withAccount } from "./helper";
 export const LEADS_ROUTES = {
   LEADS: "leads",
   CREATE: "create",
+  IMPORT:"import"
   //   UPDATE: ":formId/update",
 };
 

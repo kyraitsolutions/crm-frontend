@@ -19,7 +19,9 @@ const Notification = ({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+
   const { user } = useAuthStore((state) => state);
+  console.log(user)
   const {
     notifications,
     // loadingNotifications,

@@ -14,11 +14,11 @@ export function getEntityName(log: ActivityLog): string {
   const metadata = log.metadata;
 
   return (
-    (metadata.leadName as string) ||
-    (metadata.contactName as string) ||
-    (metadata.dealName as string) ||
-    (metadata.automationName as string) ||
-    (metadata.name as string) ||
+    (metadata?.leadName as string) ||
+    (metadata?.contactName as string) ||
+    (metadata?.dealName as string) ||
+    (metadata?.automationName as string) ||
+    (metadata?.name as string) ||
     log.entityType
   );
 }

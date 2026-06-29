@@ -14,7 +14,6 @@ import type {
   AutomationAction,
 } from "../../store/automation.store";
 import { Plus } from "lucide-react";
-// import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -354,14 +353,14 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
       <div className="flex justify-between mt-6">
         <Button
           onClick={onBack}
-          className="px-5 py-2 border border-gray-200 bg-gray-50 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-5 py-2 border border-gray-200 bg-gray-50 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
         >
           Back
         </Button>
         <Button
           onClick={onNext}
           disabled={!actions.length}
-          className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-lg hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-xl hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           Next
         </Button>

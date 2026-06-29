@@ -68,11 +68,7 @@ export function LoginPage() {
               />
             </div>
 
-            <Button
-              type="submit"
-              className="w-full mt-4"
-              disabled={loading}
-            >
+            <Button type="submit" className="w-full mt-4" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {loading ? "Signing in..." : "Sign in"}
             </Button>
@@ -97,11 +93,10 @@ export function LoginPage() {
                   "http://localhost:3000/api/auth/google";
               }}
               className={cn(
-                "w-full flex items-center justify-center gap-2 hover:bg-gray-50"
+                "w-full flex items-center justify-center gap-2 hover:bg-gray-50",
               )}
             >
               <div>
-
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -114,7 +109,6 @@ export function LoginPage() {
                 </svg>
                 Continue with Google
               </div>
-
             </Button>
 
             {/* Apple Login */}

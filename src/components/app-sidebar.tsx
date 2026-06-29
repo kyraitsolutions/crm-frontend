@@ -7,7 +7,6 @@ import { useAccountsStore } from "@/stores/accounts.store";
 import {
   IconChevronLeft,
   IconChevronRight,
-  IconFileText,
   IconUsers,
 } from "@tabler/icons-react";
 import { Gauge, MessagesSquare } from "lucide-react";
@@ -58,17 +57,17 @@ export function AppSidebar() {
         active: hasPermission(permissions, PERMISSIONS.LEADS.VIEW),
       },
       // {
-      //   title: "Chat bot",
-      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/chatbot`,
-      //   icon: IconMessageCircle,
-      //   active: hasPermission(permissions, PERMISSIONS.CHATBOTS.VIEW),
+      //   title: "Deals",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/deals`,
+      //   icon: Book,
+      //   active: true,
       // },
-      {
-        title: "Lead Forms",
-        url: `${ACCOUNT_PATHS.byId(String(accountId))}/lead-forms`,
-        icon: IconFileText,
-        active: hasPermission(permissions, PERMISSIONS.LEADS_FORMS.VIEW),
-      },
+      // {
+      //   title: "Lead Forms",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/lead-forms`,
+      //   icon: IconFileText,
+      //   active: hasPermission(permissions, PERMISSIONS.LEADS_FORMS.VIEW),
+      // },
       // {
       //   title: "Broadcast",
       //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast`,

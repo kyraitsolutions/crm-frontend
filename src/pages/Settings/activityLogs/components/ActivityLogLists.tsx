@@ -1,8 +1,8 @@
-import Loader from "@/components/Loader";
 import { useActivityLogStore } from "../store/activity-logs.store";
 
 import ActivityLogEmpty from "./ActivityLogEmpty";
 import { ActivityLogItem } from "./ActivityItem";
+import Loader from "@/components/Loader";
 // import { ActivityLogItem } from "./ActivityItem";
 // import { ActivityItem } from "./ActivityItem";
 

@@ -1,12 +1,4 @@
-import DataLoader from "@/components/Loader/data-loader";
-import { Pagination } from "@/components/pagination";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useEffect, useState, type JSX } from "react";
 import {
   Table,
   TableBody,
@@ -16,29 +8,41 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { LEADS_PATHS } from "@/constants/routes/leads.path";
-import useDebounce from "@/hooks/useDebounce";
-import { Instagram } from "@/icons/icons";
 import {
   useConfigurationStore,
   type ConfigurationItem,
 } from "@/pages/Settings/configuration/store/configuration.store";
-import { useAuthStore } from "@/stores";
-import { formatDate } from "@/utils/date-utils";
 import {
   ArrowRightCircleIcon,
   Clock3,
-  Import,
   Mail,
   Phone,
   Shapes,
-  Webhook,
 } from "lucide-react";
-import { useEffect, useState, type JSX } from "react";
-import { FaGoogle } from "react-icons/fa";
-import { MdWhatsapp } from "react-icons/md";
-import { TbManualGearbox } from "react-icons/tb";
+import { formatDate } from "@/utils/date-utils";
+import { useAuthStore } from "@/stores";
+import {
+  Facebook,
+  Google,
+  ImportIcon,
+  Instagram,
+  Manual,
+  WebForm,
+  WebHook,
+  Website,
+  Whatsapp,
+} from "@/icons/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useLeadsStore } from "../store/lead.store";
+import DataLoader from "@/components/Loader/data-loader";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Pagination } from "@/components/pagination";
 const LeadTable = () => {
   const navigate = useNavigate();
   // new Integration using zustand
@@ -52,21 +56,18 @@ const LeadTable = () => {
     totalPages,
     loadingLeads,
     updateLeadField,
+    leadQuery,
   } = useLeadsStore((state) => state);
 
   useEffect(() => {
     fetchLeads(String(accountId));
-  }, [accountId, currentPage]);
+  }, [accountId, currentPage, JSON.stringify({ ...leadQuery, search: "" })]);
 
   const { getConfigurationByType } = useConfigurationStore((state) => state);
 
-  // const [searchQuery, setSearchQuery] = useState("");
   const [leadStages, setLeadStages] = useState<ConfigurationItem[] | []>([]);
 
   // const { permissions } = useAccountAccessStore((state) => state);
-
-  const debouncedSearchQuery = useDebounce("", 500);
-  // Filters and search query state
 
   const handleStatusChange = async (leadId: string, value: string) => {
     await updateLeadField(
@@ -76,11 +77,6 @@ const LeadTable = () => {
       value,
     );
   };
-
-  useEffect(() => {
-    // getLeads();
-    // calculateBasicNumber()
-  }, [currentPage, debouncedSearchQuery]);
 
   const getLeadStages = async () => {
     const values = await getConfigurationByType("lead-status");
@@ -92,15 +88,15 @@ const LeadTable = () => {
   }, []);
 
   const getIconForSource: Record<string, JSX.Element> = {
-    website: <Shapes className="size-4 text-muted-foreground" />,
-    google_ads: <FaGoogle className="size-4 text-muted-foreground" />,
-    whatsapp: <MdWhatsapp className="size-4 text-muted-foreground" />,
-    facebook: <Shapes className="size-4 text-muted-foreground" />,
+    website: <Website />,
+    google_ads: <Google />,
+    whatsapp: <Whatsapp />,
+    facebook: <Facebook />,
     instagram: <Instagram />,
-    webform: <Shapes className="size-4 text-muted-foreground" />,
-    manual: <TbManualGearbox className="size-4 text-muted-foreground" />,
-    webhook: <Webhook className="size-4 text-muted-foreground" />,
-    import: <Import className="size-4 text-muted-foreground" />,
+    webform: <WebForm />,
+    manual: <Manual />,
+    webhook: <WebHook />,
+    import: <ImportIcon />,
   };
 
   if (loadingLeads) {
@@ -144,7 +140,7 @@ const LeadTable = () => {
   return (
     <div className="overlead-hidden hide-scrollbar bg-white rounded-xl">
       <Table className="border-b">
-        <TableHeader className="bg-muted/30">
+        <TableHeader className="bg-muted/30 ">
           <TableRow className="hover:bg-transparent">
             <TableHead className="text-xs font-semibold uppercase tracking-wide text-white bg-primary p-3">
               #

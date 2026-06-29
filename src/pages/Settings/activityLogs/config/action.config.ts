@@ -1,6 +1,13 @@
 // activityLogs/config/action.config.ts
 
-import { Pencil, Sparkle } from "lucide-react";
+import {
+  Pencil,
+  RefreshCw,
+  Sparkle,
+  Trash2,
+  UserMinus,
+  UserPlus,
+} from "lucide-react";
 import type { ActionConfig } from "../types/action.types";
 
 export const ACTION_CONFIG: Record<string, ActionConfig> = {
@@ -38,7 +45,7 @@ export const ACTION_CONFIG: Record<string, ActionConfig> = {
 
   deleted: {
     label: "Deleted",
-    icon: Pencil,
+    icon: Trash2,
 
     badge: {
       bg: "bg-red-50",
@@ -54,7 +61,7 @@ export const ACTION_CONFIG: Record<string, ActionConfig> = {
 
   assigned: {
     label: "Assigned",
-    icon: Pencil,
+    icon: UserPlus,
 
     badge: {
       bg: "bg-violet-50",
@@ -70,7 +77,7 @@ export const ACTION_CONFIG: Record<string, ActionConfig> = {
 
   unassigned: {
     label: "Unassigned",
-    icon: Pencil,
+    icon: UserMinus,
 
     badge: {
       bg: "bg-amber-50",
@@ -86,7 +93,7 @@ export const ACTION_CONFIG: Record<string, ActionConfig> = {
 
   status_changed: {
     label: "Status Changed",
-    icon: Pencil,
+    icon: RefreshCw,
 
     badge: {
       bg: "bg-blue-50",

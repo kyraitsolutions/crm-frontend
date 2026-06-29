@@ -26,14 +26,22 @@ const CreateAutomationStepper: React.FC = () => {
   const handleNext = () => setCurrentStep(currentStep + 1);
   const handleBack = () => setCurrentStep(currentStep - 1);
 
-  const handleSaveAutomation = async (name: string) => {
+  const handleSaveAutomation = async ({
+    name,
+    status,
+  }: {
+    name: string;
+    status: "published" | "draft";
+  }) => {
     try {
-      const response = await saveAutomation(name, String(accountId));
+      const data = { name, status };
+      const response = await saveAutomation(String(accountId), data);
 
-      if (response && response?.status === 201) {
+      if ((response && response?.status === 201) || response?.status === 200) {
         toastService.success(
           response?.message || "Automation created successfully!",
         );
+        setIsCreating(false);
       }
     } catch (error) {
       const err = error as ApiError;
@@ -90,7 +98,7 @@ const CreateAutomationStepper: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 max-h-[95vh] overflow-y-auto hide-scrollbar">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 max-h-[95vh] overflow-y-auto hide-scrollbar">
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
           <h1 className="text-base font-semibold text-gray-800">

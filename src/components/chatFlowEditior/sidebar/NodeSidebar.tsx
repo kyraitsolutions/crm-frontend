@@ -58,7 +58,7 @@ const NODE_COLOR_MAP: Record<
 
 const NodeSidebar = ({ onAddNode, onClose }: NodeSidebarProps) => {
   return (
-    <div className="fixed right-0 top-0 max-w-100 w-full h-full bg-ternary text-white shadow-2xl z-50 flex flex-col">
+    <div className="fixed right-0 top-0 max-w-100 w-full h-full bg-slate-900 text-white shadow-2xl z-50 flex flex-col">
       {/* HEADER */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
         <div>

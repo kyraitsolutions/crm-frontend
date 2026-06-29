@@ -84,8 +84,7 @@ export const AlertDialog: React.FC = () => {
 
         <div className="flex justify-end gap-3">
           <Button
-            variant="outline"
-            className="px-6 border border-primary/40 rounded-xl"
+            className="actions-btn px-4!"
             onClick={() => {
               onCancel?.();
               closeAlert();
@@ -95,7 +94,6 @@ export const AlertDialog: React.FC = () => {
           </Button>
 
           <Button
-            variant="destructive"
             className="px-6 rounded-xl"
             onClick={() => {
               onConfirm?.();

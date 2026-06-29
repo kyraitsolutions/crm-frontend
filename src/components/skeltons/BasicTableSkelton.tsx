@@ -7,7 +7,7 @@ type TTableSkeletonProps = {
 
 const BasicTableSkeleton = ({ rows = 5, columns = 6 }: TTableSkeletonProps) => {
   return (
-    <div className="w-full overflow-hidden rounded-2xl border bg-background">
+    <div className="w-full overflow-hidden rounded-xl border bg-background">
       {/* TABLE HEADER */}
       <div className="grid border-b bg-muted/40 px-6 py-4">
         <div

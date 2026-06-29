@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import ChatBotBuilderInfo from "./chat-bot-builder-info";
 import ChatBotBuilderInfoTabs from "./chat-bot-builder-info-tabs";
 
+
 const defaultValues: ChatBotFormData = {
   name: "",
   description: "",

@@ -12,7 +12,7 @@ export const OverviewTab = ({ data }: OverviewTabProps) => {
     <div className="space-y-3">
       <QuickStats data={data} />
 
-      <div className="grid gap-1 lg:grid-cols-3">
+      <div className="grid gap-3 lg:grid-cols-3">
         <ConnectionStatusCard
           connected={data.isConnected}
           onboardingCompleted={data.onboardingCompleted}

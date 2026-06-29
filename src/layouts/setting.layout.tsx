@@ -4,10 +4,10 @@ import { Outlet } from "react-router-dom";
 
 const SettingLayout = () => {
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       {/* <AppSidebar /> */}
 
-      <main className="w-full h-screen">
+      <main className="w-full">
         {/* <SiteHeader /> */}
         <Header />
         <Outlet />

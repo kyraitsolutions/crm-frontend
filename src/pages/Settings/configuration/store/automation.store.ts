@@ -32,6 +32,7 @@ export interface Automation {
   conditions: AutomationCondition[];
   actions: AutomationAction[];
   isActive: boolean;
+  status: "published" | "draft";
   createdAt: string;
 }
 
@@ -43,6 +44,7 @@ export interface AutomationDraft {
 
 interface AutomationStore {
   automations: Automation[];
+  loading: boolean;
   isCreating: boolean;
   isSaving: boolean;
   currentStep: number;
@@ -53,12 +55,25 @@ interface AutomationStore {
   setCurrentStep: (step: number) => void;
   updateDraft: (patch: Partial<AutomationDraft>) => void;
   resetDraft: () => void;
+  fetchAutomations: (accountId: string) => Promise<void>;
   saveAutomation: (
-    name: string,
     accountId: string,
+    data: { name: string; status: "published" | "draft" },
   ) => Promise<ApiResponse<Automation>>;
-  toggleAutomation: (id: string) => void;
-  deleteAutomation?: (id: string) => void;
+  toggleAutomation: (
+    accountId: string,
+    id: string,
+    active: boolean,
+  ) => Promise<ApiResponse<Automation> | undefined>;
+  updateStatus: (
+    accountId: string,
+    id: string,
+    status: "published" | "draft",
+  ) => Promise<ApiResponse<Automation> | undefined>;
+  deleteAutomation: (
+    accountId: string,
+    id: string,
+  ) => Promise<ApiResponse<Automation>>;
 }
 
 const defaultDraft: AutomationDraft = {
@@ -67,29 +82,13 @@ const defaultDraft: AutomationDraft = {
   actions: [],
 };
 
-const sampleAutomations: Automation[] = [
-  {
-    id: "1",
-    name: "Qualified Lead Assignment",
-    trigger: "lead_stage_changed",
-    conditions: [
-      { field: "Lead Status", operator: "Is Equal To", values: ["Qualified"] },
-    ],
-    actions: [
-      { type: "assign_lead_to_user", config: { user: "Rahul Sharma" } },
-      { type: "create_task", config: { title: "Follow up with lead" } },
-    ],
-    isActive: true,
-    createdAt: "2024-01-15",
-  },
-];
-
 export const useAutomationStore = create<AutomationStore>((set, get) => ({
-  automations: sampleAutomations,
+  automations: [],
   isCreating: false,
   isSaving: false,
   currentStep: 1,
   draft: defaultDraft,
+  loading: false,
 
   setIsCreating: (val) =>
     set({ isCreating: val, currentStep: 1, draft: defaultDraft }),
@@ -100,11 +99,25 @@ export const useAutomationStore = create<AutomationStore>((set, get) => ({
     set((state) => ({ draft: { ...state.draft, ...patch } })),
   resetDraft: () => set({ draft: defaultDraft, currentStep: 1 }),
 
-  saveAutomation: async (name, accountId) => {
+  fetchAutomations: async (accountId) => {
+    try {
+      set({ loading: true });
+      const response = await automationService.getAutomations(accountId);
+
+      if (response.status === 200) {
+        set({ automations: response.data.docs });
+      }
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  saveAutomation: async (accountId, data) => {
     set({ isSaving: true });
     const { draft } = get();
     const newAutomation = {
-      name,
+      name: data.name,
+      status: data.status,
       trigger: draft.trigger!,
       conditions: draft.conditions,
       actions: draft.actions,
@@ -116,18 +129,78 @@ export const useAutomationStore = create<AutomationStore>((set, get) => ({
       accountId,
     });
 
+    set({
+      automations: [...get().automations, response.data?.doc],
+    });
+
     return response;
   },
 
-  toggleAutomation: (id) =>
-    set((state) => ({
-      automations: state.automations.map((a) =>
-        a.id === id ? { ...a, isActive: !a.isActive } : a,
-      ),
-    })),
+  toggleAutomation: async (accountId, id, active) => {
+    const previousAutomations = get().automations;
+    try {
+      set((state) => ({
+        automations: state.automations.map((a) =>
+          a.id === id ? { ...a, isActive: !a.isActive } : a,
+        ),
+      }));
+      const response = await automationService.updateAutomation({
+        accountId: String(accountId),
+        id,
+        data: { isActive: active },
+      });
 
-  // deleteAutomation: (id) =>
-  //   set((state) => ({
-  //     // automations: state.automations.filter((a) => a.id !== id),
-  //   })),
+      return response;
+    } catch (error) {
+      set({
+        automations: previousAutomations,
+      });
+      throw error;
+    }
+  },
+
+  updateStatus: async (accountId, id, status) => {
+    const previousAutomations = get().automations;
+    try {
+      set((state) => ({
+        automations: state.automations.map((a) =>
+          a.id === id ? { ...a, status } : a,
+        ),
+      }));
+
+      const response = await automationService.updateAutomation({
+        accountId: String(accountId),
+        id,
+        data: { status },
+      });
+
+      return response;
+    } catch (error) {
+      set({
+        automations: previousAutomations,
+      });
+      throw error;
+    }
+  },
+
+  deleteAutomation: async (accountId, id) => {
+    const previousAutomations = get().automations;
+    try {
+      set((state) => ({
+        automations: state.automations.filter((a) => a.id !== id),
+      }));
+
+      const response = await automationService.deleteAutomation(
+        String(accountId),
+        id,
+      );
+
+      return response;
+    } catch (error) {
+      set({
+        automations: previousAutomations,
+      });
+      throw error;
+    }
+  },
 }));

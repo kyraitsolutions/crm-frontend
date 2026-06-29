@@ -68,8 +68,12 @@ export const API_ENDPOINT_PATH = {
   },
 
   AUTOMATIONS: {
-    GET_AUTOMATIONS: `/automation`,
-    CREATE_AUTOMATION: `/automation`,
+    getAutomationsPath: (id: string) => `/automation/${id}`,
+    createAutomationPath: (id: string) => `/automation/${id}`,
+    updateAutomationPath: (id: string, automationId: string) =>
+      `/automation/${id}/${automationId}`,
+    deleteAutomationPath: (id: string, automationId: string) =>
+      `/automation/${id}/${automationId}`,
   },
 
   INTEGRATION: {
