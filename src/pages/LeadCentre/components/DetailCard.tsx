@@ -37,13 +37,13 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   leadId={lead?.id}
                 />
 
-                <FieldRow
+                {/* <FieldRow
                   label="Phone"
                   fieldKey="phone"
                   isPhone
                   value={lead?.phone || ""}
                   leadId={lead?.id}
-                />
+                /> */}
 
                 <FieldRow
                   label="Mobile"
@@ -77,12 +77,12 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   leadId={lead?.id}
                 />
 
-                <FieldRow
+                {/* <FieldRow
                   label="Email"
                   value={lead?.email || ""}
                   fieldKey="email"
                   leadId={lead?.id}
-                />
+                /> */}
 
                 <FieldRow
                   label="Website"
@@ -91,12 +91,12 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   leadId={lead?.id}
                 />
 
-                <FieldRow
+                {/* <FieldRow
                   label="Lead Status"
                   value={lead?.status || ""}
                   fieldKey="status"
                   leadId={lead?.id}
-                />
+                /> */}
               </div>
             </div>
           </div>

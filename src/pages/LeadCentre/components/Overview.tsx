@@ -31,17 +31,23 @@ const Overview = ({ lead }: { lead: ILead | null }) => {
           value={lead?.phone || ""}
           leadId={lead?.id}
         />
-        <FieldRow
+        {/* <FieldRow
           label="Mobile"
           fieldKey="mobile"
           value={lead?.mobile || ""}
           isPhone
           leadId={lead?.id}
-        />
+        /> */}
         <FieldRow
           fieldKey="status"
           label="Lead Status"
           value={lead?.status || ""}
+          leadId={lead?.id}
+        />
+        <FieldRow
+          fieldKey="stage"
+          label="Lead Stage"
+          value={lead?.stage || ""}
           leadId={lead?.id}
         />
       </div>
