@@ -90,7 +90,6 @@ export default function Webhook() {
 
   const generateToken = async () => {
     try {
-      setLoading(true);
       const response = await webhookService.generateToken(String(accountId));
       // console.log(response)
       // console.log(response?.data?.doc)
@@ -100,9 +99,6 @@ export default function Webhook() {
       setTokenData(response?.data?.doc.savedToken)
     } catch (error) {
       console.error("Error", error)
-    }
-    finally {
-      setLoading(false);
     }
   }
 
