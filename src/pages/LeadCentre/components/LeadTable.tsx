@@ -112,8 +112,7 @@ const LeadTable = () => {
       <div className="flex h-125 w-full items-center justify-center">
         <div className="text-center">
           <img
-            src="/src/assets/nochathistoryfound_CnSlq9EOHBW59HI8RYjeSpZ_WbWyQz9RmyNcvToLwGw4g31mlf1rnCox3Y3F-6xk_.svg"
-            rel="preload"
+            src="/src/assets/converted_image_transparent.png"
             fetchPriority="high"
             alt="No chats yet"
             className="w-75"
