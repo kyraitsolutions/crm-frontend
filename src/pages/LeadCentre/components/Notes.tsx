@@ -128,7 +128,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
             onClick={(e) => e.stopPropagation()}
             value={sortType}
             onChange={handleSortChange}
-            className="border border-second font-medium rounded-xl px-4 py-1 text-sm bg-second/10 text-second outline-none  hover:bg-second/20"
+            className="border border-primary  font-medium rounded-xl px-4 py-1 text-sm bg-primary/10 text-primary outline-none  hover:bg-primary/20"
           >
             Recent Last ▾<option value="recent_first">Recent First</option>
             <option value="recent_last">Recent Last</option>
@@ -207,7 +207,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
 
           {/* Note Editor */}
           {showNoteEditor && (
-            <div className="border border-second rounded-xl max-w-4xl overflow-hidden shadow-sm">
+            <div className="border border-primary rounded-xl max-w-4xl overflow-hidden shadow-sm">
               {/* Textarea */}
               <div className="p-4">
                 <div className="flex items-center justify-between mb-3">
@@ -268,7 +268,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
 
                   <button
                     onClick={handleSaveNote}
-                    className="bg-second text-white px-5 py-1 rounded hover:bg-second/90 cursor-pointer"
+                    className="bg-primary text-white px-5 py-1 rounded hover:bg-primary/90 cursor-pointer"
                   >
                     Save
                   </button>

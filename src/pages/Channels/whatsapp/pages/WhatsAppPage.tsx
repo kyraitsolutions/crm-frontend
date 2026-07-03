@@ -1,22 +1,24 @@
 import { useAuthStore } from "@/stores";
 import { useIntegrationStore } from "@/stores/integration.store";
 import { useEffect } from "react";
-// import { useWhatsAppStore } from "../store/whatsapp.store";
-import TemplatesPage from "./TemplatesPage";
+import { useWhatsAppStore } from "../store/whatsapp.store";
+// import TemplatesPage from "./TemplatesPage";
 import DataLoader from "@/components/Loader/data-loader";
+import WhatsAppWorkspace from "../sections/WhatsAppWorkspace";
+import WhatsappConnect from "../sections/WhatsAppConnect";
 
 export const Whatsapp = () => {
   const { accountId } = useAuthStore();
-  // const { connect } = useWhatsAppStore();
-  const { getIntegration, loading } = useIntegrationStore((state) => state);
+  const { connect } = useWhatsAppStore();
+  const { getIntegration, integration, loading } = useIntegrationStore((state) => state);
 
-  // const handleWhatsAppConnect = async () => {
-  //   const data = await connect(String(accountId));
+  const handleWhatsAppConnect = async () => {
+    const data = await connect(String(accountId));
 
-  //   if (data && data?.connectUrl) {
-  //     window.open(data.connectUrl, "_blank");
-  //   }
-  // };
+    if (data && data?.connectUrl) {
+      window.open(data.connectUrl, "_blank");
+    }
+  };
 
   const getWhatsappIntegration = async () => {
     await getIntegration("WHATSAPP", String(accountId));
@@ -33,12 +35,12 @@ export const Whatsapp = () => {
 
   return (
     <main>
-      {/* {integration?.connected ? (
+      {integration?.connected ? (
         <WhatsAppWorkspace />
       ) : (
         <WhatsappConnect onConnect={handleWhatsAppConnect} />
-      )} */}
-      <TemplatesPage />
+      )}
+      {/* <TemplatesPage /> */}
     </main>
   );
 };

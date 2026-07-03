@@ -86,11 +86,10 @@ export const FieldRow = ({
         <div
           className={`
                         flex items-center gap-2 rounded-md border transition w-full
-                        ${
-                          isEditing
-                            ? "border-second shadow-md rounded-xl"
-                            : "border-transparent hover:border-gray-300"
-                        }
+                        ${isEditing
+              ? "border-primary shadow-md rounded-xl"
+              : "border-transparent hover:border-gray-300"
+            }
                     `}
         >
           {/* Assigned To Dropdown */}

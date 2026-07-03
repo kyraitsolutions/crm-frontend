@@ -27,7 +27,7 @@ export const PremiumPopup = ({ open, onOpenChange }: PremiumPopupProps) => {
   console.log(accountName);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md text-center rounded-2xl">
+      <DialogContent className="sm:max-w-md text-center rounded-xl">
         <DialogHeader>
           <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-yellow-100">
             <Crown className="size-7 text-yellow-600" />

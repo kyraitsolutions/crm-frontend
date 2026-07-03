@@ -68,15 +68,15 @@ export default function ProfilePage() {
   // ---- Map API (SINGLE STATE SET) ----
   const mapData = (data: any) => {
     setProfile({
-      firstName: data?.userprofile?.firstName || "",
-      lastName: data?.userprofile?.lastName || "",
+      firstName: data?.userProfile?.firstName || "",
+      lastName: data?.userProfile?.lastName || "",
       fullName:
-        `${data?.userprofile?.firstName || ""} ${data?.userprofile?.lastName || ""}`.trim(),
+        `${data?.userProfile?.firstName || ""} ${data?.userProfile?.lastName || ""}`.trim(),
 
-      accountType: data?.userprofile?.accountType || "",
+      accountType: data?.userProfile?.accountType || "",
       accountName: data?.organization?.name || "",
       phone: data?.phone || "",
-      avatar: data?.userprofile?.profilePicture || null,
+      avatar: data?.userProfile?.profilePicture || null,
       emails: user?.email ? [user.email] : [],
       supportEmail: data?.supportEmail || "",
     });

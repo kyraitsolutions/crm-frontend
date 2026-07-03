@@ -72,7 +72,9 @@ const Toolbar = () => {
                 title={item.title}
                 className="hover:text-blue-600 flex items-center"
               >
-                <Icon size={18} />
+                <span className="flex items-center justify-center rounded-xl text-primary bg-primary/20 transition p-1.75">
+                  <Icon size={18} />
+                </span>
               </ButtonWithTitle>
             );
           })}

@@ -25,6 +25,7 @@ import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page"
 import ActivityLogsPage from "@/pages/Settings/activityLogs/ActivityLogsPage";
 import { Whatsapp } from "@/pages/Channels/whatsapp/pages/WhatsAppPage";
 import Webhook from "@/pages/Developer/Webhook/Webhook";
+import Facebook from "@/pages/Channels/facebook.page";
 
 export const settingRoutes: RouteObject[] = [
   {
@@ -57,6 +58,7 @@ export const settingRoutes: RouteObject[] = [
           { path: "whatsapp", element: <Whatsapp /> },
           { path: "instagram", element: <Instagram /> },
           { path: "telegram", element: <Telegram /> },
+          { path: "facebook", element: <Facebook /> },
 
           // Developer
           { path: "webhook", element: <Webhook /> },
