@@ -1,5 +1,3 @@
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 
 import Loader from "@/components/Loader";
