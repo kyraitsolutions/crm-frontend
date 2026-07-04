@@ -39,7 +39,7 @@ export const OnboardingSuccessModal = ({ open, onContinue }: Props) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs">
-      <div className="w-full max-w-md mx-4 rounded-2xl p-10 text-center flex flex-col items-center gap-5 bg-white border border-violet-100 shadow-2xl shadow-violet-200/50">
+      <div className="w-full max-w-md mx-4 rounded-xl p-10 text-center flex flex-col items-center gap-5 bg-white border border-violet-100 shadow-2xl shadow-violet-200/50">
         {/* CONFETTI */}
         <div className="flex gap-2 text-2xl animate-bounce">🎉 ✨ 🚀</div>
 
@@ -100,7 +100,7 @@ export const OnboardingSuccessModal = ({ open, onContinue }: Props) => {
 
         <Button
           onClick={() => clearInterval(timerRef.current!)}
-          className="w-full actions-btn py-2.5!"
+          className="w-full actions-btn py-2!"
         >
           Stay on this page
         </Button>

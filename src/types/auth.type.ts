@@ -31,6 +31,13 @@ export interface IUser {
   permissions?: string[];
 }
 
+export interface ILoginResponse {
+  id: string;
+  email: string;
+  token: string;
+  onboarding: boolean;
+}
+
 export interface Account {
   id: string;
   userId: string;

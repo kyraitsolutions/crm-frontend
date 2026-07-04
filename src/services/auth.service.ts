@@ -1,4 +1,4 @@
-import type { ApiResponse, IUser } from "@/types";
+import type { ApiResponse, ILoginResponse, IUser } from "@/types";
 import { ApiService } from "./api.service";
 import { API_ENDPOINT_PATH } from "@/constants/api's-path";
 
@@ -11,6 +11,19 @@ export class AuthService extends ApiService {
     console.log("called")
     return await this.get(
       `${API_ENDPOINT_PATH.AUTH_USER.ME}?includes=organization,permissions`,
+    );
+  }
+  async register(userData: any): Promise<ApiResponse<ILoginResponse>> {
+    // console.log("called")
+    return await this.post(
+      `${API_ENDPOINT_PATH.AUTH_USER.REGISTER}`,
+      userData
+    );
+  }
+  async login(credentials: { email: string; password: string }): Promise<ApiResponse<ILoginResponse>> {
+    return await this.post(
+      `${API_ENDPOINT_PATH.AUTH_USER.LOGIN}`,
+      credentials
     );
   }
 }

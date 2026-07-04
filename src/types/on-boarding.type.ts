@@ -13,7 +13,7 @@ export const companySchema = z.object({
   phone: z.string().min(1, "Phone number is required"),
   website: z.string().url("Enter a valid URL").optional().or(z.literal("")),
   companySize: z.string().min(1, "Company size is required"),
-  currency: z.string().min(1, "Default currency is required"),
+  currency: z.string().min(1, "Default currency is required").default("INR"),
   taxId: z.string().optional(),
 
   // ── Registered address ───────────────────────────────────────
