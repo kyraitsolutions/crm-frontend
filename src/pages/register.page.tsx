@@ -193,8 +193,8 @@ export function Register() {
                 onClick={() => {
                   CookieUtils.clear();
                   window.location.href =
-                    // "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                    "http://localhost:3000/api/auth/google";
+                    "https://crm-backend-7lf9.onrender.com/api/auth/google";
+                  // "http://localhost:3000/api/auth/google";
                 }}
                 className={cn(
                   "w-full flex items-center justify-center gap-2 hover:bg-gray-50 rounded-xl",
