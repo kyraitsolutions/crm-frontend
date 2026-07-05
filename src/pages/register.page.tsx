@@ -4,6 +4,7 @@ import Section from "@/components/sections/Section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { COOKIES_STORAGE } from "@/constants";
 import { cn } from "@/lib/utils";
 import { AuthService } from "@/services";
@@ -33,6 +34,7 @@ const features = [
 ];
 export function Register() {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
   const [fromData, setFormData] = useState({
     email: "",
     password: "",
@@ -53,7 +55,9 @@ export function Register() {
       }
       // Here you would typically send the registration data to your backend API
     }
-    catch (error) {
+    catch (error: any) {
+      setError(error.message)
+      console.log(error)
       console.error("Registration error:", error);
     }
     finally {
@@ -78,7 +82,7 @@ export function Register() {
           {/* Brand */}
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-16">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg font-bold text-white bg-white/15 backdrop-blur-sm">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg font-bold text-white bg-white/50 backdrop-blur-sm">
                 ◈
               </div>
               <span className="text-white font-semibold text-lg tracking-tight">
@@ -86,12 +90,12 @@ export function Register() {
               </span>
             </div>
 
-            <p className="text-xs font-semibold tracking-widest uppercase text-purple-200 mb-4">
+            <p className="text-xs font-semibold tracking-widest uppercase text-white mb-4">
               Almost there
             </p>
             <h1 className="text-4xl font-bold text-white leading-snug mb-4">
               Looks like new <br />
-              <span className="text-purple-200">Create your account</span>
+              <span className="text-white">Create your account</span>
             </h1>
             <p className="text-purple-300 text-sm leading-relaxed max-w-xs">
               Tell us about your company so we can personalise your workspace,
@@ -103,7 +107,7 @@ export function Register() {
           <div className="relative z-10 space-y-5">
             {features.map((f) => (
               <div key={f.title} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-white/10">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-white">
                   {f.icon}
                 </div>
                 <div>
@@ -114,7 +118,7 @@ export function Register() {
             ))}
           </div>
 
-          <p className="relative z-10 text-purple-300 text-xs">
+          <p className="relative z-10 text-white text-xs">
             © {new Date().getFullYear()} Kyra AI CRM · Privacy · Terms
           </p>
         </aside>
@@ -124,44 +128,65 @@ export function Register() {
               <h1 className="text-2xl font-semibold">
                 Create an account
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Sign up to get started
               </p>
             </div>
+            {/* Invalid creds error  */}
+            <div>
+              {error && <p className="mt-2 text-xs text-red-500">{"User with this email already exists"}</p>}
+            </div>
+            <form onSubmit={handleRegister} className="space-y-5 mt-3">
+              <div className="grid gap-3">
+                <Label htmlFor="email">Email*</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={fromData.email}
+                  onChange={(e) => setFormData({ ...fromData, email: e.target.value })}
+                  placeholder="you@example.com"
+                  className="input-field"
+                  required
+                />
+              </div>
 
-            <div className="grid gap-3 mt-4">
-              <form onSubmit={handleRegister} className="space-y-5">
-                <div className="grid gap-3">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={fromData.email}
-                    onChange={(e) => setFormData({ ...fromData, email: e.target.value })}
-                    placeholder="you@example.com"
-                    className="input-field"
-                    required
-                  />
-                </div>
+              <div className="grid gap-3">
+                <Label htmlFor="password">Password*</Label>
+                <Input
+                  id="password"
+                  // type="password"
+                  value={fromData.password}
+                  onChange={(e) => setFormData({ ...fromData, password: e.target.value })}
+                  placeholder="••••••••"
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="confirmPassword">Confirm Password*</Label>
+                <Input
+                  id="confirmPassword"
+                  // type="password"
+                  value={fromData.password}
+                  onChange={(e) => setFormData({ ...fromData, password: e.target.value })}
+                  placeholder="••••••••"
+                  className="input-field"
+                  required
+                />
+              </div>
 
-                <div className="grid gap-3">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    // type="password"
-                    value={fromData.password}
-                    onChange={(e) => setFormData({ ...fromData, password: e.target.value })}
-                    placeholder="••••••••"
-                    className="input-field"
-                    required
-                  />
-                </div>
+              <Button type="submit" className="w-full mt-4 rounded-xl" disabled={loading}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {loading ? "Creating account..." : "Create account"}
+              </Button>
+            </form>
+            <div className="my-6 flex items-center justify-center">
+              <Separator className="w-1/4" />
+              <span className="mx-2 text-sm text-muted-foreground">or</span>
+              <Separator className="w-1/4" />
+            </div>
+            <div className="grid gap-3">
 
-                <Button type="submit" className="w-full mt-4 rounded-xl" disabled={loading}>
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {loading ? "Creating account..." : "Create account"}
-                </Button>
-              </form>
               {/* Google Login */}
               <Button
                 asChild

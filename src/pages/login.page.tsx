@@ -34,6 +34,7 @@ const features = [
 export function LoginPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [fromData, setFormData] = useState({
     email: "",
     password: "",
@@ -45,18 +46,17 @@ export function LoginPage() {
       setLoading(true);
 
       const response = await authService.login(fromData);
-      console.log("Login response:", response.data); // Log the response for debugging
+      console.log(response.data)
       const user = response.data?.doc;
-      console.log("User data:", user); // Log the user data for debugging
 
       if (response.status === 200 && user) {
         CookieUtils.setItem(COOKIES_STORAGE.auth_token, user.token);
-        // Let ProtectedOnly decide
         navigate("/", { replace: true });
       }
-      // Here you would typically send the registration data to your backend API
     }
-    catch (error) {
+    catch (error: any) {
+      setError(error.message)
+      console.log(error)
       console.error("Login error:", error);
     }
     finally {
@@ -96,7 +96,7 @@ export function LoginPage() {
               Welcome back <br />
               <span className="text-white">Sign in to your account</span>
             </h1>
-            <p className="text-white text-sm leading-relaxed max-w-xs">
+            <p className="text-purple-300 text-sm leading-relaxed max-w-xs">
               Tell us about your company so we can personalise your workspace,
               invoices, and reports from day one.
             </p>
@@ -111,7 +111,7 @@ export function LoginPage() {
                 </div>
                 <div>
                   <p className="text-white text-sm font-semibold">{f.title}</p>
-                  <p className="text-white text-xs mt-0.5">{f.desc}</p>
+                  <p className="text-purple-300 text-xs mt-0.5">{f.desc}</p>
                 </div>
               </div>
             ))}
@@ -128,14 +128,19 @@ export function LoginPage() {
               <h1 className="text-2xl font-semibold tracking-tight">
                 Welcome back 👋
               </h1>
-              <p>
+              <p className="text-sm text-muted-foreground">
                 Sign in to continue to your dashboard
               </p>
             </div>
 
+            {/* Invalid creds error  */}
+            <div>
+              {error && <p className="mt-2 text-xs text-red-500">{"Invalid username and password"}</p>}
+            </div>
+
             <form onSubmit={handleLogin} className="space-y-5 mt-3">
               <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email*</Label>
                 <Input
                   id="email"
                   type="email"
@@ -148,7 +153,7 @@ export function LoginPage() {
               </div>
 
               <div className="grid gap-3">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Password*</Label>
                 <Input
                   id="password"
                   // type="password"
