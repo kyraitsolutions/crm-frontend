@@ -1,5 +1,3 @@
-"use client";
-
 import Section from "@/components/sections/Section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
