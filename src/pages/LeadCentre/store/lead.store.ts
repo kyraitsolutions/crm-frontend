@@ -1,33 +1,11 @@
 import { create } from "zustand";
+
 import { leadService } from "../services/lead.service";
+
+import type { ApiResponse } from "@/types";
 import type { ILead } from "../types/lead.type";
 
-interface ILeadsStoreState {
-  leads: ILead[] | [];
-  totalItems: number | null;
-  //   leadForms: ILeadForm[] | [];
-  currentPage: number;
-  totalPages: number;
-  editingField: string | null;
-  updatingLead: boolean;
-  loadingLeads: boolean;
-  leadQuery: TLeadQuery;
-  setLeadQuery: (query: Partial<TLeadQuery>) => void;
-  openSort: boolean;
-  setOpenSort: (openSort: boolean) => void;
-  setEditingField: (field: string | null) => void;
-  setCurrentPage: (page: number) => void;
-  fetchLeads: (accountId: string) => Promise<void>;
-  updateLeadField: (
-    accountId: string,
-    leadId: string,
-    field: keyof ILead,
-    value: any,
-  ) => Promise<void>;
-  addLead: (accountId: string, payload: any) => Promise<void>;
-}
-
-type TLeadQuery = {
+export type TLeadQuery = {
   limit: number;
   search: string;
   source: string;
@@ -44,7 +22,8 @@ type TLeadQuery = {
   read: boolean | null;
   tags: string[];
 };
-const initialLeadQuery: TLeadQuery = {
+
+export const initialLeadQuery: TLeadQuery = {
   limit: 10,
   search: "",
   source: "",
@@ -62,130 +41,395 @@ const initialLeadQuery: TLeadQuery = {
   tags: [],
 };
 
+interface ILeadsStoreState {
+  leads: ILead[];
+
+  selectedLead: ILead | null;
+
+  loadingLeads: boolean;
+  updatingLead: boolean;
+
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+
+  editingField: keyof ILead | null;
+
+  leadQuery: TLeadQuery;
+
+  setLeadQuery: (query: Partial<TLeadQuery>) => void;
+
+  resetLeadQuery: () => void;
+
+  setCurrentPage: (page: number) => void;
+
+  setEditingField: (field: keyof ILead | null) => void;
+
+  setSelectedLead: (lead: ILead | null) => void;
+
+  fetchLeads: (accountId: string) => Promise<void>;
+
+  updateLeadField: (
+    accountId: string,
+    leadId: string,
+    field: keyof ILead,
+    value: unknown,
+  ) => Promise<ApiResponse<ILead>>;
+
+  addLead: (accountId: string, payload: unknown) => Promise<void>;
+}
+
 export const useLeadsStore = create<ILeadsStoreState>((set, get) => ({
   leads: [],
+
+  selectedLead: null,
+
   loadingLeads: false,
+  updatingLead: false,
 
   currentPage: 1,
   totalPages: 1,
-  totalItems: 10,
+  totalItems: 0,
 
   editingField: null,
-  updatingLead: false,
 
   leadQuery: initialLeadQuery,
-  setLeadQuery: (query) => {
+
+  setLeadQuery: (query) =>
     set((state) => ({
       leadQuery: {
         ...state.leadQuery,
         ...query,
       },
       currentPage: 1,
-    }));
-  },
+    })),
 
-  openSort: false,
-  setEditingField: (field) => {
+  resetLeadQuery: () =>
     set({
-      editingField: field,
+      leadQuery: initialLeadQuery,
+      currentPage: 1,
+    }),
+
+  setCurrentPage: (page) => {
+    if (page === get().currentPage) return;
+
+    set({
+      currentPage: page,
     });
   },
-  setOpenSort: (openSort) => {
-    set({ openSort: openSort });
-  },
-  setCurrentPage: (page) => {
-    const current = get().currentPage;
 
-    if (current === page) return;
+  setEditingField: (field) =>
+    set({
+      editingField: field,
+    }),
 
-    set({ currentPage: page });
-  },
+  setSelectedLead: (lead) =>
+    set({
+      selectedLead: lead,
+    }),
+
   fetchLeads: async (accountId) => {
-    try {
-      set({ loadingLeads: true });
+    const { currentPage, leadQuery } = get();
 
-      const { leadQuery, currentPage } = get();
-      const payload = {
+    try {
+      set({
+        loadingLeads: true,
+      });
+
+      const response = await leadService.getLeads(accountId, {
         page: currentPage,
         limit: leadQuery.limit,
-        search: leadQuery.search?.trim() || undefined,
+        search: leadQuery.search.trim() || undefined,
+
         filters: {
-          stage: leadQuery.stage || "",
-          status: leadQuery.status || "",
-          source: leadQuery.source || "",
+          source: leadQuery.source || undefined,
+          status: leadQuery.status || undefined,
+          stage: leadQuery.stage || undefined,
         },
 
-        assignedTo: leadQuery.assignedTo || "",
-        form: leadQuery.form || "",
-        dateRange: leadQuery.dateRange,
+        assignedTo: leadQuery.assignedTo || undefined,
+        form: leadQuery.form || undefined,
         read: leadQuery.read,
+
+        dateRange: leadQuery.dateRange,
+
         sort: {
           field: leadQuery.sortBy || undefined,
           order: leadQuery.sortOrder,
         },
-      };
+      });
 
-      console.log(payload);
-      const response = await leadService.getLeads(String(accountId), payload);
-
-      const leads = response.data.docs;
       set({
-        leads,
-        totalPages: response.data?.pagination?.totalPages,
-        totalItems: response.data.pagination?.totalDocs,
+        leads: response.data.docs,
+        totalPages: response?.data?.pagination?.totalPages,
+        totalItems: response?.data?.pagination?.totalDocs,
       });
     } catch (error) {
-      console.error("Fetch leads error", error);
+      console.error("Failed to fetch leads", error);
     } finally {
-      set({ loadingLeads: false });
+      set({
+        loadingLeads: false,
+      });
     }
   },
+
   updateLeadField: async (accountId, leadId, field, value) => {
-    console.log("Updating lead", { leadId, field, value });
-    const prevLeads = get().leads;
+    const previousLeads = get().leads;
+    const previousLead = get().selectedLead;
 
     try {
-      set({ updatingLead: true });
+      set({
+        updatingLead: true,
+      });
 
-      // Optimistic update
       set((state) => ({
-        leads: state.leads.map((lead) => {
-          if (lead.id !== leadId) {
-            return lead;
-          }
+        leads: state.leads.map((lead) =>
+          lead.id === leadId
+            ? {
+                ...lead,
+                [field]: value,
+              }
+            : lead,
+        ),
 
-          return {
-            ...lead,
-            [field]: value,
-          };
-        }),
+        selectedLead:
+          state.selectedLead?.id === leadId
+            ? {
+                ...state.selectedLead,
+                [field]: value,
+              }
+            : state.selectedLead,
       }));
 
-      // Partial payload only
-      const payload = { id: leadId, [field]: value };
+      const response = await leadService.updateLead(accountId, {
+        id: leadId,
+        [field]: value,
+      });
 
-      console.log("Api payload", payload);
-      await leadService.updateLead(accountId, payload);
+      set({
+        editingField: null,
+      });
 
-      set({ editingField: null });
+      return response;
     } catch (error) {
-      console.error("Update lead failed", error);
+      set({
+        leads: previousLeads,
+        selectedLead: previousLead,
+      });
 
-      // rollback
-      set({ leads: prevLeads });
+      throw error;
     } finally {
-      set({ updatingLead: false });
+      set({
+        updatingLead: false,
+      });
     }
   },
-  addLead: async (accountId, payload) => {
-    try {
-      console.log(payload);
-      await leadService.createLead(accountId, payload);
-    } catch (error) {
-      console.error("Error creating lead", error);
-    }
+
+  addLead: async (accountId: string, payload: any) => {
+    await leadService.createLead(accountId, payload);
   },
 }));
+
+// import { create } from "zustand";
+// import { leadService } from "../services/lead.service";
+// import type { ILead } from "../types/lead.type";
+// import type { ApiResponse } from "@/types";
+
+// interface ILeadsStoreState {
+//   leads: ILead[] | [];
+//   totalItems: number | null;
+//   //   leadForms: ILeadForm[] | [];
+//   currentPage: number;
+//   totalPages: number;
+//   editingField: string | null;
+//   updatingLead: boolean;
+//   loadingLeads: boolean;
+//   leadQuery: TLeadQuery;
+//   setLeadQuery: (query: Partial<TLeadQuery>) => void;
+//   openSort: boolean;
+//   selectedLead: ILead | null;
+
+//   setOpenSort: (openSort: boolean) => void;
+//   setEditingField: (field: string | null) => void;
+//   setCurrentPage: (page: number) => void;
+//   fetchLeads: (accountId: string) => Promise<void>;
+//   updateLeadField: (
+//     accountId: string,
+//     leadId: string,
+//     field: keyof ILead,
+//     value: any,
+//   ) => Promise<ApiResponse<ILead>>;
+//   addLead: (accountId: string, payload: any) => Promise<void>;
+//   setSelectedLead: (lead: ILead | null) => void;
+// }
+// type TLeadQuery = {
+//   limit: number;
+//   search: string;
+//   source: string;
+//   status: string;
+//   stage: string;
+//   assignedTo: string;
+//   form: string;
+//   sortBy: string;
+//   sortOrder: "asc" | "desc";
+//   dateRange: {
+//     startDate: string | null;
+//     endDate: string | null;
+//   } | null;
+//   read: boolean | null;
+//   tags: string[];
+// };
+
+// const initialLeadQuery: TLeadQuery = {
+//   limit: 10,
+//   search: "",
+//   source: "",
+//   status: "",
+//   stage: "",
+//   assignedTo: "",
+//   form: "",
+//   sortBy: "",
+//   sortOrder: "desc",
+//   dateRange: {
+//     startDate: "",
+//     endDate: "",
+//   },
+//   read: null,
+//   tags: [],
+// };
+
+// export const useLeadsStore = create<ILeadsStoreState>((set, get) => ({
+//   leads: [],
+//   loadingLeads: false,
+
+//   currentPage: 1,
+//   totalPages: 1,
+//   totalItems: 10,
+
+//   editingField: null,
+//   updatingLead: false,
+
+//   leadQuery: initialLeadQuery,
+
+//   openSort: false,
+
+//   selectedLead: null,
+
+//   setLeadQuery: (query) => {
+//     set((state) => ({
+//       leadQuery: {
+//         ...state.leadQuery,
+//         ...query,
+//       },
+//       currentPage: 1,
+//     }));
+//   },
+
+//   setEditingField: (field) => {
+//     set({
+//       editingField: field,
+//     });
+//   },
+//   setOpenSort: (openSort) => {
+//     set({ openSort: openSort });
+//   },
+//   setCurrentPage: (page) => {
+//     const current = get().currentPage;
+
+//     if (current === page) return;
+
+//     set({ currentPage: page });
+//   },
+//   fetchLeads: async (accountId) => {
+//     try {
+//       set({ loadingLeads: true });
+//       const { leadQuery, currentPage } = get();
+
+//       const payload = {
+//         page: currentPage,
+//         limit: leadQuery.limit,
+//         search: leadQuery.search?.trim() || undefined,
+//         filters: {
+//           stage: leadQuery.stage || "",
+//           status: leadQuery.status || "",
+//           source: leadQuery.source || "",
+//         },
+
+//         assignedTo: leadQuery.assignedTo || "",
+//         form: leadQuery.form || "",
+//         dateRange: leadQuery.dateRange,
+//         read: leadQuery.read,
+//         sort: {
+//           field: leadQuery.sortBy || undefined,
+//           order: leadQuery.sortOrder,
+//         },
+//       };
+
+//       const response = await leadService.getLeads(String(accountId), payload);
+
+//       const leads = response.data.docs;
+//       set({
+//         leads,
+//         totalPages: response.data?.pagination?.totalPages,
+//         totalItems: response.data.pagination?.totalDocs,
+//       });
+//     } catch (error) {
+//       console.error("Fetch leads error", error);
+//     } finally {
+//       set({ loadingLeads: false });
+//     }
+//   },
+//   updateLeadField: async (accountId, leadId, field, value) => {
+//     const prevLeads = get().leads;
+//     const prevLead = get().selectedLead;
+
+//     try {
+//       set({ updatingLead: true });
+
+//       // Optimistic update
+//       set((state) => ({
+//         // leads: state.leads.map((lead) =>
+//         //   lead.id === leadId
+//         //     ? {
+//         //         ...lead,
+//         //         [field]: value,
+//         //       }
+//         //     : lead,
+//         // ),
+
+//         selectedLead:
+//           state.selectedLead?.id === leadId
+//             ? {
+//                 ...state.selectedLead,
+//                 [field]: value,
+//               }
+//             : state.selectedLead,
+//       }));
+
+//       // Partial payload only
+//       const payload = { id: leadId, [field]: value };
+//       const response = await leadService.updateLead(accountId, payload);
+//       set({ editingField: null });
+//       return response;
+//     } catch (error) {
+//       // rollback
+//       set({ leads: prevLeads, selectedLead: prevLead });
+//       throw error;
+//     } finally {
+//       set({ updatingLead: false });
+//     }
+//   },
+//   addLead: async (accountId, payload) => {
+//     try {
+//       console.log(payload);
+//       await leadService.createLead(accountId, payload);
+//     } catch (error) {
+//       console.error("Error creating lead", error);
+//     }
+//   },
+
+//   setSelectedLead: (lead) => set({ selectedLead: lead }),
+// }));
 
 // export class LeadsStoreManager {
 //   private store = useLeadsStore;

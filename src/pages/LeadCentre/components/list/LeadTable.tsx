@@ -13,7 +13,7 @@ import {
   type ConfigurationItem,
 } from "@/pages/Settings/configuration/store/configuration.store";
 import {
-  ArrowRightCircleIcon,
+  // ArrowRightCircleIcon,
   Clock3,
   Mail,
   Phone,
@@ -32,8 +32,8 @@ import {
   Website,
   Whatsapp,
 } from "@/icons/icons";
-import { Link, useNavigate } from "react-router-dom";
-import { useLeadsStore } from "../store/lead.store";
+import { useNavigate } from "react-router-dom";
+import { useLeadsStore } from "../../store/lead.store";
 import DataLoader from "@/components/Loader/data-loader";
 import {
   Select,
@@ -43,6 +43,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Pagination } from "@/components/pagination";
+import LeadNotFound from "../errors/LeadNotFound";
 const LeadTable = () => {
   const navigate = useNavigate();
   // new Integration using zustand
@@ -50,18 +51,23 @@ const LeadTable = () => {
 
   const {
     leads,
-    fetchLeads,
+    // fetchLeads,
     currentPage,
     setCurrentPage,
     totalPages,
     loadingLeads,
     updateLeadField,
-    leadQuery,
+    // leadQuery,
   } = useLeadsStore((state) => state);
 
-  useEffect(() => {
-    fetchLeads(String(accountId));
-  }, [accountId, currentPage, JSON.stringify({ ...leadQuery, search: "" })]);
+  // useEffect(() => {
+  //   fetchLeads(String(accountId));
+  // }, [accountId, currentPage, JSON.stringify({ ...leadQuery, search: "" })]);
+
+  // useEffect(() => {
+  //   if (!accountId) return;
+  //   fetchLeads(String(accountId));
+  // }, []);
 
   const { getConfigurationByType } = useConfigurationStore((state) => state);
 
@@ -108,33 +114,7 @@ const LeadTable = () => {
   }
 
   if (leads.length === 0) {
-    return (
-      <div className="flex h-125 w-full items-center justify-center">
-        <div className="text-center">
-          <img
-            src="/src/assets/nochathistoryfound_CnSlq9EOHBW59HI8RYjeSpZ_WbWyQz9RmyNcvToLwGw4g31mlf1rnCox3Y3F-6xk_.svg"
-            rel="preload"
-            fetchPriority="high"
-            alt="No chats yet"
-            className="w-75"
-          />
-          <h3 className="text-sm mt-2 font-semibold text-gray-800">
-            No leads yet
-          </h3>
-
-          <p className="mt-1 text-xs text-gray-500 flex items-center gap-1">
-            Start managing leads,{" "}
-            <Link
-              to="/dashboard/settings/webhook"
-              className="text-blue-600 underline flex items-center gap-1"
-            >
-              {" "}
-              setup webhook <ArrowRightCircleIcon size={14} />
-            </Link>
-          </p>
-        </div>
-      </div>
-    );
+    return <LeadNotFound />;
   }
 
   return (
@@ -288,46 +268,47 @@ const LeadTable = () => {
 
               {/* ACTIONS */}
               {/* <TableCell>
-                                <div className="flex justify-center">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                size="icon"
-                                                variant="ghost"
-                                                className="opacity-60 transition-opacity group-hover:opacity-100"
-                                            >
-                                                <MoreHorizontal className="size-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
+                <div className="flex justify-center">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="opacity-60 transition-opacity group-hover:opacity-100"
+                      >
+                        <MoreHorizontal className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
 
-                                        <DropdownMenuContent align="end" className="rounded-xl">
-                                            <DropdownMenuItem
-                                                className="cursor-pointer"
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/dashboard/settings/chatleads/${lead.id}/lead-builder`,
-                                                    )
-                                                }
-                                            >
-                                                <Pencil className="mr-2 size-4" />
-                                                Edit
-                                            </DropdownMenuItem>
+                    <DropdownMenuContent align="end" className="rounded-xl">
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() =>
+                          navigate(
+                            `/dashboard/settings/chatleads/${lead.id}/lead-builder`,
+                          )
+                        }
+                      >
+                        <Pencil className="mr-2 size-4" />
+                        Edit
+                      </DropdownMenuItem>
 
-                                            <DropdownMenuItem
-                                                className="cursor-pointer text-red-500 focus:text-red-500"
-                                                onClick={() => handleDeletelead(lead.id)}
-                                            >
-                                                <Trash2 className="mr-2 size-4" />
-                                                Delet
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                            </TableCell> */}
+                      <DropdownMenuItem
+                        className="cursor-pointer text-red-500 focus:text-red-500"
+                        onClick={() => handleDeletelead(lead.id)}
+                      >
+                        <Trash2 className="mr-2 size-4" />
+                        Delet
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </TableCell> */}
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
       <div className="px-5">
         <Pagination
           currentPage={currentPage}

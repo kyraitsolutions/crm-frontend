@@ -6,7 +6,7 @@ import { immer } from "zustand/middleware/immer";
 interface ITeamsStoreState {
   teams: ITeam[];
   totalTeams: number | null;
-  getTeams: () => Promise<{ label: string; key: string }[]>;
+  getTeams: () => Promise<ITeam[]>;
 }
 
 export const useTeamsStore = create<ITeamsStoreState>()(
@@ -16,12 +16,14 @@ export const useTeamsStore = create<ITeamsStoreState>()(
     getTeams: async () => {
       const response = await teamService.getTeamMembers();
       const data = response?.data?.docs || [];
-      return (
-        data?.map((team: ITeam) => ({
-          label: `${team?.userProfile?.firstName} ${team?.userProfile?.lastName}`,
-          key: team.userId,
-        })) || []
-      );
+
+      return data;
+      // return (
+      //   data?.map((team: ITeam) => ({
+      //     label: `${team?.userProfile?.firstName} ${team?.userProfile?.lastName}`,
+      //     key: team.userId,
+      //   })) || []
+      // );
     },
   })),
 );
@@ -62,7 +64,6 @@ export class TeamsStoreManager {
   }
   /** Optimistic update + rollback */
   updateTeamOptimistic(updatedTeam: Partial<ITeam>) {
-    console.log(updatedTeam);
     const prevTeams = this.store.getState().teams;
 
     // update immediately

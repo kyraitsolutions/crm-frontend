@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
-import type { ILead } from "../types/lead.type";
+import type { ILead } from "../../types/lead.type";
 import { useAuthStore } from "@/stores";
 import { EmailService } from "@/services/email.service";
 import { useAccountsStore } from "@/stores/accounts.store";
@@ -30,8 +30,7 @@ interface EmailEditorProps {
 }
 
 const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
-
-  const emailService = new EmailService()
+  const emailService = new EmailService();
 
   const { user, accountId } = useAuthStore((state) => state);
   const { accounts } = useAccountsStore((state) => state);
@@ -60,31 +59,24 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
     ["link", "image"],
     ["clean"],
   ];
-  const handleGenerateAIEmail = async (type:
-    | "generate"
-    | "rewrite"
-    | "shorten"
-    | "professional"
-    | "friendly"
+  const handleGenerateAIEmail = async (
+    type: "generate" | "rewrite" | "shorten" | "professional" | "friendly",
   ) => {
     try {
       setAiLoading(true);
 
-      const response = await fetch(
-        "/api/ai/generate-email",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt: aiPrompt,
-            subject,
-            body,
-            type,
-          }),
-        }
-      );
+      const response = await fetch("/api/ai/generate-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: aiPrompt,
+          subject,
+          body,
+          type,
+        }),
+      });
 
       const data = await response.json();
 
@@ -130,21 +122,15 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
         html: body, // ReactQuill HTML
       };
 
-      const response = await emailService.sendEmail(String(accountId), payload)
-      console.log(response)
-      const data =
-        await response.json();
+      const response = await emailService.sendEmail(String(accountId), payload);
+      console.log(response);
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message ||
-          "Failed to send email"
-        );
+        throw new Error(data.message || "Failed to send email");
       }
 
-      alert(
-        "Email queued successfully"
-      );
+      alert("Email queued successfully");
 
       // reset form
       setSubject("");
@@ -152,25 +138,21 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
       setTo([]);
 
       onClose();
-
     } catch (error: any) {
       console.log(error);
 
-      alert(
-        error.message ||
-        "Failed to send email"
-      );
+      alert(error.message || "Failed to send email");
     } finally {
       setSending(false);
     }
   };
 
-
   console.log("User AuthUser", user, accounts);
-  const getCurrentAccount = accounts?.find(acc => acc.id === accountId);
+  const getCurrentAccount = accounts?.find((acc) => acc.id === accountId);
 
-  console.log(getCurrentAccount)
-  const [sender,
+  console.log(getCurrentAccount);
+  const [
+    sender,
     //  setSender
   ] = useState(getCurrentAccount);
 
@@ -178,10 +160,10 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
 
   return (
     <div
-      className={`absolute ${isMaximize ? "top-0" : "top-16"}  left-0 w-full z-50 bg-black/40 flex items-start justify-end`}
+      className={`fixed top-0 ${isMaximize ? "top-0 w-full" : "max-w-2xl"} h-full  right-0 w-full z-50 bg-black/40 flex items-start justify-end`}
     >
       <div
-        className={`w-full ${isMaximize ? "h-screen w-screen" : "h-[93vh] max-w-7xl"}  duration-100  bg-white shadow-2xl rounded-t-md overflow-hidden flex flex-col`}
+        className={`w-full ${isMaximize ? "h-screen w-screen" : "h-full max-w-7xl"}  duration-100  bg-white shadow-2xl rounded-t-md overflow-hidden flex flex-col`}
       >
         {/* Top Header */}
         <div className="h-11 bg-[#5468ff] text-white flex items-center justify-between px-5">
@@ -219,9 +201,7 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
           {/* Template */}
           <div className="flex justify-end px-4 gap-3">
             <button
-              onClick={() =>
-                setShowAiBox(!showAiBox)
-              }
+              onClick={() => setShowAiBox(!showAiBox)}
               className="border border-violet-500 text-violet-600 text-sm px-3 py-1 rounded-xl flex items-center gap-2 hover:bg-violet-50"
             >
               <Sparkles size={16} />
@@ -347,29 +327,20 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
           </div>
         </div>
       </div>
+
       {showAiBox && (
         <div className="border-b bg-violet-50 px-6 py-4 absolute">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium text-sm">
-              Generate Email with AI
-            </h3>
+            <h3 className="font-medium text-sm">Generate Email with AI</h3>
 
-            <button
-              onClick={() =>
-                setShowAiBox(false)
-              }
-            >
+            <button onClick={() => setShowAiBox(false)}>
               <X size={16} />
             </button>
           </div>
 
           <textarea
             value={aiPrompt}
-            onChange={(e) =>
-              setAiPrompt(
-                e.target.value
-              )
-            }
+            onChange={(e) => setAiPrompt(e.target.value)}
             placeholder="Example: Write a follow-up email after product demo"
             className="w-full border rounded-lg p-3 outline-none text-sm resize-none"
             rows={3}
@@ -378,59 +349,35 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
           <div className="flex gap-2 mt-3 flex-wrap">
             <button
               disabled={aiLoading}
-              onClick={() =>
-                handleGenerateAIEmail(
-                  "generate"
-                )
-              }
+              onClick={() => handleGenerateAIEmail("generate")}
               className="bg-[#5468ff] text-white px-3 py-2 rounded-md text-sm"
             >
-              {aiLoading ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                "Generate"
-              )}
+              {aiLoading ? <Loader2 className="animate-spin" /> : "Generate"}
             </button>
 
             <button
-              onClick={() =>
-                handleGenerateAIEmail(
-                  "rewrite"
-                )
-              }
+              onClick={() => handleGenerateAIEmail("rewrite")}
               className="border px-3 py-2 rounded-md text-sm"
             >
               Rewrite
             </button>
 
             <button
-              onClick={() =>
-                handleGenerateAIEmail(
-                  "professional"
-                )
-              }
+              onClick={() => handleGenerateAIEmail("professional")}
               className="border px-3 py-2 rounded-md text-sm"
             >
               Professional
             </button>
 
             <button
-              onClick={() =>
-                handleGenerateAIEmail(
-                  "friendly"
-                )
-              }
+              onClick={() => handleGenerateAIEmail("friendly")}
               className="border px-3 py-2 rounded-md text-sm"
             >
               Friendly
             </button>
 
             <button
-              onClick={() =>
-                handleGenerateAIEmail(
-                  "shorten"
-                )
-              }
+              onClick={() => handleGenerateAIEmail("shorten")}
               className="border px-3 py-2 rounded-md text-sm"
             >
               Shorten

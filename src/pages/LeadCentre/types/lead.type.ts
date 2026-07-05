@@ -122,6 +122,7 @@ export const CreateLeadSchema = z.object({
     )
     .optional(),
 });
+
 export type ILead = z.infer<typeof LeadSchema>;
 export type BasicNumber = z.infer<typeof BasicNumberSchema>;
 export type ICreateLead = z.infer<typeof CreateLeadSchema>;

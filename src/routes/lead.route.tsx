@@ -2,10 +2,12 @@ import { LEADS_PATHS } from "@/constants/routes/leads.path";
 import { type RouteObject } from "react-router-dom";
 import { RequirePermission } from "./route-access/RequirePermission";
 import { PERMISSIONS } from "@/rbac";
-import AddLead from "@/pages/LeadCentre/AddLead";
-import LeadDetail from "@/pages/LeadCentre/components/LeadDetail";
-import LeadCenter from "@/pages/LeadCentre/leadCentre.page";
-import ImportLead from "@/pages/LeadCentre/importLead.page";
+
+import LeadCenter from "@/pages/LeadCentre/pages/leadCentre.page";
+import ImportLeadStep from "@/pages/LeadCentre/components/import/ImportLeadStep";
+import AddLead from "@/pages/LeadCentre/pages/AddLead.page";
+import LeadDetail from "@/pages/LeadCentre/pages/LeadDetails.page";
+
 // import LeadsCentre from "@/pages/leads-center.page";
 export const leadRoutes: RouteObject[] = [
   {
@@ -32,7 +34,7 @@ export const leadRoutes: RouteObject[] = [
       {
         element: (
           <RequirePermission permission={PERMISSIONS.LEADS.CREATE}>
-            <ImportLead />
+            <ImportLeadStep />
           </RequirePermission>
         ),
         path: "import",

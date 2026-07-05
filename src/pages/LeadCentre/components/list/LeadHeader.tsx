@@ -2,8 +2,8 @@ import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { useAuthStore } from "@/stores";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { ILead } from "../types/lead.type";
-import LeadTags from "./Tag";
+import type { ILead } from "../../types/lead.type";
+import LeadTags from "../common/Tag";
 
 interface LeadHeaderProps {
   onClick: () => void;
@@ -15,12 +15,16 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className='relative'>
+    <div className="relative">
       <header className="bg-white border-b border-[#e5e7eb] px-3 py-2">
         <div className="flex items-center justify-between">
           {/* Left */}
           <div className="flex items-center gap-4">
-            <ButtonWithTitle onClick={() => navigate(`/dashboard/account/${accountId}/leads`)} title="Go back to leads" className="flex items-center">
+            <ButtonWithTitle
+              onClick={() => navigate(`/dashboard/account/${accountId}/leads`)}
+              title="Go back to leads"
+              className="flex items-center"
+            >
               <ChevronLeft className="text-slate-600" />
             </ButtonWithTitle>
 

@@ -99,7 +99,6 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
   onBack,
   onNext,
 }) => {
-  console.log(actions);
   const { getTeams } = useTeamsStore();
   const addAction = () => onChange([...actions, emptyAction()]);
 

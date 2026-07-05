@@ -96,7 +96,7 @@ const AutomationSection: React.FC = () => {
       </div>
     );
 
-  if (automations.length === 0) {
+  if (!automations.length) {
     return <EmptyAutomation />;
   }
 

@@ -39,7 +39,7 @@ export const appRoutes = createBrowserRouter([
 
       //PROTECTED (logged in)
       {
-        // element: <ProtectedOnly />,
+        element: <ProtectedOnly />,
         children: [
           {
             element: <AppLayout />,

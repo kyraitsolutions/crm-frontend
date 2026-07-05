@@ -30,7 +30,7 @@ interface TimelineItem {
   showNote?: boolean;
 }
 
-const Timeline = () => {
+const TimelineTab = () => {
   // const [activeTab, setActiveTab] = useState<
   //     "history" | "interactions"
   // >("history");
@@ -141,15 +141,10 @@ const Timeline = () => {
         </div>
 
         <button
-          onClick={() =>
-            setShowUpcoming(
-              !showUpcoming
-            )
-          }
+          onClick={() => setShowUpcoming(!showUpcoming)}
           className="text-sm text-second flex items-center gap-1"
         >
-          Show Upcoming Automated
-          Actions
+          Show Upcoming Automated Actions
           <ChevronDown size={15} />
         </button>
       </div>
@@ -157,10 +152,7 @@ const Timeline = () => {
       {/* Timeline */}
       <div className="max-h-150 overflow-y-auto px-5 pb-8 mt-10 hide-scrollbar">
         {Object.entries(groupedTimeline).map(([date, items]) => (
-          <div
-            key={date}
-            className="mb-10"
-          >
+          <div key={date} className="mb-10">
             {/* Date Badge */}
             <div className="inline-flex border border- rounded-xl px-4 py-1 text-sm text-gray-500 bg-gray-50 mb-6">
               {date}
@@ -171,56 +163,44 @@ const Timeline = () => {
               <div className="absolute left-27.25 top-0 bottom-0 w-px bg-gray-200" />
 
               <div className="space-y-8">
-                {items.map(
-                  (item) => (
-                    <div
-                      key={item.id}
-                      className="relative flex"
-                    >
-                      {/* Time */}
-                      <div className="w-22.5 text-sm text-gray-700 pt-2 text-right pr-6 shrink-0">
-                        {item.time}
-                      </div>
+                {items.map((item) => (
+                  <div key={item.id} className="relative flex">
+                    {/* Time */}
+                    <div className="w-22.5 text-sm text-gray-700 pt-2 text-right pr-6 shrink-0">
+                      {item.time}
+                    </div>
 
-                      {/* Icon */}
-                      <div className="relative z-10 shrink-0">
-                        <div className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center text-gray-700">
-                          {renderIcon(item.type)}
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className="ml-8 pb-2">
-                        <h3 className="text-sm text-gray-900">
-                          {item.title}
-                        </h3>
-
-                        {item.description && (
-                          <p className="text-sm text-gray-800">
-                            {item.description}
-                          </p>
-                        )}
-
-                        <p className="text-sm text-gray-500 mt-1">
-                          by{" "}
-                          <span className="text-gray-700">
-                            {item.user}
-                          </span>{" "}
-                          {item.date}
-                        </p>
-
-                        {item.showNote && (
-                          <button className="text-sm text-second mt-1 flex items-center gap-1">
-                            Add Note
-                            <ChevronDown
-                              size={14}
-                            />
-                          </button>
-                        )}
+                    {/* Icon */}
+                    <div className="relative z-10 shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center text-gray-700">
+                        {renderIcon(item.type)}
                       </div>
                     </div>
-                  )
-                )}
+
+                    {/* Content */}
+                    <div className="ml-8 pb-2">
+                      <h3 className="text-sm text-gray-900">{item.title}</h3>
+
+                      {item.description && (
+                        <p className="text-sm text-gray-800">
+                          {item.description}
+                        </p>
+                      )}
+
+                      <p className="text-sm text-gray-500 mt-1">
+                        by <span className="text-gray-700">{item.user}</span>{" "}
+                        {item.date}
+                      </p>
+
+                      {item.showNote && (
+                        <button className="text-sm text-second mt-1 flex items-center gap-1">
+                          Add Note
+                          <ChevronDown size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -230,4 +210,4 @@ const Timeline = () => {
   );
 };
 
-export default Timeline;
+export default TimelineTab;

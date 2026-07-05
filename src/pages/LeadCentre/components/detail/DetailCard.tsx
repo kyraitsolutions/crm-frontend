@@ -1,9 +1,47 @@
 import { useState } from "react";
 import { FieldRow } from "./FieldRow";
-import type { ILead } from "../types/lead.type";
+import type { ILead } from "../../types/lead.type";
+import { ToastMessageService } from "@/services";
+import { useAuthStore } from "@/stores";
+import { useLeadsStore } from "../../store/lead.store";
+import SelectFieldRow from "./SelectFieldRow";
+
+const LEAD_STATUS_OPTIONS = [
+  {
+    label: "Active",
+    value: "active",
+  },
+  {
+    label: "Inactive",
+    value: "inactive",
+  },
+];
 
 const DetailCard = ({ lead }: { lead: ILead | null }) => {
+  const toastService = new ToastMessageService();
+  const { accountId } = useAuthStore((state) => state);
+  const { updateLeadField } = useLeadsStore((state) => state);
+
   const [hideDetails, setHideDetails] = useState(true);
+
+  const handleSave = async (fieldKey: keyof ILead, value: string) => {
+    try {
+      const response = await updateLeadField(
+        String(accountId),
+        String(lead?.id),
+        fieldKey,
+        value,
+      );
+      if (response && response.status === 200) {
+        toastService.success(response?.message || "Lead updated successfully!");
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastService.error(err.message || "Failed to update lead");
+      }
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl overflow-hidden">
@@ -13,6 +51,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
       >
         Hide Details
       </div>
+
       {hideDetails && (
         <div>
           <div className="p-6">
@@ -35,6 +74,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   value={lead?.title || "Sample Inquiry"}
                   fieldKey="title"
                   leadId={lead?.id}
+                  onChange={(value) => handleSave("title", value)}
                 />
 
                 <FieldRow
@@ -43,21 +83,24 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   isPhone
                   value={lead?.phone || ""}
                   leadId={lead?.id}
+                  onChange={(value) => handleSave("phone", value)}
                 />
 
-                <FieldRow
+                {/* <FieldRow
                   label="Mobile"
                   value={lead?.mobile || ""}
                   isPhone
                   fieldKey="mobile"
                   leadId={lead?.id}
-                />
+                  onChange={(value) => handleSave("title", value)}
+                /> */}
 
                 <FieldRow
                   label="Lead Source"
                   value={lead?.source?.name || ""}
                   fieldKey="source.name"
                   leadId={lead?.id}
+                  onChange={(value) => handleSave("source.name", value)}
                 />
               </div>
 
@@ -68,6 +111,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   fieldKey="company"
                   value={lead?.company || "TCS"}
                   leadId={lead?.id}
+                  onChange={(value) => handleSave("company", value)}
                 />
 
                 <FieldRow
@@ -75,6 +119,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   value={lead?.name || ""}
                   fieldKey="name"
                   leadId={lead?.id}
+                  onChange={(value) => handleSave("name", value)}
                 />
 
                 <FieldRow
@@ -82,24 +127,35 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   value={lead?.email || ""}
                   fieldKey="email"
                   leadId={lead?.id}
+                  onChange={(value) => handleSave("email", value)}
                 />
 
                 <FieldRow
                   label="Website"
-                  value={lead?.website || ""}
+                  value={lead?.website || "-"}
                   fieldKey="website"
                   leadId={lead?.id}
+                  onChange={(value) => handleSave("website", value)}
                 />
 
-                <FieldRow
+                <SelectFieldRow
+                  label="Status"
+                  value={lead?.status || "active"}
+                  options={LEAD_STATUS_OPTIONS}
+                  onChange={(value) => handleSave("status", value)}
+                />
+
+                {/* <FieldRow
                   label="Lead Status"
                   value={lead?.status || ""}
                   fieldKey="status"
                   leadId={lead?.id}
-                />
+                  onChange={(value) => handleSave("status", value)}
+                /> */}
               </div>
             </div>
           </div>
+
           <div className="p-6">
             <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
               Other Details
@@ -115,10 +171,12 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   value={String(value || "-")}
                   fieldKey={`customFields.${key}`}
                   leadId={lead?.id}
+                  onChange={(value) => handleSave(`customFields.${key}`, value)}
                 />
               ))}
             </div>
           </div>
+
           <div className="p-6">
             <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
               Address Information
@@ -129,18 +187,21 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                 value={lead?.meta?.location?.address || "Mohali, India"}
                 fieldKey="meta.location.address"
                 leadId={lead?.id}
+                onChange={(value) => handleSave(`meta.location.address`, value)}
               />
               <FieldRow
                 label="City"
                 value={lead?.meta?.location?.city || "Mohali"}
                 fieldKey="meta.location.city"
                 leadId={lead?.id}
+                onChange={(value) => handleSave(`meta.location.city`, value)}
               />
               <FieldRow
                 label="Country"
                 value={lead?.meta?.location?.country || "India"}
                 fieldKey="meta.location.country"
                 leadId={lead?.id}
+                onChange={(value) => handleSave(`meta.location.country`, value)}
               />
             </div>
           </div>
@@ -155,9 +216,12 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                 value={lead?.message || "No message provided."}
                 fieldKey="message"
                 leadId={lead?.id}
+                onChange={(value) => handleSave("message", value)}
+                type="textarea"
               />
             </div>
           </div>
+
           <div className="p-6">
             <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
               Description
@@ -168,10 +232,21 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                 value={lead?.description || "No description provided."}
                 fieldKey="description"
                 leadId={lead?.id}
+                onChange={(value) => handleSave("description", value)}
+                type="textarea"
               />
             </div>
           </div>
-          {/* <div className="p-6">
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default DetailCard;
+
+{
+  /* <div className="p-6">
                     <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
                         Visit Summary
                     </h2>
@@ -226,11 +301,5 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
 
                         </div>
                     </div>
-                </div> */}
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default DetailCard;
+                </div> */
+}
