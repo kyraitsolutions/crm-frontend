@@ -1,5 +1,3 @@
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 
 import Loader from "@/components/Loader";
@@ -34,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import { hasPermission } from "@/rbac";
 import { ACCOUNT_PATHS } from "@/constants/routes";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
+import DataLoader from "@/components/Loader/data-loader";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -180,17 +179,7 @@ export const DashboardPage = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="p-5 space-y-4 w-75">
-        <Card className="p-2">
-          <div className="space-y-2">
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-6 w-full" />
-            ))}
-          </div>
-        </Card>
-      </div>
-    );
+    return <DataLoader />;
   }
 
   return (
@@ -213,7 +202,7 @@ export const DashboardPage = () => {
               className={`
                   relative flex flex-col justify-between gap-4
                   px-4 py-3
-                  border hover:shadow-sm ${account.status === "active" ? "border-primary/30 " : "border-destructive/30"} rounded-2xl
+                  border hover:shadow-sm ${account.status === "active" ? "border-primary/30 " : "border-destructive/30"} rounded-xl
                   cursor-pointer
                   transition-all duration-200
                   ${isActive ? "ring-1 ring-[#37322F]" : ""}
@@ -263,13 +252,12 @@ export const DashboardPage = () => {
                 <span
                   className={`
             px-2 py-0.5 rounded-full capitalize text-xs font-medium
-            ${
-              account.status === "active"
-                ? "bg-primary/10 text-primary"
-                : account.status === "inactive"
-                  ? "bg-destructive/10 text-destructive"
-                  : "bg-primary/10 text-primary"
-            }
+            ${account.status === "active"
+                      ? "bg-primary/10 text-primary"
+                      : account.status === "inactive"
+                        ? "bg-destructive/10 text-destructive"
+                        : "bg-primary/10 text-primary"
+                    }
           `}
                 >
                   {account.status}
@@ -288,7 +276,7 @@ export const DashboardPage = () => {
             flex flex-col justify-center items-center gap-2
             px-6 py-5
             border-2 border-dashed border-primary/30
-            rounded-2xl
+            rounded-xl
             cursor-pointer
             transition-all
             hover:shadow-sm
@@ -305,7 +293,7 @@ export const DashboardPage = () => {
           <DialogContent
             className="
             sm:max-w-105
-            rounded-2xl
+            rounded-xl
             p-6
             shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
           "
@@ -375,7 +363,7 @@ export const DashboardPage = () => {
                   <button
                     type="button"
                     className="
-              px-4 py-2 rounded-[99px]
+              px-4 py-2 rounded-xl
               border border-[rgba(50,45,43,0.20)]
               text-sm font-medium text-foreground
               hover:bg-[rgba(55,50,47,0.05)]
@@ -390,7 +378,7 @@ export const DashboardPage = () => {
                   type="submit"
                   disabled={loading}
                   className="
-            relative px-5 py-2 flex items-center gap-2 rounded-[99px]
+            relative px-5 py-2 flex items-center gap-2 rounded-xl
             bg-primary
             text-sm font-medium text-[#FBFAF9]
             shadow-[0px_2px_4px_rgba(55,50,47,0.12)]

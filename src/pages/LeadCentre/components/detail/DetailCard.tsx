@@ -77,7 +77,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   onChange={(value) => handleSave("title", value)}
                 />
 
-                <FieldRow
+                {/* <FieldRow
                   label="Phone"
                   fieldKey="phone"
                   isPhone
@@ -109,7 +109,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                 <FieldRow
                   label="Company"
                   fieldKey="company"
-                  value={lead?.company || "TCS"}
+                  value={lead?.company || "Company name--"}
                   leadId={lead?.id}
                   onChange={(value) => handleSave("company", value)}
                 />
@@ -122,7 +122,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   onChange={(value) => handleSave("name", value)}
                 />
 
-                <FieldRow
+                {/* <FieldRow
                   label="Email"
                   value={lead?.email || ""}
                   fieldKey="email"

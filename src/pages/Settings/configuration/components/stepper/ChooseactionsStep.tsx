@@ -148,7 +148,9 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
 
     if (type === "assign_lead_to_user") {
       const users = await getTeams();
-      setUsers(users);
+      setUsers(
+        users.map((u) => ({ label: u.userProfile.firstName, key: u.id })),
+      );
     }
   };
 

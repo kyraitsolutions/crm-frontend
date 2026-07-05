@@ -6,6 +6,7 @@ interface ActivityLogState {
   logs: ActivityLog[];
   loading: boolean;
   getLogs: (accountId: string) => Promise<void>;
+  fetchLeadLogs: (accountId: string, leadId: string) => Promise<void>;
 }
 
 export const useActivityLogStore = create<ActivityLogState>((set) => ({
@@ -17,6 +18,22 @@ export const useActivityLogStore = create<ActivityLogState>((set) => ({
       set({ loading: true });
 
       const response = await activityLogService.getLogs(accountId);
+
+      set({
+        logs: response.data.docs,
+      });
+    } finally {
+      set({
+        loading: false,
+      });
+    }
+  },
+
+  async fetchLeadLogs(accountId, leadId) {
+    try {
+      set({ loading: true });
+
+      const response = await activityLogService.getLeadLogs(accountId, leadId);
 
       set({
         logs: response.data.docs,

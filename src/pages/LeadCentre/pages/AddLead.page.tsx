@@ -6,6 +6,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { useLeadsStore } from "../store/lead.store";
 import { useConfigurationStore } from "@/pages/Settings/configuration/store/configuration.store";
+import { Input } from "@/components/ui/input";
 
 const suggestedTags = [
   "Hot Lead",
@@ -224,7 +225,7 @@ const AddLead = () => {
                   name="name"
                   placeholder="Full Name"
                   required
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -236,7 +237,7 @@ const AddLead = () => {
                   name="email"
                   placeholder="Email"
                   required
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -261,7 +262,7 @@ const AddLead = () => {
                     value={form.countryCode}
                     onChange={handleChange}
                     required
-                    className="border rounded px-3 bg-gray-50 outline-primary text-sm min-w-[90px]"
+                    className="input-field py-[6.5px] shadow-xs border border-primary outline-none w-28"
                   >
                     <option value="+91">🇮🇳 +91</option>
                     <option value="+1">🇺🇸 +1</option>
@@ -273,7 +274,7 @@ const AddLead = () => {
                     name="phone"
                     placeholder="Phone"
                     required
-                    className="border py-1.5 w-full rounded px-4 bg-gray-50 outline-primary text-sm"
+                    className="input-field"
                     onChange={handleChange}
                   />
                 </div>
@@ -351,16 +352,16 @@ const AddLead = () => {
                     onChange={(e) =>
                       handleCustomFieldChange(index, "key", e.target.value)
                     }
-                    className="border w-full rounded px-4 py-2 bg-gray-50 outline-primary text-sm"
+                    className="input-field"
                   />
 
-                  <input
+                  <Input
                     placeholder="Value"
                     value={field.value}
                     onChange={(e) =>
                       handleCustomFieldChange(index, "value", e.target.value)
                     }
-                    className="border w-full rounded px-4 py-1 bg-gray-50 outline-primary text-sm"
+                    className="input-field"
                   />
                   <div className="w-20 flex items-center justify-center">
                     <Trash2
@@ -545,19 +546,19 @@ const AddLead = () => {
 
             {/* Add custom tag */}
             <div className="flex gap-2 mb-5">
-              <input
+              <Input
                 type="text"
                 placeholder="Add custom tag"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
-                className="flex-1 border rounded px-4 py-2 bg-gray-100 outline-primary"
+                className="input-field"
               />
 
               <button
                 type="button"
                 onClick={() => addTag(tagInput)}
-                className="px-4 py-2 bg-primary text-white rounded"
+                className="px-4 bg-primary text-white rounded"
               >
                 Add
               </button>

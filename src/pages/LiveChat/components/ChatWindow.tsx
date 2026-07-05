@@ -57,7 +57,7 @@ const ChatWindow = () => {
     return (
       <div className="flex h-full w-full items-center justify-center">
         <div className="text-center">
-          <img src="/src/assets/nochathistoryfound_CnSlq9EOHBW59HI8RYjeSpZ_WbWyQz9RmyNcvToLwGw4g31mlf1rnCox3Y3F-6xk_.svg" rel="preload" fetchPriority="high" alt="No chats yet" className="w-75" />
+          <img src="/converted_image_transparent.png" rel="preload" fetchPriority="high" alt="No chats yet" className="w-75" />
           <h3 className="text-sm mt-2 font-semibold text-gray-800">No messages yet</h3>
 
           <p className="mt-1 text-xs text-gray-500">

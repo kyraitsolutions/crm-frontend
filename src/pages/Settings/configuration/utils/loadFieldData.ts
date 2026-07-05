@@ -1,10 +1,11 @@
+import type { ITeam } from "@/types/teams.type";
 import { CONDITION_FIELDS_VALUES } from "../constants/automation.constants";
 
 export const loadFieldData = async (
   field: string,
   deps: {
     getConfigurationsByType?: (type: string) => Promise<any>;
-    getUsers?: () => Promise<{ label: string; key: string }[]>;
+    getUsers?: () => Promise<ITeam[]>;
   },
 ) => {
   const config =

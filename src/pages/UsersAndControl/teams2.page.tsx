@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -18,6 +16,7 @@ import TeamList from "./components/TeamList";
 import type { TRole } from "./role.page";
 import { hasPermission } from "@/rbac";
 import type { ITeam } from "@/types/teams.type";
+import DataLoader from "@/components/Loader/data-loader";
 
 const Teams = () => {
   const roleService = new RBACService();
@@ -136,18 +135,10 @@ const Teams = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="p-6">
-        <Card className="p-6 space-y-2">
-          {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} className="h-5 w-full" />
-          ))}
-        </Card>
-      </div>
-    );
+    return <DataLoader />
   }
 
-  console.log(user);
+  // console.log(user);
 
   return (
     <React.Fragment>

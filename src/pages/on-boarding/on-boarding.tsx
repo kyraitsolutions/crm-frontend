@@ -115,6 +115,7 @@ export default function Onboarding() {
   };
 
   const onSubmit = async (data: OnboardingFormData) => {
+    console.log("Submitting onboarding data:", data); // Log the submitted data for debugging
     try {
       const response = await userService.createOnboarding(data);
       if (response.status === 200 || response.status === 201) {
@@ -139,7 +140,7 @@ export default function Onboarding() {
 
   return (
     <Section>
-      <div className="h-full flex">
+      <div className="h-screen flex">
         <aside
           className="hidden lg:flex flex-col gap-16 w-[45%] p-6 relative overflow-hidden"
           style={{
@@ -157,7 +158,7 @@ export default function Onboarding() {
                 ◈
               </div>
               <span className="text-white font-semibold text-lg tracking-tight">
-                YourBrand
+                Kyra CRM
               </span>
             </div>
 
@@ -178,7 +179,7 @@ export default function Onboarding() {
           <div className="relative z-10 space-y-5">
             {features.map((f) => (
               <div key={f.title} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-white/10">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 bg-white/10">
                   {f.icon}
                 </div>
                 <div>
@@ -190,16 +191,16 @@ export default function Onboarding() {
           </div>
 
           <p className="relative z-10 text-purple-400/60 text-xs">
-            © {new Date().getFullYear()} YourBrand · Privacy · Terms
+            © {new Date().getFullYear()} Kyra AI CRM · Privacy · Terms
           </p>
         </aside>
 
         {!showSuccess && (
           <main className="flex flex-1 justify-center py-3 bg-gray-200/40 h-full">
-            <div className="w-full max-w-3xl bg-white rounded-xl shadow-xl shadow-black p-6 space-y-7 border border-primary/20">
+            <div className="w-full max-w-5xl rounded-xl p-6 space-y-7">
               {/* Header */}
               <div className="space-y-1">
-                <h2 className="text-xl font-bold text-gray-900">
+                <h2 className="text-xl font-semibold text-gray-900">
                   Organisation Information
                 </h2>
                 <p className="text-sm text-gray-400">

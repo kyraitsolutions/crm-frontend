@@ -15,7 +15,7 @@ export interface IUser {
     id: string;
     name: string;
   };
-  userprofile: {
+  userProfile: {
     firstName: string;
     lastName: string;
     organizationName: string;
@@ -29,6 +29,13 @@ export interface IUser {
     expiresAt:Date
   };
   permissions?: string[];
+}
+
+export interface ILoginResponse {
+  id: string;
+  email: string;
+  token: string;
+  onboarding: boolean;
 }
 
 export interface Account {

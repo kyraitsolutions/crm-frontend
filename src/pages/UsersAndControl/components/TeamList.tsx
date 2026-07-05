@@ -132,13 +132,13 @@ const TeamList = ({
       ) : (
         filteredTeams?.length > 0 &&
         filteredTeams?.map((item) => {
-          const isChecked = selectedIds.includes(item.userId);
-          const isOwner = item.role.name === ROLES.OWNER;
+          const isChecked = selectedIds.includes(item?.userId);
+          const isOwner = item?.role?.name === ROLES.OWNER;
 
           return (
             <div
-              key={item.id}
-              className={`flex items-center justify-between p-4 border-b hover:bg-gray-50 ${selectedUser?.id === item.id ? "bg-blue-50" : ""
+              key={item?.id}
+              className={`flex items-center justify-between p-4 border-b hover:bg-gray-50 ${selectedUser?.id === item?.id ? "bg-blue-50" : ""
                 }`}
             >
               {/* LEFT */}
@@ -153,9 +153,9 @@ const TeamList = ({
 
                 <div>
                   <p className="font-medium">
-                    {item.userProfile?.firstName} {item.userProfile?.lastName}
+                    {item?.userProfile?.firstName} {item?.userProfile?.lastName}
                   </p>
-                  <p className="text-xs text-slate-400">{item.email}</p>
+                  <p className="text-xs text-slate-400">{item?.email}</p>
                 </div>
               </div>
 
@@ -165,7 +165,7 @@ const TeamList = ({
                   disabled={isOwner}
                   type="checkbox"
                   checked={isChecked}
-                  onChange={() => toggleSelect(item.userId)}
+                  onChange={() => toggleSelect(item?.userId)}
                   className="cursor-pointer"
                 />
               )}

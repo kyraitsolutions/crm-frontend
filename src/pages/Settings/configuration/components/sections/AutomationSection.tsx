@@ -122,17 +122,23 @@ const AutomationSection: React.FC = () => {
       {/* Empty state */}
 
       <div className="space-y-2">
-        {automations.map((automation) => (
-          <AutomationCard
-            key={automation.id}
-            automation={automation}
-            onToggle={(id, active) => handleToggleActiveAndInactive(id, active)}
-            onStatusChange={(id, status) => {
-              handleUpdateStatus(id, status);
-            }}
-            onDelete={(id) => handleDelete(id)}
-          />
-        ))}
+        {automations.length != 0 ? (
+          automations.map((automation) => (
+            <AutomationCard
+              key={automation.id}
+              automation={automation}
+              onToggle={(id, active) =>
+                handleToggleActiveAndInactive(id, active)
+              }
+              onStatusChange={(id, status) => {
+                handleUpdateStatus(id, status);
+              }}
+              onDelete={(id) => handleDelete(id)}
+            />
+          ))
+        ) : (
+          <EmptyAutomation />
+        )}
       </div>
 
       {/* Stepper modal */}

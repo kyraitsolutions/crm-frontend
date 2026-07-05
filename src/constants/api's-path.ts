@@ -3,6 +3,8 @@ export const API_PATH_PREFIX_USER = "/auth";
 export const API_ENDPOINT_PATH = {
   AUTH_USER: {
     ME: `${API_PATH_PREFIX_USER}/me`,
+    REGISTER: `${API_PATH_PREFIX_USER}/register`,
+    LOGIN: `${API_PATH_PREFIX_USER}/login`,
     // CREATE: `/organization/onboarding`,
     // UPDATE: `${API_PATH_PREFIX_USER}/user/update`,
     // GET: `${API_PATH_PREFIX_USER}/user/get`,

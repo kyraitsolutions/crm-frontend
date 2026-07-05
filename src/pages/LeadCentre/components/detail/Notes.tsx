@@ -141,8 +141,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
       : aTime - bTime; // oldest first
   });
 
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value as "recent_first" | "recent_last";
+  const handleSortChange = (value: "recent_first" | "recent_last") => {
     setSortType(value);
   };
 
@@ -158,7 +157,11 @@ const Notes = ({ lead }: { lead: ILead }) => {
         <div className="flex justify-between items-center w-full">
           <h2 className="font-semibold text-md ">Notes</h2>
 
-          <Select>
+          <Select
+            onValueChange={(value: "recent_first" | "recent_last") =>
+              handleSortChange(value)
+            }
+          >
             <SelectTrigger className="cursor-pointer">
               <SelectValue placeholder="Recent First" />
             </SelectTrigger>
@@ -172,7 +175,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
             onClick={(e) => e.stopPropagation()}
             value={sortType}
             onChange={handleSortChange}
-            className="border border-second font-medium rounded-xl px-4 py-1 text-sm bg-second/10 text-second outline-none  hover:bg-second/20"
+            className="border border-primary  font-medium rounded-xl px-4 py-1 text-sm bg-primary/10 text-primary outline-none  hover:bg-primary/20"
           >
             Recent Last ▾<option value="recent_first">Recent First</option>
             <option value="recent_last">Recent Last</option>

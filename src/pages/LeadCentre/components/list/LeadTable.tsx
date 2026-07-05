@@ -44,8 +44,11 @@ import {
 } from "@/components/ui/select";
 import { Pagination } from "@/components/pagination";
 import LeadNotFound from "../errors/LeadNotFound";
+import { ToastMessageService } from "@/services";
+import type { ApiError } from "@/types";
 const LeadTable = () => {
   const navigate = useNavigate();
+  const toastService = new ToastMessageService();
   // new Integration using zustand
   const { accountId } = useAuthStore((state) => state);
 
@@ -76,12 +79,23 @@ const LeadTable = () => {
   // const { permissions } = useAccountAccessStore((state) => state);
 
   const handleStatusChange = async (leadId: string, value: string) => {
-    await updateLeadField(
-      String(accountId),
-      String(leadId),
-      "stage" as any,
-      value,
-    );
+    try {
+      const response = await updateLeadField(
+        String(accountId),
+        String(leadId),
+        "stage" as any,
+        value,
+      );
+
+      if (response && response.status === 200) {
+        toastService.success(response?.message || "Lead updated successfully!");
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastService.error(err.message || "Failed to update lead");
+      }
+    }
   };
 
   const getLeadStages = async () => {
@@ -202,17 +216,14 @@ const LeadTable = () => {
               </TableCell>
 
               {/* Stage */}
-              <TableCell>
+              <TableCell onClick={(e) => e.stopPropagation()}>
                 <Select
                   value={lead?.stage}
                   onValueChange={(value: any) =>
                     handleStatusChange(lead.id, value)
                   }
                 >
-                  <SelectTrigger
-                    className="border-none shadow-none"
-                    onClick={(e: any) => e.stopPropagation()}
-                  >
+                  <SelectTrigger className="border-none shadow-none">
                     <SelectValue />
                   </SelectTrigger>
 

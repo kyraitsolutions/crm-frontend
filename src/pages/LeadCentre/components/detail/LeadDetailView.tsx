@@ -103,7 +103,7 @@ const LeadDetailView = ({ lead, users, leadStages }: ILeadDetailViewProps) => {
         );
 
       case "timeline":
-        return <TimelineTab />;
+        return <TimelineTab lead={lead} />;
 
       case "aiSummary":
         return <AILeadSummary leadId={String(lead.id)} />;

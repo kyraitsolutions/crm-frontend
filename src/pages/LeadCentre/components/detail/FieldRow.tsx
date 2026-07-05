@@ -5,11 +5,12 @@ import { useLeadsStore } from "../../store/lead.store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import type { ILead } from "../../types/lead.type";
 
 interface FieldRowProps {
   label: string;
   value: string;
-  fieldKey: string;
+  fieldKey: keyof ILead;
   leadId?: string;
   isPhone?: boolean;
   onChange: (value: string) => void;

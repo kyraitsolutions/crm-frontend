@@ -92,7 +92,7 @@ const Toolbar = () => {
         <div className="relative flex rounded-xl shadow-sm">
           <Button
             onClick={() => navigate(LEADS_ROUTES.CREATE)}
-            className="actions-btn rounded-none rounded-l-xl px-2 py-1.5 hover:bg-primary hover:text-white"
+            className="actions-btn rounded-none! rounded-l-xl! px-2 py-1.5 hover:bg-primary! hover:text-white!"
           >
             <Plus size={18} />
             Create Lead
@@ -100,7 +100,7 @@ const Toolbar = () => {
 
           <Button
             onClick={() => setOpenDropdown((prev) => !prev)}
-            className="actions-btn rounded-none rounded-r-xl bg-primary px-3 text-white"
+            className="actions-btn rounded-none! rounded-r-xl! bg-primary! px-3 text-white!"
           >
             <ChevronDown size={16} />
           </Button>

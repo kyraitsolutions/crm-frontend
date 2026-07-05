@@ -175,7 +175,7 @@ const Attachment = () => {
                                 setShowDropdown((prev) => !prev)
                             }
                             }
-                            className="bg-second/10 text-sm  text-second font-medium border border-second rounded-xl px-4 py-1 flex items-center gap-2 hover:opacity-90 transition"
+                            className="bg-primary/10 text-sm  text-primary font-medium border border-primary rounded-xl px-4 py-1 flex items-center gap-2 hover:opacity-90 transition"
                         >
                             Attach
                             <ChevronDown size={16} />

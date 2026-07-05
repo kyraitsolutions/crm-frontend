@@ -16,8 +16,10 @@ import {
   MODULE_OPTIONS,
 } from "../constants/dashboard.constants";
 import { useDashboardStore } from "../store/dashboard.store";
+import { useAuthStore } from "@/stores";
 
 export function DashboardHeader() {
+  const { user } = useAuthStore((state) => state);
   const { setFilters } = useDashboardStore((state) => state);
   const [selectedModule, setSelectedModule] = React.useState("overview");
 
@@ -40,6 +42,8 @@ export function DashboardHeader() {
     setFilters({ module: value });
   };
 
+  console.log("user", user);
+
   return (
     <header className="flex flex-col gap-4 bg-white px-4 py-1.5 md:flex-row md:items-center  md:justify-between">
       {/* LEFT */}
@@ -48,7 +52,11 @@ export function DashboardHeader() {
           <h1 className="text-base font-semibold text-neutral-900">
             Dashboard
           </h1>
-          <p className="text-sm text-neutral-500">Welcome back, John! 👋</p>
+          {user && (
+            <p className="text-sm text-neutral-500">
+              Welcome back, {user?.userProfile?.firstName}! 👋
+            </p>
+          )}
         </div>
       </div>
 

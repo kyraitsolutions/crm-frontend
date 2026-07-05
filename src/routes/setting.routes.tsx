@@ -6,7 +6,6 @@ import Telegram from "@/pages/Channels/telegram.page";
 import ChatFlows from "@/pages/ChatFlows/ChatFlows";
 import Recyclebin from "@/pages/DataAdministration/recyclebin.page";
 import Storage from "@/pages/DataAdministration/storage.page";
-import Webhook from "@/pages/Developer/Webhook";
 import Integrations from "@/pages/Integration/Integrations";
 import NotificationSettingPage from "@/pages/Notification/NotificationSettingPage";
 // import Notification from "@/pages/Notification/notification.page";
@@ -25,6 +24,8 @@ import ConfigurationPage from "@/pages/Settings/configuration/ConfigurationPage"
 import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page";
 import ActivityLogsPage from "@/pages/Settings/activityLogs/ActivityLogsPage";
 import { Whatsapp } from "@/pages/Channels/whatsapp/pages/WhatsAppPage";
+import Webhook from "@/pages/Developer/Webhook/Webhook";
+import Facebook from "@/pages/Channels/facebook.page";
 
 export const settingRoutes: RouteObject[] = [
   {
@@ -57,6 +58,7 @@ export const settingRoutes: RouteObject[] = [
           { path: "whatsapp", element: <Whatsapp /> },
           { path: "instagram", element: <Instagram /> },
           { path: "telegram", element: <Telegram /> },
+          { path: "facebook", element: <Facebook /> },
 
           // Developer
           { path: "webhook", element: <Webhook /> },

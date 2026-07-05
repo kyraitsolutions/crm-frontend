@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
 import StatusBadge from "./StatusBadge";
 import { Edit } from "lucide-react";
 import DataRow from "./DataRow";
 import CompanyLogo from "./CompanyLogo";
 import { ROLES } from "@/rbac";
+import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 
 const CompanyProfileView = ({ data, onEdit, role }: any) => {
   return (
@@ -11,13 +11,13 @@ const CompanyProfileView = ({ data, onEdit, role }: any) => {
       <div className="flex justify-between items-center px-6 py-4 border-b">
         <div className="flex items-center gap-4">
           <h2 className="text-primary">Company Profile</h2>
-          <StatusBadge isActive={data?.isActive} />
+          <StatusBadge isActive={data?.isActive || "Active"} />
         </div>
 
         {role === ROLES.OWNER && (
-          <Button onClick={onEdit}>
-            <Edit className="mr-1" /> Edit
-          </Button>
+          <ButtonWithTitle title="Edit" className="rounded-xl flex items-center gap-1" onClick={onEdit}>
+            <Edit className="mr-1 size-5" /> Edit
+          </ButtonWithTitle>
         )}
       </div>
 

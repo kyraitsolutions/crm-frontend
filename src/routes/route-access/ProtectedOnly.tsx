@@ -30,7 +30,9 @@ export const ProtectedOnly = () => {
 
     try {
       const res: any = await authService.getMe();
-      const userData = res.data?.docs;
+
+      console.log("User profile response:", res.data); // Log the response for debugging
+      const userData = res.data?.doc;
 
       authManager.setUser(userData);
     } catch (err) {

@@ -41,7 +41,13 @@ const CompanyLogo = ({
           className={`w-20 h-20 rounded-full overflow-hidden border border-slate-200 ${isEdit && "cursor-pointer"}`}
           onClick={() => isEdit && handleImageClick()}
         >
-          <img src={logo} alt="logo" className="w-full h-full object-cover" />
+          {logo ? (
+            <img src={logo} alt="logo" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Camera size={20} className="text-gray-500" />
+            </div>
+          )}
         </div>
 
         {/* Camera Icon */}

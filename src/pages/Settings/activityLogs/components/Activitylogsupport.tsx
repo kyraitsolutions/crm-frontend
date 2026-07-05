@@ -1,6 +1,7 @@
 // ─── ActivityLogFilter ────────────────────────────────────────────────────────
 import { cn } from "@/lib/utils";
-import type { FilterActor } from "../utils/activity-logs.utils";
+// import type { FilterActor } from "../utils/activity-logs.utils";
+type FilterActor = "all" | "user" | "automation" | "system";
 
 interface ActivityLogFilterProps {
   value: FilterActor;
