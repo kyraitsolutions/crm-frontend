@@ -2,14 +2,6 @@
 
 import Section from "@/components/sections/Section";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { COOKIES_STORAGE } from "@/constants";
@@ -147,6 +139,7 @@ export function Register() {
                     value={fromData.email}
                     onChange={(e) => setFormData({ ...fromData, email: e.target.value })}
                     placeholder="you@example.com"
+                    className="input-field"
                     required
                   />
                 </div>
@@ -159,6 +152,7 @@ export function Register() {
                     value={fromData.password}
                     onChange={(e) => setFormData({ ...fromData, password: e.target.value })}
                     placeholder="••••••••"
+                    className="input-field"
                     required
                   />
                 </div>

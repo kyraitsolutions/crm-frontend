@@ -6,6 +6,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { useConfigurationStore } from "../Settings/configuration/store/configuration.store";
 import { useLeadsStore } from "./store/lead.store";
+import { Input } from "@/components/ui/input";
 
 
 const suggestedTags = [
@@ -221,24 +222,24 @@ const AddLead = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="name" >Full Name <span className="text-red-500">*</span></label>
-                <input name="name" placeholder="Full Name"
+                <Input name="name" placeholder="Full Name"
                   required
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="email">Email<span className="text-red-500">*</span></label>
-                <input name="email" placeholder="Email"
+                <Input name="email" placeholder="Email"
                   required
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="title">Title</label>
-                <input name="title" placeholder="Title"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                <Input name="title" placeholder="Title"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -250,7 +251,7 @@ const AddLead = () => {
                     value={form.countryCode}
                     onChange={handleChange}
                     required
-                    className="border rounded px-3 bg-gray-50 outline-primary text-sm min-w-[90px]"
+                    className="input-field py-[6.5px] shadow-xs border border-primary outline-none w-28"
                   >
                     <option value="+91">🇮🇳 +91</option>
                     <option value="+1">🇺🇸 +1</option>
@@ -258,9 +259,11 @@ const AddLead = () => {
                     <option value="+61">🇦🇺 +61</option>
                     <option value="+971">🇦🇪 +971</option>
                   </select>
-                  <input name="phone" placeholder="Phone"
+                  <Input
+                    name="phone"
+                    placeholder="Phone"
                     required
-                    className="border py-1.5 w-full rounded px-4 bg-gray-50 outline-primary text-sm"
+                    className="input-field"
                     onChange={handleChange}
                   />
                 </div>
@@ -268,29 +271,29 @@ const AddLead = () => {
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="company">Company</label>
-                <input name="company" placeholder="Company"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                <Input name="company" placeholder="Company"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="website">Website</label>
-                <input name="website" placeholder="Website"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                <Input name="website" placeholder="Website"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="mobile">Whatsapp Number</label>
-                <input name="mobile" placeholder="Whatsapp Number"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                <Input name="mobile" placeholder="Whatsapp Number"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="message">Message</label>
-                <input name="message" placeholder="Message"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                <Input name="message" placeholder="Message"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -318,7 +321,7 @@ const AddLead = () => {
                   key={index}
                   className="flex gap-3"
                 >
-                  <input
+                  <Input
                     placeholder="Key"
                     value={field.key.split(' ').join('_').toLowerCase()}
                     onChange={(e) =>
@@ -328,10 +331,10 @@ const AddLead = () => {
                         e.target.value
                       )
                     }
-                    className="border w-full rounded px-4 py-2 bg-gray-50 outline-primary text-sm"
+                    className="input-field"
                   />
 
-                  <input
+                  <Input
                     placeholder="Value"
                     value={field.value}
                     onChange={(e) =>
@@ -341,7 +344,7 @@ const AddLead = () => {
                         e.target.value
                       )
                     }
-                    className="border w-full rounded px-4 py-1 bg-gray-50 outline-primary text-sm"
+                    className="input-field"
                   />
                   <div className="w-20 flex items-center justify-center">
                     <Trash2
@@ -362,7 +365,7 @@ const AddLead = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="stage">Stage</label>
-                <select name="stage" onChange={handleChange} className="py-2 outline-primary text-sm bg-gray-50 border px-4 rounded">
+                <select name="stage" onChange={handleChange} className="input-field py-[6.5px] shadow-xs border border-primary outline-none">
                   {configurationItems.map((stage, index) => (
                     <option key={index} value={stage.key}>{stage.label}</option>
                   ))}
@@ -370,7 +373,7 @@ const AddLead = () => {
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="status">Status</label>
-                <select name="status" onChange={handleChange} className="py-2 outline-primary text-sm bg-gray-50 border px-4 rounded">
+                <select name="status" onChange={handleChange} className="input-field py-[6.5px] shadow-xs border border-primary outline-none">
                   {statusOptions.map((status, index) => (
                     <option key={index} value={status.value}>{status.label}</option>
                   ))}
@@ -378,7 +381,7 @@ const AddLead = () => {
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="source">Source</label>
-                <select name="source" onChange={handleChange} className="py-2 outline-primary text-sm bg-gray-50 border px-4 rounded">
+                <select name="source" onChange={handleChange} className="input-field py-[6.5px] shadow-xs border border-primary outline-none">
                   {sourceOptions.map((source, index) => (
                     <option key={index} value={source.value}>{source.label}</option>
                   ))}
@@ -386,7 +389,7 @@ const AddLead = () => {
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="sourceurl">Source URL</label>
-                <input name="sourceurl" placeholder="Source URL" className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded" onChange={handleChange} />
+                <Input name="sourceurl" placeholder="Source URL" className="input-field" onChange={handleChange} />
               </div>
             </div>
           </div>
@@ -397,19 +400,19 @@ const AddLead = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="address">Address</label>
-                <input name="address" placeholder="Address" className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded" onChange={handleChange} />
+                <Input name="address" placeholder="Address" className="input-field" onChange={handleChange} />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="city">City</label>
-                <input name="city" placeholder="City" className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded" onChange={handleChange} />
+                <Input name="city" placeholder="City" className="input-field" onChange={handleChange} />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="state">State</label>
-                <input name="state" placeholder="State" className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded" onChange={handleChange} />
+                <Input name="state" placeholder="State" className="input-field" onChange={handleChange} />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm" htmlFor="country">Country</label>
-                <input name="country" placeholder="Country" className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded" onChange={handleChange} />
+                <Input name="country" placeholder="Country" className="input-field" onChange={handleChange} />
               </div>
               {/* <div className="flex flex-col gap-1">
                                 <label className="text-sm" htmlFor="pincode">Pincode</label>
@@ -423,7 +426,8 @@ const AddLead = () => {
             <h2 className="font-medium mb-5 text-lg flex items-center gap-1"><MdInfo size={20} className="-mt-0.5 text-blue-500" /> Additional Details</h2>
             <div className="flex flex-col gap-1">
               <label className="text-sm" htmlFor="description">Description</label>
-              <textarea name="description" placeholder="Enter the additional information" rows={6} className="py-1.5 resize-none outline-primary text-sm bg-gray-50 border px-4 rounded w-full" onChange={handleChange} />
+              <textarea name="description" placeholder="Enter the additional information" rows={6}
+                className="input-field border border-primary p-2 shadow-xs outline-none" onChange={handleChange} />
 
             </div>
           </div>
@@ -455,7 +459,7 @@ const AddLead = () => {
 
             {/* Add custom tag */}
             <div className="flex gap-2 mb-5">
-              <input
+              <Input
                 type="text"
                 placeholder="Add custom tag"
                 value={tagInput}
@@ -463,13 +467,13 @@ const AddLead = () => {
                   setTagInput(e.target.value)
                 }
                 onKeyDown={handleTagKeyDown}
-                className="flex-1 border rounded px-4 py-2 bg-gray-100 outline-primary"
+                className="input-field"
               />
 
               <button
                 type="button"
                 onClick={() => addTag(tagInput)}
-                className="px-4 py-2 bg-primary text-white rounded"
+                className="px-4 bg-primary text-white rounded"
               >
                 Add
               </button>
