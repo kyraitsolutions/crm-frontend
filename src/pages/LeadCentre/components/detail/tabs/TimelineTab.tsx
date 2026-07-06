@@ -2,7 +2,6 @@ import type { ILead } from "@/pages/LeadCentre/types/lead.type";
 import ActivityLogLists from "@/pages/Settings/activityLogs/components/ActivityLogLists";
 import { useActivityLogStore } from "@/pages/Settings/activityLogs/store/activity-logs.store";
 import { useAuthStore } from "@/stores";
-import { Filter } from "lucide-react";
 import { useEffect } from "react";
 
 // type TimelineType =
@@ -133,32 +132,35 @@ const TimelineTab = ({ lead }: TimelineTabProps) => {
   }, []);
 
   return (
-    <div className="bg-white rounded-xl h-full overflow-y-auto">
-      {/* Top Actions */}
-      <div className="px-5 pt-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h2 className="text-md font-semibold">Timeline History</h2>
+    <div className="p-5 overflow-y-auto hide-scrollbar ">
+      <div>
+        {/* Top Actions */}
+        <div className="bg-white rounded-xl px-5 pt-4 flex items-center justify-between">
+          {/* <div className="flex items-center gap-3">
+            <h2 className="text-md font-semibold">Timeline History</h2>
 
-          <button className=" bg-gray-200 rounded-xl text-gray-500 py-2 px-3 hover:opacity-90">
-            <Filter size={16} />
-          </button>
-        </div>
+            <button className=" bg-gray-200 rounded-xl text-gray-500 py-2 px-3 hover:opacity-90">
+              <Filter size={16} />
+            </button>
+          </div> */}
 
-        {/* <button
+          {/* <button
           onClick={() => setShowUpcoming(!showUpcoming)}
           className="text-sm text-second flex items-center gap-1"
         >
           Show Upcoming Automated Actions
           <ChevronDown size={15} />
         </button> */}
-      </div>
+        </div>
 
-      {/* Timeline */}
+        {/* Timeline */}
 
-      <div className="p-4 h-full">
-        <ActivityLogLists />
+        <div className="bg-white py-5 px-10 h-full">
+          <ActivityLogLists />
+        </div>
       </div>
     </div>
+
   );
 };
 

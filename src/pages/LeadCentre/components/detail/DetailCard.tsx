@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { FieldRow } from "./FieldRow";
-import type { ILead } from "../../types/lead.type";
+import type { ILead, Path } from "../../types/lead.type";
 import { ToastMessageService } from "@/services";
 import { useAuthStore } from "@/stores";
 import { useLeadsStore } from "../../store/lead.store";
 import SelectFieldRow from "./SelectFieldRow";
+import type { ApiError } from "@/types";
 
 const LEAD_STATUS_OPTIONS = [
   {
@@ -17,6 +18,7 @@ const LEAD_STATUS_OPTIONS = [
   },
 ];
 
+
 const DetailCard = ({ lead }: { lead: ILead | null }) => {
   const toastService = new ToastMessageService();
   const { accountId } = useAuthStore((state) => state);
@@ -24,7 +26,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
 
   const [hideDetails, setHideDetails] = useState(true);
 
-  const handleSave = async (fieldKey: keyof ILead, value: string) => {
+  const handleSave = async (fieldKey: Path<ILead>, value: string) => {
     try {
       const response = await updateLeadField(
         String(accountId),
@@ -84,21 +86,21 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   value={lead?.phone || ""}
                   leadId={lead?.id}
                   onChange={(value) => handleSave("phone", value)}
-                />
+                /> */}
 
-                {/* <FieldRow
+                <FieldRow
                   label="Mobile"
-                  value={lead?.mobile || ""}
+                  value={lead?.mobile || "Not provided--"}
                   isPhone
                   fieldKey="mobile"
                   leadId={lead?.id}
                   onChange={(value) => handleSave("title", value)}
-                /> */}
+                />
 
                 <FieldRow
-                  label="Lead Source"
-                  value={lead?.source?.name || ""}
-                  fieldKey="source.name"
+                  label="Source"
+                  value={lead?.source?.name && lead.source.name.charAt(0).toUpperCase() + lead.source.name.slice(1) || ""}
+                  fieldKey={"source.name" as any}
                   leadId={lead?.id}
                   onChange={(value) => handleSave("source.name", value)}
                 />
@@ -114,13 +116,13 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   onChange={(value) => handleSave("company", value)}
                 />
 
-                <FieldRow
+                {/* <FieldRow
                   label="Lead Name"
                   value={lead?.name || ""}
                   fieldKey="name"
                   leadId={lead?.id}
                   onChange={(value) => handleSave("name", value)}
-                />
+                /> */}
 
                 {/* <FieldRow
                   label="Email"
@@ -128,11 +130,11 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   fieldKey="email"
                   leadId={lead?.id}
                   onChange={(value) => handleSave("email", value)}
-                />
+                /> */}
 
                 <FieldRow
                   label="Website"
-                  value={lead?.website || "-"}
+                  value={lead?.website || "Not provided--"}
                   fieldKey="website"
                   leadId={lead?.id}
                   onChange={(value) => handleSave("website", value)}
@@ -144,14 +146,6 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
                   options={LEAD_STATUS_OPTIONS}
                   onChange={(value) => handleSave("status", value)}
                 />
-
-                {/* <FieldRow
-                  label="Lead Status"
-                  value={lead?.status || ""}
-                  fieldKey="status"
-                  leadId={lead?.id}
-                  onChange={(value) => handleSave("status", value)}
-                /> */}
               </div>
             </div>
           </div>
@@ -160,7 +154,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
             <h2 className="font-semibold text-md mb-6 text-[#1e293b]">
               Other Details
             </h2>
-            <div className="grid xl:grid-cols-2 gap-x-24 max-w-4xl mx-auto">
+            <div className="grid xl:grid-cols-1 gap-x-24 max-w-4xl mx-auto">
               {Object.entries(lead?.customFields || {}).map(([key, value]) => (
                 <FieldRow
                   key={key}
@@ -185,21 +179,21 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
               <FieldRow
                 label="Address"
                 value={lead?.meta?.location?.address || "Mohali, India"}
-                fieldKey="meta.location.address"
+                fieldKey={"meta.location.address"}
                 leadId={lead?.id}
                 onChange={(value) => handleSave(`meta.location.address`, value)}
               />
               <FieldRow
                 label="City"
                 value={lead?.meta?.location?.city || "Mohali"}
-                fieldKey="meta.location.city"
+                fieldKey={"meta.location.city"}
                 leadId={lead?.id}
                 onChange={(value) => handleSave(`meta.location.city`, value)}
               />
               <FieldRow
                 label="Country"
                 value={lead?.meta?.location?.country || "India"}
-                fieldKey="meta.location.country"
+                fieldKey={"meta.location.country"}
                 leadId={lead?.id}
                 onChange={(value) => handleSave(`meta.location.country`, value)}
               />

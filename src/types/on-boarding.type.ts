@@ -9,6 +9,7 @@ export const personalSchema = z.object({
 export const companySchema = z.object({
   // ── Company basics ──────────────────────────────────────────
   name: z.string().min(1, "Company name is required"),
+  email: z.email("Enter a valid email").optional(),
   industry: z.string().min(1, "Industry is required"),
   phone: z.string().min(1, "Phone number is required"),
   website: z.string().url("Enter a valid URL").optional().or(z.literal("")),
@@ -40,7 +41,7 @@ export const companySchema = z.object({
 });
 
 export const onboardingSchema = z.object({
-  ...personalSchema.shape,
+  // ...personalSchema.shape,
   ...companySchema.shape,
 });
 

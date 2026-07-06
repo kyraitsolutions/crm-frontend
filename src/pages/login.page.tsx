@@ -32,6 +32,7 @@ const features = [
   },
 ];
 export function LoginPage() {
+  const url = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -185,9 +186,7 @@ export function LoginPage() {
                 type="button"
                 onClick={() => {
                   CookieUtils.clear();
-                  window.location.href =
-                    "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                  // "http://localhost:3000/api/auth/google";
+                  window.location.href = `${url}/api/auth/google`
                 }}
                 className={cn(
                   "w-full flex items-center justify-center gap-2 hover:bg-gray-50",

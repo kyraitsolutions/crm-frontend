@@ -41,7 +41,7 @@ const Sidebar = ({ onTabClick, counts }: ISidebarProps) => {
             <Button
               key={item.id}
               onClick={() => onTabClick(item.id)}
-              className="bg-transparent! text-primary! capitalize  transition cursor-pointer py-1! px-0!"
+              className="bg-transparent! text-gray-700 capitalize  transition cursor-pointer py-1! px-0!"
             >
               {item.label}
 

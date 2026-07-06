@@ -58,6 +58,7 @@ export const ProtectedOnly = () => {
 
   // onboarding not completed
   if (user && !user.onboarding) {
+    console.log("user onboarding", user.onboarding)
     if (location.pathname !== "/on-boarding") {
       return <Navigate to="/on-boarding" replace />;
     }

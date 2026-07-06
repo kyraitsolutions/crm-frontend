@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+export type Path<T> = {
+  [K in keyof T & string]:
+    NonNullable<T[K]> extends object
+      ? K | `${K}.${Path<NonNullable<T[K]>>}`
+      : K;
+}[keyof T & string];
 export const LeadSchema = z.object({
   id: z.string().min(1),
   accountId: z.string().min(1),

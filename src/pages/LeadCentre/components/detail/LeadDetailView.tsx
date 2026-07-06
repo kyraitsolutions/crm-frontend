@@ -45,7 +45,7 @@ const LeadDetailView = ({ lead, users, leadStages }: ILeadDetailViewProps) => {
 
   return (
     <div className="h-[calc(100vh-64px)] flex flex-col bg-[#f4f5f8]">
-      <LeadHeader lead={lead} onClick={() => setOpenEmailEditor(true)} />
+      <LeadHeader lead={lead} onClick={() => setOpenEmailEditor(!openEmailEditor)} />
 
       <div className="flex overflow-hidden flex-1">
         <Sidebar

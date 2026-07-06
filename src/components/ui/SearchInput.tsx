@@ -14,14 +14,14 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
     return (
       <div className={`relative w-full ${containerClassName ?? ""}`}>
         <Search
-          size={20}
+          size={16}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
         />
 
         <Input
           ref={ref}
           type="search"
-          className={`w-full pl-10 input-field ${className ?? ""}`}
+          className={`w-full pl-10 py-2! input-field ${className ?? ""}`}
           placeholder={placeholder}
           {...props}
         />

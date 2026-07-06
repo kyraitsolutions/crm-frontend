@@ -31,9 +31,12 @@ const features = [
   },
 ];
 export function Register() {
+  const url = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [fromData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
@@ -136,6 +139,31 @@ export function Register() {
             </div>
             <form onSubmit={handleRegister} className="space-y-5 mt-3">
               <div className="grid gap-3">
+                <Label htmlFor="firstName">First Name*</Label>
+                <Input
+                  id="firstName"
+                  type="text"
+                  value={fromData.firstName}
+                  onChange={(e) => setFormData({ ...fromData, firstName: e.target.value })}
+                  placeholder="John Doe"
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="lastName">Last Name*</Label>
+                <Input
+                  id="lastName"
+                  type="text"
+                  value={fromData.lastName}
+                  onChange={(e) => setFormData({ ...fromData, lastName: e.target.value })}
+                  placeholder="John Doe"
+                  className="input-field"
+                  required
+                />
+              </div>
+
+              <div className="grid gap-3">
                 <Label htmlFor="email">Email*</Label>
                 <Input
                   id="email"
@@ -192,9 +220,7 @@ export function Register() {
                 type="button"
                 onClick={() => {
                   CookieUtils.clear();
-                  window.location.href =
-                    "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                  // "http://localhost:3000/api/auth/google";
+                  window.location.href = `${url}/api/auth/google`
                 }}
                 className={cn(
                   "w-full flex items-center justify-center gap-2 hover:bg-gray-50 rounded-xl",
