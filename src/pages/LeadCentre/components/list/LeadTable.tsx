@@ -128,7 +128,9 @@ const LeadTable = () => {
   }
 
   if (leads.length === 0) {
-    return <LeadNotFound />;
+    return <div className="h-[50dvh] flex justify-center items-center">
+      <LeadNotFound />
+    </div>;
   }
 
   return (

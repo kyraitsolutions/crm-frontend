@@ -111,11 +111,11 @@ const Contacts = () => {
             className="border flex  items-center  gap-2 border-primary hover:bg-primary/10 text-primary text-sm px-3 py-1.5 rounded font-medium transition">
             <Plus size={16} /> Add Contact
           </ButtonWithTitle>
-          <ButtonWithTitle
+          {/* <ButtonWithTitle
             title="Import contact using sheet"
             className="border border-primary hover:bg-primary/10 text-primary text-sm px-3 py-1.5 rounded font-medium transition">
             Import Contact
-          </ButtonWithTitle>
+          </ButtonWithTitle> */}
         </div>
 
       </div>

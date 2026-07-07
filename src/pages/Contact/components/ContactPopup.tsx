@@ -250,23 +250,20 @@ const ContactPopup = () => {
                                     Select Source
                                 </option>
 
-                                {sourceOptions.map(
-                                    (
-                                        option
-                                    ) => (
-                                        <option
-                                            key={
-                                                option.value
-                                            }
-                                            value={
-                                                option.value
-                                            }
-                                        >
-                                            {
-                                                option.label
-                                            }
-                                        </option>
-                                    )
+                                {sourceOptions.map((option) => (
+                                    <option
+                                        key={
+                                            option.value
+                                        }
+                                        value={
+                                            option.value
+                                        }
+                                    >
+                                        {
+                                            option.label
+                                        }
+                                    </option>
+                                )
                                 )}
                             </select>
 
