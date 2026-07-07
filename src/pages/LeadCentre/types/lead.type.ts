@@ -1,11 +1,26 @@
 import { z } from "zod";
 
-export type Path<T> = {
-  [K in keyof T & string]:
-    NonNullable<T[K]> extends object
-      ? K | `${K}.${Path<NonNullable<T[K]>>}`
-      : K;
-}[keyof T & string];
+export type Keys<T> = keyof T & string;
+
+export type Path<T> =
+  | Keys<T>
+  | {
+      [K in Keys<T>]:
+        NonNullable<T[K]> extends object
+          ? `${K}.${Keys<NonNullable<T[K]>>}`
+          : never;
+    }[Keys<T>]
+  | {
+      [K in Keys<T>]:
+        NonNullable<T[K]> extends object
+          ? {
+              [P in Keys<NonNullable<T[K]>>]:
+                NonNullable<NonNullable<T[K]>[P]> extends object
+                  ? `${K}.${P}.${Keys<NonNullable<NonNullable<T[K]>[P]>>}`
+                  : never;
+            }[Keys<NonNullable<T[K]>>]
+          : never;
+    }[Keys<T>];
 export const LeadSchema = z.object({
   id: z.string().min(1),
   accountId: z.string().min(1),
