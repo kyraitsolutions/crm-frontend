@@ -6,7 +6,7 @@ const LeadNotFound = () => {
     <div className="flex w-full items-center justify-center">
       <div className="text-center">
         <img
-          src="/src/assets/nochathistoryfound_CnSlq9EOHBW59HI8RYjeSpZ_WbWyQz9RmyNcvToLwGw4g31mlf1rnCox3Y3F-6xk_.svg"
+          src="/converted_image_transparent.png"
           rel="preload"
           fetchPriority="high"
           alt="No chats yet"
