@@ -116,7 +116,7 @@ export function Register() {
           <div className="relative z-10 space-y-5">
             {features.map((f) => (
               <div key={f.title} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-white">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 bg-white">
                   {f.icon}
                 </div>
                 <div>
