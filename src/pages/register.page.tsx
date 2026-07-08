@@ -32,29 +32,39 @@ const features = [
 ];
 export function Register() {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const [fromData, setFormData] = useState({
+  const [error, setError] = useState({
+    message: "",
+    status: false
+  });
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
+    confirmPassword: ""
   });
   const [loading, setLoading] = useState(false);
   const authService = new AuthService();
   const handleRegister = async (e: React.FormEvent) => {
 
     e.preventDefault();
+
+    if (formData.confirmPassword !== formData.password) {
+      setError({ message: "Passwords do not match", status: true });
+      return;
+    }
     try {
       setLoading(true);
 
-      const response = await authService.register(fromData);
+      const response = await authService.register(formData);
       console.log("Registration response:", response.data); // Log the response for debugging
       if (response.status === 201) {
         CookieUtils.setItem(COOKIES_STORAGE.auth_token, response.data?.doc?.token);
         navigate("/", { replace: true });
       }
-      // Here you would typically send the registration data to your backend API
     }
     catch (error: any) {
-      setError(error.message)
+      setError({ message: error.message, status: true })
       console.log(error)
       console.error("Registration error:", error);
     }
@@ -62,6 +72,7 @@ export function Register() {
       setLoading(false);
     }
   };
+
 
 
   return (
@@ -132,16 +143,40 @@ export function Register() {
             </div>
             {/* Invalid creds error  */}
             <div>
-              {error && <p className="mt-2 text-xs text-red-500">{"User with this email already exists"}</p>}
+              {error.status && <p className="mt-2 text-xs text-red-500">{error.message}</p>}
             </div>
             <form onSubmit={handleRegister} className="space-y-5 mt-3">
+              <div className="grid gap-3">
+                <Label htmlFor="firstName">First Name*</Label>
+                <Input
+                  id="firstName"
+                  type="firstName"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  placeholder="John"
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="lastName">Last Name*</Label>
+                <Input
+                  id="lastName"
+                  type="lastName"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  placeholder="Doe"
+                  className="input-field"
+                  required
+                />
+              </div>
               <div className="grid gap-3">
                 <Label htmlFor="email">Email*</Label>
                 <Input
                   id="email"
                   type="email"
-                  value={fromData.email}
-                  onChange={(e) => setFormData({ ...fromData, email: e.target.value })}
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="you@example.com"
                   className="input-field"
                   required
@@ -153,8 +188,8 @@ export function Register() {
                 <Input
                   id="password"
                   // type="password"
-                  value={fromData.password}
-                  onChange={(e) => setFormData({ ...fromData, password: e.target.value })}
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="••••••••"
                   className="input-field"
                   required
@@ -165,15 +200,15 @@ export function Register() {
                 <Input
                   id="confirmPassword"
                   // type="password"
-                  value={fromData.password}
-                  onChange={(e) => setFormData({ ...fromData, password: e.target.value })}
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                   placeholder="••••••••"
                   className="input-field"
                   required
                 />
               </div>
 
-              <Button type="submit" className="w-full mt-4 rounded-xl" disabled={loading}>
+              <Button type="submit" className="w-full mt-4 rounded-xl" disabled={loading && formData.confirmPassword !== formData.password}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? "Creating account..." : "Create account"}
               </Button>
