@@ -10,7 +10,6 @@ import Integrations from "@/pages/Integration/Integrations";
 import NotificationSettingPage from "@/pages/Notification/NotificationSettingPage";
 // import Notification from "@/pages/Notification/notification.page";
 import CompanyDetails from "@/pages/Profile/CompanyDetails";
-import ProfilePage from "@/pages/Profile/Profile";
 import SettingPage from "@/pages/setting.page";
 import { SubscriptionPage } from "@/pages/subscription.page";
 import Role from "@/pages/UsersAndControl/role.page";
@@ -26,6 +25,7 @@ import ActivityLogsPage from "@/pages/Settings/activityLogs/ActivityLogsPage";
 import { Whatsapp } from "@/pages/Channels/whatsapp/pages/WhatsAppPage";
 import Webhook from "@/pages/Developer/Webhook/Webhook";
 import Facebook from "@/pages/Channels/facebook.page";
+import ProfilePage from "@/pages/Profile/UserProfile/pages/Profile";
 
 export const settingRoutes: RouteObject[] = [
   {
