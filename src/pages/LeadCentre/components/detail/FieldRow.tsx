@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { ILead, Path } from "../../types/lead.type";
+import { Link } from "react-router-dom";
 
 interface FieldRowProps {
   label: string;
@@ -82,9 +83,9 @@ export const FieldRow = ({
           )}
 
           {isPhone && !isEditing && (
-            <button className="bg-primary/10 p-1.5 rounded-md mr-2">
+            <Link to={`tel:${tempValue}`} className="bg-primary/10 p-1.5 rounded-md mr-2">
               <Phone className="text-primary" size={14} />
-            </button>
+            </Link>
           )}
         </div>
 

@@ -96,9 +96,9 @@ const AutomationSection: React.FC = () => {
       </div>
     );
 
-  if (!automations.length) {
-    return <EmptyAutomation />;
-  }
+  // if (!automations.length) {
+  //   return <EmptyAutomation />;
+  // }
 
   return (
     <div className="w-full h-full space-y-4">

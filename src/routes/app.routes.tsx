@@ -1,5 +1,5 @@
 import { AppLayout, RootLayout } from "@/layouts";
-import { AuthCallbackPage, LoginPage, OnBoardingPage, Register } from "@/pages";
+import { AuthCallbackPage, OnBoardingPage } from "@/pages";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 // import { builderRoutes } from "./builder.routes";
 import { dashboardRoutes } from "./dashboard.routes";
@@ -17,6 +17,9 @@ import Teams from "@/pages/UsersAndControl/teams2.page";
 import { liveChatRoutes } from "./livechat.routes";
 import { chatBotRoutes } from "@/rbac/chat-bot.routes";
 import { dealsRoutes } from "./deal.routes";
+import { LoginPage } from "@/pages/Auth/Login/login.page";
+import { Register } from "@/pages/Auth/Register/register.page";
+import ForgotPasswordPage from "@/pages/Auth/ForgotPassword/forgotPassword.page";
 // import { dealsRoutes } from "./deal.routes";
 
 export const appRoutes = createBrowserRouter([
@@ -35,6 +38,7 @@ export const appRoutes = createBrowserRouter([
         children: [
           { path: "/login", element: <LoginPage /> },
           { path: "/register", element: <Register /> },
+          { path: "/forgot-password", element: <ForgotPasswordPage /> },
         ],
       },
 

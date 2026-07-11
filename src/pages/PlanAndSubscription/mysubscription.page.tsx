@@ -1,6 +1,7 @@
 import { SubscriptionPlan } from "@/enums/subscription.enum";
 import { useAuthStore } from "@/stores";
 import { CalendarDays, Clock3, CreditCard, Crown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const MySubscriptionPage = () => {
   const { user } = useAuthStore((state) => state);
@@ -23,17 +24,17 @@ const MySubscriptionPage = () => {
   const totalDays =
     startDate && expiryDate
       ? Math.ceil(
-          (expiryDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
-        )
+        (expiryDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+      )
       : 0;
 
   const daysLeft = expiryDate
     ? Math.max(
-        Math.ceil(
-          (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
-        ),
-        0,
-      )
+      Math.ceil(
+        (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+      ),
+      0,
+    )
     : 0;
 
   const usedDays = totalDays - daysLeft;
@@ -43,10 +44,10 @@ const MySubscriptionPage = () => {
     <div className="p-6 bg-[#f8fafc] min-h-screen">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-md font-semibold text-slate-800 text-sm">
+        <h1 className="text-base font-semibold text-slate-800">
           My Subscription
         </h1>
-        <p className="text-slate-500 mt-1 text-xs">
+        <p className="text-slate-500 text-sm">
           Manage your plan and billing details
         </p>
       </div>
@@ -63,7 +64,7 @@ const MySubscriptionPage = () => {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-semibold text-slate-800 text-sm">
+                  <h2 className="font-semibold text-slate-800 text-sm">
                     {planName} Plan
                   </h2>
 
@@ -77,9 +78,9 @@ const MySubscriptionPage = () => {
               </div>
             </div>
 
-            <button className="px-3 py-1.5 rounded-xl bg-primary text-sm text-white font-medium hover:opacity-90 transition">
+            <Link to="/dashboard/settings/subscription" className="px-3 py-1.5 rounded-xl bg-primary text-sm text-white font-medium hover:opacity-90 transition">
               Upgrade Plan
-            </button>
+            </Link>
           </div>
 
           {/* Progress */}

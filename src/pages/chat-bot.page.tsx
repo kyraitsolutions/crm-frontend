@@ -291,11 +291,11 @@ export function ChatBotPage() {
   return (
     <div className="space-y-6 lg:px-3 px-2 py-2">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-medium text-[#37322F]">
+        <div className="px-3 mt-2">
+          <h1 className="text-base font-semibold text-slate-700">
             Chatbot Directory
           </h1>
-          <p className="mt-2 text-sm text-[#847971]">
+          <p className="text-sm text-[#847971]">
             Manage deployment status, monitor engagement, and open detailed user
             insights.
           </p>
@@ -346,10 +346,10 @@ export function ChatBotPage() {
 
             {/* Text */}
             <div>
-              <h2 className="text-xl font-medium text-[#37322F]">
+              <h2 className="text-lg font-semibold text-slate-700">
                 No Chatbot found
               </h2>
-              <p className="mt-2 text-sm text-[#847971]">
+              <p className="text-sm text-slate-700">
                 Get started by creating your first chatbot for your website or
                 app.
               </p>
@@ -361,7 +361,7 @@ export function ChatBotPage() {
                 to={`${CHATBOT_PATHS.getCreate(String(accountId))}`}
                 className="
             inline-flex items-center gap-2
-            rounded-[99px]
+            rounded-xl
             bg-primary
             px-5 py-2
             text-sm font-medium text-[#FBFAF9]
@@ -370,7 +370,7 @@ export function ChatBotPage() {
             hover:opacity-90
           "
               >
-                + Create First Chatbot
+                <Plus className="h-4 w-4" /> Create first chatbot
               </Link>
             )}
           </div>

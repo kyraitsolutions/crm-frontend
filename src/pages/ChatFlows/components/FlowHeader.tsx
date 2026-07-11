@@ -7,11 +7,11 @@ type Props = {
 
 const FlowHeader = ({ onCreateFlow }: Props) => {
   return (
-    <div className="flex items-center justify-between bg-primary/5 px-4 py-2">
+    <div className="flex items-center justify-between  px-4 py-2">
       <div>
-        <h1 className="text-lg font-semibold text-slate-700">Chat Flows</h1>
+        <h1 className="text-base font-semibold text-slate-700">Chat Flows</h1>
 
-        <p className="text-xs text-slate-500">
+        <p className="text-sm text-slate-500">
           Create and manage your chatbot conversation flows.
         </p>
       </div>

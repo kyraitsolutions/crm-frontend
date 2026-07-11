@@ -165,6 +165,7 @@ export function LoginPage() {
                   required
                 />
               </div>
+              <p onClick={() => navigate("/forgot-password")} className="cursor-pointer text-sm font-semibold text-primary flex justify-end w-full">Forgot password</p>
 
               <Button type="submit" className="w-full mt-4" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -234,6 +235,7 @@ export function LoginPage() {
               </Link>
             </div>
           </div>
+
         </div>
 
       </div>
