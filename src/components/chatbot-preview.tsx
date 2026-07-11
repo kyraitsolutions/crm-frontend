@@ -187,7 +187,6 @@ export default function ChatbotPreview() {
               </AnimatePresence>
 
               {isTyping && <TypingIndicator />}
-
               <div ref={bottomRef} />
             </div>
 

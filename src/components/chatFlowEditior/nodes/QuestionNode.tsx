@@ -32,6 +32,7 @@ const INPUT_TYPES = [
   { label: "Number", value: "number" },
   { label: "Phone", value: "phone" },
   { label: "Date", value: "date" },
+  { label: "Date Range", value: "date-range" },
 ];
 
 const MAX_TEXT_LENGTH = 1024;

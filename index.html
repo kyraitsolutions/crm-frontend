@@ -18,63 +18,15 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- <button onclick="launchWhatsAppSignup()">Connect WhatsApp</button> -->
     <script type="module" src="/src/main.tsx"></script>
-
-    <!-- <script>
-      window.fbAsyncInit = function () {
-        FB.init({
-          appId: "YOUR_META_APP_ID",
-          cookie: true,
-          xfbml: true,
-          version: "v23.0",
-        });
+    <script>
+      window.eazbotConfig = {
+        accountId: "6a378da8789aaf51e63c9634",
+        chatbotId: "6a4e7e57a2fd505959b57da4",
       };
+    </script>
 
-      (function (d, s, id) {
-        let js;
-        const fjs = d.getElementsByTagName(s)[0];
-
-        if (d.getElementById(id)) return;
-
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-
-        fjs.parentNode.insertBefore(js, fjs);
-      })(document, "script", "facebook-jssdk");
-
-      function launchWhatsAppSignup() {
-        FB.login(
-          function (response) {
-            console.log("LOGIN RESPONSE:", response);
-
-            if (response.authResponse) {
-              const code = response.authResponse.accessToken;
-
-              fetch("http://localhost:5000/api/whatsapp/connect", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  accessToken: code,
-                }),
-              });
-            }
-          },
-          {
-            config_id: "YOUR_EMBEDDED_SIGNUP_CONFIG_ID",
-            response_type: "token",
-            override_default_response_type: true,
-            extras: {
-              setup: {},
-            },
-          },
-        );
-      }
-    </script> -->
-
+    <script src="http://localhost:3001/widget/chatbot-script.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   </body>
 </html>

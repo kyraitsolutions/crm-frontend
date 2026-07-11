@@ -193,7 +193,9 @@ export default function ChatbotFlowEditor() {
   const { user: authUser, accountId } = useAuthStore((state) => state);
   const { permissions } = useAccountAccessStore((state) => state);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<TAppNodeData | any>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<TAppNodeData | any>(
+    [],
+  );
   const [edges, setEdges, onEdgesChange] = useEdgesState<TAppEdge>([]);
   const [selectedNode, setSelectedNode] = useState<TAppNode | null>(null);
   const [nodeSettingOpen, setNodeSettingOpen] = useState(false);
@@ -204,6 +206,7 @@ export default function ChatbotFlowEditor() {
   const [fieldOpen, setFieldOpen] = useState(false);
   const [publishLoading, setPublishLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentPublishStatus, setCurrentPublishStatus] = useState("");
 
   const handleCloseSidebar = () => {
     setFieldOpen(false);
@@ -236,8 +239,7 @@ export default function ChatbotFlowEditor() {
       isValid: boolean;
     } | null = null;
 
-
-    console.log(validateObj)
+    console.log(validateObj);
     for (const value of nodes) {
       switch (value.type) {
         case "send_message":
@@ -246,13 +248,15 @@ export default function ChatbotFlowEditor() {
           // console.log(validateSendMessageNode(value.data.payload));
           break;
         case "button":
-          validateObj = validateButtonNode(value.data.payload as TButtonNodeData["payload"],);
+          validateObj = validateButtonNode(
+            value.data.payload as TButtonNodeData["payload"],
+          );
           break;
         default:
           validateObj = {
             message: "jhg",
             isValid: true,
-          }
+          };
       }
     }
 
@@ -321,9 +325,9 @@ export default function ChatbotFlowEditor() {
   };
 
   const publishChanges = async (status: string) => {
-    console.log(status)
     if (!validateFlow()) return;
     setPublishLoading(true);
+    setCurrentPublishStatus(status);
     try {
       const payloadData = {
         nodes,
@@ -336,13 +340,13 @@ export default function ChatbotFlowEditor() {
         const response =
           (chatflowId && flowName) || flowId
             ? await chatflowService.updateChatFlow(
-              String(chatflowId || flowId),
-              payloadData,
-            )
+                String(chatflowId || flowId),
+                payloadData,
+              )
             : await chatflowService.createChatFlow(
-              String(accountId),
-              payloadData,
-            );
+                String(accountId),
+                payloadData,
+              );
 
         if (response?.status === 200 || response?.status === 201) {
           toastMessageService.success(
@@ -442,42 +446,49 @@ export default function ChatbotFlowEditor() {
               permissions,
               PERMISSIONS.CHATBOTS.CREATE || PERMISSIONS.CHATBOTS.UPDATE,
             ) && (
-                <div className="flex items-center gap-3.5">
-                  <Button
-                    disabled={!flowName || !nodes?.length}
-                    className="actions-btn p-2!"
-                    onClick={() => publishChanges("draft")}
+              <div className="flex items-center gap-3.5">
+                <Button
+                  disabled={!flowName || !nodes?.length}
+                  className="actions-btn p-2!"
+                  onClick={() => publishChanges("draft")}
+                >
+                  <MdOutlineDrafts size={18} />
+
+                  <span>Draft</span>
+
+                  {publishLoading && currentPublishStatus === "draft" && (
+                    <Loader color="#a5a0a0" />
+                  )}
+                </Button>
+
+                <Button
+                  disabled={publishLoading}
+                  onClick={() => publishChanges("published")}
+                  className="bg-primary text-white px-5 py-2 rounded-xl flex items-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed"
+                >
+                  <Upload size={16} />
+
+                  <span>Publish</span>
+
+                  {publishLoading && currentPublishStatus === "published" && (
+                    <Loader />
+                  )}
+                </Button>
+
+                <button
+                  onClick={handleFieldOpen}
+                  className="flex cursor-pointer bg-primary text-white p-2 rounded-full justify-end"
+                >
+                  <div
+                    className={`${
+                      fieldOpen && "-rotate-45"
+                    } transition-all duration-300`}
                   >
-                    <MdOutlineDrafts size={18} />
-
-                    <span>Draft</span>
-                  </Button>
-
-                  <Button
-                    disabled={publishLoading}
-                    onClick={() => publishChanges("published")}
-                    className="bg-primary text-white px-5 py-2 rounded-xl flex items-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed"
-                  >
-                    <Upload size={16} />
-
-                    <span>Publish</span>
-
-                    {publishLoading && <Loader />}
-                  </Button>
-
-                  <button
-                    onClick={handleFieldOpen}
-                    className="flex cursor-pointer bg-primary text-white p-2 rounded-full justify-end"
-                  >
-                    <div
-                      className={`${fieldOpen && "-rotate-45"
-                        } transition-all duration-300`}
-                    >
-                      <MdAdd size={20} />
-                    </div>
-                  </button>
-                </div>
-              )}
+                    <MdAdd size={20} />
+                  </div>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* NODE SETTING SIDEBAR RENDERER  */}

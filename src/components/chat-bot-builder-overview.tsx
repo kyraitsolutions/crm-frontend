@@ -36,7 +36,7 @@ export default function ChatBotBuilderOverview() {
           </CardHeader>
 
           <CardContent className="px-0 space-y-6">
-            <div>
+            <div className="space-y-2">
               <Label className="text-sm font-medium text-[#37322F]">
                 Chatbot name <span className="text-red-500">*</span>
               </Label>
@@ -47,23 +47,14 @@ export default function ChatBotBuilderOverview() {
                 render={({ field }) => (
                   <Input
                     {...field}
-                    placeholder="Ex: YouWare Concierge"
-                    className="
-                  mt-2
-                  h-11
-                  bg-[#F7F6F4]
-                  border-none
-                  rounded-lg
-                  text-[#37322F]
-                  placeholder:text-[#847971]
-                  focus-visible:ring-0
-                "
+                    placeholder="Ex: Chatbot Name"
+                    className="input-field border-none! py-5! bg-gray-100"
                   />
                 )}
               />
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label className="text-sm font-medium text-[#37322F]">
                 Description
               </Label>
@@ -74,18 +65,8 @@ export default function ChatBotBuilderOverview() {
                 render={({ field }) => (
                   <Textarea
                     {...field}
-                    rows={4}
-                    placeholder="Summarize what your chatbot helps with..."
-                    className="
-                  mt-2
-                  bg-[#F7F6F4]
-                  border-none
-                  rounded-lg
-                  resize-none
-                  text-[#37322F]
-                  placeholder:text-[#847971]
-                  focus-visible:ring-0
-                "
+                    placeholder="Summarize what your chatbot helps with....."
+                    className="input-field border-none bg-gray-100 min-h-40"
                   />
                 )}
               />
@@ -111,10 +92,11 @@ export default function ChatBotBuilderOverview() {
                   <div
                     className={`
                   mt-0.5 flex h-5 w-5 items-center justify-center rounded-full
-                  ${index < 2
-                        ? "bg-[rgba(55,50,47,0.10)]"
-                        : "border border-[rgba(55,50,47,0.20)]"
-                      }
+                  ${
+                    index < 2
+                      ? "bg-[rgba(55,50,47,0.10)]"
+                      : "border border-[rgba(55,50,47,0.20)]"
+                  }
                 `}
                   >
                     {index < 2 ? (
@@ -125,11 +107,7 @@ export default function ChatBotBuilderOverview() {
                   </div>
 
                   <span
-                    className={
-                      index < 2
-                        ? "text-[#37322F]"
-                        : "text-[#847971]"
-                    }
+                    className={index < 2 ? "text-[#37322F]" : "text-[#847971]"}
                   >
                     {tip}
                   </span>
@@ -140,7 +118,5 @@ export default function ChatBotBuilderOverview() {
         </Card>
       </div>
     </section>
-
-
   );
 }
