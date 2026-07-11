@@ -10,7 +10,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { COOKIES_STORAGE } from "@/constants";
-import { ACCOUNT_PATHS, CHATBOT_PATHS } from "@/constants/routes";
+import { ACCOUNT_PATHS, CHATBOT_PATHS, ROUTES } from "@/constants/routes";
 import { hasPermission, PERMISSIONS } from "@/rbac";
 import { ChatBotService, ToastMessageService } from "@/services";
 import { ChatBotManager, useChatBotStore } from "@/stores";
@@ -79,7 +79,7 @@ export function ChatBotPage() {
         >
           <SelectTrigger
             onClick={(e) => e.stopPropagation()}
-            className="text-sm h-7! cursor-pointer"
+            className="h-7! cursor-pointer text-sm"
           >
             <SelectValue
               placeholder="Select flow"
@@ -88,17 +88,33 @@ export function ChatBotPage() {
           </SelectTrigger>
 
           <SelectContent>
-            {flows.map((flow) => (
-              <SelectItem key={flow.id} value={flow.id}>
-                <div className="flex items-center gap-2">
-                  <span>{flow.name}</span>
+            {flows?.length ? (
+              flows.map((flow) => (
+                <SelectItem key={flow.id} value={flow.id}>
+                  <div className="flex items-center gap-2">
+                    <span>{flow.name}</span>
+                    <span className="text-xs capitalize text-muted-foreground">
+                      ({flow.status})
+                    </span>
+                  </div>
+                </SelectItem>
+              ))
+            ) : (
+              <div className="px-3 py-4 text-center">
+                <p className="text-sm font-medium">No flows found</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Create a chatbot flow to attach it to this trigger.
+                </p>
 
-                  <span className="text-xs text-muted-foreground capitalize">
-                    ({flow.status})
-                  </span>
-                </div>
-              </SelectItem>
-            ))}
+                <Link
+                  to={`${ROUTES.DASHBOARD}/settings/chatflows/flow-builder`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+                >
+                  + Create Flow
+                </Link>
+              </div>
+            )}
           </SelectContent>
         </Select>
       ),

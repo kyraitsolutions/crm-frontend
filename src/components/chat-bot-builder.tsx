@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import ChatBotBuilderInfo from "./chat-bot-builder-info";
 import ChatBotBuilderInfoTabs from "./chat-bot-builder-info-tabs";
 
-
 const defaultValues: ChatBotFormData = {
   name: "",
   description: "",
@@ -78,7 +77,7 @@ export const ChatBotBuilder = () => {
     defaultValues,
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, reset } = form;
 
   const handleFormSubmit = useCallback(
     async (data: any) => {
@@ -136,7 +135,9 @@ export const ChatBotBuilder = () => {
       );
 
       if (response.status === 200 || response.status === 201) {
-        // reset(response.data?.docs);
+        const chatbotData = response.data.docs;
+
+        reset(chatbotData);
       }
     } catch (error) {
       console.log(error);

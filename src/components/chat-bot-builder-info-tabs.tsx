@@ -53,7 +53,7 @@ export default function ChatBotBuilderInfoTabs({
   };
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 px-4">
       {isDirty &&
         hasPermission(
           permissions,
@@ -61,20 +61,20 @@ export default function ChatBotBuilderInfoTabs({
         ) && (
           <div className="flex justify-end px-4">
             <Button
+              className="actions-btn px-4! py-2!"
               type="submit"
               disabled={isFormSubmitting}
-              className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-green-600 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-300 "
             >
               {isFormSubmitting ? (
-                <div className="flex items-center gap-1.5">
-                  <span>Publishing...</span>
-                  <Loader size={18} color="#331a54" />
-                </div>
+                <span className="flex gap-2">
+                  Publishing
+                  <Loader color="black" />
+                </span>
               ) : (
-                <div className="flex items-center gap-1.5">
-                  <span>Publish</span>
+                <span className="flex gap-2">
+                  Publish
                   <ArrowDownRight />
-                </div>
+                </span>
               )}
             </Button>
           </div>
@@ -96,10 +96,11 @@ export default function ChatBotBuilderInfoTabs({
             transition-colors
             max-sm:flex-col
             cursor-pointer
-            ${activeTab === tab.id
-                    ? "bg-[#FBFAF9] text-[#37322F] shadow"
-                    : "text-[#847971] hover:bg-[#F7F6F4] hover:text-[#37322F]"
-                  }
+            ${
+              activeTab === tab.id
+                ? "bg-[#FBFAF9] text-[#37322F] shadow"
+                : "text-[#847971] hover:bg-[#F7F6F4] hover:text-[#37322F]"
+            }
           `}
                 onClick={() => {
                   if (tab?.id === "chatbotFlow") {
