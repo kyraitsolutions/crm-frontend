@@ -297,6 +297,7 @@ export default function ProfilePage() {
             </div>
           )}
         </div>
+
         <div className="flex gap-6 justify-between w-full bg-white p-6">
           <ChangePassword />
           <TwoFactorAuth />
