@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { ChevronDown, Plus, HelpCircle } from "lucide-react";
+import Navhandle from "./Navhandle";
 
 const STANDARD_FIELDS = [
     "name",
@@ -13,7 +14,11 @@ const STANDARD_FIELDS = [
     "website",
     "stage",
     "status",
-    "source.name"
+    "source.name",
+    "source.url",
+    "meta.location.address",
+    "meta.location.city",
+    "meta.location.country"
 ];
 
 const DEFAULT_CUSTOM_FIELDS = [
@@ -54,9 +59,11 @@ type Props = {
     sampleRows: Record<string, any>[];
     onComplete?: (mapping: Record<string, string>, customFields: string[]) => void;
     onPrevious?: () => void;
+    handleStep?: any,
+    step?: any
 };
 
-const FieldMappingStep = ({ csvHeaders, sampleRows, onComplete,
+const FieldMappingStep = ({ csvHeaders, sampleRows, onComplete, handleStep, step
     //  onPrevious 
 }: Props) => {
     const [mapping, setMapping] = useState<Record<string, string>>({});
@@ -129,6 +136,7 @@ const FieldMappingStep = ({ csvHeaders, sampleRows, onComplete,
 
     const handleNext = () => {
         onComplete?.(mapping, customFields);
+        console.log(mapping, customFields)
     };
 
     // ── Sample data ───────────────────────────────────────────────────────────
@@ -373,7 +381,8 @@ const FieldMappingStep = ({ csvHeaders, sampleRows, onComplete,
                 </div> */}
             </div>
 
-            <button onClick={handleNext}>next </button>
+            <Navhandle step={step} isSelected={mappedCount > 0} handleStep={handleNext} />
+            {/* <button onClick={handleNext}>next </button> */}
         </div>
     );
 };

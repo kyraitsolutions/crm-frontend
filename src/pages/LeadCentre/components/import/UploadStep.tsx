@@ -1,7 +1,8 @@
 import { FileText, Users } from 'lucide-react';
 import { useRef } from 'react'
+import Navhandle from './Navhandle';
 
-const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setSelectedFile: any }) => {
+const UploadStep = ({ selectedFile, setSelectedFile, isSelected, step, setStep, handleStep }: { selectedFile: any, setSelectedFile: any, isSelected: any, step: number, setStep: any, handleStep: any }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleBrowseClick = () => {
@@ -23,7 +24,7 @@ const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setS
         console.log("Selected File:", file);
     };
     return (
-        <div className="flex items-center justify-center px-6 py-16">
+        <div className="flex flex-col items-center  justify-between px-6 py-16 gap-20">
             <div className="flex items-center gap-10">
                 {/* Left Card */}
                 <div className="relative flex h-100 w-95 flex-col rounded-xl border border-[#d7d9f1] bg-white px-7 py-6">
@@ -128,6 +129,9 @@ const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setS
                     </div>
                 </div>
             </div>
+
+            <Navhandle step={step} isSelected={selectedFile} handleStep={handleStep} />
+
         </div>
     )
 }
