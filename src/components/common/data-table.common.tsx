@@ -128,7 +128,7 @@ export function DataTable<T extends Record<string, any>>({
       <div
         className={cn(
           "overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm",
-          tableContainerClassName
+          tableContainerClassName,
         )}
       >
         {loading ? (
@@ -140,15 +140,16 @@ export function DataTable<T extends Record<string, any>>({
             <thead
               className={cn(
                 "border-b border-gray-200 bg-gray-50",
-                theadClassName
+                theadClassName,
               )}
             >
               <tr>
                 {columns.map((column) => (
                   <th
                     key={String(column.key)}
-                    className={`px-4 py-3 text-left font-medium text-gray-700 ${column.className || ""
-                      }`}
+                    className={`px-4 py-3 text-left font-medium text-gray-700 ${
+                      column.className || ""
+                    }`}
                     onClick={() =>
                       column.sortable !== false &&
                       handleSort(String(column.key))
@@ -184,16 +185,18 @@ export function DataTable<T extends Record<string, any>>({
                 paginatedData?.map((row, idx) => (
                   <tr
                     key={row.id || idx}
-                    className={`${onRowClick
+                    className={`${
+                      onRowClick
                         ? "cursor-pointer hover:bg-gray-50 transition"
                         : ""
-                      } ${rowClassName}`}
+                    } ${rowClassName}`}
                     onClick={() => onRowClick?.(row)}
                   >
                     {columns.map((column) => (
                       <td
                         key={String(column.key)}
                         className={`px-4 py-3 ${column.cellClassName || ""}`}
+                        onClick={(e) => e.stopPropagation()}
                       >
                         {column.render
                           ? column.render(row)
@@ -212,7 +215,7 @@ export function DataTable<T extends Record<string, any>>({
         <div
           className={cn(
             "flex flex-col sm:flex-row items-center sm:justify-between px-1 py-1 space-y-2 sm:space-y-0",
-            paginationClassName
+            paginationClassName,
           )}
         >
           {/* Entries info */}

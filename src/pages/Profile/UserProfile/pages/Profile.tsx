@@ -8,6 +8,8 @@ import { useAuthStore } from "@/stores";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
 import { Camera, Mail, Pencil, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
+import TwoFactorAuth from "../components/TwoFactorAuth";
+import ChangePassword from "../components/ChangePassword";
 
 // ---- Types ----
 type ProfileState = {
@@ -294,6 +296,11 @@ export default function ProfilePage() {
               </Button>
             </div>
           )}
+        </div>
+
+        <div className="flex gap-6 justify-between w-full bg-white p-6">
+          <ChangePassword />
+          <TwoFactorAuth />
         </div>
       </div>
     </div>

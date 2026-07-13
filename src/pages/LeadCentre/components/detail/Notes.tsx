@@ -12,6 +12,7 @@ import { timeAgo } from "@/utils/date.utils";
 import {
   Clock,
   FileText,
+  Link,
   // Link,
   MessageCircle,
   Phone,
@@ -186,10 +187,10 @@ const Notes = ({ lead }: { lead: ILead }) => {
       {showNotes && (
         <div className="p-5">
           {/* Existing Notes */}
-          <div className="space-y-7 mb-4 max-h-100 overflow-y-auto">
+          <div className="space-y-7 mb-4">
             {sortedNotes?.map((note) => (
               <div key={note.message} className="flex gap-4">
-                <div className="w-8 h-8 rounded-full bg-primary/60 flex items-center justify-center text-white font-medium text-md shrink-0">
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium text-md shrink-0">
                   {note?.createdBy?.charAt(0) || note.message?.charAt(0)}
                 </div>
                 <div className="flex flex-col gap-2">
@@ -257,10 +258,10 @@ const Notes = ({ lead }: { lead: ILead }) => {
             <div className="border border-primary/40 rounded-xl max-w-4xl overflow-hidden">
               {/* Textarea */}
               <div className="p-4">
-                <div className="flex items-center justify-end mb-2">
-                  {/* <label className="block text-[#8b95a7] font-medium">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-[#8b95a7] font-medium">
                     Title
-                  </label> */}
+                  </label>
                   <Select
                     value={activitySource}
                     onValueChange={(value) =>
@@ -287,20 +288,20 @@ const Notes = ({ lead }: { lead: ILead }) => {
                 <textarea
                   value={noteTitle}
                   onChange={(e) => setNoteTitle(e.target.value)}
-                  className="w-full min-h-20 resize-none outline-none text-md"
+                  className="w-full min-h-20 resize-none outline-none text-sm"
                   placeholder="Write your note..."
                 />
               </div>
 
               {/* Footer */}
               <div className="border-t bg-[#f8f9fc] px-4 py-2 flex items-center justify-between">
-                {/* <div className="flex items-center gap-4 text-gray-700">
+                <div className="flex items-center gap-4 text-gray-700">
                   <button className="text-lg font-serif">T</button>
 
                   <button className="text-lg">
                     <Link size={16} />
                   </button>
-                </div> */}
+                </div>
 
                 <div className="flex gap-3">
                   <Button

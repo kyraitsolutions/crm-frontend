@@ -181,11 +181,11 @@ const LeadStatusSection = () => {
       {/* TOP */}
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-700">
+          <h2 className="text-base font-semibold tracking-tight text-slate-700">
             Lead Statuses
           </h2>
 
-          <p className="mt-2 text-sm text-[#6B7280]">
+          <p className="text-sm text-[#6B7280]">
             Manage and customize lead statuses for your organization.
           </p>
         </div>

@@ -19,7 +19,7 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
 </Script>
 
 <Script
-  src="https://crm.kyraitsolutions.com/widget/chatbot-script.js"
+  src="https://chatbot.kyraitsolutions.com/widget/chatbot-script.js"
   strategy="afterInteractive"
 />`;
 
@@ -30,7 +30,7 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
   };
 </script>
 
-<script src="https://crm.kyraitsolutions.com/widget/chatbot-script.js"></script>`;
+<script src="https://chatbot.kyraitsolutions.com/widget/chatbot-script.js"></script>`;
 
   const handleCopy = async (script: string, id: number) => {
     try {
@@ -116,11 +116,10 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
                 <button
                   type="button"
                   onClick={() => handleCopy(scriptCode, 1)}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium shadow-sm transition-colors cursor-pointer ${
-                    copiedId === 1
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium shadow-sm transition-colors cursor-pointer ${copiedId === 1
                       ? "bg-green-600 text-white"
                       : "bg-slate-900 text-white hover:bg-slate-700"
-                  }`}
+                    }`}
                 >
                   {copiedId === 1 ? (
                     <>
@@ -161,11 +160,10 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
                 <button
                   type="button"
                   onClick={() => handleCopy(scriptCode2, 2)}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium shadow-sm transition-colors cursor-pointer ${
-                    copiedId === 2
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium shadow-sm transition-colors cursor-pointer ${copiedId === 2
                       ? "bg-green-600 text-white"
                       : "bg-slate-900 text-white hover:bg-slate-700"
-                  }`}
+                    }`}
                 >
                   {copiedId === 2 ? (
                     <>

@@ -23,6 +23,13 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useChatFlowStore } from "./ChatFlows/store/chatflow.store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export function ChatBotPage() {
   // const { accountId } = useParams();
@@ -120,6 +127,51 @@ export function ChatBotPage() {
       ),
     },
     {
+      key: "embed",
+      header: "Embed",
+      render: (row) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              className="actions-btn py-0.5! px-2!"
+              onClick={(e) => e.stopPropagation()}
+            >
+              Copy Script
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                copyEmbedCode(row, "html");
+              }}
+            >
+              HTML / WordPress
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                copyEmbedCode(row, "react");
+              }}
+            >
+              React
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                copyEmbedCode(row, "next");
+              }}
+            >
+              Next.js
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+    {
       key: "createdDisplay",
       header: "Created",
       cellClassName: "whitespace-nowrap text-gray-700",
@@ -166,6 +218,53 @@ export function ChatBotPage() {
       ),
     },
   ];
+
+  const copyEmbedCode = async (
+    chatbot: ChatbotListItem,
+    type: "html" | "react" | "next",
+  ) => {
+    const config = `
+window.eazbotConfig = {
+  accountId: "${accountId}",
+  chatbotId: "${chatbot.id}",
+};`;
+
+    let code = "";
+
+    switch (type) {
+      case "html":
+        code = `<script>
+${config}
+</script>
+
+<script src="https://chatbot.kyraitsolutions.com/widget/chatbot-script.js"></script>`;
+        break;
+
+      case "react":
+        code = `<script>
+${config}
+</script>
+
+<script src="https://chatbot.kyraitsolutions.com/widget/chatbot-script.js"></script>`;
+        break;
+
+      case "next":
+        code = `<Script id="chatbot-config" strategy="afterInteractive">
+${config}
+</Script>
+
+<Script
+  src="https://chatbot.kyraitsolutions.com/widget/chatbot-script.js"
+  strategy="afterInteractive"
+/>`;
+        break;
+    }
+
+    await navigator.clipboard.writeText(code);
+
+    // toastmessageService.success(`${type.toUpperCase()} embed code copied.`);
+    toastMessageService.apiSuccess(`${type.toUpperCase()} embed code copied.`);
+  };
 
   const getChatBotsList = async () => {
     try {
@@ -307,11 +406,11 @@ export function ChatBotPage() {
   return (
     <div className="space-y-6 lg:px-3 px-2 py-2">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-medium text-[#37322F]">
+        <div className="px-3 mt-2">
+          <h1 className="text-base font-semibold text-slate-700">
             Chatbot Directory
           </h1>
-          <p className="mt-2 text-sm text-[#847971]">
+          <p className="text-sm text-[#847971]">
             Manage deployment status, monitor engagement, and open detailed user
             insights.
           </p>
@@ -362,10 +461,10 @@ export function ChatBotPage() {
 
             {/* Text */}
             <div>
-              <h2 className="text-xl font-medium text-[#37322F]">
+              <h2 className="text-lg font-semibold text-slate-700">
                 No Chatbot found
               </h2>
-              <p className="mt-2 text-sm text-[#847971]">
+              <p className="text-sm text-slate-700">
                 Get started by creating your first chatbot for your website or
                 app.
               </p>
@@ -377,7 +476,7 @@ export function ChatBotPage() {
                 to={`${CHATBOT_PATHS.getCreate(String(accountId))}`}
                 className="
             inline-flex items-center gap-2
-            rounded-[99px]
+            rounded-xl
             bg-primary
             px-5 py-2
             text-sm font-medium text-[#FBFAF9]
@@ -386,7 +485,7 @@ export function ChatBotPage() {
             hover:opacity-90
           "
               >
-                + Create First Chatbot
+                <Plus className="h-4 w-4" /> Create first chatbot
               </Link>
             )}
           </div>

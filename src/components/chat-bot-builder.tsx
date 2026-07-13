@@ -87,10 +87,10 @@ export const ChatBotBuilder = () => {
         const response = !chatBotId
           ? await chatBotService?.createChatBot(String(accountId), data)
           : await chatBotService.updateChatBot(
-              String(accountId),
-              String(chatBotId),
-              data,
-            );
+            String(accountId),
+            String(chatBotId),
+            data,
+          );
 
         if (!chatBotId) {
           // const chatbotId = response?.data.docs?.id;
@@ -137,7 +137,7 @@ export const ChatBotBuilder = () => {
       if (response.status === 200 || response.status === 201) {
         const chatbotData = response.data.docs;
 
-        reset(chatbotData);
+        reset(chatbotData as any);
       }
     } catch (error) {
       console.log(error);

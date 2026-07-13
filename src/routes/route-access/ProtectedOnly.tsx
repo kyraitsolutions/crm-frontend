@@ -18,6 +18,8 @@ export const ProtectedOnly = () => {
   const authManager = new AuthStoreManager();
 
   const fetchUser = async () => {
+    console.log("ider to aara hai");
+    console.log("user", user);
     if (!token) {
       setLoading(false);
       return;
@@ -29,7 +31,7 @@ export const ProtectedOnly = () => {
     }
 
     try {
-      const res: any = await authService.getMe();
+      const res = await authService.getMe();
 
       console.log("User profile response:", res.data); // Log the response for debugging
       const userData = res.data?.doc;
@@ -53,9 +55,12 @@ export const ProtectedOnly = () => {
 
   // not logged in
   if (!token) {
+    CookieUtils.removeItem(COOKIES_STORAGE.auth_token);
+    CookieUtils.removeItem(COOKIES_STORAGE.accountId);
     return <Navigate to="/login" replace />;
   }
 
+  console.log(user);
   // onboarding not completed
   if (user && !user.onboarding) {
     if (location.pathname !== "/on-boarding") {

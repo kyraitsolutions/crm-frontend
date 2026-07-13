@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { leadService } from "../services/lead.service";
 
 import type { ApiResponse } from "@/types";
-import type { ILead } from "../types/lead.type";
+import type { ILead, Path } from "../types/lead.type";
 
 export type TLeadQuery = {
   limit: number;
@@ -72,7 +72,7 @@ interface ILeadsStoreState {
   updateLeadField: (
     accountId: string,
     leadId: string,
-    field: keyof ILead,
+    field: Path<ILead>,
     value: unknown,
   ) => Promise<ApiResponse<ILead>>;
 

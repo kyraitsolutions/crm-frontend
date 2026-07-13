@@ -51,7 +51,7 @@ const Overview = ({ lead, leadStages, users }: IOverviewProps) => {
 
   return (
     <div className="bg-white rounded-xl">
-      <div className="max-w-6xl w-full mx-auto p-6">
+      <div className="max-w-4xl w-full mx-auto py-6">
         <SelectFieldRow
           label="Lead Owner"
           value={lead?.assignedTo?.userId || String(lead?.assignedTo)}
@@ -62,7 +62,7 @@ const Overview = ({ lead, leadStages, users }: IOverviewProps) => {
         />
 
         <FieldRow
-          label="Lead Name"
+          label="Name"
           fieldKey="name"
           value={lead?.name || ""}
           leadId={lead?.id}
@@ -91,7 +91,7 @@ const Overview = ({ lead, leadStages, users }: IOverviewProps) => {
         />
 
         <SelectFieldRow
-          label="Lead Status"
+          label="Stage"
           value={lead?.stage}
           options={leadStagesOptions || []}
           onChange={(value) => {

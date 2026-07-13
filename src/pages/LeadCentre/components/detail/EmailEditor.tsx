@@ -160,15 +160,15 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
 
   return (
     <div
-      className={`fixed top-0 ${isMaximize ? "top-0 w-full" : "max-w-2xl"} h-full  right-0 w-full z-50 bg-black/40 flex items-start justify-end`}
+      className={`fixed bottom-0 ${isMaximize ? "h-screen w-screen" : " max-w-2xl"} h-[80vh]  right-0 w-full z-50 bg-black/40 flex items-end justify-end`}
     >
       <div
-        className={`w-full ${isMaximize ? "h-screen w-screen" : "h-full max-w-7xl"}  duration-100  bg-white shadow-2xl rounded-t-md overflow-hidden flex flex-col`}
+        className={`w-full ${isMaximize ? "h-screen w-screen" : "h-[80vh] max-w-2xl"}  duration-100  bg-white shadow-2xl rounded-t-md overflow-hidden flex flex-col`}
       >
         {/* Top Header */}
         <div className="h-11 bg-[#5468ff] text-white flex items-center justify-between px-5">
           <div className="flex items-center gap-4">
-            <h2 className="font-medium text-md">New Message</h2>
+            <h2 className="font-medium text-sm">New Message</h2>
 
             <button onClick={onClose}>
               <X size={18} />
@@ -196,19 +196,19 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
             <div className="font-semibold h-8 w-8  capitalize flex text-white items-center justify-center bg-second/80 rounded-full">
               {sender?.email?.charAt(0)}
             </div>{" "}
-            {sender?.accountName} {`<${sender?.email}>`}
+            <span className="text-gray-500 text-xs">{sender?.accountName} {`<${sender?.email}>`}</span>
           </div>
           {/* Template */}
-          <div className="flex justify-end px-4 gap-3">
+          <div className="flex justify-end px-4 gap-2">
             <button
               onClick={() => setShowAiBox(!showAiBox)}
-              className="border border-violet-500 text-violet-600 text-sm px-3 py-1 rounded-xl flex items-center gap-2 hover:bg-violet-50"
+              className="border border-violet-500 text-xs text-violet-600 whitespace-nowrap px-2 py-1 rounded-xl flex items-center gap-1 hover:bg-violet-50"
             >
               <Sparkles size={16} />
               AI Write
             </button>
 
-            <button className="border border-[#5468ff] text-sm text-[#5468ff] px-3 py-1 rounded-xl flex items-center gap-2 hover:bg-[#eef1ff]">
+            <button className="border border-[#5468ff] text-xs whitespace-nowrap text-[#5468ff] px-2 py-1 rounded-xl flex items-center gap-2 hover:bg-[#eef1ff]">
               Insert Template
               <ChevronDown size={16} />
             </button>
@@ -223,7 +223,7 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
         </div>
 
         {/* Recipients */}
-        <div className="border-b px-6 py-1 flex items-center gap-4 text-sm">
+        <div className="border-b px-6 py-1 flex items-center gap-4 text-xs font-semibold">
           <span className="w-10 text-gray-600">To</span>
 
           <div className="flex-1 py-1">
@@ -251,12 +251,12 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
         {/* CC */}
         {ccOpen && (
           <div className="py-2 border-b">
-            <div className="px-6 flex items-center gap-4 text-sm">
+            <div className="px-6 flex items-center gap-4 text-xs">
               <span className="w-10 text-gray-600">Cc</span>
 
               <input
-                className="flex-1 outline-none py-1 text-sm"
-                placeholder="Add CC"
+                className="flex-1 outline-none py-1 text-xs"
+                placeholder="Add Cc"
               />
             </div>
           </div>
@@ -265,26 +265,26 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
         {/* BCC */}
         {bccOpen && (
           <div className="py-2 border-b">
-            <div className="px-6 flex items-center gap-4 text-sm">
+            <div className="px-6 flex items-center gap-4 text-xs">
               <span className="w-10 text-gray-600 ">Bcc</span>
 
               <input
                 className="flex-1 outline-none py-1 text-sm"
-                placeholder="Add BCC"
+                placeholder="Add Bcc"
               />
             </div>
           </div>
         )}
 
         {/* Subject */}
-        <div className="px-6 py-4 flex items-center gap-4 text-sm">
+        <div className="px-6 py-4 flex items-center gap-4 text-xs">
           <span className="w-20 text-gray-600">Subject</span>
 
           <input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             placeholder="Enter subject"
-            className="w-full outline-none text-sm"
+            className="w-full outline-none text-xs"
           />
         </div>
 
@@ -308,19 +308,19 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
             title="Attachment"
             className=" w-8 h-8 rounded-md text-gray-500 flex items-center justify-center"
           >
-            <Paperclip size={18} />
+            <Paperclip size={16} />
           </ButtonWithTitle>
 
           <div className="flex items-center gap-7">
-            <button className="flex items-center gap-2 text-[#374151]">
-              <Clock3 size={18} />
+            <button className="flex items-center text-sm gap-2 text-[#374151]">
+              <Clock3 size={16} />
               Schedule
             </button>
 
             <button
               onClick={handleSendEmail}
               disabled={sending}
-              className="bg-[#5468ff] text-white px-3 py-1 rounded-md hover:bg-[#4355ef] disabled:opacity-50"
+              className="bg-[#5468ff] text-white text-sm px-3 py-1 rounded-md hover:bg-[#4355ef] disabled:opacity-50"
             >
               {sending ? "Sending..." : "Send"}
             </button>

@@ -123,7 +123,7 @@ export const SubscriptionPage = () => {
             </div>
 
             {/* Title */}
-            <div className="self-stretch text-center flex justify-center flex-col text-gray-900 text-3xl md:text-6xl font-semibold leading-tight md:leading-15 font-sans tracking-tight">
+            <div className="self-stretch text-center flex justify-center flex-col text-gray-900 text-3xl md:text-4xl font-semibold leading-tight md:leading-15 font-sans tracking-">
               Choose the perfect plan for your business
             </div>
 
@@ -220,13 +220,12 @@ function PricingCard({
           onClick={() => handleChoosePlan(id)}
           className={`w-full py-3 mb-8 rounded-[10px] font-semibold transition
             
-          ${
-            featured === true
+          ${featured === true
               ? "bg-primary text-white hover:bg-primary/90 cursor-pointer"
               : id === authUser?.usersubscription?.planId
                 ? "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md disabled:"
                 : "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md cursor-pointer"
-          }
+            }
               `}
         >
           {id === authUser?.usersubscription?.planId ? "Current Plan" : button}

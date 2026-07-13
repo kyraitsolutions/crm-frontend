@@ -32,6 +32,7 @@ const features = [
   },
 ];
 export function LoginPage() {
+  const url = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -164,6 +165,7 @@ export function LoginPage() {
                   required
                 />
               </div>
+              <p onClick={() => navigate("/forgot-password")} className="cursor-pointer text-sm font-semibold text-primary flex justify-end w-full">Forgot password</p>
 
               <Button type="submit" className="w-full mt-4" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -185,9 +187,7 @@ export function LoginPage() {
                 type="button"
                 onClick={() => {
                   CookieUtils.clear();
-                  window.location.href =
-                    "https://crm-backend-7lf9.onrender.com/api/auth/google";
-                  // "http://localhost:3000/api/auth/google";
+                  window.location.href = `${url}/api/auth/google`
                 }}
                 className={cn(
                   "w-full flex items-center justify-center gap-2 hover:bg-gray-50",
@@ -235,6 +235,7 @@ export function LoginPage() {
               </Link>
             </div>
           </div>
+
         </div>
 
       </div>

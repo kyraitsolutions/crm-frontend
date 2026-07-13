@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowUpDown, ChevronDown, Funnel, List, Plus } from "lucide-react";
+import { ArrowUpDown, ChevronDown, Ellipsis, Funnel, List, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
@@ -30,7 +30,7 @@ const Toolbar = () => {
   const [openFilter, setOpenFilter] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
 
-  const debounceSearchText = useDebounce(searchText, 500);
+  const debounceSearchText = useDebounce(searchText, 2000);
 
   useEffect(() => {
     setLeadQuery({ search: debounceSearchText });
@@ -83,6 +83,7 @@ const Toolbar = () => {
           <SearchInput
             placeholder="Search leads"
             onChange={(e) => setSearchText(e.target.value)}
+
           />
         </div>
       </div>
@@ -92,7 +93,7 @@ const Toolbar = () => {
         <div className="relative flex rounded-xl shadow-sm">
           <Button
             onClick={() => navigate(LEADS_ROUTES.CREATE)}
-            className="actions-btn rounded-none! rounded-l-xl! px-2 py-1.5 hover:bg-primary! hover:text-white!"
+            className="actions-btn rounded-none! rounded-l-xl! border-r-0! pr-2! border-white! py-1.5 bg-primary! text-white!"
           >
             <Plus size={18} />
             Create Lead
@@ -100,24 +101,24 @@ const Toolbar = () => {
 
           <Button
             onClick={() => setOpenDropdown((prev) => !prev)}
-            className="actions-btn rounded-none! rounded-r-xl! bg-primary! px-3 text-white!"
+            className="actions-btn rounded-none! rounded-r-xl! border-white! bg-primary! px-3 text-white!"
           >
             <ChevronDown size={16} />
           </Button>
 
           {openDropdown && (
-            <div className="absolute left-0 top-10 z-50 w-fit rounded-xl border bg-white p-2 shadow-lg">
+            <div className="absolute left-0 top-8 z-50 w-fit rounded-xl border bg-white shadow-lg">
               <button
                 onClick={() => {
                   navigate(LEADS_ROUTES.IMPORT);
                   setOpenDropdown(false);
                 }}
-                className="w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-100"
+                className="w-full rounded-lg px-4 py-1 text-left text-sm hover:bg-gray-100"
               >
                 Import Lead
               </button>
 
-              <button className="w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-100">
+              {/* <button className="w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-100">
                 Import Notes
               </button>
 
@@ -127,10 +128,16 @@ const Toolbar = () => {
 
               <button className="w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-100">
                 Sync LinkedIn Ads
-              </button>
+              </button> */}
             </div>
           )}
         </div>
+        <ButtonWithTitle
+          title="Actions"
+          className="h-7 w-10 border rounded-xl flex items-center justify-center text-gray-600 hover:bg-gray-100 transition"
+        >
+          <Ellipsis size={16} />
+        </ButtonWithTitle>
       </div>
     </div>
   );

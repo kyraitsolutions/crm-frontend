@@ -6,6 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 const DashboardLayout = () => {
   const { accountId, lastSlug } = useAuthStore((state) => state);
   const navigate = useNavigate();
+  console.log("accountId", accountId);
 
   useEffect(() => {
     if (accountId) {

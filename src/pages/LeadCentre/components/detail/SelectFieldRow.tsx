@@ -26,13 +26,13 @@ const SelectFieldRow = ({
   onChange,
 }: SelectFieldRowProps) => {
   return (
-    <div className="grid grid-cols-[160px_1fr] items-center py-4">
+    <div className="grid grid-cols-[160px_1fr] items-center">
       <Label className="text-sm font-medium text-muted-foreground">
         {label}
       </Label>
 
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-full max-w-88 rounded-xl border border-primary/20 cursor-pointer">
+        <SelectTrigger className="w-full border-none hover:border! border-primary/20 max-w-88 shadow-none cursor-pointer">
           <SelectValue placeholder={`Select ${label}`} />
         </SelectTrigger>
 

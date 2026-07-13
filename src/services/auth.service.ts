@@ -26,4 +26,26 @@ export class AuthService extends ApiService {
       credentials
     );
   }
+
+  async forgotPassword(userData: any): Promise<ApiResponse<ILoginResponse>> {
+    // console.log("called")
+    return await this.post(
+      `${API_ENDPOINT_PATH.AUTH_USER.FORGOT}`,
+      userData
+    );
+  }
+  async verifyOTP(userData: any): Promise<ApiResponse<any>> {
+    console.log("called",userData)
+    return await this.post(
+      `${API_ENDPOINT_PATH.AUTH_USER.VERIFYOTP}`,
+      userData
+    );
+  }
+  async resetPassword(userData: any): Promise<ApiResponse<any>> {
+    console.log("called",userData)
+    return await this.post(
+      `${API_ENDPOINT_PATH.AUTH_USER.RESET}`,
+      userData
+    );
+  }
 }

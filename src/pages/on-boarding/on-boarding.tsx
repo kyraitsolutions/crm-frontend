@@ -115,7 +115,6 @@ export default function Onboarding() {
   };
 
   const onSubmit = async (data: OnboardingFormData) => {
-    console.log("Submitting onboarding data:", data); // Log the submitted data for debugging
     try {
       const response = await userService.createOnboarding(data);
       if (response.status === 200 || response.status === 201) {
@@ -243,6 +242,14 @@ export default function Onboarding() {
                         {...register("name")}
                         placeholder="Acme Inc."
                         aria-invalid={!!errors.name}
+                        className="input-field"
+                      />
+                    </Field>
+                    <Field label="Email" required error={errors.email?.message}>
+                      <Input
+                        {...register("email")}
+                        placeholder="Acme Inc."
+                        aria-invalid={!!errors.email}
                         className="input-field"
                       />
                     </Field>
@@ -507,7 +514,7 @@ export default function Onboarding() {
                     >
                       <Input
                         {...register("privacyPolicy")}
-                        placeholder="https://acme.com/privacy"
+                        placeholder="https://example.com/privacy"
                         aria-invalid={!!errors.privacyPolicy}
                         className="input-field"
                       />
@@ -518,7 +525,7 @@ export default function Onboarding() {
                     >
                       <Input
                         {...register("terms")}
-                        placeholder="https://acme.com/terms"
+                        placeholder="https://example.com/terms"
                         aria-invalid={!!errors.terms}
                         className="input-field"
                       />
