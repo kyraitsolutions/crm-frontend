@@ -196,7 +196,7 @@ export function DataTable<T extends Record<string, any>>({
                       <td
                         key={String(column.key)}
                         className={`px-4 py-3 ${column.cellClassName || ""}`}
-                        onClick={(e) => e.stopPropagation()}
+                        // onClick={(e) => e.stopPropagation()}
                       >
                         {column.render
                           ? column.render(row)
