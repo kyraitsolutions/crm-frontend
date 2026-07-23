@@ -103,7 +103,7 @@ export default function Onboarding() {
   //     setStep(2);
   //   }
   // };
-  console.log("hfghfg", isSubmitting)
+
   const handleContinue = async () => {
     const userRes: any = await authService.getMe();
     authManager.setUser(userRes.data?.docs);
@@ -115,8 +115,6 @@ export default function Onboarding() {
   };
 
   const onSubmit = async (data: OnboardingFormData) => {
-    alert("jhghjg")
-    console.log("Submitting onboarding data:", data); // Log the submitted data for debugging
     try {
       const response = await userService.createOnboarding(data);
       if (response.status === 200 || response.status === 201) {
@@ -247,11 +245,7 @@ export default function Onboarding() {
                         className="input-field"
                       />
                     </Field>
-                    <Field
-                      label="Email"
-                      required
-                      error={errors.email?.message}
-                    >
+                    <Field label="Email" required error={errors.email?.message}>
                       <Input
                         {...register("email")}
                         placeholder="Acme Inc."

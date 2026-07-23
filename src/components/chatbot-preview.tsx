@@ -96,123 +96,71 @@ export default function ChatbotPreview() {
   }, [messages, isTyping]);
 
   return (
-    <div className="h-full w-full bg-[#f2efeb83] p-2 rounded-lg">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 py-10">
-        {/* LEFT CONTENT */}
-        <div className="flex flex-col max-w-xl">
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Chatbot Preview
-          </h2>
 
-          <p className="mt-2 text-sm text-slate-500 leading-relaxed">
-            This preview shows how your chatbot will look and behave on your
-            website. Any changes you make to the chatbot’s name, colors, or
-            messages will update instantly here.
-          </p>
-
-          {/* Divider */}
-          <div className="my-5 h-px bg-slate-200" />
-
-          <h3 className="text-base font-medium text-slate-800">
-            What you’re seeing
-          </h3>
-
-          <ul className="mt-3 space-y-3 text-sm text-slate-600">
-            <li className="flex items-start gap-2">
-              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-indigo-500" />
-              <span>Real-time chatbot appearance preview</span>
-            </li>
-
-            <li className="flex items-start gap-2">
-              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-indigo-500" />
-              <span>Automated conversation flow with typing animation</span>
-            </li>
-
-            <li className="flex items-start gap-2">
-              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-indigo-500" />
-              <span>Bot and user messages styled separately</span>
-            </li>
-
-            <li className="flex items-start gap-2">
-              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-indigo-500" />
-              <span>Auto-scroll behavior just like a real chat app</span>
-            </li>
-
-            <li className="flex items-start gap-2">
-              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-indigo-500" />
-              <span>Matches the live chatbot experience on your website</span>
-            </li>
-          </ul>
+    <div className="flex items-center justify-center">
+      <div className="flex flex-col w-[360px] h-[560px] rounded-xl shadow-xl bg-white overflow-hidden">
+        {/* Header */}
+        <div
+          className="flex items-center border justify-between px-4 py-3 text-white"
+          style={{ backgroundColor, border: backgroundColor }}
+        >
+          <span className="font-medium">{title || "Chatbot"}</span>
+          <X className="w-4 h-4 opacity-80" />
         </div>
 
-        {/* RIGHT CHATBOT */}
-        <div className="flex items-center justify-center">
-          <div className="flex flex-col w-[360px] h-[560px] rounded-2xl shadow-2xl border bg-white overflow-hidden">
-            {/* Header */}
-            <div
-              className="flex items-center justify-between px-4 py-3 text-white"
-              style={{ backgroundColor }}
-            >
-              <span className="font-medium">{title || "Chatbot"}</span>
-              <X className="w-4 h-4 opacity-80" />
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 p-4 space-y-6 overflow-y-auto bg-[#FAFAFA] hide-scrollbar">
-              <AnimatePresence>
-                {messages?.map((msg) => (
-                  <motion.div
-                    key={msg?.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className={`max-w-[80%]  px-4 py-2 text-sm rounded-2xl ${
-                      msg?.sender === "user"
-                        ? "ml-auto  text-white"
-                        : "bg-gray-100"
-                    }`}
-                    style={{
-                      backgroundColor:
-                        msg?.sender === "user" ? backgroundColor : "#fff",
-                      color:
-                        msg?.sender === "user"
-                          ? userMessageColor
-                          : messageColor,
-                    }}
-                  >
-                    {msg?.text}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {isTyping && <TypingIndicator />}
-              <div ref={bottomRef} />
-            </div>
-
-            {/* Input */}
-            <div className="border-t p-3 flex items-center gap-2">
-              <input
-                disabled
-                placeholder="Type a message..."
-                className="flex-1 text-sm bg-transparent outline-none"
-              />
-              <button
-                className="h-9 w-9 rounded-full flex items-center justify-center text-white"
-                style={{ backgroundColor }}
+        {/* Messages */}
+        <div className="flex-1 p-4 space-y-6 overflow-y-auto bg-[#FAFAFA] hide-scrollbar">
+          <AnimatePresence>
+            {messages?.map((msg) => (
+              <motion.div
+                key={msg?.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className={`max-w-[80%]  px-4 py-2 text-sm rounded-xl ${msg?.sender === "user"
+                  ? "ml-auto  text-white"
+                  : "bg-gray-100"
+                  }`}
+                style={{
+                  backgroundColor:
+                    msg?.sender === "user" ? backgroundColor : "#fff",
+                  color:
+                    msg?.sender === "user"
+                      ? userMessageColor
+                      : messageColor,
+                }}
               >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
+                {msg?.text}
+              </motion.div>
+            ))}
+          </AnimatePresence>
 
-            {/* Footer */}
-            {showBranding && (
-              <div className="text-center text-[10px] text-slate-400 py-1">
-                {brandingLabelText || "Proudly by Kyra IT Solutions"}
-              </div>
-            )}
-          </div>
+          {isTyping && <TypingIndicator />}
+          <div ref={bottomRef} />
         </div>
+
+        {/* Input */}
+        <div className="border-t p-3 flex items-center gap-2">
+          <input
+            disabled
+            placeholder="Type a message..."
+            className="flex-1 text-sm bg-transparent outline-none"
+          />
+          <button
+            className="h-9 w-9 rounded-full flex items-center justify-center text-white"
+            style={{ backgroundColor }}
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Footer */}
+        {showBranding && (
+          <div className="text-center text-[10px] text-slate-400 py-1">
+            {brandingLabelText || "Proudly by Kyra IT Solutions"}
+          </div>
+        )}
       </div>
     </div>
   );

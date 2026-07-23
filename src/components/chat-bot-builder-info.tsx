@@ -17,7 +17,7 @@ export default function ChatBotBuilderInfo() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
             <Bot className="h-4 w-4 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-[#37322F]">
+          <h2 className="text-base font-semibold text-[#37322F]">
             Create your first chatbot
           </h2>
         </div>

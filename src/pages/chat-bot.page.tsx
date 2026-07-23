@@ -23,6 +23,13 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useChatFlowStore } from "./ChatFlows/store/chatflow.store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export function ChatBotPage() {
   // const { accountId } = useParams();
@@ -120,6 +127,51 @@ export function ChatBotPage() {
       ),
     },
     {
+      key: "embed",
+      header: "Embed",
+      render: (row) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              className="actions-btn py-0.5! px-2!"
+              onClick={(e) => e.stopPropagation()}
+            >
+              Copy Script
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                copyEmbedCode(row, "html");
+              }}
+            >
+              HTML / WordPress
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                copyEmbedCode(row, "react");
+              }}
+            >
+              React
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                copyEmbedCode(row, "next");
+              }}
+            >
+              Next.js
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+    {
       key: "createdDisplay",
       header: "Created",
       cellClassName: "whitespace-nowrap text-gray-700",
@@ -166,6 +218,53 @@ export function ChatBotPage() {
       ),
     },
   ];
+
+  const copyEmbedCode = async (
+    chatbot: ChatbotListItem,
+    type: "html" | "react" | "next",
+  ) => {
+    const config = `
+window.eazbotConfig = {
+  accountId: "${accountId}",
+  chatbotId: "${chatbot.id}",
+};`;
+
+    let code = "";
+
+    switch (type) {
+      case "html":
+        code = `<script>
+${config}
+</script>
+
+<script src="https://chatbot.kyraitsolutions.com/widget/chatbot-script.js"></script>`;
+        break;
+
+      case "react":
+        code = `<script>
+${config}
+</script>
+
+<script src="https://chatbot.kyraitsolutions.com/widget/chatbot-script.js"></script>`;
+        break;
+
+      case "next":
+        code = `<Script id="chatbot-config" strategy="afterInteractive">
+${config}
+</Script>
+
+<Script
+  src="https://chatbot.kyraitsolutions.com/widget/chatbot-script.js"
+  strategy="afterInteractive"
+/>`;
+        break;
+    }
+
+    await navigator.clipboard.writeText(code);
+
+    // toastmessageService.success(`${type.toUpperCase()} embed code copied.`);
+    toastMessageService.apiSuccess(`${type.toUpperCase()} embed code copied.`);
+  };
 
   const getChatBotsList = async () => {
     try {

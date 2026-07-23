@@ -134,8 +134,8 @@ const LeadTable = () => {
   }
 
   return (
-    <div className="overlead-hidden hide-scrollbar bg-white rounded-xl">
-      <Table className="border-b">
+    <div className=" overlead-hidden mt-5 hide-scrollbar bg-white rounded-xl px-5">
+      <Table className="border-b rounded-xl! overflow-hidden">
         <TableHeader className="bg-muted/30 ">
           <TableRow className="hover:bg-transparent">
             <TableHead className="text-xs font-semibold uppercase tracking-wide text-white bg-primary p-3">
@@ -168,7 +168,7 @@ const LeadTable = () => {
               onClick={() =>
                 navigate(LEADS_PATHS.getLeadDetail(String(accountId), lead.id))
               }
-              className="group border-b  border-gray-200 transition-colors hover:bg-muted/20 odd:bg-gray-100/40"
+              className="group border-b  border-gray-50 transition-colors hover:bg-gray-100 odd:bg-gray-100/50"
             >
               <TableCell className="">
                 <p className="flex items-center gap-4">

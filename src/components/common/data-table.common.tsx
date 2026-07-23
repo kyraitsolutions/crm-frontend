@@ -128,7 +128,7 @@ export function DataTable<T extends Record<string, any>>({
       <div
         className={cn(
           "overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm",
-          tableContainerClassName
+          tableContainerClassName,
         )}
       >
         {loading ? (
@@ -140,7 +140,7 @@ export function DataTable<T extends Record<string, any>>({
             <thead
               className={cn(
                 "border-b border-gray-200 bg-gray-50",
-                theadClassName
+                theadClassName,
               )}
             >
               <tr>
@@ -194,6 +194,7 @@ export function DataTable<T extends Record<string, any>>({
                       <td
                         key={String(column.key)}
                         className={`px-4 py-3 ${column.cellClassName || ""}`}
+                      // onClick={(e) => e.stopPropagation()}
                       >
                         {column.render
                           ? column.render(row)
@@ -212,7 +213,7 @@ export function DataTable<T extends Record<string, any>>({
         <div
           className={cn(
             "flex flex-col sm:flex-row items-center sm:justify-between px-1 py-1 space-y-2 sm:space-y-0",
-            paginationClassName
+            paginationClassName,
           )}
         >
           {/* Entries info */}

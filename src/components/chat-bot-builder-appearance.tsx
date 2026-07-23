@@ -27,6 +27,7 @@ import { Controller, useFormContext, type Path } from "react-hook-form";
 import { chatBotAppearanceSections } from "@/constants";
 import type { ChatBotFormData } from "@/types";
 import React from "react";
+import ChatbotPreview from "./chatbot-preview";
 
 type ChatBotFieldPath = Path<ChatBotFormData>;
 
@@ -165,9 +166,8 @@ export default function ChatBotAppearanceEditor() {
                             }}
                           >
                             <Check
-                              className={`mr-2 h-4 w-4 ${
-                                f.value === option ? "opacity-100" : "opacity-0"
-                              }`}
+                              className={`mr-2 h-4 w-4 ${f.value === option ? "opacity-100" : "opacity-0"
+                                }`}
                             />
                             {option}
                           </CommandItem>
@@ -185,37 +185,45 @@ export default function ChatBotAppearanceEditor() {
   };
 
   return (
-    <div className="space-y-4">
-      {fieldGroups.map((group, index) => {
-        const Icon = group.icon;
-        return (
-          <Card className="shadow-none" key={index}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Icon className="h-5 w-5" />
-                {group.title}
-              </CardTitle>
-              <CardDescription>{group.description}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {group.fields.map((field: any) => (
-                  <div
-                    key={field.key}
-                    className={field.type === "textarea" ? "col-span-2" : ""}
-                  >
-                    {field.type === "select" ? (
-                      <CommandSelect field={field} />
-                    ) : (
-                      renderField(field)
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        );
-      })}
+    <div className="relative grid grid-cols-3 w-full space-y-4">
+      <div className="grid grid-cols-2 col-span-2 gap-3">
+        {fieldGroups.map((group, index) => {
+          const Icon = group.icon;
+          return (
+            <Card className="shadow-none" key={index}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon className="h-5 w-5" />
+                  {group.title}
+                </CardTitle>
+                <CardDescription>{group.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-w grid-cols-2 gap-6">
+                  {group.fields.map((field: any) => (
+                    <div
+                      key={field.key}
+                      className={field.type === "textarea" ? "col-span-2" : ""}
+                    >
+                      {field.type === "select" ? (
+                        <CommandSelect field={field} />
+                      ) : (
+                        renderField(field)
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <div className="fixed flex items-center justify-center right-20">
+
+        <ChatbotPreview />
+      </div>
+
     </div>
   );
 }

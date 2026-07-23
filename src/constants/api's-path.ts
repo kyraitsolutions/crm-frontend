@@ -96,4 +96,12 @@ export const API_ENDPOINT_PATH = {
   ACTIVITY_LOGS: {
     getActivityLogsPath: (id: string) => `/activity-logs/${id}`,
   },
+  CALLS: {
+    GET_NUMBERS:"twilio/voice/get-available-numbers",
+    PURCHASE_NUMBERS:"twilio/voice/purchase-number",
+    GET_MY_NUMBERS:"twilio/voice/my-numbers",
+    GET_MY_NUMBERS_DETAILS:"twilio/voice/my-number/details",
+    MAKE_CALL:"twilio/voice/make-call",
+    getCallsLogsPath: (id: string) => `/calls/${id}`,
+  },
 };

@@ -22,7 +22,7 @@ export const OnboardingSuccessModal = ({ open, onContinue }: Props) => {
       setSeconds((s) => {
         if (s <= 1) {
           clearInterval(timerRef.current!);
-          // onContinue();
+          onContinue();
           return 0;
         }
         return s - 1;

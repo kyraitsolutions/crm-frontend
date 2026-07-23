@@ -3,10 +3,10 @@ export class CookieUtils {
     try {
       const json = JSON.stringify(value);
       const expires = new Date(
-        Date.now() + days * 24 * 60 * 60 * 1000
+        Date.now() + days * 24 * 60 * 60 * 1000,
       ).toUTCString();
       document.cookie = `${key}=${encodeURIComponent(
-        json
+        json,
       )}; expires=${expires}; path=/`;
     } catch (error) {
       console.error(`Error saving ${key} to cookies`, error);
@@ -39,6 +39,7 @@ export class CookieUtils {
 
   static clear(): void {
     const cookies = document.cookie.split(";");
+    console.log(cookies);
 
     for (const cookie of cookies) {
       const key = cookie.split("=")[0].trim();

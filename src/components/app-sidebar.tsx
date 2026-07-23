@@ -9,7 +9,7 @@ import {
   IconChevronRight,
   IconUsers,
 } from "@tabler/icons-react";
-import { Gauge, MessagesSquare } from "lucide-react";
+import { Book, BookUser, Gauge, MessagesSquare } from "lucide-react";
 import { useState } from "react";
 import { MdOutlineContacts } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
@@ -56,6 +56,12 @@ export function AppSidebar() {
         icon: IconUsers,
         active: hasPermission(permissions, PERMISSIONS.LEADS.VIEW),
       },
+      // {
+      //   title: "Calls",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/calls`,
+      //   icon: BookUser,
+      //   active: true,
+      // },
       // {
       //   title: "Deals",
       //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/deals`,
