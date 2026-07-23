@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import type {
-  ButtonType,
   TemplateState,
   TemplateVariable,
+  VariableType,
 } from "../types/template.type";
-
-const generateId = () => Math.random().toString(36).substring(2, 9);
+import { generateId } from "@/utils/generateId.utils";
+import { createButton } from "../utils/template/template.utils";
 
 let _bodyCursorPos: number | undefined = undefined;
 export const setBodyCursorPos = (pos: number) => {
@@ -30,15 +30,13 @@ export const useTemplateStore = create<
   TemplateState & { suggestedVariables: string[] }
 >((set, get) => ({
   templateName: "",
+  language: "en_IN",
   category: "Utility",
-  language: "English (US)",
-  templateType: "Utility",
+  templateType: "CUSTOM",
 
   headerType: "Text",
   headerText: "",
-  headerVariables: [
-    { id: generateId(), name: "customer_name", exampleValue: "John" },
-  ],
+  headerVariables: [],
 
   bodyText: "",
   bodyVariables: [],
@@ -46,39 +44,9 @@ export const useTemplateStore = create<
   footerText: "",
 
   buttonStrategy: "Mixed Actions",
-  buttons: [
-    {
-      id: generateId(),
-      type: "URL Button",
-      label: "Track Order",
-      value: "https://crm.com/order/{{1}}",
-    },
-    {
-      id: generateId(),
-      type: "Phone Button",
-      label: "Call Support",
-      value: "+91 9876543210",
-    },
-    {
-      id: generateId(),
-      type: "Quick Reply",
-      label: "Order Status",
-      value: "ORDER_STATUS",
-    },
-    {
-      id: generateId(),
-      type: "Quick Reply",
-      label: "Cancel Order",
-      value: "CANCEL_ORDER",
-    },
-    {
-      id: generateId(),
-      type: "Quick Reply",
-      label: "Contact Support",
-      value: "CONTACT_SUPPORT",
-    },
-  ],
+  buttons: [],
 
+  variableType: "Number",
   suggestedVariables: SUGGESTED_VARIABLES,
 
   setTemplateName: (name) => set({ templateName: name }),
@@ -88,6 +56,33 @@ export const useTemplateStore = create<
 
   setHeaderType: (headerType) => set({ headerType }),
   setHeaderText: (headerText) => set({ headerText }),
+  setHeaderMedia: (file: File) => {
+    const previous = get().headerMedia;
+
+    if (previous?.previewUrl) {
+      URL.revokeObjectURL(previous.previewUrl);
+    }
+
+    set({
+      headerMedia: {
+        file,
+        previewUrl: URL.createObjectURL(file),
+        mimeType: file.type,
+        size: file.size,
+      },
+    });
+  },
+  clearHeaderMedia: () => {
+    const previous = get().headerMedia;
+
+    if (previous?.previewUrl) {
+      URL.revokeObjectURL(previous.previewUrl);
+    }
+
+    set({
+      headerMedia: undefined,
+    });
+  },
 
   addHeaderVariable: () => {
     const vars = get().headerVariables;
@@ -108,7 +103,29 @@ export const useTemplateStore = create<
   removeHeaderVariable: (id) =>
     set({ headerVariables: get().headerVariables.filter((v) => v.id !== id) }),
 
-  setBodyText: (bodyText) => set({ bodyText }),
+  // setBodyText: (bodyText) => set({ bodyText }),
+  setBodyText: (bodyText) => {
+    const { variableType, bodyVariables } = get();
+
+    if (variableType === "Number") {
+      set({ bodyText });
+      return;
+    }
+
+    // Match {{user_name}}
+    const matches = [...bodyText.matchAll(/\{\{([a-zA-Z_][a-zA-Z0-9_]*)\}\}/g)];
+
+    const variables = matches.map((match, index) => ({
+      id: bodyVariables[index]?.id ?? generateId(),
+      name: match[1],
+      exampleValue: bodyVariables[index]?.exampleValue ?? "",
+    }));
+
+    set({
+      bodyText,
+      bodyVariables: variables,
+    });
+  },
 
   addBodyVariable: () => {
     const vars = get().bodyVariables;
@@ -124,12 +141,46 @@ export const useTemplateStore = create<
       bodyText: currentBody + ` {{${nextIdx}}}`,
     });
   },
-  updateBodyVariable: (id, field, value) =>
+
+  updateBodyVariable: (id, field, value) => {
+    const { bodyVariables, bodyText, variableType } = get();
+
+    const index = bodyVariables.findIndex((v) => v.id === id);
+
+    if (index === -1) return;
+
+    const variables = bodyVariables.map((v) =>
+      v.id === id ? { ...v, [field]: value } : v,
+    );
+
+    let newBody = bodyText;
+
+    if (field === "name" && variableType === "Name") {
+      const oldName = bodyVariables[index].name;
+
+      if (oldName) {
+        // rename existing placeholder
+        newBody = newBody.replace(
+          new RegExp(`\\{\\{${oldName}\\}\\}`, "g"),
+          `{{${value}}}`,
+        );
+      } else {
+        // first time replacing {{}}
+        newBody = newBody.replace("{{}}", `{{${value}}}`);
+      }
+    }
+
     set({
-      bodyVariables: get().bodyVariables.map((v) =>
-        v.id === id ? { ...v, [field]: value } : v,
-      ),
-    }),
+      bodyVariables: variables,
+      bodyText: newBody,
+    });
+  },
+  // updateBodyVariable: (id, field, value) =>
+  //   set({
+  //     bodyVariables: get().bodyVariables.map((v) =>
+  //       v.id === id ? { ...v, [field]: value } : v,
+  //     ),
+  //   }),
   removeBodyVariable: (id) => {
     const vars = get().bodyVariables;
     const idx = vars.findIndex((v) => v.id === id);
@@ -150,96 +201,62 @@ export const useTemplateStore = create<
   },
 
   insertVariableToBody: (varName, cursorPos?: number) => {
-    const vars = get().bodyVariables;
-    const nextIdx = vars.length + 1;
-    const placeholder = `{{${nextIdx}}}`;
+    const { bodyVariables, bodyText, variableType } = get();
+
+    const nextIdx = bodyVariables.length + 1;
+
+    const placeholder = variableType === "Number" ? `{{${nextIdx}}}` : "{{}}";
+
     const newVar: TemplateVariable = {
       id: generateId(),
       name: varName,
       exampleValue: "",
     };
-    const currentBody = get().bodyText;
 
     let newBody: string;
+
     if (cursorPos !== undefined) {
-      // Insert placeholder at cursor position
       newBody =
-        currentBody.slice(0, cursorPos) +
-        placeholder +
-        currentBody.slice(cursorPos);
+        bodyText.slice(0, cursorPos) + placeholder + bodyText.slice(cursorPos);
     } else {
-      // Fallback: append at end
-      newBody = currentBody + ` ${placeholder}`;
+      newBody = `${bodyText} ${placeholder}`;
     }
 
     set({
-      bodyVariables: [...vars, newVar],
+      bodyVariables: [...bodyVariables, newVar],
       bodyText: newBody,
     });
   },
-  // insertVariableToBody: (varName) => {
-  //   const vars = get().bodyVariables;
-  //   const nextIdx = vars.length + 1;
-  //   const newVar: TemplateVariable = {
-  //     id: generateId(),
-  //     name: varName,
-  //     exampleValue: "",
-  //   };
-  //   set({
-  //     bodyVariables: [...vars, newVar],
-  //     bodyText: get().bodyText + ` {{${nextIdx}}}`,
-  //   });
-  // },
 
   setFooterText: (footerText) => set({ footerText }),
 
-  setButtonStrategy: (buttonStrategy) => {
-    if (buttonStrategy === "No Buttons") {
-      set({ buttonStrategy, buttons: [] });
-    } else if (buttonStrategy === "Call To Action") {
-      set({
-        buttonStrategy,
-        buttons: [
-          {
-            id: generateId(),
-            type: "URL Button",
-            label: "Track Order",
-            value: "https://crm.com/order/{{1}}",
-          },
-        ],
-      });
-    } else if (buttonStrategy === "Quick Replies") {
-      set({
-        buttonStrategy,
-        buttons: [
-          {
-            id: generateId(),
-            type: "Quick Reply",
-            label: "Track Order",
-            value: "TRACK_ORDER",
-          },
-        ],
-      });
-    } else {
-      set({ buttonStrategy, buttons: [] });
-    }
-  },
+  setVariableType: (variableType: VariableType) => set({ variableType }),
 
-  addButton: () => {
-    const { buttons, buttonStrategy } = get();
+  addButton: (kind) => {
+    const buttons = get().buttons;
     if (buttons.length >= 10) return;
-    let type: ButtonType = "Quick Reply";
-    if (buttonStrategy === "Call To Action") type = "URL Button";
+
     set({
-      buttons: [...buttons, { id: generateId(), type, label: "", value: "" }],
+      buttons: [...buttons, createButton(kind)],
     });
   },
-  updateButton: (id, field, value) =>
+  updateButton: (id, data) =>
     set({
-      buttons: get().buttons.map((b) =>
-        b.id === id ? { ...b, [field]: value } : b,
+      buttons: get().buttons.map((button) =>
+        button.id === id
+          ? {
+              ...button,
+              ...data,
+            }
+          : button,
       ),
     }),
+  // updateButton: (id, field, value) =>
+  //   set({
+  //     buttons: get().buttons.map((b) =>
+  //       b.id === id ? { ...b, [field]: value } : b,
+  //     ),
+  //   }),
   removeButton: (id) =>
     set({ buttons: get().buttons.filter((b) => b.id !== id) }),
 }));

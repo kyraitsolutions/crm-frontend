@@ -26,17 +26,6 @@ export const BodyEditor = () => {
     if (pos !== undefined) setBodyCursorPos(pos);
   };
 
-  // After insert, move cursor to just after the inserted placeholder
-  // const restoreCursor = (placeholderLength: number, insertedAt: number) => {
-  //   const el = textareaRef.current;
-  //   if (!el) return;
-  //   const newPos = insertedAt + placeholderLength;
-  //   // requestAnimationFrame(() => {
-  //   //   el.focus();
-  //   //   el.setSelectionRange(newPos, newPos);
-  //   // });
-  // };
-
   const handleAddBlankVariable = () => {
     const cursorPos = textareaRef.current?.selectionStart;
     // const nextIdx = bodyVariables.length + 1;

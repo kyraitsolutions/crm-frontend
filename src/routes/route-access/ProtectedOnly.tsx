@@ -46,7 +46,7 @@ export const ProtectedOnly = () => {
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [user]);
 
   // 🔄 loading state
   if (loading) {
