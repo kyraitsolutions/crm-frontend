@@ -8,10 +8,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { VariableAccordion } from "../shared/VariableAccordion";
-import { useTemplateStore } from "../../../store/template-builder.store";
 import { Pencil } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
+import { VariableAccordion } from "../../shared/VariableAccordion";
+import { HeaderMediaUploader } from "./HeaderMediaUploader";
 
 const HEADER_TYPES = ["Text", "Image", "Video", "Document"] as const;
 
@@ -28,7 +29,7 @@ export const HeaderEditor = () => {
     removeHeaderVariable,
 
     addHeaderVariable,
-  } = useTemplateStore();
+  } = useTemplateStore((state) => state);
 
   const headerMaxLen = 60;
 
@@ -77,7 +78,27 @@ export const HeaderEditor = () => {
           </Select>
         </div>
 
-        {headerType === "Text" && (
+        <div className="flex-1">
+          {headerType === "Text" ? (
+            <div className="relative">
+              <Input
+                value={headerText}
+                maxLength={headerMaxLen}
+                className="input-field"
+                placeholder="Header text..."
+                onChange={(e) => setHeaderText(e.target.value)}
+              />
+
+              <span className="absolute bottom-1 right-2 text-xs text-gray-400">
+                {headerText.length}/{headerMaxLen}
+              </span>
+            </div>
+          ) : (
+            <HeaderMediaUploader />
+          )}
+        </div>
+
+        {/* {headerType === "Text" && (
           <div className="relative flex-1">
             <Input
               value={headerText}
@@ -91,7 +112,7 @@ export const HeaderEditor = () => {
               {headerText.length}/{headerMaxLen}
             </span>
           </div>
-        )}
+        )} */}
       </div>
 
       {headerType === "Text" && (

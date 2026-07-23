@@ -1,6 +1,6 @@
-import { AddButtonAction } from "../ui/AddButtonAction";
-import { ButtonsList } from "../ui/ButtonList";
-import { ButtonStrategySelector } from "./ButtonStrategySelector";
+import { AddButtonAction } from "../ui/buttons/AddButtonAction";
+import { ButtonsList } from "../ui/buttons/ButtonList";
+// import { ButtonStrategySelector } from "./ButtonStrategySelector";
 
 export const ButtonsEditor = () => {
   return (
@@ -23,7 +23,7 @@ export const ButtonsEditor = () => {
       </div>
 
       <div className="space-y-2">
-        <ButtonStrategySelector />
+        {/* <ButtonStrategySelector /> */}
         <ButtonsList />
         <AddButtonAction />
       </div>

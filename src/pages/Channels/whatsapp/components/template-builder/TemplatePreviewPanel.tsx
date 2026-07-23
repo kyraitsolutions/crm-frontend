@@ -111,7 +111,7 @@ export const TemplatePreviewPanel: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 border border-primary/20 p-2 shadow-sm rounded-xl">
       {/* Header */}
       <div>
         {/* Toggle */}

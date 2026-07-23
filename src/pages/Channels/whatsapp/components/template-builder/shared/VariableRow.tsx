@@ -22,9 +22,8 @@ export const VariableRow = ({
   onUpdate,
   onRemove,
 }: VariableRowProps) => {
-  const { suggestedVariables: SUGGESTED_VARIABLES } = useTemplateStore(
-    (state) => state,
-  );
+  const { suggestedVariables: SUGGESTED_VARIABLES, variableType } =
+    useTemplateStore((state) => state);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState(name);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
@@ -32,6 +31,8 @@ export const VariableRow = ({
   const inputWrapRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
+
+  const isNumberVariable = variableType === "Number";
 
   // Sync external name into local search
   useEffect(() => {
@@ -114,22 +115,26 @@ export const VariableRow = ({
       {/* Variable name input */}
       <div className="relative" ref={inputWrapRef}>
         <Input
-          value={search}
+          value={isNumberVariable ? `{{${index}}}` : search}
           placeholder="Pick or type variable"
+          disabled={isNumberVariable}
           className="input-field h-8 pr-7 text-xs"
           onChange={(e) => handleInputChange(e.target.value)}
           onFocus={handleOpen}
         />
-        <button
-          type="button"
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-          onClick={() => (open ? setOpen(false) : handleOpen())}
-        >
-          <ChevronDown
-            size={13}
-            className={`transition-transform duration-150 ${open ? "rotate-180" : ""}`}
-          />
-        </button>
+
+        {!isNumberVariable && (
+          <button
+            type="button"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            onClick={() => (open ? setOpen(false) : handleOpen())}
+          >
+            <ChevronDown
+              size={13}
+              className={`transition-transform ${open ? "rotate-180" : ""}`}
+            />
+          </button>
+        )}
 
         {/* Portal dropdown — anchored to body, position tracked live */}
         {open &&

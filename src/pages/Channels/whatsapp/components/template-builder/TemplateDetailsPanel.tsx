@@ -1,13 +1,4 @@
-import React from "react";
 import { Input } from "@/components/ui/input";
-import {
-  getBodyCursorPos,
-  useTemplateStore,
-} from "../../store/template-builder.store";
-import type {
-  TemplateCategory,
-  TemplateLanguage,
-} from "../../types/template.type";
 import {
   Select,
   SelectContent,
@@ -15,25 +6,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CategoryGuidelines } from "./ui/CategoryGuidelines";
-import { TEMPLATE_CATEGORIES } from "../../constants/template.constants";
+import { LANGUAGES } from "@/constants";
+import React from "react";
+import {
+  getBodyCursorPos,
+  useTemplateStore,
+} from "../../store/template-builder.store";
 import { VariablesLibrary } from "./ui/Variableslibrary";
 // import { CategoryGuidelines } from "./CategoryGuidelines";
 // import { VariablesLibrary } from "./VariablesLibrary";
-
-const LANGUAGES: TemplateLanguage[] = [
-  "English (US)",
-  "Hindi",
-  "Spanish",
-  "French",
-];
 
 export const TemplateDetailsPanel: React.FC = () => {
   const {
     templateName,
     setTemplateName,
-    category,
-    setCategory,
     language,
     setLanguage,
     suggestedVariables,
@@ -50,85 +36,61 @@ export const TemplateDetailsPanel: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Template Name */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Template Name
-        </label>
-        <div className="relative">
-          <Input
-            className="input-field pr-14"
-            type="text"
-            value={templateName}
-            onChange={handleNameChange}
-            maxLength={512}
-            placeholder="e.g. order_confirmation"
-          />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">
-            {templateName.length}/512
-          </span>
+      <div className="flex gap-2">
+        {/* Template Name */}
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Template Name
+          </label>
+          <div className="relative">
+            <Input
+              className="input-field pr-14"
+              type="text"
+              value={templateName}
+              onChange={handleNameChange}
+              maxLength={512}
+              placeholder="e.g. order_confirmation"
+            />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">
+              {templateName.length}/512
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 mt-1">
+            Use lowercase letters and underscores only.
+          </p>
         </div>
-        <p className="text-xs text-gray-400 mt-1">
-          Use lowercase letters and underscores only.
-        </p>
-      </div>
 
-      {/* Category */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Category
-        </label>
-        <Select
-          value={category}
-          onValueChange={(val) => setCategory(val as TemplateCategory)}
-        >
-          <SelectTrigger className="input-field w-full">
-            <SelectValue placeholder="Select category" />
-          </SelectTrigger>
-          <SelectContent>
-            {TEMPLATE_CATEGORIES.map((c) => (
-              <SelectItem key={c.value} value={c.value}>
-                {c.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <p className="text-xs text-gray-400 mt-1">
-          Choose the category that best fits your message.
-        </p>
-        <CategoryGuidelines category={category} />
-      </div>
-
-      {/* Language */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Language
-        </label>
-        <Select
-          value={language}
-          onValueChange={(val) => setLanguage(val as TemplateLanguage)}
-        >
-          <SelectTrigger className="input-field w-full">
-            <SelectValue placeholder="Select language" />
-          </SelectTrigger>
-          <SelectContent>
-            {LANGUAGES.map((l) => (
-              <SelectItem key={l} value={l}>
-                {l}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <p className="text-xs text-gray-400 mt-1">
-          Select the language for your template.
-        </p>
+        {/* Language */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Language
+          </label>
+          <Select
+            value={language}
+            onValueChange={(val) => setLanguage(val as string)}
+          >
+            <SelectTrigger className="input-field w-full">
+              <SelectValue placeholder="Select language" />
+            </SelectTrigger>
+            <SelectContent>
+              {LANGUAGES.map((l) => (
+                <SelectItem key={l.value} value={l.value}>
+                  {l.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-gray-400 mt-1">
+            Select the language for your template.
+          </p>
+        </div>
       </div>
 
       {/* Variables Library */}
-      <VariablesLibrary
+      {/* <VariablesLibrary
         suggestedVariables={suggestedVariables}
         onInsert={handleInsert}
-      />
+      /> */}
     </div>
   );
 };

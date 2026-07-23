@@ -379,15 +379,36 @@
 import { BodyEditor } from "./content/BodyEditor";
 import { ButtonsEditor } from "./content/ButtonEditor";
 import { FooterEditor } from "./content/FooterEditor";
-import { HeaderEditor } from "./content/HeaderEditor";
+import { HeaderEditor } from "./content/header/HeaderEditor";
+import { VariableTypeSelector } from "./content/VariableTypeSelector";
+import { FooterActions } from "./shared/FooterActions";
+import { TemplateDetailsPanel } from "./TemplateDetailsPanel";
 
-export const TemplateComposerPanel = () => {
+interface ITemplateComposerPanelProps {
+  onDiscard: () => void;
+  onSubmit: () => void;
+  isSubmitting?: boolean;
+}
+
+export const TemplateComposerPanel = ({
+  onSubmit,
+  isSubmitting,
+  onDiscard,
+}: ITemplateComposerPanelProps) => {
   return (
     <div className="space-y-4">
+      <TemplateDetailsPanel />
+      <VariableTypeSelector />
       <HeaderEditor />
       <BodyEditor />
       <FooterEditor />
       <ButtonsEditor />
+      <FooterActions
+        onDiscard={onDiscard}
+        onNext={onSubmit}
+        nextLabel="Submit for Review"
+        isSubmitting={isSubmitting}
+      />
     </div>
   );
 };

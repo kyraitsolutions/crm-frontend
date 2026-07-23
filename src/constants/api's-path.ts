@@ -5,9 +5,9 @@ export const API_ENDPOINT_PATH = {
     ME: `${API_PATH_PREFIX_USER}/me`,
     REGISTER: `${API_PATH_PREFIX_USER}/register`,
     LOGIN: `${API_PATH_PREFIX_USER}/login`,
-    FORGOT:`${API_PATH_PREFIX_USER}/forgot-password`,
-    VERIFYOTP:`${API_PATH_PREFIX_USER}/verify-otp`,
-    RESET:`${API_PATH_PREFIX_USER}/reset-password`,
+    FORGOT: `${API_PATH_PREFIX_USER}/forgot-password`,
+    VERIFYOTP: `${API_PATH_PREFIX_USER}/verify-otp`,
+    RESET: `${API_PATH_PREFIX_USER}/reset-password`,
     // CREATE: `/organization/onboarding`,
     // UPDATE: `${API_PATH_PREFIX_USER}/user/update`,
     // GET: `${API_PATH_PREFIX_USER}/user/get`,
@@ -91,6 +91,7 @@ export const API_ENDPOINT_PATH = {
 
   WHATSAPP: {
     REGISTER_PHONE_NUMBER: "whatsapp/phone-number/register",
+    getTemplateCreatePath: (id: string) => `/whatsapp/accounts/${id}/templates`,
   },
 
   ACTIVITY_LOGS: {

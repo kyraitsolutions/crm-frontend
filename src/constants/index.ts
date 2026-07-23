@@ -5,3 +5,4 @@ export * from "./dropdown.constant";
 export * from "./local-or-cookies-storage.constant";
 export * from "./routes/index";
 export * from "./file.constant";
+export * from "./language.constant";

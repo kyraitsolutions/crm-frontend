@@ -19,6 +19,7 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
     <script>
       window.eazbotConfig = {
         accountId: "6a53c80c4b3899243439141c",
@@ -30,5 +31,22 @@
     <!-- <script src="https://chatbot.kyraitsolutions.com/widget/chatbot-script.js"></script> -->
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js"
+    ></script>
+
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: 1546002133553417,
+          cookie: true,
+          xfbml: false,
+          version: "v24.0",
+        });
+      };
+    </script>
   </body>
 </html>
