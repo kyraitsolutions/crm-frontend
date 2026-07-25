@@ -9,16 +9,14 @@ import { VariableRow } from "./VariableRow";
 
 interface Variable {
   id: string;
-  name: string;
+  name?: string;
   exampleValue: string;
 }
 
 interface VariableAccordionProps {
   title?: string;
   variables: Variable[];
-
   onUpdate: (id: string, field: "name" | "exampleValue", value: string) => void;
-
   onRemove: (id: string) => void;
 }
 
@@ -33,7 +31,12 @@ export const VariableAccordion = ({
   }
 
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion
+      type="single"
+      collapsible
+      className="w-full"
+      defaultValue="variables"
+    >
       <AccordionItem value="variables">
         <AccordionTrigger className="py-2 text-sm font-medium text-green-700">
           {title} ({variables.length})
@@ -54,9 +57,9 @@ export const VariableAccordion = ({
               {variables.map((variable, index) => (
                 <VariableRow
                   key={variable.id}
-                  index={index + 1}
+                  index={index}
                   id={variable.id}
-                  name={variable.name}
+                  name={variable.name || ""}
                   exampleValue={variable.exampleValue}
                   onUpdate={onUpdate}
                   onRemove={onRemove}

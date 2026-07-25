@@ -11,17 +11,24 @@ import { useTemplateStore } from "../../store/template-builder.store";
 import { mapTemplateToPayload } from "../../utils/template/mapper";
 import { whatsappTemplateService } from "../../services/whatsapp-template.service";
 import { useAuthStore } from "@/stores";
+import type { TemplateForm } from "../../types/template.type";
+import { FormProvider } from "react-hook-form";
+import { useTemplateForm } from "../../hooks/useTemplateForm";
 // import { useTemplateStore } from "../../store/template-builder.store";
 
 export const TemplateBuilder: React.FC = () => {
+  const methods = useTemplateForm();
+
   const [step, setStep] = useState<WizardStepKey>("setup");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const accountId = useAuthStore((state) => state.accountId);
 
-  const handleSubmitTemplate = async () => {
-    // setIsSubmitting(true);
-    const state = useTemplateStore.getState();
-    const payload = mapTemplateToPayload(state);
+  const handleSubmitTemplate = async (data: TemplateForm) => {
+    setIsSubmitting(true);
+    console.log("data", data);
+    const payload = mapTemplateToPayload(data);
+
+    console.log("payload", payload);
 
     const response = await whatsappTemplateService.create(
       String(accountId),
@@ -62,14 +69,14 @@ export const TemplateBuilder: React.FC = () => {
   return (
     <section>
       {/* <TemplateHeader /> */}
+      <FormProvider {...methods}>
+        <TemplateStepIndicator currentStep={step} />
 
-      <TemplateStepIndicator currentStep={step} />
+        <div className="grid lg:grid-cols-[1fr_380px] gap-2 h-full mt-6 items-start">
+          {renderStep(step)}
 
-      <div className="grid lg:grid-cols-[1fr_380px] gap-2 h-full mt-6 items-start">
-        {renderStep(step)}
-
-        <div className="flex flex-col overflow-y-auto space-y-4 sticky top-2">
-          {/* <div>
+          <div className="flex flex-col overflow-y-auto space-y-4 sticky top-2">
+            {/* <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="w-5 h-5 rounded-full bg-gray-800 text-white text-xs flex items-center justify-center font-bold">
                 3
@@ -77,9 +84,10 @@ export const TemplateBuilder: React.FC = () => {
               <h2 className="text-sm font-semibold text-gray-800">Preview</h2>
             </div>
           </div> */}
-          <TemplatePreviewPanel />
+            <TemplatePreviewPanel />
+          </div>
         </div>
-      </div>
+      </FormProvider>
     </section>
   );
 };

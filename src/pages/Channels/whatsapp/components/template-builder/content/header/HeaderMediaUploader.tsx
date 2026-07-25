@@ -1,14 +1,27 @@
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { UploadDropzone } from "./UploadDropzone";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { useFormContext, useWatch } from "react-hook-form";
 import { HeaderMediaPreview } from "./HeaderMediaPreview";
+import { UploadDropzone } from "./UploadDropzone";
 import { HEADER_MEDIA_CONFIG } from "./header-media.constants";
-import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
 
 export function HeaderMediaUploader() {
-  const { headerType, headerMedia, setHeaderMedia, clearHeaderMedia } =
-    useTemplateStore((state) => state);
+  // const { headerType, headerMedia, setHeaderMedia, clearHeaderMedia } =
+  //   useTemplateStore((state) => state);
+
+  const { control, setValue } = useFormContext<TemplateForm>();
+
+  const headerType = useWatch({
+    control,
+    name: "headerType",
+  });
+
+  const headerMedia = useWatch({
+    control,
+    name: "headerMedia",
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,7 +44,20 @@ export function HeaderMediaUploader() {
   const handleSelectFile = (file: File) => {
     if (!validateFile(file)) return;
 
-    setHeaderMedia(file);
+    setValue(
+      "headerMedia",
+      {
+        file: file,
+        previewUrl: URL.createObjectURL(file),
+        name: file.name,
+        size: file.size,
+        mimeType: file.type,
+      },
+      {
+        shouldDirty: true,
+        shouldValidate: true,
+      },
+    );
 
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
@@ -40,12 +66,27 @@ export function HeaderMediaUploader() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+  // const handleSelectFile = (file: File) => {
+  //   if (!validateFile(file)) return;
+
+  //   setHeaderMedia(file);
+
+  //   if (previewUrl) {
+  //     URL.revokeObjectURL(previewUrl);
+  //   }
+
+  //   setPreviewUrl(URL.createObjectURL(file));
+  // };
+
   const handleReplace = () => {
     inputRef.current?.click();
   };
 
   const handleRemove = () => {
-    clearHeaderMedia();
+    setValue("headerMedia", undefined, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
 
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
@@ -53,6 +94,16 @@ export function HeaderMediaUploader() {
 
     setPreviewUrl(undefined);
   };
+
+  // const handleRemove = () => {
+  //   clearHeaderMedia();
+
+  //   if (previewUrl) {
+  //     URL.revokeObjectURL(previewUrl);
+  //   }
+
+  //   setPreviewUrl(undefined);
+  // };
 
   return (
     <div className="space-y-3">

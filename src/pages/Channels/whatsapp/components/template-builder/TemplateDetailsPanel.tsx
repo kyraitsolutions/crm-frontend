@@ -8,31 +8,33 @@ import {
 } from "@/components/ui/select";
 import { LANGUAGES } from "@/constants";
 import React from "react";
-import {
-  getBodyCursorPos,
-  useTemplateStore,
-} from "../../store/template-builder.store";
-import { VariablesLibrary } from "./ui/Variableslibrary";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
+import type { TemplateForm } from "../../validations/template.schema";
+// import type { TemplateForm } from "../../types/template.type";
 // import { CategoryGuidelines } from "./CategoryGuidelines";
 // import { VariablesLibrary } from "./VariablesLibrary";
 
 export const TemplateDetailsPanel: React.FC = () => {
+  // const {
+  //   // templateName,
+  //   // setTemplateName,
+  //   // language,
+  //   // setLanguage,
+  //   // suggestedVariables,
+  //   insertVariableToBody,
+  // } = useTemplateStore();
+
   const {
-    templateName,
-    setTemplateName,
-    language,
-    setLanguage,
-    suggestedVariables,
-    insertVariableToBody,
-  } = useTemplateStore();
+    control,
+    formState: { errors },
+  } = useFormContext<TemplateForm>();
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTemplateName(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""));
-  };
+  const templateName = useWatch({ control, name: "templateName" });
+  // const language = useWatch({ control, name: "language" });
 
-  const handleInsert = (varName: string) => {
-    insertVariableToBody(varName, getBodyCursorPos());
-  };
+  // const handleInsert = (varName: string) => {
+  //   insertVariableToBody(varName, getBodyCursorPos());
+  // };
 
   return (
     <div className="flex flex-col gap-5">
@@ -43,20 +45,42 @@ export const TemplateDetailsPanel: React.FC = () => {
             Template Name
           </label>
           <div className="relative">
-            <Input
+            {/* <Input
               className="input-field pr-14"
+              {...register("templateName")}
               type="text"
               value={templateName}
               onChange={handleNameChange}
               maxLength={512}
               placeholder="e.g. order_confirmation"
+            /> */}
+            <Controller
+              name="templateName"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  className="input-field pr-14"
+                  maxLength={512}
+                  placeholder="e.g. order_confirmation"
+                  onChange={(e) => {
+                    field.onChange(
+                      e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""),
+                    );
+                  }}
+                />
+              )}
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">
               {templateName.length}/512
             </span>
+
+            <p className="mt-1 text-xs text-red-500">
+              {errors?.templateName?.message}
+            </p>
           </div>
-          <p className="text-xs text-gray-400 mt-1">
-            Use lowercase letters and underscores only.
+          <p className="text-[11px] text-gray-400 mt-1">
+            Use lowercase letters and underscores only. e.g. order_confirmation
           </p>
         </div>
 
@@ -65,7 +89,26 @@ export const TemplateDetailsPanel: React.FC = () => {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Language
           </label>
-          <Select
+          <Controller
+            control={control}
+            name="language"
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger className="input-field">
+                  <SelectValue />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {LANGUAGES.map((l) => (
+                    <SelectItem key={l.value} value={l.value}>
+                      {l.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+          {/* <Select
             value={language}
             onValueChange={(val) => setLanguage(val as string)}
           >
@@ -79,7 +122,7 @@ export const TemplateDetailsPanel: React.FC = () => {
                 </SelectItem>
               ))}
             </SelectContent>
-          </Select>
+          </Select> */}
           <p className="text-xs text-gray-400 mt-1">
             Select the language for your template.
           </p>

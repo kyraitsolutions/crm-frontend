@@ -8,28 +8,45 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Pencil } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
-import { VariableAccordion } from "../../shared/VariableAccordion";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { Pencil } from "lucide-react";
+import { useFormContext, useWatch } from "react-hook-form";
 import { HeaderMediaUploader } from "./HeaderMediaUploader";
 
 const HEADER_TYPES = ["Text", "Image", "Video", "Document"] as const;
 
 export const HeaderEditor = () => {
-  const {
-    headerType,
-    setHeaderType,
+  // const {
+  //   headerType,
+  //   setHeaderType,
 
-    headerText,
-    setHeaderText,
+  //   headerText,
+  //   setHeaderText,
 
-    headerVariables,
-    updateHeaderVariable,
-    removeHeaderVariable,
+  //   headerVariables,
+  //   updateHeaderVariable,
+  //   removeHeaderVariable,
 
-    addHeaderVariable,
-  } = useTemplateStore((state) => state);
+  //   addHeaderVariable,
+  // } = useTemplateStore((state) => state);
+
+  const { control, setValue } = useFormContext<TemplateForm>();
+
+  const headerType = useWatch({
+    control,
+    name: "headerType",
+  });
+
+  const headerText = useWatch({
+    control,
+    name: "headerText",
+  });
+
+  const headerVariables = useWatch({
+    control,
+    name: "headerVariables",
+  });
 
   const headerMaxLen = 60;
 
@@ -47,7 +64,7 @@ export const HeaderEditor = () => {
         {canAddVariable && (
           <Button
             className="flex bg-transparent! items-center gap-1.5 text-xs text-green-700 font-medium border border-green-300 h-7! hover:bg-green-50 transition-colors rounded-xl"
-            onClick={addHeaderVariable}
+            // onClick={addHeaderVariable}
           >
             <Pencil size={12} />
 
@@ -61,7 +78,7 @@ export const HeaderEditor = () => {
           <Select
             value={headerType}
             onValueChange={(value) =>
-              setHeaderType(value as "Text" | "Image" | "Video" | "Document")
+              setValue("headerType", value, { shouldValidate: true })
             }
           >
             <SelectTrigger className="input-field">
@@ -86,7 +103,11 @@ export const HeaderEditor = () => {
                 maxLength={headerMaxLen}
                 className="input-field"
                 placeholder="Header text..."
-                onChange={(e) => setHeaderText(e.target.value)}
+                onChange={(e) =>
+                  setValue("headerText", e.target.value, {
+                    shouldValidate: true,
+                  })
+                }
               />
 
               <span className="absolute bottom-1 right-2 text-xs text-gray-400">
@@ -122,12 +143,12 @@ export const HeaderEditor = () => {
         </p>
       )}
 
-      <VariableAccordion
+      {/* <VariableAccordion
         title="Manage Variables"
         variables={headerVariables}
         onUpdate={updateHeaderVariable}
         onRemove={removeHeaderVariable}
-      />
+      /> */}
     </section>
   );
 };

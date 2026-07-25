@@ -4,6 +4,8 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTemplateStore } from "../../../store/template-builder.store";
+import { Controller, useFormContext } from "react-hook-form";
+import type { TemplateForm } from "../../../validations/template.schema";
 
 interface VariableRowProps {
   index: number;
@@ -18,12 +20,19 @@ export const VariableRow = ({
   index,
   id,
   name,
-  exampleValue,
+  // exampleValue,
   onUpdate,
   onRemove,
 }: VariableRowProps) => {
+  const {
+    getValues,
+    control,
+    formState: { errors },
+  } = useFormContext<TemplateForm>();
+
   const { suggestedVariables: SUGGESTED_VARIABLES, variableType } =
     useTemplateStore((state) => state);
+
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState(name);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
@@ -32,7 +41,7 @@ export const VariableRow = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
 
-  const isNumberVariable = variableType === "Number";
+  const isNumberVariable = getValues("variableType") === "Number";
 
   // Sync external name into local search
   useEffect(() => {
@@ -110,18 +119,24 @@ export const VariableRow = ({
   return (
     <div className="grid grid-cols-[32px_1fr_1fr_20px] items-center gap-2 border-b border-gray-100 py-1.5 last:border-0">
       {/* Index */}
-      <span className="text-center text-sm text-gray-500">{index}</span>
+      <span className="text-center text-sm text-gray-500">{index + 1}</span>
 
       {/* Variable name input */}
       <div className="relative" ref={inputWrapRef}>
         <Input
-          value={isNumberVariable ? `{{${index}}}` : search}
+          value={isNumberVariable ? `{{${index + 1}}}` : search}
           placeholder="Pick or type variable"
           disabled={isNumberVariable}
           className="input-field h-8 pr-7 text-xs"
           onChange={(e) => handleInputChange(e.target.value)}
           onFocus={handleOpen}
         />
+
+        {errors.bodyVariables?.[index]?.name && (
+          <p className="text-[10px] font-medium text-red-500 absolute bottom-0 right-2">
+            {errors.bodyVariables[index]?.name?.message}
+          </p>
+        )}
 
         {!isNumberVariable && (
           <button
@@ -198,16 +213,35 @@ export const VariableRow = ({
       </div>
 
       {/* Example value */}
-      <Input
+      <div className="relative">
+        <Controller
+          control={control}
+          name={`bodyVariables.${index}.exampleValue`}
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeholder="Example value"
+              className="input-field h-8 text-xs"
+            />
+          )}
+        />
+        {errors.bodyVariables?.[index]?.exampleValue && (
+          <p className="text-[10px] font-medium text-red-500 absolute bottom-0.5 right-2">
+            {errors.bodyVariables[index]?.exampleValue?.message}
+          </p>
+        )}
+      </div>
+      {/* <Input
         value={exampleValue}
         placeholder="Example value"
         className="input-field h-8 text-xs"
         onChange={(e) => onUpdate(id, "exampleValue", e.target.value)}
-      />
+      /> */}
 
       {/* Remove */}
       <div className="flex justify-center">
         <Button
+          type="button"
           variant="ghost"
           size="icon"
           className="h-7 w-7 text-gray-400 hover:text-red-500 hover:bg-transparent"

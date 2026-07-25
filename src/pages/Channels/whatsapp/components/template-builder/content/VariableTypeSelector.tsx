@@ -9,9 +9,12 @@ import {
 } from "@/components/ui/select";
 import { useTemplateStore } from "../../../store/template-builder.store";
 import { VARIABLE_TYPES } from "../../../constants/template.constants";
+import { Controller, useFormContext } from "react-hook-form";
+import type { TemplateForm } from "../../../validations/template.schema";
 
 export function VariableTypeSelector() {
-  const { variableType, setVariableType } = useTemplateStore((state) => state);
+  // const { variableType, setVariableType } = useTemplateStore((state) => state);
+  const { control } = useFormContext<TemplateForm>();
 
   return (
     <div className="space-y-5">
@@ -30,7 +33,27 @@ export function VariableTypeSelector() {
           <CircleHelp className="h-4 w-4 text-muted-foreground" />
         </label>
 
-        <Select
+        <Controller
+          control={control}
+          name="variableType"
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger className="input-field">
+                <SelectValue />
+              </SelectTrigger>
+
+              <SelectContent>
+                {VARIABLE_TYPES.map((type) => (
+                  <SelectItem key={type.value} value={type.value}>
+                    {type.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+
+        {/* <Select
           value={variableType}
           onValueChange={(value) => setVariableType(value as any)}
         >
@@ -45,7 +68,7 @@ export function VariableTypeSelector() {
               </SelectItem>
             ))}
           </SelectContent>
-        </Select>
+        </Select> */}
 
         {/* <p className="text-xs text-muted-foreground">
           {VARIABLE_TYPES.find((v) => v.value === variableType)?.description}
