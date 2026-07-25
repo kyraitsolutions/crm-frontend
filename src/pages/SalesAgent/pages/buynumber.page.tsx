@@ -50,7 +50,7 @@ const Buynumber = () => {
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 <button
-                                    className="flex items-center gap-2 rounded-xl w-80 justify-between border px-4 py-2 text-sm font-medium text-[#37322F]"
+                                    className="flex items-center gap-2 rounded-2xl w-80 justify-between border px-4 py-2 text-sm font-medium text-[#37322F]"
                                 >
                                     <span>
                                         +{selectedCountry.phonecode} {selectedCountry.name}
@@ -61,7 +61,7 @@ const Buynumber = () => {
 
                             <DropdownMenuContent
                                 align="start"
-                                className="w-72 max-h-80 overflow-y-auto rounded-xl"
+                                className="w-72 max-h-80 overflow-y-auto rounded-2xl"
                             >
                                 {countries.map((country) => (
                                     <DropdownMenuItem

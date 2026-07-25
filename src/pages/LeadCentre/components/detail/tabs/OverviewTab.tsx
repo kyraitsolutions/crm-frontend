@@ -53,7 +53,7 @@ const OverviewTab = ({
   return (
     <div
       ref={scrollContainerRef}
-      className="flex-1 overflow-y-auto p-5 space-y-5"
+      className="flex-1 overflow-y-auto hide-scrollbar p-5 space-y-5"
     >
       {sections.map((section) => (
         <div

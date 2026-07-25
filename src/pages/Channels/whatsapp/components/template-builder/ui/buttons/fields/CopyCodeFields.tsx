@@ -18,7 +18,7 @@ export function CopyCodeFields({ button }: ICopyCodeFieldsProps) {
 
         <div className="relative">
           <Input
-            className="input-field pr-14"
+            className="input-field pr-14 rounded-xl!"
             placeholder="Enter sample"
             value={button.offerCode ?? ""}
             maxLength={20}

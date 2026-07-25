@@ -93,7 +93,7 @@ const CallSidebar = () => {
             {/* Header */}
             <div className="border-b border-gray-500/20 px-3 py-2">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/30 text-primary">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-2xl bg-primary/30 text-primary">
                         <PhoneCall size={16} />
                     </div>
 
@@ -107,7 +107,7 @@ const CallSidebar = () => {
             </div>
 
             <nav className="flex-1 overflow-y-auto py-4">
-                <button className="mx-3 mb-5 flex  text-xs w-[calc(100%-24px)] items-center gap-3 rounded-xl bg-primary text-white px-4 py-2 transition hover:bg-primary">
+                <button className="mx-3 mb-5 flex  text-xs w-[calc(100%-24px)] items-center gap-3 rounded-2xl bg-primary text-white px-4 py-2 transition hover:bg-primary">
                     <LayoutDashboard size={16} />
                     Dashboard
                 </button>

@@ -202,13 +202,13 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
           <div className="flex justify-end px-4 gap-2">
             <button
               onClick={() => setShowAiBox(!showAiBox)}
-              className="border border-violet-500 text-xs text-violet-600 whitespace-nowrap px-2 py-1 rounded-xl flex items-center gap-1 hover:bg-violet-50"
+              className="border border-violet-500 text-xs text-violet-600 whitespace-nowrap px-2 py-1 rounded-2xl flex items-center gap-1 hover:bg-violet-50"
             >
               <Sparkles size={16} />
               AI Write
             </button>
 
-            <button className="border border-[#5468ff] text-xs whitespace-nowrap text-[#5468ff] px-2 py-1 rounded-xl flex items-center gap-2 hover:bg-[#eef1ff]">
+            <button className="border border-[#5468ff] text-xs whitespace-nowrap text-[#5468ff] px-2 py-1 rounded-2xl flex items-center gap-2 hover:bg-[#eef1ff]">
               Insert Template
               <ChevronDown size={16} />
             </button>

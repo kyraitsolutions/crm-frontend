@@ -19,23 +19,23 @@ const CTA_OPTIONS: {
   value: ButtonKind;
   label: string;
 }[] = [
-  {
-    value: "URL",
-    label: "Visit website",
-  },
-  {
-    value: "CALL_ON_WHATSAPP",
-    label: "Call on WhatsApp",
-  },
-  {
-    value: "PHONE_NUMBER",
-    label: "Call Phone Number",
-  },
-  {
-    value: "COPY_CODE",
-    label: "Copy offer code",
-  },
-];
+    {
+      value: "URL",
+      label: "Visit website",
+    },
+    {
+      value: "CALL_ON_WHATSAPP",
+      label: "Call on WhatsApp",
+    },
+    {
+      value: "PHONE_NUMBER",
+      label: "Call Phone Number",
+    },
+    {
+      value: "COPY_CODE",
+      label: "Copy offer code",
+    },
+  ];
 
 export function TypeOfActionField({ button }: Props) {
   const { changeButtonKind } = useTemplateStore((state) => state);
@@ -58,11 +58,11 @@ export function TypeOfActionField({ button }: Props) {
           changeButtonKind(button.id, value as ButtonKind)
         }
       >
-        <SelectTrigger className="input-field">
+        <SelectTrigger className="input-field rounded-xl!">
           <SelectValue />
         </SelectTrigger>
 
-        <SelectContent>
+        <SelectContent className="rounded-xl!">
           {CTA_OPTIONS.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}

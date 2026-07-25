@@ -34,11 +34,11 @@ export function VariableTypeSelector() {
           value={variableType}
           onValueChange={(value) => setVariableType(value as any)}
         >
-          <SelectTrigger className="input-field">
+          <SelectTrigger className="input-field rounded-xl!">
             <SelectValue />
           </SelectTrigger>
 
-          <SelectContent>
+          <SelectContent className="rounded-xl!">
             {VARIABLE_TYPES.map((type) => (
               <SelectItem key={type.value} value={type.value}>
                 {type.label}

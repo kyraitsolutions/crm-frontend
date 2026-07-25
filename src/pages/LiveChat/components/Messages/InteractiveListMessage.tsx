@@ -82,7 +82,7 @@ const InteractiveListMessage = ({
                           messageId: message.messageId,
                         })
                       }
-                      className="w-full rounded-xl border border-black/10 p-3 text-left hover:bg-black/5 transition"
+                      className="w-full rounded-2xl border border-black/10 p-3 text-left hover:bg-black/5 transition"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>

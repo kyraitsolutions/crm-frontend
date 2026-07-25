@@ -183,7 +183,7 @@ export const DashboardPage = () => {
   }
 
   return (
-    <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 px-5 py-5">
+    <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 px-5 py-10 mx-24">
       {accounts &&
         accounts.length > 0 &&
         accounts?.map((account, idx) => {
@@ -202,7 +202,7 @@ export const DashboardPage = () => {
               className={`
                   relative flex flex-col justify-between gap-4
                   px-4 py-3
-                  border hover:shadow-sm ${account.status === "active" ? "border-primary/30 " : "border-destructive/30"} rounded-xl
+                  border hover:shadow-sm ${account.status === "active" ? "border-primary/30 " : "border-destructive/30"} rounded-2xl
                   cursor-pointer
                   transition-all duration-200
                   ${isActive ? "ring-1 ring-[#37322F]" : ""}
@@ -276,7 +276,7 @@ export const DashboardPage = () => {
             flex flex-col justify-center items-center gap-2
             px-6 py-5
             border-2 border-dashed border-primary/30
-            rounded-xl
+            rounded-2xl
             cursor-pointer
             transition-all
             hover:shadow-sm
@@ -293,7 +293,7 @@ export const DashboardPage = () => {
           <DialogContent
             className="
             sm:max-w-105
-            rounded-xl
+            rounded-2xl
             p-6
             shadow-[0px_12px_24px_rgba(55,50,47,0.12)]
           "
@@ -363,7 +363,7 @@ export const DashboardPage = () => {
                   <button
                     type="button"
                     className="
-              px-4 py-2 rounded-xl
+              px-4 py-2 rounded-2xl
               border border-[rgba(50,45,43,0.20)]
               text-sm font-medium text-foreground
               hover:bg-[rgba(55,50,47,0.05)]
@@ -378,7 +378,7 @@ export const DashboardPage = () => {
                   type="submit"
                   disabled={loading}
                   className="
-            relative px-5 py-2 flex items-center gap-2 rounded-xl
+            relative px-5 py-2 flex items-center gap-2 rounded-2xl
             bg-primary
             text-sm font-medium text-[#FBFAF9]
             shadow-[0px_2px_4px_rgba(55,50,47,0.12)]

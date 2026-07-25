@@ -6,7 +6,7 @@ const FacebookData = {
     name: "Facebook for Business",
     icon: FaFacebook,
     color: "bg-blue-500",
-    buttonColor: "bg-blue-600 hover:bg-blue-700 rounded-xl",
+    buttonColor: "bg-blue-600 hover:bg-blue-700 rounded-2xl",
     description:
         "Connect with your customers on Facebook to send messages, automate conversations, and manage support efficiently from a single platform.",
     features: [

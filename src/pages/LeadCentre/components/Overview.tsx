@@ -4,7 +4,7 @@
 // const Overview = ({ lead }: { lead: ILead | null }) => {
 //   console.log("Rendering Overview with lead", lead?.id);
 //   return (
-//     <div className="bg-white rounded-xl py-8">
+//     <div className="bg-white rounded-2xl py-8">
 //       <div className="max-w-4xl mx-auto">
 //         <FieldRow
 //           label="Lead Owner"

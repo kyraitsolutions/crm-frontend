@@ -64,11 +64,10 @@ export const TemplateSetupStep: React.FC<TemplateSetupStepProps> = ({
                 onClick={() =>
                   handleCategoryChange(cat.value as TemplateCategory)
                 }
-                className={`actions-btn p-2! flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors  ${
-                  active
-                    ? "bg-primary! text-white!"
-                    : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
-                }`}
+                className={`actions-btn p-2! flex items-center justify-center gap-2 rounded-xl! border px-3 py-2.5 text-sm font-medium transition-colors  ${active
+                  ? "bg-primary! text-white!"
+                  : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
               >
                 {Icon && <Icon className="w-4 h-4" />}
                 {cat.label}
@@ -78,15 +77,14 @@ export const TemplateSetupStep: React.FC<TemplateSetupStepProps> = ({
         </div>
 
         {/* Type list */}
-        <div className="rounded-lg border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+        <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
           {typeOptions.map((opt) => {
             const active = opt.value === type;
             return (
               <label
                 key={opt.value}
-                className={`flex items-start gap-3 px-4 py-3 cursor-pointer transition-colors ${
-                  active ? "bg-blue-50" : "hover:bg-gray-50"
-                }`}
+                className={`flex items-start gap-3 px-4 py-3 cursor-pointer transition-colors ${active ? "bg-blue-50" : "hover:bg-gray-50"
+                  }`}
               >
                 <input
                   type="radio"

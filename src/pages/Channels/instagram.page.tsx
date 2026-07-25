@@ -7,7 +7,7 @@ const InstagramData =
     name: "Instagram for Business",
     icon: FaInstagram,
     color: "bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500",
-    buttonColor: "bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-xl text-white",
+    buttonColor: "bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-2xl text-white",
     description:
         "Connect with your audience on Instagram seamlessly. Manage DMs, automate replies and grow your brand engagement.",
     features: [

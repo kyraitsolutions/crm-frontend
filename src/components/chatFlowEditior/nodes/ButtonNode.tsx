@@ -71,7 +71,7 @@ const ButtonNode = ({ data }: TButtonNodeProps) => {
                 backgroundColor: doc?.badgeBg,
                 color: doc?.badgeText,
               }}
-              className={` size-16 rounded-2xl flex items-center justify-center`}
+              className={` size-16 rounded-xl flex items-center justify-center`}
             >
               {Icon && <Icon />}
             </div>
@@ -124,7 +124,7 @@ const ButtonNode = ({ data }: TButtonNodeProps) => {
               return (
                 <div key={btnData?.id} className="relative flex items-center">
                   {/* BUTTON UI */}
-                  <Button className="w-full actions-btn text-center">
+                  <Button className="w-full actions-btn  text-center">
                     {btnData?.title}
                   </Button>
 
@@ -140,7 +140,7 @@ const ButtonNode = ({ data }: TButtonNodeProps) => {
             })}
 
           {ctaUrlButton && (
-            <Button className="w-full actions-btn text-center">
+            <Button className="w-full actions-btn text-center rounded-xl!">
               <ExternalLink /> {ctaUrlButton?.display_text}
             </Button>
           )}

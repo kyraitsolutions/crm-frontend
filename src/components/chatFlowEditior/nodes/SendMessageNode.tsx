@@ -239,12 +239,12 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
       nds.map((node) =>
         node.id === id
           ? {
-              ...node,
-              data: {
-                ...node.data,
-                payload: newPayload,
-              },
-            }
+            ...node,
+            data: {
+              ...node.data,
+              payload: newPayload,
+            },
+          }
           : node,
       ),
     );
@@ -292,7 +292,7 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="w-90 group relative bg-card rounded-none shadow-lg antialiased overflow-visible "
+      className="w-90 group relative bg-card rounded-xl shadow-lg antialiased overflow-visible "
     >
       {/* HEADER */}
       <NodeHeader
@@ -315,7 +315,7 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                   {item.type === "text" && (
                     <Textarea
                       placeholder="Enter message..."
-                      className={`input-field nodrag`}
+                      className={`input-field nodrag rounded-xl!`}
                       value={item.content || ""}
                       onChange={(e) => handleInputChange(index, e.target.value)}
                     />
@@ -330,7 +330,7 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                           <img
                             src={item.image?.link}
                             alt="preview"
-                            className="w-full h-40 object-cover rounded-lg border"
+                            className="w-full h-40 object-cover rounded-xl border"
                           />
 
                           <label className="group-hover:opacity-100 opacity-0 flex justify-center items-center flex-col  absolute top-0 left-0 w-full h-full  p-6 cursor-pointer border-2 border-dashed border-blue-200 rounded-lg  transition-all duration-500 backdrop-blur-xs bg-black/10">
@@ -345,7 +345,7 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                             <Input
                               type="file"
                               accept={FILE_LIMITS.IMAGE.ACCEPTED_TYPES}
-                              className="hidden"
+                              className="hidden rounded-xl "
                               onChange={(e) =>
                                 handleFile(index, "image", e.target.files?.[0])
                               }
@@ -388,7 +388,7 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                         <Input
                           placeholder="Caption..."
                           value={item.image?.caption || ""}
-                          className="input-field bg-white text-xs!"
+                          className="input-field bg-white text-xs! rounded-xl!"
                           onChange={(e) =>
                             updateItem(index, {
                               ...item,
@@ -410,7 +410,7 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                         <div className="relative group">
                           <video
                             src={item.video?.link}
-                            className="w-full h-40 object-cover rounded-lg border"
+                            className="w-full h-40 object-cover rounded-xl! border"
                           />
                         </div>
                       )}
@@ -485,14 +485,14 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                                   <p className="text-sm font-medium break-words">
                                     {decodeURIComponent(
                                       item?.document?.link?.split("/").pop() ||
-                                        "",
+                                      "",
                                     )}
                                   </p>
                                 </div>
                               </a>
 
                               {/* Replace */}
-                              <label className="flex items-center justify-center p-3 cursor-pointer border-2 border-dashed rounded-lg bg-white hover:bg-gray-100 transition">
+                              <label className="flex items-center justify-center p-3 cursor-pointer border-2 border-dashed rounded-xl bg-white hover:bg-gray-100 transition">
                                 <p className="text-sm">Replace Document</p>
 
                                 <Input

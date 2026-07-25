@@ -87,7 +87,7 @@
 //           className={`
 //                         flex items-center gap-2 rounded-md border transition w-full
 //                         ${isEditing
-//               ? "border-primary shadow-md rounded-xl"
+//               ? "border-primary shadow-md rounded-2xl"
 //               : "border-transparent hover:border-gray-300"
 //             }
 //                     `}

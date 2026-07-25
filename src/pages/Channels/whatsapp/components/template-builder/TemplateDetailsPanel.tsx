@@ -44,7 +44,7 @@ export const TemplateDetailsPanel: React.FC = () => {
           </label>
           <div className="relative">
             <Input
-              className="input-field pr-14"
+              className="input-field pr-14 rounded-xl!"
               type="text"
               value={templateName}
               onChange={handleNameChange}
@@ -62,17 +62,17 @@ export const TemplateDetailsPanel: React.FC = () => {
 
         {/* Language */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm  font-medium text-gray-700 mb-1">
             Language
           </label>
           <Select
             value={language}
             onValueChange={(val) => setLanguage(val as string)}
           >
-            <SelectTrigger className="input-field w-full">
+            <SelectTrigger className="input-field w-full rounded-xl!">
               <SelectValue placeholder="Select language" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl!">
               {LANGUAGES.map((l) => (
                 <SelectItem key={l.value} value={l.value}>
                   {l.label}

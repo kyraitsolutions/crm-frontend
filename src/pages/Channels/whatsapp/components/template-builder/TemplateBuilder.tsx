@@ -11,6 +11,9 @@ import { useTemplateStore } from "../../store/template-builder.store";
 import { mapTemplateToPayload } from "../../utils/template/mapper";
 import { whatsappTemplateService } from "../../services/whatsapp-template.service";
 import { useAuthStore } from "@/stores";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { handleHistoryBack } from "@/utils/back.utils";
 // import { useTemplateStore } from "../../store/template-builder.store";
 
 export const TemplateBuilder: React.FC = () => {
@@ -58,18 +61,26 @@ export const TemplateBuilder: React.FC = () => {
         return null;
     }
   };
-
   return (
-    <section>
-      {/* <TemplateHeader /> */}
+    <section className="max-w-7xl mx-auto py-10 h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar">
+      <div className="">
+        {/* <TemplateHeader /> */}
+        <div className="flex items-center gap-4">
+          <Button
+            onClick={handleHistoryBack}
+            className="actions-btn rounded-full!"
+          >
+            <ArrowLeft />
+          </Button>
+          <TemplateStepIndicator currentStep={step} />
 
-      <TemplateStepIndicator currentStep={step} />
+        </div>
 
-      <div className="grid lg:grid-cols-[1fr_380px] gap-2 h-full mt-6 items-start">
-        {renderStep(step)}
+        <div className="grid lg:grid-cols-[1fr_380px] gap-2 h-full mt-6 items-start bg-white p-5 rounded-2xl">
+          {renderStep(step)}
 
-        <div className="flex flex-col overflow-y-auto space-y-4 sticky top-2">
-          {/* <div>
+          <div className="flex flex-col overflow-y-auto space-y-4 sticky top-2">
+            {/* <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="w-5 h-5 rounded-full bg-gray-800 text-white text-xs flex items-center justify-center font-bold">
                 3
@@ -77,9 +88,11 @@ export const TemplateBuilder: React.FC = () => {
               <h2 className="text-sm font-semibold text-gray-800">Preview</h2>
             </div>
           </div> */}
-          <TemplatePreviewPanel />
+            <TemplatePreviewPanel />
+          </div>
         </div>
       </div>
+
     </section>
   );
 };

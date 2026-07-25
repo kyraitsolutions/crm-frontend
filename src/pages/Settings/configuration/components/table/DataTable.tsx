@@ -23,9 +23,9 @@ interface DataTableProps<T> {
 
 export function DataTable<T>({ data, columns }: DataTableProps<T>) {
   return (
-    <div className="overflow-hidden rounded-lg border border-[#E5E7EB] bg-white">
+    <div className="overflow-hidden rounded-xl border-0 border-[#E5E7EB] bg-white">
       <Table>
-        <TableHeader>
+        <TableHeader className="">
           <TableRow>
             {columns.map((column) => (
               <TableHead
@@ -42,7 +42,7 @@ export function DataTable<T>({ data, columns }: DataTableProps<T>) {
           {data.map((row, index) => (
             <TableRow
               key={index}
-              className="border-b even:bg-gray-100 transition-all hover:bg-gray-50"
+              className="even:bg-gray-100 border-0 transition-all hover:bg-gray-50"
             >
               {columns.map((column) => {
                 const value = row[column.key as keyof T];

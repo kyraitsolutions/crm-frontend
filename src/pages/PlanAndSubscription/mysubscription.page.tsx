@@ -55,7 +55,7 @@ const MySubscriptionPage = () => {
       {/* Main Subscription Card */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         {/* Left Side */}
-        <div className="xl:col-span-2 bg-white rounded-xl border border-slate-200 p-6">
+        <div className="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <div className="flex items-center gap-3">
@@ -78,7 +78,7 @@ const MySubscriptionPage = () => {
               </div>
             </div>
 
-            <Link to="/dashboard/settings/subscription" className="px-3 py-1.5 rounded-xl bg-primary text-sm text-white font-medium hover:opacity-90 transition">
+            <Link to="/dashboard/settings/subscription" className="px-3 py-1.5 rounded-2xl bg-primary text-sm text-white font-medium hover:opacity-90 transition">
               Upgrade Plan
             </Link>
           </div>
@@ -109,9 +109,9 @@ const MySubscriptionPage = () => {
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-            <div className="border border-slate-200 rounded-xl p-5">
+            <div className="border border-slate-200 rounded-2xl p-5">
               <div className="flex items-center gap-3">
-                <div className="bg-blue-100 p-3 rounded-xl">
+                <div className="bg-blue-100 p-3 rounded-2xl">
                   <CalendarDays className="text-blue-600" size={22} />
                 </div>
 
@@ -125,9 +125,9 @@ const MySubscriptionPage = () => {
               </div>
             </div>
 
-            <div className="border border-slate-200 rounded-xl p-5">
+            <div className="border border-slate-200 rounded-2xl p-5">
               <div className="flex items-center gap-3">
-                <div className="bg-orange-100 p-3 rounded-xl">
+                <div className="bg-orange-100 p-3 rounded-2xl">
                   <Clock3 className="text-orange-600" size={22} />
                 </div>
 
@@ -141,9 +141,9 @@ const MySubscriptionPage = () => {
               </div>
             </div>
 
-            <div className="border border-slate-200 rounded-xl p-5">
+            <div className="border border-slate-200 rounded-2xl p-5">
               <div className="flex items-center gap-3">
-                <div className="bg-green-100 p-3 rounded-xl">
+                <div className="bg-green-100 p-3 rounded-2xl">
                   <CreditCard className="text-green-600" size={22} />
                 </div>
 
@@ -160,7 +160,7 @@ const MySubscriptionPage = () => {
         </div>
 
         {/* Right Side */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6">
           <h2 className="text-md font-semibold text-slate-800 text-sm">
             Subscription Details
           </h2>
@@ -206,7 +206,7 @@ const MySubscriptionPage = () => {
             </p>
           </div>
 
-          <button className="w-full mt-5 bg-primary text-white py-3 rounded-xl font-medium hover:opacity-90 transition">
+          <button className="w-full mt-5 bg-primary text-white py-3 rounded-2xl font-medium hover:opacity-90 transition">
             Manage Billing
           </button>
         </div>

@@ -91,9 +91,9 @@ export default function ProfilePage() {
   // const is_admin = isAdmin(user?.roleId);
 
   return (
-    <div className="bg-gray-50 ">
+    <div className="h-[calc(100vh-114px)] overflow-y-scroll hide-scrollbar bg-gray-50">
 
-      <div className="p-6 mx-auto max-w-4xl h-screen space-y-6">
+      <div className="p-6 mx-auto max-w-4xl space-y-6 ">
         {/* HEADER */}
         <div className="bg-linear-to-r from-blue-100 to-yellow-100 p-6 rounded flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -143,7 +143,7 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">First Name</Label>
               <Input
-                className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
+                className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl"
                 value={profile.firstName}
                 disabled={!editMode}
                 onChange={(e) =>
@@ -155,7 +155,7 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">Last Name</Label>
               <Input
-                className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl"
+                className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl"
                 value={profile.lastName}
                 disabled={!editMode}
                 onChange={(e) =>
@@ -169,7 +169,7 @@ export default function ProfilePage() {
               <div className="relative">
                 <Phone className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                  className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
                   value={profile.phone}
                   disabled={!editMode}
                   placeholder="9199999999"
@@ -185,7 +185,7 @@ export default function ProfilePage() {
               <div className="relative">
                 <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                  className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
                   value={profile.emails[0]}
                   disabled={!editMode}
                   placeholder="9199999999"
@@ -202,7 +202,7 @@ export default function ProfilePage() {
             <div className="relative">
               <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
               <Input
-                className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
                 value={profile.emails[0]}
                 disabled={!editMode}
                 onChange={(e) => {
@@ -229,7 +229,7 @@ export default function ProfilePage() {
                 <div className="relative">
                   <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
                   <Input
-                    className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                    className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
                     value={email}
                     disabled={!editMode}
                     onChange={(e) => {
@@ -251,7 +251,7 @@ export default function ProfilePage() {
                 <div className="relative">
                   <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
                   <Input
-                    className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                    className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
                     placeholder="Secondary Email"
                     value={profile.emails[1]}
                     disabled={!editMode}
@@ -274,7 +274,7 @@ export default function ProfilePage() {
               <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
 
               <Input
-                className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-xl px-8"
+                className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
                 placeholder="support@email.com"
                 value={profile.supportEmail}
                 disabled={!editMode}

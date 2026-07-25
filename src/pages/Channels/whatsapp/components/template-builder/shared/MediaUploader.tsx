@@ -63,7 +63,7 @@ export function MediaUploader({
 
       {renderPreview()}
 
-      <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 p-8 transition hover:border-green-500 hover:bg-green-50">
+      <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 p-8 transition hover:border-green-500 hover:bg-green-50">
         <UploadCloud className="mb-2 h-8 w-8 text-gray-400" />
 
         <p className="font-medium">Drag & drop or click to upload</p>

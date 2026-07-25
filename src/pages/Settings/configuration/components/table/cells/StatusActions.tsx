@@ -13,7 +13,7 @@ const StatusActions = ({ row, onEdit, onDelete }: StatusActionsProps) => {
     <div className="flex items-center gap-1">
       <Button
         onClick={onEdit}
-        className="flex size-7 items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200"
+        className="flex size-7 items-center justify-center rounded-2xl bg-gray-100 hover:bg-gray-200"
       >
         <Pencil className="size-4 text-gray-600" />
       </Button>
@@ -21,7 +21,7 @@ const StatusActions = ({ row, onEdit, onDelete }: StatusActionsProps) => {
       {!row.system && (
         <Button
           onClick={onDelete}
-          className="flex size-7 items-center justify-center rounded-xl bg-red-100 hover:bg-red-200"
+          className="flex size-7 items-center justify-center rounded-2xl bg-red-100 hover:bg-red-200"
         >
           <Trash2 className="size-4 text-red-500" />
         </Button>

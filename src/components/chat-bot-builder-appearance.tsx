@@ -186,11 +186,11 @@ export default function ChatBotAppearanceEditor() {
 
   return (
     <div className="relative grid grid-cols-3 w-full space-y-4">
-      <div className="grid grid-cols-2 col-span-2 gap-3">
+      <div className="grid grid-cols-2 col-span-2 gap-3 border border-gray-200 rounded-2xl">
         {fieldGroups.map((group, index) => {
           const Icon = group.icon;
           return (
-            <Card className="shadow-none" key={index}>
+            <Card className="shadow-none border-none" key={index}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Icon className="h-5 w-5" />

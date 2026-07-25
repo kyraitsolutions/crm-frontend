@@ -540,8 +540,8 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
                     toggleVideo();
                   }}
                   className={` relative size-10 flex items-center justify-center rounded-full cursor-pointer z-50 transition-all duration-300 ease-out shadow-xl border backdrop-blur-xl hover:scale-110 active:scale-95 ${isPlaying
-                      ? "bg-red-500/90 border-red-300/40 text-white hover:bg-red-500"
-                      : "bg-white/90 border-white/30 text-black hover:bg-white"
+                    ? "bg-red-500/90 border-red-300/40 text-white hover:bg-red-500"
+                    : "bg-white/90 border-white/30 text-black hover:bg-white"
                     }`}
                 >
                   {/* Icon */}
@@ -629,8 +629,8 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
                 key={type}
                 onClick={() => handleHeaderType(type.toLowerCase())}
                 className={`node-setting-header-types ${header.type === type.toLowerCase()
-                    ? "bg-emerald-500 text-white"
-                    : "bg-white/5 text-gray-400 hover:bg-white/10"
+                  ? "bg-emerald-500 text-white"
+                  : "bg-white/5 text-gray-400 hover:bg-white/10"
                   }`}
               >
                 {type}
@@ -717,7 +717,7 @@ const ButtonNodeSetting = ({ id, data, onClose }: TButtonNodeSettingProps) => {
               <Button
                 size="sm"
                 onClick={handleAddButton}
-                className="rounded-xl"
+                className="rounded-2xl"
               >
                 + Add
               </Button>
@@ -978,7 +978,7 @@ export default ButtonNodeSetting;
 //       {/* Card Section */}
 //       <div className="space-y-4">
 //         {/* Header */}
-//         <div className="p-2 rounded-xl bg-gray-50 border border-gray-200">
+//         <div className="p-2 rounded-2xl bg-gray-50 border border-gray-200">
 //           <label className="text-xs text-slate-500">Header (optional)</label>
 
 //           <Input
@@ -996,7 +996,7 @@ export default ButtonNodeSetting;
 //         </div>
 
 //         {/* Body */}
-//         <div className="p-2 rounded-xl bg-gray-50 border border-gray-200">
+//         <div className="p-2 rounded-2xl bg-gray-50 border border-gray-200">
 //           <label className="text-xs text-slate-500">Body (required)</label>
 //           <Textarea
 //             value={body}
@@ -1010,7 +1010,7 @@ export default ButtonNodeSetting;
 //         </div>
 
 //         {/* Footer */}
-//         <div className="p-2 rounded-xl bg-gray-50 border border-gray-200">
+//         <div className="p-2 rounded-2xl bg-gray-50 border border-gray-200">
 //           <label className="text-xs text-slate-500">Footer (optional)</label>
 //           <Input
 //             value={footer}
@@ -1027,7 +1027,7 @@ export default ButtonNodeSetting;
 //         </div>
 
 //         {/* Buttons */}
-//         <div className="p-2 rounded-xl bg-white border border-gray-200 space-y-4">
+//         <div className="p-2 rounded-2xl bg-white border border-gray-200 space-y-4">
 //           <div>
 //             <label className="text-xs text-slate-500">Buttons</label>
 //             <p className="text-[11px] text-slate-400">

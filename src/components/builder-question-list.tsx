@@ -28,9 +28,9 @@ export function QuestionList() {
             {questions?.map((question, index) => (
               <Card
                 key={question.id}
-                className={`group cursor-pointer shadow-none border rounded-xl p-4 transition ${selectedQuestionId === question.id
-                    ? "border-primary bg-muted/50"
-                    : "border-border hover:bg-muted/30 "
+                className={`group cursor-pointer shadow-none border rounded-2xl p-4 transition ${selectedQuestionId === question.id
+                  ? "border-primary bg-muted/50"
+                  : "border-border hover:bg-muted/30 "
                   }`}
                 onClick={() =>
                   builderStoreManager.setSelectedQuestionId(question.id)

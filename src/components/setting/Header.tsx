@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { handleHistoryBack } from "@/utils/back.utils";
 
 // interface NavItem {
 //   label: string;
@@ -22,9 +23,6 @@ const Header = () => {
   //     { label: "Seting", path: "", icon: MdInsights },
   //   ];
 
-  const handleHistoryBack = () => {
-    window.history.back();
-  };
 
   const breadcrumbs = getBreadcrumbs(location.pathname);
 
@@ -99,7 +97,7 @@ const Header = () => {
                 <DropdownMenuContent
                   align="start"
                   className="
-                                rounded-xl
+                                rounded-2xl
                                 border-none
                                 bg-white
                                 shadow-lg

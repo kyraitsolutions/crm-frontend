@@ -191,7 +191,7 @@ const LeadListHeader = () => {
             >
               <button
                 onClick={() => handleSelectOption(option)}
-                className="rounded-xl  text-sm text-gray-600 cursor-pointer flex items-center gap-2"
+                className="rounded-2xl  text-sm text-gray-600 cursor-pointer flex items-center gap-2"
               >
                 {option.name}
               </button>
@@ -226,7 +226,7 @@ const LeadListHeader = () => {
 
           <DropdownMenuContent
             align="start"
-            className="rounded-xl border-none  bg-white shadow-lg w-64 px-0!  h-75  "
+            className="rounded-2xl border-none  bg-white shadow-lg w-64 px-0!  h-75  "
           >
             {StatusFilter.map((option) => {
               const isSelected = showFilter.some(

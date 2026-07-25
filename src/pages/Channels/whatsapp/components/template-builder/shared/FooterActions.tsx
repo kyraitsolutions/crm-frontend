@@ -16,7 +16,7 @@ export const FooterActions = ({
   return (
     <div className="flex items-center justify-between">
       {onDiscard ? (
-        <Button onClick={onDiscard} className="actions-btn px-4! py-2!">
+        <Button onClick={onDiscard} className="actions-btn rounded-xl! py-1.5! px-4!">
           Discard
         </Button>
       ) : (
@@ -25,7 +25,7 @@ export const FooterActions = ({
       <Button
         onClick={onNext}
         disabled={isSubmitting}
-        className="rounded-xl py-2!"
+        className="rounded-xl! py-1.5! px-4!"
       >
         {isSubmitting ? "Submitting..." : nextLabel}
       </Button>
@@ -50,7 +50,7 @@ export const FooterActions = ({
 //       ) : (
 //         <span />
 //       )}
-//       <Button onClick={onNext} className="rounded-xl py-2!">
+//       <Button onClick={onNext} className="rounded-2xl py-2!">
 //         Next
 //       </Button>
 //     </div>

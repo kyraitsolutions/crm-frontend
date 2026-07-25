@@ -15,7 +15,7 @@ export function ActivityLogChanges({ log }: ActivityLogChangesProps) {
   }
 
   return (
-    <div className="mt-3 space-y-2 rounded-xl border border-dashed border-border bg-muted/20 p-3">
+    <div className="mt-3 space-y-2 rounded-2xl border border-dashed border-border bg-muted/20 p-3">
       {changes.map(({ key, label, change }) => (
         <div key={key} className="flex items-start gap-3">
           <span className="min-w-20 text-[11px] font-medium text-muted-foreground">
@@ -49,7 +49,7 @@ export function ActivityLogChanges({ log }: ActivityLogChangesProps) {
 //   }
 
 //   return (
-//     <div className="mt-3 space-y-2 rounded-xl border border-dashed border-border bg-muted/20 p-3">
+//     <div className="mt-3 space-y-2 rounded-2xl border border-dashed border-border bg-muted/20 p-3">
 //       {changes.map(({ key, label, change }) => {
 //         const from = formatChangeValue(change.from);
 //         const to = formatChangeValue(change.to);
@@ -104,7 +104,7 @@ export function ActivityLogChanges({ log }: ActivityLogChangesProps) {
 //   if (changes.length === 0) return null;
 
 //   return (
-//     <div className="mt-3 space-y-2 rounded-xl border border-dashed border-border bg-muted/20 p-3">
+//     <div className="mt-3 space-y-2 rounded-2xl border border-dashed border-border bg-muted/20 p-3">
 //       {changes.map(({ key, label, change, type }) => {
 //         // if (type === "notes") {
 //         //   const { added, removed } = getNotesDiff(change);

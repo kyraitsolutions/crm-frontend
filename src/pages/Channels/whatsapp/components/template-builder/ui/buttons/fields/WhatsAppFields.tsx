@@ -77,7 +77,7 @@ export function WhatsAppFields({ button }: IWhatsAppFieldsProps) {
             })
           }
         >
-          <SelectTrigger className="input-field">
+          <SelectTrigger className="input-field rounded-xl!">
             <SelectValue />
           </SelectTrigger>
 

@@ -38,7 +38,7 @@ const Emails = ({ lead, onCompose }: EmailsProps) => {
     };
 
     return (
-        <div className="bg-white rounded-xl border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-2xl border-gray-200 overflow-hidden">
 
             {/* Header */}
             <div onClick={() => setOpenEmail((prev) => !prev)} className={` ${openEmail && "border-b"} px-5 py-4 flex items-center justify-between`}>
@@ -58,7 +58,7 @@ const Emails = ({ lead, onCompose }: EmailsProps) => {
                         e.stopPropagation();
                         onCompose()
                     }}
-                    className="bg-primary text-white px-4 py-1.5 rounded-xl cursor-pointer text-sm hover:opacity-90 transition"
+                    className="bg-primary text-white px-4 py-1.5 rounded-2xl cursor-pointer text-sm hover:opacity-90 transition"
                 >
                     Compose Email
                 </button>
@@ -152,7 +152,7 @@ const Emails = ({ lead, onCompose }: EmailsProps) => {
                                     {isOpen && (
                                         <div className="px-5 pb-5">
 
-                                            <div className="border rounded-xl bg-gray-50 overflow-hidden">
+                                            <div className="border rounded-2xl bg-gray-50 overflow-hidden">
 
                                                 {/* Email Meta */}
                                                 <div className="border-b bg-white px-5 py-4 text-sm">

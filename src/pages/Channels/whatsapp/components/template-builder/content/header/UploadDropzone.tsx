@@ -33,12 +33,11 @@ export function UploadDropzone({ accept, onFileSelect }: IUploadDropzoneProps) {
 
           handleFile(e.dataTransfer.files[0]);
         }}
-        className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-10 transition-all
-        ${
-          isDragging
+        className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 transition-all
+        ${isDragging
             ? "border-green-500 bg-green-50"
             : "border-gray-300 hover:border-green-400 hover:bg-gray-50"
-        }`}
+          }`}
       >
         <UploadCloud size={42} className="mb-3 text-muted-foreground" />
 

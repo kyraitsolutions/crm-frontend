@@ -7,7 +7,7 @@ export const FooterEditor = () => {
   const footerMaxLen = 60;
 
   return (
-    <section className="rounded-xl border border-gray-200 p-4">
+    <section className="rounded-2xl border border-gray-200 px-5 py-3">
       <div className="mb-4">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-800">Footer</span>
@@ -26,7 +26,7 @@ export const FooterEditor = () => {
           value={footerText}
           maxLength={footerMaxLen}
           placeholder="Footer text..."
-          className="input-field pr-16"
+          className="input-field pr-16 rounded-xl!"
           onChange={(e) => setFooterText(e.target.value)}
         />
 
@@ -35,8 +35,8 @@ export const FooterEditor = () => {
         </span>
       </div>
 
-      <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3">
-        <p className="text-xs text-blue-700">
+      <div className="mt-3 border border-blue-100 bg-blue-50 py-2 px-4 rounded-2xl!">
+        <p className="text-xs text-blue-700 ">
           Footer text does not support variables and can contain up to 60
           characters.
         </p>

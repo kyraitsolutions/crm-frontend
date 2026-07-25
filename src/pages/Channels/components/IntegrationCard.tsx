@@ -21,11 +21,11 @@ const IntegrationCard = ({ data }: any) => {
 
   return (
     <div className=" mt-5 bg-gray-100 min-h-screen">
-      <div className="w-full rounded-xl">
+      <div className="w-full rounded-2xl">
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className={`${data.color} p-2 rounded-xl`}>
+              <div className={`${data.color} p-2 rounded-2xl`}>
                 <Icon className="text-white w-6 h-6" />
               </div>
               <h2 className="text-xl font-semibold">{data.name}</h2>

@@ -22,7 +22,7 @@ const ConfigurationTabs = () => {
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={clsx(
-              "flex w-full items-center rounded-xl px-4 py-3 text-left text-sm font-medium transition-all",
+              "flex w-full items-center rounded-xl px-4 py-2.5 text-left text-sm font-medium transition-all",
 
               activeTab === tab.key
                 ? "bg-primary/80 text-white"

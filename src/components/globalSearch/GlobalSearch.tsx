@@ -72,7 +72,7 @@ const GlobalSearch = ({ search, openSearch, setOpenSearch }: SearchProps) => {
                   {searchResult?.leads?.map((lead: any) => (
                     <div
                       key={lead._id}
-                      className="border rounded-xl p-3 hover:bg-gray-50 cursor-pointer transition"
+                      className="border rounded-2xl p-3 hover:bg-gray-50 cursor-pointer transition"
                     >
                       <div className="flex justify-between items-center">
                         <div>
@@ -100,7 +100,7 @@ const GlobalSearch = ({ search, openSearch, setOpenSearch }: SearchProps) => {
                   {searchResult?.contacts?.map((contact: any) => (
                     <div
                       key={contact._id}
-                      className="border rounded-xl p-3 hover:bg-gray-50 cursor-pointer transition"
+                      className="border rounded-2xl p-3 hover:bg-gray-50 cursor-pointer transition"
                     >
                       <div className="flex justify-between items-center">
                         <div>

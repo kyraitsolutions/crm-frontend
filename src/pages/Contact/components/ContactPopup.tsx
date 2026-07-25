@@ -63,7 +63,7 @@ const ContactPopup = () => {
                 onClick={(e) =>
                     e.stopPropagation()
                 }
-                className="relative w-full max-w-3xl rounded-xl bg-white shadow-2xl p-8"
+                className="relative w-full max-w-3xl rounded-2xl bg-white shadow-2xl p-8"
             >
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-medium text-gray-800">

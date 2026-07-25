@@ -149,7 +149,7 @@ const ForgotPassword = () => {
             {/* Brand mark */}
             <div className="mb-8 flex justify-center">
                 <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-xl bg-primary flex items-center justify-center">
+                    <div className="h-8 w-8 rounded-2xl bg-primary flex items-center justify-center">
                         <span className="text-white font-semibold text-sm">K</span>
                     </div>
                     <span className="text-lg font-semibold text-slate-900">Kyra</span>
@@ -218,7 +218,7 @@ const ForgotPassword = () => {
                                         setEmail(e.target.value);
                                         clearError();
                                     }}
-                                    className="w-full rounded-xl border border-primary px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:border-primary focus:ring-4 focus:ring-primary/10"
+                                    className="w-full rounded-2xl border border-primary px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:border-primary focus:ring-4 focus:ring-primary/10"
                                 />
                             </div>
 
@@ -227,7 +227,7 @@ const ForgotPassword = () => {
                             <button
                                 type="submit"
                                 disabled={loading || !email}
-                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                                 {loading ? "Sending code..." : "Send verification code"}
@@ -268,7 +268,7 @@ const ForgotPassword = () => {
                             <button
                                 type="submit"
                                 disabled={loading || otp.length !== 6}
-                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                                 {loading ? "Verifying..." : "Verify code"}
@@ -324,7 +324,7 @@ const ForgotPassword = () => {
                                             setNewPassword(e.target.value);
                                             clearError();
                                         }}
-                                        className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 pr-10 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                                        className="w-full rounded-2xl border border-slate-300 px-3.5 py-2.5 pr-10 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
                                     />
                                     <button
                                         type="button"
@@ -359,7 +359,7 @@ const ForgotPassword = () => {
                                             setConfirmPassword(e.target.value);
                                             clearError();
                                         }}
-                                        className={`w-full rounded-xl border px-3.5 py-2.5 pr-10 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:ring-4 ${passwordsMismatch
+                                        className={`w-full rounded-2xl border px-3.5 py-2.5 pr-10 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:ring-4 ${passwordsMismatch
                                             ? "border-red-300 focus:border-red-500 focus:ring-red-500/10"
                                             : "border-slate-300 focus:border-indigo-500 focus:ring-indigo-500/10"
                                             }`}
@@ -389,7 +389,7 @@ const ForgotPassword = () => {
                             <button
                                 type="submit"
                                 disabled={loading || !newPassword || !confirmPassword}
-                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                                 {loading ? "Saving..." : "Save new password"}
@@ -433,7 +433,7 @@ const ForgotPassword = () => {
 export default ForgotPassword;
 
 const ErrorMessage = ({ message }: { message: string }) => (
-    <div className="flex items-start gap-2 rounded-xl border border-red-100 bg-red-50 px-3 py-2.5">
+    <div className="flex items-start gap-2 rounded-2xl border border-red-100 bg-red-50 px-3 py-2.5">
         <AlertCircle className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
         <p className="text-sm text-red-700">{message}</p>
     </div>

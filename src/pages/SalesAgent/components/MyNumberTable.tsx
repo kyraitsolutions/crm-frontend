@@ -43,11 +43,11 @@ const MyNumberTable = ({ myNumbers, loading }: any) => {
         <div className='px-5'>
             <div className='flex justify-between items-center py-4'>
                 <h1 className='text-sm font-semibold'>Active Number</h1>
-                <Button className='rounded-xl'>
+                <Button className='rounded-2xl'>
                     Buy a number <ArrowRight />
                 </Button>
             </div>
-            <Table className="border-b rounded-xl overflow-hidden">
+            <Table className="border-b rounded-2xl overflow-hidden">
                 <TableHeader className="bg-muted/30 ">
                     <TableRow className="hover:bg-transparent">
                         <TableHead className="text-xs font-semibold uppercase tracking-wide text-white bg-primary p-3">
@@ -123,7 +123,7 @@ const MyNumberTable = ({ myNumbers, loading }: any) => {
                                 <div className="flex items-center gap-2">
                                     <BookUser className="size-4 text-primary" />
                                     <h3 className="font-">{number?.isoCountry}</h3>
-                                    <Button onClick={() => purchaseNumber(number.phoneNumber)} className='py-2! text-xs! rounded-xl bg-primary/20 border border-primary text-primary font-semibold hover:text-white transition-all duration-200'>
+                                    <Button onClick={() => purchaseNumber(number.phoneNumber)} className='py-2! text-xs! rounded-2xl bg-primary/20 border border-primary text-primary font-semibold hover:text-white transition-all duration-200'>
                                         Buy Now
                                     </Button>
                                 </div>

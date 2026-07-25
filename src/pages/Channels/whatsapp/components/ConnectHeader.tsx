@@ -37,7 +37,7 @@ export default function ConnectHeader({ onConnect }: ConnectHeaderProps) {
       <Button
         disabled={connecting}
         onClick={onConnect}
-        className={`rounded-xl flex items-center bg-green-600 hover:bg-green-700 ${connecting && "w-14"}`}
+        className={`rounded-2xl flex items-center bg-green-600 hover:bg-green-700 ${connecting && "w-14"}`}
       >
         {connecting ? (
           <Loader size={25} className="border-4" />

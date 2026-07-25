@@ -33,9 +33,9 @@ const CallTable = () => {
     }
 
     return (
-        <div className=" bg-white rounded-xl! px-5!">
+        <div className=" bg-white rounded-2xl! px-5!">
 
-            {/* <Table className="border-b rounded-xl! overflow-hidden">
+            {/* <Table className="border-b rounded-2xl! overflow-hidden">
                 <TableHeader className="bg-muted/30 ">
                     <TableRow className="hover:bg-transparent">
                         <TableHead className="text-xs font-semibold uppercase tracking-wide text-white bg-primary p-3">

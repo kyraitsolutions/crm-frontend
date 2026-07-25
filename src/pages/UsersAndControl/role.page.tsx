@@ -1,4 +1,4 @@
-import { Users, Pencil, Trash2, ShieldCheck } from "lucide-react";
+import { Users, Pencil, Trash2, ShieldCheck, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import PermissionManager from "./permissionManager";
 import { RBACService } from "@/services/rbac.service";
@@ -210,17 +210,17 @@ const Role = () => {
   }
 
   return (
-    <div className="w-full bg-gray-50">
-      <div className="p-4">
+    <div className="h-[calc(100vh-114px)] overflow-y-scroll hide-scrollbar bg-gray-50 py-5">
+      <div className="p-4  mx-24">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold">Roles</h2>
 
           <button
             onClick={startCreate}
-            className="bg-primary text-white px-4 py-2 text-sm font-medium rounded-lg cursor-pointer"
+            className="bg-primary text-white flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl cursor-pointer"
           >
-            + Create Role
+            <Plus size={16} /> Create Role
           </button>
         </div>
 
@@ -231,7 +231,7 @@ const Role = () => {
               <div
                 key={role.id}
                 onClick={() => startView(role)}
-                className="group flex items-center justify-between p-4 rounded-xl border bg-white cursor-pointer"
+                className="group flex items-center justify-between p-4 rounded-2xl border bg-white cursor-pointer"
               >
                 {/* LEFT */}
                 <div className="flex items-center gap-4">
@@ -501,7 +501,7 @@ export default Role;
 //             <div
 //               key={role.id}
 //               onClick={() => getPermissions(role)}
-//               className="group flex items-center justify-between p-4 rounded-xl border bg-white transition cursor-pointer"
+//               className="group flex items-center justify-between p-4 rounded-2xl border bg-white transition cursor-pointer"
 //             >
 //               {/* LEFT */}
 //               <div className="flex items-center gap-4">

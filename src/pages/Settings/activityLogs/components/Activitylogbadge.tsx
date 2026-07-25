@@ -19,7 +19,7 @@ export function ActivityLogBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-xl border px-1.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center gap-1 rounded-2xl border px-1.5 py-0.5 text-xs font-medium",
         badge.bg,
         badge.text,
         badge.border,
@@ -48,7 +48,7 @@ export function ActivityLogBadge({
 //   return (
 //     <span
 //       className={cn(
-//         "inline-flex items-center gap-1 rounded-xl border px-1.5 py-0.5 text-xs font-medium",
+//         "inline-flex items-center gap-1 rounded-2xl border px-1.5 py-0.5 text-xs font-medium",
 //         cfg.colorClass,
 //         cfg.textClass,
 //         cfg.borderClass,

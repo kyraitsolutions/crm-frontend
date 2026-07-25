@@ -88,7 +88,7 @@ const Contacts = () => {
               </div>
             </div>
             <div className="relative">
-              <ButtonWithTitle onClick={() => setOpenFilter(!openFilter)} className="flex items-center gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-100 transition">
+              <ButtonWithTitle onClick={() => setOpenFilter(!openFilter)} className="flex items-center gap-2 rounded-2xl px-3 py-2.5 hover:bg-gray-100 transition">
                 <Funnel size={16} />
                 <span className="text-sm font-medium">Filter</span>
               </ButtonWithTitle>
@@ -121,7 +121,7 @@ const Contacts = () => {
       </div>
 
 
-      {!loadingContacts ? <div className="border rounded-xl! overflow-">
+      {!loadingContacts ? <div className="border rounded-2xl! overflow-">
         <table className="w-full text-sm ">
           <thead className="bg-muted text-muted-foreground">
             <tr className="text-primary">
@@ -182,7 +182,7 @@ const Contacts = () => {
                 </td>
                 {/* <td className="p-3 text-right flex justify-center">
                                     <button
-                                        className="rounded-xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-red-400
+                                        className="rounded-2xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-red-400
                                             transition-all
                                             hover:bg-[#16A34A]/10
                                             hover:border-[#16A34A]/50 cursor-pointer"

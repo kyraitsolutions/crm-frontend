@@ -161,7 +161,7 @@ const Attachment = () => {
 
     return (
         <>
-            <div className="bg-white rounded-xl overflow-hidden">
+            <div className="bg-white rounded-2xl overflow-hidden">
                 {/* Header */}
                 <div onClick={() => setShowAttachment((prev) => !prev)} className={`flex cursor-pointer items-center justify-between ${showAttachment && "border-b"} border-gray-200 px-5 py-2.5`}>
                     <h2 className="text-md font-semibold">
@@ -175,14 +175,14 @@ const Attachment = () => {
                                 setShowDropdown((prev) => !prev)
                             }
                             }
-                            className="bg-primary/10 text-sm  text-primary font-medium border border-primary rounded-xl px-4 py-1 flex items-center gap-2 hover:opacity-90 transition"
+                            className="bg-primary/10 text-sm  text-primary font-medium border border-primary rounded-2xl px-4 py-1 flex items-center gap-2 hover:opacity-90 transition"
                         >
                             Attach
                             <ChevronDown size={16} />
                         </button>
 
                         {showDropdown && (
-                            <div className="absolute right-0 mt-2 bg-white  rounded-xl shadow-md z-20 overflow-hidden">
+                            <div className="absolute right-0 mt-2 bg-white  rounded-2xl shadow-md z-20 overflow-hidden">
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -277,7 +277,7 @@ const Attachment = () => {
             {/* URL Modal */}
             {showUrlModal && (
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl w-full max-w-md p-5">
+                    <div className="bg-white rounded-2xl w-full max-w-md p-5">
                         <div className="flex justify-between items-center mb-5">
                             <h3 className="text-md font-semibold">
                                 Add URL
@@ -302,7 +302,7 @@ const Attachment = () => {
                                     setUrl(e.target.value)
                                 }
                                 placeholder="Enter URL"
-                                className="w-full border rounded-xl px-3 py-2 text-sm outline-none"
+                                className="w-full border rounded-2xl px-3 py-2 text-sm outline-none"
                             />
 
                             {url && (
@@ -312,7 +312,7 @@ const Attachment = () => {
                                         setUrlName(e.target.value)
                                     }
                                     placeholder="Enter URL Name"
-                                    className="w-full border rounded-xl px-3 py-2 text-sm outline-none"
+                                    className="w-full border rounded-2xl px-3 py-2 text-sm outline-none"
                                 />
                             )}
 
@@ -321,14 +321,14 @@ const Attachment = () => {
                                     onClick={() =>
                                         setShowUrlModal(false)
                                     }
-                                    className="px-4 py-1 text-sm border rounded-xl"
+                                    className="px-4 py-1 text-sm border rounded-2xl"
                                 >
                                     Cancel
                                 </button>
 
                                 <button
                                     onClick={handleSaveUrl}
-                                    className="px-4 py-1 text-sm bg-second rounded-xl text-white"
+                                    className="px-4 py-1 text-sm bg-second rounded-2xl text-white"
                                 >
                                     Save
                                 </button>
@@ -341,7 +341,7 @@ const Attachment = () => {
             {/* Media Modal */}
             {showMediaModal && (
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl w-full max-w-md p-5">
+                    <div className="bg-white rounded-2xl w-full max-w-md p-5">
                         <div className="flex justify-between items-center mb-5">
                             <h3 className="text-md font-semibold">
                                 Upload Media
@@ -361,7 +361,7 @@ const Attachment = () => {
                                 onClick={() =>
                                     fileInputRef.current?.click()
                                 }
-                                className="border-2 border-dashed border-gray-300 rounded-xl p-8 cursor-pointer flex flex-col items-center justify-center"
+                                className="border-2 border-dashed border-gray-300 rounded-2xl p-8 cursor-pointer flex flex-col items-center justify-center"
                             >
                                 <Upload size={24} />
 
@@ -393,14 +393,14 @@ const Attachment = () => {
                                     onClick={() =>
                                         setShowMediaModal(false)
                                     }
-                                    className="px-4 py-1 text-sm border rounded-xl"
+                                    className="px-4 py-1 text-sm border rounded-2xl"
                                 >
                                     Cancel
                                 </button>
 
                                 <button
                                     onClick={handleSaveMedia}
-                                    className="px-4 py-1 text-sm bg-second text-white rounded-xl"
+                                    className="px-4 py-1 text-sm bg-second text-white rounded-2xl"
                                 >
                                     Save
                                 </button>

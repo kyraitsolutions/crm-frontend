@@ -64,7 +64,7 @@ const ChatFilter = () => {
     <div className="flex flex-col gap-2 pt-2 mt-1 relative">
       <div className="flex items-center justify-between px-3">
         <h1 className="text-lg font-semibold">Chats</h1>
-        <button className="flex items-center gap-1 text-sm cursor-pointer font-medium text-white bg-second rounded-xl py-1 px-2 hover:bg-second/90">
+        <button className="flex items-center gap-1 text-sm cursor-pointer font-medium text-white bg-second rounded-2xl py-1 px-2 hover:bg-second/90">
           <MdAdd size={18} className="text-white" />
         </button>
       </div>
@@ -102,7 +102,7 @@ const ChatFilter = () => {
       </div>
 
       {filterOpen && (
-        <div className="absolute top-25 right-0 flex flex-col gap-3 shadow-lg p-4 bg-linear-to-b from-green-50 to-orange-50 z-50 w-78 rounded-xl">
+        <div className="absolute top-25 right-0 flex flex-col gap-3 shadow-lg p-4 bg-linear-to-b from-green-50 to-orange-50 z-50 w-78 rounded-2xl">
           <div className="flex justify-between items-center">
             <h2 className="font-medium">Filters</h2>
             {appliedFilter.length > 0 && (
@@ -126,11 +126,10 @@ const ChatFilter = () => {
                       onClick={() => handleAddFilter(i)}
                       className={`
                                                     text-xs py-1 px-3 border rounded-full capitalize cursor-pointer transition
-                                                    ${
-                                                      appliedFilter.includes(i)
-                                                        ? "bg-second text-white border-second"
-                                                        : "bg-white hover:bg-gray-100"
-                                                    }
+                                                    ${appliedFilter.includes(i)
+                          ? "bg-second text-white border-second"
+                          : "bg-white hover:bg-gray-100"
+                        }
                                                 `}
                     >
                       {i}

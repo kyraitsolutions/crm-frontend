@@ -75,7 +75,7 @@ const ChatProfile = () => {
             <p className="text-xs text-gray-500">
               Joined: {formatDate(String(selectedConversation?.createdAt))}
             </p>
-            <p className="text-xs px-2 bg-primary/10 rounded-xl text-center text-primary border border-primary">
+            <p className="text-xs px-2 bg-primary/10 rounded-2xl text-center text-primary border border-primary">
               Active
             </p>
           </div>
@@ -85,7 +85,7 @@ const ChatProfile = () => {
         {sharedMedia.slice(0, 5).map((media) => (
           <div
             key={media.messageId}
-            className="w-16 h-16 rounded-xl overflow-hidden"
+            className="w-16 h-16 rounded-2xl overflow-hidden"
           >
             {media.type === "image" && (
               <img
@@ -114,7 +114,7 @@ const ChatProfile = () => {
         ))}
 
         {sharedMedia.length > 5 && (
-          <div className="bg-gray-200 rounded-xl w-16 h-16 flex justify-center items-center text-lg text-gray-500">
+          <div className="bg-gray-200 rounded-2xl w-16 h-16 flex justify-center items-center text-lg text-gray-500">
             +{sharedMedia.length - 5}
           </div>
         )}
@@ -124,12 +124,12 @@ const ChatProfile = () => {
           Shared media
         </h1>
         <div className="flex flex-wrap gap-2 py-4">
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 flex justify-center items-center text-lg text-gray-500">
+          <div className="bg-gray-200 border-2 border-dashed rounded-2xl w-16 h-16" />
+          <div className="bg-gray-200 border-2 border-dashed rounded-2xl w-16 h-16" />
+          <div className="bg-gray-200 border-2 border-dashed rounded-2xl w-16 h-16" />
+          <div className="bg-gray-200 border-2 border-dashed rounded-2xl w-16 h-16" />
+          <div className="bg-gray-200 border-2 border-dashed rounded-2xl w-16 h-16" />
+          <div className="bg-gray-200 border-2 border-dashed rounded-2xl w-16 h-16 flex justify-center items-center text-lg text-gray-500">
             12+
           </div>
         </div>

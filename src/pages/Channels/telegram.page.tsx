@@ -7,7 +7,7 @@ const TelegramData = {
     name: "Telegram for Business",
     icon: Send,
     color: "bg-blue-500",
-    buttonColor: "bg-blue-600 hover:bg-blue-700 rounded-xl",
+    buttonColor: "bg-blue-600 hover:bg-blue-700 rounded-2xl",
     description:
         "Connect with your customers on Telegram to send messages, automate conversations, and manage support efficiently from a single platform.",
     features: [

@@ -131,7 +131,7 @@ export function AppSidebar() {
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 bg-primary text-white rounded-xl cursor-pointer "
+          className="p-2 bg-primary text-white rounded-2xl cursor-pointer "
         >
           {collapsed ? (
             <IconChevronRight size={18} />
@@ -159,7 +159,7 @@ export function AppSidebar() {
       {/* <div className="px-3 py-3">
         <Link
           to="/dashboard/subscription"
-          className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-white bg-primary hover:bg-primary/90 transition"
+          className="flex items-center gap-3 px-3 py-2 rounded-2xl text-sm font-medium text-white bg-primary hover:bg-primary/90 transition"
         >
           <span className="text-lg">⚡</span>
           {!collapsed && (

@@ -34,7 +34,7 @@ const PerformanceOverview = () => {
   }, [dashboardOverview]);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 h-full">
+    <div className="bg-white rounded-2xl border border-gray-200 p-5 h-full">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

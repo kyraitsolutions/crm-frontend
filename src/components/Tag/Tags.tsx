@@ -118,7 +118,7 @@ const Tags = ({ tags, onChange, onSave }: TagsProps) => {
             </div>
 
             {open && (
-                <div className="absolute top-10 left-0 z-50 w-112.5  rounded-xl border bg-white shadow-lg p-3">
+                <div className="absolute top-10 left-0 z-50 w-112.5  rounded-2xl border bg-white shadow-lg p-3">
                     <div className="flex items-start gap-3">
                         <Tag
                             className="text-gray-500 mt-1"
@@ -185,7 +185,7 @@ const Tags = ({ tags, onChange, onSave }: TagsProps) => {
                                     </div>
 
                                     {showColorPicker && (
-                                        <div className="absolute top-12 left-0 bg-white border rounded-xl shadow-lg p-3 w-60">
+                                        <div className="absolute top-12 left-0 bg-white border rounded-2xl shadow-lg p-3 w-60">
                                             <div className="flex flex-wrap gap-2">
                                                 {tagColors.map((color) => (
                                                     <button

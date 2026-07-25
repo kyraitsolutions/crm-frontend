@@ -26,7 +26,7 @@ const CallFilter = () => {
                         placeholder="Search name, phone, email"
                         value={""}
                         // onChange={(e) => setContactQuery({ search: e.target.value, })}
-                        className="w-full bg-gray-100 rounded-xl! px-4 border-gray-300 py-2 pr-8 text-sm text-[#37322F] placeholder:text-[#847971] focus:outline-none focus:border-gray-300 transition"
+                        className="w-full bg-gray-100 rounded-2xl! px-4 border-gray-300 py-2 pr-8 text-sm text-[#37322F] placeholder:text-[#847971] focus:outline-none focus:border-gray-300 transition"
                     />
 
                     {/* Right icon */}
@@ -47,7 +47,7 @@ const CallFilter = () => {
                     </div>
                 </div>
                 <div className="relative">
-                    <ButtonWithTitle onClick={() => setOpenFilter(!openFilter)} className="flex items-center gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-100 transition">
+                    <ButtonWithTitle onClick={() => setOpenFilter(!openFilter)} className="flex items-center gap-2 rounded-2xl px-3 py-2.5 hover:bg-gray-100 transition">
                         <Funnel size={16} />
                         <span className="text-sm font-medium">Filter</span>
                     </ButtonWithTitle>
@@ -59,7 +59,7 @@ const CallFilter = () => {
 
             </div>
             <div>
-                <Button className='border border-primary text-primary bg-primary/20 rounded-xl hover:text-white duration-200 transition-all'>
+                <Button className='border border-primary text-primary bg-primary/20 rounded-2xl hover:text-white duration-200 transition-all'>
                     <RefreshCw /> Refresh
                 </Button>
             </div>

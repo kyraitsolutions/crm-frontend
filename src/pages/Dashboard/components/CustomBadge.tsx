@@ -36,9 +36,9 @@ const CustomBadge = ({ children, variant, value }: BadgeProps) => {
   return (
     <Badge
       className={cn(
-        "px-2 h-5! text-[11px] font-semibold shadow-none rounded-xl bg-gray-100 text-gray-500 border border-gray-200 transition-all duration-300",
+        "px-2 h-5! text-[11px] font-semibold shadow-none rounded-2xl bg-gray-100 text-gray-500 border border-gray-200 transition-all duration-300",
         badgeVariants[variant]?.[
-          value as keyof (typeof badgeVariants)[typeof variant]
+        value as keyof (typeof badgeVariants)[typeof variant]
         ],
       )}
     >

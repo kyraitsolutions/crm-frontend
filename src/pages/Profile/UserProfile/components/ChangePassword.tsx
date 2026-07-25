@@ -52,7 +52,7 @@ const ChangePassword = () => {
                     type={visible ? "text" : "password"}
                     placeholder={placeholder}
                     {...register(registerName)}
-                    className="h-12 w-full rounded-xl border border-gray-300 bg-white pl-11 pr-12 text-sm transition-all outline-none placeholder:text-gray-400 focus:border-primary focus:ring-4 focus:ring-primary/10"
+                    className="h-12 w-full rounded-2xl border border-gray-300 bg-white pl-11 pr-12 text-sm transition-all outline-none placeholder:text-gray-400 focus:border-primary focus:ring-4 focus:ring-primary/10"
                 />
 
                 <button
@@ -123,7 +123,7 @@ const ChangePassword = () => {
                     <Button
                         type="button"
                         variant="outline"
-                        className="rounded-xl px-6"
+                        className="rounded-2xl px-6"
                     >
                         Cancel
                     </Button>
@@ -131,7 +131,7 @@ const ChangePassword = () => {
                     <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="rounded-xl px-6"
+                        className="rounded-2xl px-6"
                     >
                         {isSubmitting ? "Updating..." : "Update Password"}
                     </Button>

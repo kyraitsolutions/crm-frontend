@@ -54,10 +54,10 @@ const CompanyProfileForm = ({
       </div>
 
       <div className="flex justify-center gap-4 mt-10">
-        <Button onClick={onSave} className="rounded-xl">
+        <Button onClick={onSave} className="rounded-2xl">
           Update
         </Button>
-        <Button variant="outline" onClick={onCancel} className="rounded-xl">
+        <Button variant="outline" onClick={onCancel} className="rounded-2xl">
           Cancel
         </Button>
       </div>

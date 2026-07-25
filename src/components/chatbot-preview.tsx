@@ -98,7 +98,7 @@ export default function ChatbotPreview() {
   return (
 
     <div className="flex items-center justify-center">
-      <div className="flex flex-col w-[360px] h-[560px] rounded-xl shadow-xl bg-white overflow-hidden">
+      <div className="flex flex-col w-[360px] h-[560px] rounded-2xl shadow-xl bg-white overflow-hidden">
         {/* Header */}
         <div
           className="flex items-center border justify-between px-4 py-3 text-white"
@@ -118,7 +118,7 @@ export default function ChatbotPreview() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className={`max-w-[80%]  px-4 py-2 text-sm rounded-xl ${msg?.sender === "user"
+                className={`max-w-[80%]  px-4 py-2 text-sm rounded-2xl ${msg?.sender === "user"
                   ? "ml-auto  text-white"
                   : "bg-gray-100"
                   }`}

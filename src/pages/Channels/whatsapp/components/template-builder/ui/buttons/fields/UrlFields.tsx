@@ -32,11 +32,11 @@ export function UrlFields({ button }: IUrlFieldsProps) {
             })
           }
         >
-          <SelectTrigger className="input-field">
+          <SelectTrigger className="input-field rounded-xl!">
             <SelectValue />
           </SelectTrigger>
 
-          <SelectContent>
+          <SelectContent className="rounded-xl!">
             <SelectItem value="STATIC">Static</SelectItem>
 
             <SelectItem value="DYNAMIC">Dynamic</SelectItem>
@@ -50,7 +50,7 @@ export function UrlFields({ button }: IUrlFieldsProps) {
 
         <div className="relative">
           <Input
-            className="input-field pr-16"
+            className="input-field pr-16 rounded-xl!"
             placeholder="https://www.example.com"
             maxLength={2000}
             value={url}

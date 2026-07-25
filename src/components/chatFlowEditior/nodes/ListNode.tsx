@@ -31,7 +31,7 @@ const ListNode = ({ data }: TListNodeProps) => {
       <div className="p-3 space-y-4 text-sm">
         {/* HEADER */}
         {headerText && (
-          <div className="bg-gray-100 px-3 py-2 rounded-md text-xs font-semibold text-gray-700 flex items-center gap-2">
+          <div className="bg-gray-100 px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-2">
             <Type size={12} />
             <span>{headerText}</span>
           </div>
@@ -79,7 +79,7 @@ const ListNode = ({ data }: TListNodeProps) => {
         </div>
 
         {/* ACTION BUTTON */}
-        <Button className="actions-btn w-full">{actionButton}</Button>
+        <Button className="actions-btn w-full ">{actionButton}</Button>
       </div>
 
       {/* TARGET HANDLE */}

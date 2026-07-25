@@ -33,8 +33,8 @@ const TeamList = ({
 
     return teams.filter((t) => {
       return (
-        t.userProfile?.firstName?.toLowerCase().includes(term) ||
-        t.userProfile?.lastName?.toLowerCase().includes(term) ||
+        t?.userProfile?.firstName?.toLowerCase().includes(term) ||
+        t?.userProfile?.lastName?.toLowerCase().includes(term) ||
         t.email?.toLowerCase().includes(term)
       );
     });
@@ -67,7 +67,7 @@ const TeamList = ({
   };
 
   return (
-    <div className="border rounded-xl overflow-hidden">
+    <div className="border rounded-2xl overflow-hidden">
       {/* 🔍 SEARCH */}
       <div className="p-3 border-b bg-white">
         <Input
@@ -138,7 +138,7 @@ const TeamList = ({
           return (
             <div
               key={item?.id}
-              className={`flex items-center justify-between p-4 border-b hover:bg-gray-50 ${selectedUser?.id === item?.id ? "bg-blue-50" : ""
+              className={`flex items-center justify-between p-4 hover:bg-gray-50 ${selectedUser?.id === item?.id ? "bg-blue-50" : ""
                 }`}
             >
               {/* LEFT */}

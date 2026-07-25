@@ -19,7 +19,7 @@ const FlowHeader = ({ onCreateFlow }: Props) => {
       <ButtonWithTitle
         title="Create chatflow"
         onClick={onCreateFlow}
-        className="gap-2 rounded-xl  flex items-center actions-btn p-2!"
+        className="gap-2 rounded-xl!  flex items-center actions-btn px-4! py-2!"
       >
         <Plus size={18} />
         Create Flow

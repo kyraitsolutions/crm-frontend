@@ -94,7 +94,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
       <div>
         <button
           // onClick={() => generateLeadSummary(leadId)}
-          className="bg-primary/10 hover:bg-primary/20 cursor-pointer flex items-center mt-4 gap-2 px-4 py-2 text-sm rounded-xl text-primary transition-colors"
+          className="bg-primary/10 hover:bg-primary/20 cursor-pointer flex items-center mt-4 gap-2 px-4 py-2 text-sm rounded-2xl text-primary transition-colors"
         >
           {!loading ? (
             <span className="flex gap-2 items-center">
@@ -137,7 +137,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
   );
 
   return (
-    <div className="rounded-xl bg-white p-5 max-w-md space-y-4">
+    <div className="rounded-2xl bg-white p-5 max-w-md space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -162,7 +162,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
       {/* {statChips.length > 0 && (
                 <div className="grid grid-cols-3 gap-2">
                     {statChips.map(([key, val]) => (
-                        <div key={key} className="bg-gray-50 rounded-xl px-3 py-2">
+                        <div key={key} className="bg-gray-50 rounded-2xl px-3 py-2">
                             <p className="text-[11px] text-gray-400 mb-0.5">{formatLabel(key)}</p>
                             <p className="text-[13px] font-medium text-gray-800 truncate">{String(val)}</p>
                         </div>
@@ -183,9 +183,8 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
               return (
                 <span
                   key={key}
-                  className={`text-xs px-2.5 py-1 rounded-xl flex items-center gap-1 ${
-                    ok ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"
-                  }`}
+                  className={`text-xs px-2.5 py-1 rounded-2xl flex items-center gap-1 ${ok ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"
+                    }`}
                 >
                   {isEmail ? <Mail size={13} /> : <Phone size={13} />}
                   {isEmail ? "Email" : "Phone"} {ok ? "provided" : "missing"}
@@ -207,7 +206,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
               {aiSummary.key_requirements.map((req: string, idx: number) => (
                 <span
                   key={idx}
-                  className="text-xs px-2.5 py-1 rounded-xl bg-gray-100 text-gray-700"
+                  className="text-xs px-2.5 py-1 rounded-2xl bg-gray-100 text-gray-700"
                 >
                   {req}
                 </span>
@@ -231,7 +230,7 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
       {/* Regenerate button */}
       <button
         // onClick={() => generateLeadSummary(leadId)}
-        className="w-full flex items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 cursor-pointer px-4 py-2 text-sm rounded-xl text-gray-700 transition-colors"
+        className="w-full flex items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 cursor-pointer px-4 py-2 text-sm rounded-2xl text-gray-700 transition-colors"
       >
         <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
         <span className={loading ? "animate-pulse" : ""}>

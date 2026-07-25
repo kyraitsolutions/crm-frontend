@@ -130,7 +130,7 @@ const FlowTable = ({ flows, loading }: TFlowTableProps) => {
   }
 
   return (
-    <div className="overflow-hidden border bg-white rounded-xl">
+    <div className="overflow-hidden border bg-white rounded-2xl">
       <Table>
         <TableHeader className="bg-muted/30">
           <TableRow className="hover:bg-transparent">
@@ -259,7 +259,7 @@ const FlowTable = ({ flows, loading }: TFlowTableProps) => {
                       </Button>
                     </DropdownMenuTrigger>
 
-                    <DropdownMenuContent align="end" className="rounded-xl">
+                    <DropdownMenuContent align="end" className="rounded-2xl">
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() =>

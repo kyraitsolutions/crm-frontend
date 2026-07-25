@@ -43,7 +43,7 @@ export function PillFilterDropdown({
                 align="start"
                 className="
                     mt-2
-                    rounded-xl
+                    rounded-2xl
                     border-none
                     bg-[#FBFAF9]
                     p-1

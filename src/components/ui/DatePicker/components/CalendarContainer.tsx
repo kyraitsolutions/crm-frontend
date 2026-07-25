@@ -12,7 +12,7 @@ type Props = {
 export const CalendarContainer: React.FC<Props> = ({ state, props }) => {
   if (props.range && props.dualCalendar) {
     return (
-      <div className="w-fit bg-white flex flex-col justify-center p-4 rounded-xl">
+      <div className="w-fit bg-white flex flex-col justify-center p-4 rounded-2xl">
         <div className="flex justify-end mb-3">
           <Button
             onClick={() => state.setOpen && state.setOpen(false)}

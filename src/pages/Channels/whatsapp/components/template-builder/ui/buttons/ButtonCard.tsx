@@ -10,7 +10,7 @@ interface ButtonCardProps {
 
 export function ButtonCard({ children, onDelete }: ButtonCardProps) {
   return (
-    <div className="rounded-xl border border-border bg-background p-4">
+    <div className="rounded-2xl border border-border bg-background p-4">
       <div className="flex items-start gap-3">
         {/* Content */}
         <div className="min-w-0 flex-1">{children}</div>

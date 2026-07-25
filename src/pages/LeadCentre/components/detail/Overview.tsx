@@ -50,7 +50,7 @@ const Overview = ({ lead, leadStages, users }: IOverviewProps) => {
   };
 
   return (
-    <div className="bg-white rounded-xl">
+    <div className="bg-white rounded-2xl">
       <div className="max-w-4xl w-full mx-auto py-6">
         <SelectFieldRow
           label="Lead Owner"

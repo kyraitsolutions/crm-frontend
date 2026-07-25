@@ -32,9 +32,9 @@ const ValidationItem: React.FC<{ ok: boolean; label: string }> = ({
 }) => (
   <div className="flex items-center gap-2 text-xs">
     {ok ? (
-      <CheckCircle size={13} className="text-green-500 flex-shrink-0" />
+      <CheckCircle size={13} className="text-green-500 shrink-0" />
     ) : (
-      <XCircle size={13} className="text-red-400 flex-shrink-0" />
+      <XCircle size={13} className="text-red-400 shrink-0" />
     )}
     <span className={ok ? "text-gray-700" : "text-red-500"}>{label}</span>
   </div>
@@ -111,20 +111,19 @@ export const TemplatePreviewPanel: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 border border-primary/20 p-2 shadow-sm rounded-xl">
+    <div className="flex flex-col gap-4  p-2 shadow-sm rounded-2xl">
       {/* Header */}
-      <div>
+      <div className="border border-primary/20 pb-4 rounded-2xl overflow-hidden">
         {/* Toggle */}
-        <div className="flex rounded-lg border border-gray-200 overflow-hidden mb-4">
+        <div className="flex rounded-lg  overflow-hidden mb-4">
           {(["Mobile View", "Desktop View"] as const).map((mode) => (
             <button
               key={mode}
               onClick={() => setViewMode(mode)}
-              className={`flex-1 py-2 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors ${
-                viewMode === mode
-                  ? "bg-gray-100 text-gray-900"
-                  : "bg-white text-gray-500 hover:bg-gray-50"
-              }`}
+              className={`flex-1 py-2 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors ${viewMode === mode
+                ? "bg-gray-100 text-gray-900"
+                : "bg-white text-gray-500 hover:bg-gray-50"
+                }`}
             >
               {mode === "Mobile View" ? (
                 <Smartphone size={13} />
@@ -135,82 +134,85 @@ export const TemplatePreviewPanel: React.FC = () => {
             </button>
           ))}
         </div>
+        <div className="px-3">
 
-        {/* Phone mockup */}
-        <div
-          className={`mx-auto rounded-xl overflow-hidden shadow-lg bg-[#ECE5DD] ${
-            isMobile ? "max-w-65" : "max-w-full"
-          }`}
-        >
-          {/* WhatsApp header bar */}
-          <div className="bg-[#075E54] flex items-center gap-2 px-3 py-2">
-            <div className="w-6 h-6 rounded-full bg-green-300 flex items-center justify-center text-xs font-bold text-green-800">
-              Y
-            </div>
-            <span className="text-white text-xs font-semibold flex-1">
-              Your Business ✓
-            </span>
-            <span className="text-green-200 text-xs">⋯</span>
-          </div>
 
-          {/* Chat area */}
-          <div className="p-3 min-h-50">
-            <div className="bg-white rounded-xl rounded-tl-none shadow-sm overflow-hidden max-w-[95%]">
-              <div className="p-3">
-                {/* Header text */}
-                {resolvedHeader && (
-                  <p className="text-xs font-semibold text-gray-800 break-all mb-2">
-                    {resolvedHeader}
-                  </p>
-                )}
-                {/* Body text */}
-                <pre className="text-xs text-gray-700 leading-relaxed break-all whitespace-pre-line font-serif">
-                  {resolvedBody || (
-                    <span className="text-gray-400 italic">
-                      Message body will appear here...
-                    </span>
-                  )}
-                </pre>
-                {/* Footer */}
-                {footerText && (
-                  <p className="text-xs text-gray-400 mt-2">{footerText}</p>
-                )}
-                <p className="text-right text-[10px] text-gray-400 mt-1">
-                  11:30 AM
-                </p>
+          {/* Phone mockup */}
+          <div
+            className={`mx-auto rounded-2xl overflow-hidden shadow-lg bg-[#ECE5DD] ${isMobile ? "max-w-65" : "max-w-full"
+              }`}
+          >
+            {/* WhatsApp header bar */}
+            <div className="bg-[#075E54] flex items-center gap-2 px-3 py-2">
+              <div className="w-6 h-6 rounded-full bg-green-300 flex items-center justify-center text-xs font-bold text-green-800">
+                Y
               </div>
-              {/* Buttons */}
-              {buttons.length > 0 && (
-                <div className="border-t border-gray-100">
-                  {buttons.map(renderButtonPreview)}
+              <span className="text-white text-xs font-semibold flex-1">
+                Your Business ✓
+              </span>
+              <span className="text-green-200 text-xs">⋯</span>
+            </div>
+
+            {/* Chat area */}
+            <div className="p-3 min-h-50">
+              <div className="bg-white rounded-2xl rounded-tl-none shadow-sm overflow-hidden max-w-[95%]">
+                <div className="p-3">
+                  {/* Header text */}
+                  {resolvedHeader && (
+                    <p className="text-xs font-semibold text-gray-800 break-all mb-2">
+                      {resolvedHeader}
+                    </p>
+                  )}
+                  {/* Body text */}
+                  <pre className="text-xs text-gray-700 leading-relaxed break-all whitespace-pre-line font-serif">
+                    {resolvedBody || (
+                      <span className="text-gray-400 italic">
+                        Message body will appear here...
+                      </span>
+                    )}
+                  </pre>
+                  {/* Footer */}
+                  {footerText && (
+                    <p className="text-xs text-gray-400 mt-2">{footerText}</p>
+                  )}
+                  <p className="text-right text-[10px] text-gray-400 mt-1">
+                    11:30 AM
+                  </p>
                 </div>
-              )}
+                {/* Buttons */}
+                {buttons.length > 0 && (
+                  <div className="border-t border-gray-100">
+                    {buttons.map(renderButtonPreview)}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
+
+          {/* Desktop limitation warning */}
+          {!isMobile && buttons.length > 3 && (
+            <div className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 p-3 flex gap-2">
+              <span className="text-amber-500 text-sm">⚠️</span>
+              <div>
+                <p className="text-xs font-semibold text-amber-700">
+                  Desktop Limitation
+                </p>
+                <p className="text-xs text-amber-600 mt-0.5">
+                  This template contains {buttons.length} buttons. WhatsApp
+                  Desktop users may see "View on Phone" instead.
+                </p>
+                <button className="text-xs text-blue-600 underline mt-1">
+                  Learn more
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Desktop limitation warning */}
-        {!isMobile && buttons.length > 3 && (
-          <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 flex gap-2">
-            <span className="text-amber-500 text-sm">⚠️</span>
-            <div>
-              <p className="text-xs font-semibold text-amber-700">
-                Desktop Limitation
-              </p>
-              <p className="text-xs text-amber-600 mt-0.5">
-                This template contains {buttons.length} buttons. WhatsApp
-                Desktop users may see "View on Phone" instead.
-              </p>
-              <button className="text-xs text-blue-600 underline mt-1">
-                Learn more
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Meta Validation */}
-      <div className="border border-gray-200 rounded-xl p-4">
+      <div className="border border-gray-200 rounded-2xl p-4">
         <p className="text-sm font-semibold text-gray-800 mb-3">
           Meta Validation
         </p>

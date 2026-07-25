@@ -55,9 +55,8 @@ export const AlertDialog: React.FC = () => {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${
-        isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
     >
       {/* Backdrop */}
       <div
@@ -67,9 +66,8 @@ export const AlertDialog: React.FC = () => {
 
       {/* Modal */}
       <div
-        className={`relative rounded-md bg-white rounded-xl shadow-2xl w-[90%] max-w-md p-6 transform transition-all duration-300 ${
-          isOpen ? "scale-100 opacity-100" : "scale-90 opacity-0"
-        }`}
+        className={`relative rounded-md bg-white rounded-2xl shadow-2xl w-[90%] max-w-md p-6 transform transition-all duration-300 ${isOpen ? "scale-100 opacity-100" : "scale-90 opacity-0"
+          }`}
       >
         {/* Icon */}
         <div className="flex justify-center mb-4">
@@ -94,7 +92,7 @@ export const AlertDialog: React.FC = () => {
           </Button>
 
           <Button
-            className="px-6 rounded-xl"
+            className="px-6 rounded-2xl"
             onClick={() => {
               onConfirm?.();
               closeAlert();

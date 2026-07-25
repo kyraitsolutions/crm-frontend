@@ -11,7 +11,7 @@ const ConfigurationHeader = () => {
         </p>
       </div>
 
-      <button className="rounded-xl bg-[#16a34a] px-5 py-3 text-sm font-medium text-white transition-all hover:opacity-90">
+      <button className="rounded-2xl bg-[#16a34a] px-5 py-3 text-sm font-medium text-white transition-all hover:opacity-90">
         Save Changes
       </button>
     </div>

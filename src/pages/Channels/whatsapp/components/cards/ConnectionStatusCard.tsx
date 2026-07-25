@@ -15,7 +15,7 @@ export const ConnectionStatusCard = ({
   officialBusiness,
 }: ConnectionStatusProps) => {
   return (
-    <GlassCard className="p-5">
+    <GlassCard className="p-5 rounded-2xl">
       <h3 className="mb-8 text-sm font-semibold uppercase tracking-widest text-slate-500">
         Connection Status
       </h3>

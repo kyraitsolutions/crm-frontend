@@ -44,7 +44,7 @@ const Uploading = ({
                     </div>
 
                     {/* Current Status */}
-                    <div className="mt-6 rounded-xl bg-blue-50 border border-blue-100 p-4 flex items-center gap-3">
+                    <div className="mt-6 rounded-2xl bg-blue-50 border border-blue-100 p-4 flex items-center gap-3">
 
                         <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
 
@@ -64,7 +64,7 @@ const Uploading = ({
                     {/* Statistics */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
 
-                        <div className="border rounded-xl p-4 text-center">
+                        <div className="border rounded-2xl p-4 text-center">
                             <p className="text-gray-500 text-sm">
                                 Total
                             </p>
@@ -74,7 +74,7 @@ const Uploading = ({
                             </h3>
                         </div>
 
-                        <div className="border rounded-xl p-4 text-center">
+                        <div className="border rounded-2xl p-4 text-center">
                             <p className="text-gray-500 text-sm">
                                 Uploaded
                             </p>
@@ -84,7 +84,7 @@ const Uploading = ({
                             </h3>
                         </div>
 
-                        <div className="border rounded-xl p-4 text-center">
+                        <div className="border rounded-2xl p-4 text-center">
                             <p className="text-gray-500 text-sm">
                                 Failed
                             </p>
@@ -94,7 +94,7 @@ const Uploading = ({
                             </h3>
                         </div>
 
-                        <div className="border rounded-xl p-4 text-center">
+                        <div className="border rounded-2xl p-4 text-center">
                             <p className="text-gray-500 text-sm">
                                 Remaining
                             </p>
@@ -109,7 +109,7 @@ const Uploading = ({
                     </div>
 
                     {/* Current File Status */}
-                    <div className="mt-8 border rounded-xl p-5 bg-gray-50">
+                    <div className="mt-8 border rounded-2xl p-5 bg-gray-50">
 
                         <div className="flex justify-between mb-2">
                             <span className="text-gray-600">
@@ -136,7 +136,7 @@ const Uploading = ({
                     <div className="mt-8 flex justify-end">
 
                         <button
-                            className="rounded-xl border border-gray-300 bg-white px-6 py-2 text-gray-700 hover:bg-gray-50"
+                            className="rounded-2xl border border-gray-300 bg-white px-6 py-2 text-gray-700 hover:bg-gray-50"
                         >
                             Cancel
                         </button>

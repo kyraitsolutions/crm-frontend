@@ -118,7 +118,7 @@ export const VariableRow = ({
           value={isNumberVariable ? `{{${index}}}` : search}
           placeholder="Pick or type variable"
           disabled={isNumberVariable}
-          className="input-field h-8 pr-7 text-xs"
+          className="input-field rounded-xl! h-8 pr-7 text-xs"
           onChange={(e) => handleInputChange(e.target.value)}
           onFocus={handleOpen}
         />
@@ -163,11 +163,10 @@ export const VariableRow = ({
                           e.preventDefault();
                           handleSelect(v);
                         }}
-                        className={`cursor-pointer px-3 py-1.5 text-xs transition-colors hover:bg-green-50 hover:text-green-700 ${
-                          name === v
-                            ? "bg-green-50 font-medium text-green-700"
-                            : "text-gray-700"
-                        }`}
+                        className={`cursor-pointer px-3 py-1.5 text-xs transition-colors hover:bg-green-50 hover:text-green-700 ${name === v
+                          ? "bg-green-50 font-medium text-green-700"
+                          : "text-gray-700"
+                          }`}
                       >
                         {v}
                       </li>
@@ -201,7 +200,7 @@ export const VariableRow = ({
       <Input
         value={exampleValue}
         placeholder="Example value"
-        className="input-field h-8 text-xs"
+        className="input-field h-8 text-xs rounded-xl!"
         onChange={(e) => onUpdate(id, "exampleValue", e.target.value)}
       />
 

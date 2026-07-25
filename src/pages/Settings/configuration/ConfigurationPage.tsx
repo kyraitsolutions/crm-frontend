@@ -13,14 +13,14 @@ const ConfigurationPage = () => {
   }, [activeTab]);
   return (
     <div>
-      <div className="flex h-f">
+      <div className="flex h-f bg-gray-50">
         {/* LEFT SIDEBAR */}
-        <div className="max-w-56 w-full p-4 h-[calc(100vh-64px)] shadow-lg">
+        <div className="max-w-80 w-full px-4 py-10 h-[calc(100vh-64px)] bg-white">
           <ConfigurationTabs />
         </div>
 
         {/* RIGHT CONTENT */}
-        <div className="flex-1 p-4">
+        <div className="flex-1 p-4 max-w-7xl mx-auto py-10  h-[calc(100vh-114px)] overflow-y-scroll hide-scrollbar">
           <ConfigurationContent />
         </div>
       </div>

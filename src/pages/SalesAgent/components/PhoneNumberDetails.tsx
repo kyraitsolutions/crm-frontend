@@ -5,6 +5,7 @@ import { callService } from "../services/call.service";
 import { useParams } from "react-router-dom";
 import DataLoader from "@/components/Loader/data-loader";
 import { ArrowLeft } from "lucide-react";
+import { handleHistoryBack } from "@/utils/back.utils";
 
 const PhoneNumberDetails = () => {
     const { accountId } = useAuthStore((state) => state);
@@ -38,9 +39,6 @@ const PhoneNumberDetails = () => {
     }
 
     console.log(myNumberDetails)
-    const handleHistoryBack = () => {
-        window.history.back();
-    };
     return (
         <div className="p-5">
             <div className="flex items-center border-b pb-3 mb-6 gap-10">
@@ -95,7 +93,7 @@ const PhoneNumberDetails = () => {
 
             <div className="grid md:grid-cols-2 gap-5">
                 {/* Configure */}
-                {/* <div className="rounded-xl border p-6">
+                {/* <div className="rounded-2xl border p-6">
                     <h3 className="font-semibold mb-3">
                         Configure Voice & Messaging
                     </h3>
@@ -111,7 +109,7 @@ const PhoneNumberDetails = () => {
                 </div> */}
 
                 {/* Release */}
-                <div className="rounded-xl border p-4">
+                <div className="rounded-2xl border p-4">
                     <h3 className="font-semibold mb-3 text-primary">
                         Release Phone Number
                     </h3>

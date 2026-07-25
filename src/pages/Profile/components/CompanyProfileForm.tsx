@@ -15,7 +15,7 @@ const CompanyProfileView = ({ data, onEdit, role }: any) => {
         </div>
 
         {role === ROLES.OWNER && (
-          <ButtonWithTitle title="Edit" className="rounded-xl flex items-center gap-1" onClick={onEdit}>
+          <ButtonWithTitle title="Edit" className="rounded-2xl flex items-center gap-1" onClick={onEdit}>
             <Edit className="mr-1 size-5" /> Edit
           </ButtonWithTitle>
         )}

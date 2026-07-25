@@ -36,13 +36,13 @@ export const BodyEditor = () => {
   };
 
   return (
-    <section className="rounded-xl border border-gray-200 space-y-3 p-4">
+    <section className="rounded-2xl border border-gray-200 space-y-3 px-5 py-3">
       {/* Title row */}
       <div className="flex items-center justify-between">
         <span className="text-sm font-semibold text-gray-800">Body</span>
         <button
           onClick={handleAddBlankVariable}
-          className="flex items-center gap-1.5 text-xs text-green-700 font-medium border border-green-300 rounded-xl px-2.5 h-7 hover:bg-green-50 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-green-700 font-medium border border-green-300 rounded-2xl px-2.5 h-7 hover:bg-green-50 transition-colors"
         >
           <Pencil size={12} />
           Add Variable
@@ -62,7 +62,7 @@ export const BodyEditor = () => {
           maxLength={1024}
           rows={5}
           placeholder="Enter your message body. Use {{1}}, {{2}} for variables."
-          className="input-field resize-none pb-6 text-sm min-h-24"
+          className="input-field  rounded-xl! resize-none pb-6 text-sm min-h-24"
         />
         <span className="absolute bottom-2 right-2 text-xs text-gray-400 pointer-events-none">
           {bodyText.length}/1024
@@ -101,14 +101,14 @@ export const BodyEditor = () => {
 //   const bodyMaxLen = 1024;
 
 //   return (
-//     <section className="rounded-xl border border-gray-200 p-2 space-y-3">
+//     <section className="rounded-2xl border border-gray-200 p-2 space-y-3">
 //       <div className="flex items-center justify-between">
 //         <div>
 //           <span className="text-sm font-semibold text-gray-800">Body *</span>
 //         </div>
 
 //         <Button
-//           className="flex bg-transparent! items-center gap-1.5 text-xs text-green-700 font-medium border border-green-300 h-7! hover:bg-green-50 transition-colors rounded-xl"
+//           className="flex bg-transparent! items-center gap-1.5 text-xs text-green-700 font-medium border border-green-300 h-7! hover:bg-green-50 transition-colors rounded-2xl"
 //           onClick={addBodyVariable}
 //         >
 //           <Pencil size={12} />

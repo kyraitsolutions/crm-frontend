@@ -1,5 +1,4 @@
 import { DataTable, type Column } from "@/components/common";
-import { Card } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -7,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { COOKIES_STORAGE } from "@/constants";
 import { ACCOUNT_PATHS, CHATBOT_PATHS, ROUTES } from "@/constants/routes";
@@ -30,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import DataLoader from "@/components/Loader/data-loader";
 
 export function ChatBotPage() {
   // const { accountId } = useParams();
@@ -133,7 +132,7 @@ export function ChatBotPage() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              className="actions-btn py-0.5! px-2!"
+              className="actions-btn rounded-xl! text-sm py-0.5! px-2!"
               onClick={(e) => e.stopPropagation()}
             >
               Copy Script
@@ -392,21 +391,15 @@ ${config}
   if (loading) {
     return (
       <div className="space-y-4">
-        <Card className="p-6">
-          <div className="space-y-2">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="h-10 w-full" />
-            ))}
-          </div>
-        </Card>
+        <DataLoader />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 lg:px-3 px-2 py-2">
+    <div className="space-y-6 lg:px-3 mx-24 py-10">
       <div className="flex justify-between items-center">
-        <div className="px-3 mt-2">
+        <div className=" mt-2">
           <h1 className="text-base font-semibold text-slate-700">
             Chatbot Directory
           </h1>
@@ -420,7 +413,7 @@ ${config}
             <div className="flex justify-end">
               <Link
                 to={`${CHATBOT_PATHS.getCreate(String(accountId))}`}
-                className="inline-flex items-center gap-1 rounded-md  bg-primary/90 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary transition-colors duration-200 focus:outline-none"
+                className="inline-flex items-center gap-1 rounded-xl  bg-primary/90 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary transition-colors duration-200 focus:outline-none"
               >
                 <Plus size={18} />
                 Create Chatbot
@@ -452,11 +445,11 @@ ${config}
           />
         </div>
       ) : (
-        <div className="flex w-full justify-center items-center ">
-          <div className="flex flex-col justify-center items-center max-w-xl w-full gap-6 p-10 text-center rounded-2xl border-2 border-dashed border-[rgba(50,45,43,0.20)]bg-[rgba(255,255,255,0)">
+        <div className="flex justify-center items-center w-full">
+          <div className="flex flex-col justify-center items-center w-full gap-6 p-10 text-center rounded-2xl border-2 border-dashed border-[rgba(50,45,43,0.20)]bg-[rgba(255,255,255,0)">
             {/* Icon */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full  bg-primary text-white border-2 ">
-              <Plus className="h-8 w-8]" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full  bg-primary text-white ">
+              <Plus className="h-6 w-6" />
             </div>
 
             {/* Text */}
@@ -476,7 +469,7 @@ ${config}
                 to={`${CHATBOT_PATHS.getCreate(String(accountId))}`}
                 className="
             inline-flex items-center gap-2
-            rounded-xl
+            rounded-2xl
             bg-primary
             px-5 py-2
             text-sm font-medium text-[#FBFAF9]
@@ -485,7 +478,7 @@ ${config}
             hover:opacity-90
           "
               >
-                <Plus className="h-4 w-4" /> Create first chatbot
+                <Plus className="h-4 w-4 text-white" /> Create first chatbot
               </Link>
             )}
           </div>

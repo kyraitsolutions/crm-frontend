@@ -32,12 +32,12 @@ export function UrlButtonEditor({ button }: Props) {
               Type of action
             </label>
 
-            <Select value="URL" onValueChange={() => {}}>
-              <SelectTrigger className="input-field">
+            <Select value="URL" onValueChange={() => { }}>
+              <SelectTrigger className="input-field rounded-xl!">
                 <SelectValue />
               </SelectTrigger>
 
-              <SelectContent>
+              <SelectContent className="rounded-xl!">
                 <SelectItem value="URL">Visit website</SelectItem>
               </SelectContent>
             </Select>
@@ -51,7 +51,7 @@ export function UrlButtonEditor({ button }: Props) {
 
             <div className="relative">
               <Input
-                className="input-field pr-16"
+                className="input-field pr-16 rounded-xl!"
                 maxLength={40}
                 value={button.label}
                 placeholder="Visit website"

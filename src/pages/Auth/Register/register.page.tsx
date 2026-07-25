@@ -116,7 +116,7 @@ export function Register() {
           <div className="relative z-10 space-y-5">
             {features.map((f) => (
               <div key={f.title} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 bg-white">
+                <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0 bg-white">
                   {f.icon}
                 </div>
                 <div>
@@ -208,7 +208,7 @@ export function Register() {
                 />
               </div>
 
-              <Button type="submit" className="w-full mt-4 rounded-xl" disabled={loading && formData.confirmPassword !== formData.password}>
+              <Button type="submit" className="w-full mt-4 rounded-2xl" disabled={loading && formData.confirmPassword !== formData.password}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? "Creating account..." : "Create account"}
               </Button>
@@ -232,7 +232,7 @@ export function Register() {
                   // "http://localhost:3000/api/auth/google";
                 }}
                 className={cn(
-                  "w-full flex items-center justify-center gap-2 hover:bg-gray-50 rounded-xl",
+                  "w-full flex items-center justify-center gap-2 hover:bg-gray-50 rounded-2xl",
                 )}
               >
                 <div>

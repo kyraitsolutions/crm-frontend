@@ -69,17 +69,15 @@ export const PhoneNumberSettings = ({
 
       <CardContent className="space-y-4">
         <div
-          className={`flex items-center justify-between rounded-xl border p-4 ${
-            isRegistered
+          className={`flex items-center justify-between rounded-2xl border p-4 ${isRegistered
               ? "border-emerald-200 bg-emerald-50"
               : "border-amber-200 bg-amber-50"
-          }`}
+            }`}
         >
           <div>
             <p
-              className={`font-medium ${
-                isRegistered ? "text-emerald-700" : "text-amber-700"
-              }`}
+              className={`font-medium ${isRegistered ? "text-emerald-700" : "text-amber-700"
+                }`}
             >
               {isRegistered
                 ? "WhatsApp Cloud API Active"
@@ -87,9 +85,8 @@ export const PhoneNumberSettings = ({
             </p>
 
             <p
-              className={`text-sm ${
-                isRegistered ? "text-emerald-600" : "text-amber-600"
-              }`}
+              className={`text-sm ${isRegistered ? "text-emerald-600" : "text-amber-600"
+                }`}
             >
               {isRegistered
                 ? "This phone number is registered and ready to send and receive WhatsApp messages."
@@ -99,7 +96,7 @@ export const PhoneNumberSettings = ({
 
           <Switch checked={isRegistered} disabled className="bg-emerald-900!" />
         </div>
-        {/* <div className="flex items-center justify-between rounded-xl border border-gray-200 p-4">
+        {/* <div className="flex items-center justify-between rounded-2xl border border-gray-200 p-4">
           <div>
             <p className="font-medium">Register Phone Number</p>
 
@@ -121,7 +118,7 @@ export const PhoneNumberSettings = ({
                 Register Number
               </Button>
             ) : (
-              <div className="rounded-xl border p-4 space-y-4">
+              <div className="rounded-2xl border p-4 space-y-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium">
                     Verification PIN
@@ -229,7 +226,7 @@ export const PhoneNumberSettings = ({
 //       </CardHeader>
 
 //       <CardContent className="space-y-4">
-//         <div className="flex items-center justify-between rounded-xl border border-gray-200 p-4">
+//         <div className="flex items-center justify-between rounded-2xl border border-gray-200 p-4">
 //           <div>
 //             <p className="font-medium">Register Phone Number</p>
 //             <p className="text-sm text-muted-foreground">

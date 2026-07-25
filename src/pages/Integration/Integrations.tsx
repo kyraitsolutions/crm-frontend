@@ -242,18 +242,17 @@ const Integrations = () => {
       : integrations.filter((item) => item.category === activeTab);
 
   return (
-    <div className="min-h-screen bg-white p-6 font-sans text-slate-700">
+    <div className="h-[calc(100vh-114px)] overflow-y-scroll hide-scrollbar p-6 font-sans text-slate-700 mx-24">
       {/* Filter Tabs */}
       <nav className="mb-8 flex flex-wrap gap-2">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveTab(cat)}
-            className={`rounded px-4 py-1 text-sm border transition-all ${
-              activeTab === cat
-                ? "bg-primary text-white border-primary"
-                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
-            }`}
+            className={`rounded px-4 py-1 text-sm border transition-all ${activeTab === cat
+              ? "bg-primary text-white border-primary"
+              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+              }`}
           >
             {cat}
           </button>

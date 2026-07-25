@@ -14,12 +14,12 @@ const VideoMessage = ({ message }: TVideoMessageProps) => {
   return (
     <div>
       {/* VIDEO */}
-      <div className="overflow-hidden rounded-xl bg-black">
+      <div className="overflow-hidden rounded-2xl bg-black">
         <video
           controls
           playsInline
           preload="metadata"
-          className="w-full h-auto rounded-xl"
+          className="w-full h-auto rounded-2xl"
         >
           <source src={videoLink} type="video/mp4" />
           Your browser does not support video playback.

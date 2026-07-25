@@ -40,7 +40,7 @@ const alerts = [
 
 const AlertCard = () => {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 h-full">
+    <div className="bg-white border border-gray-200 rounded-2xl p-5 h-full">
       <div className="mb-5">
         <h2 className="text-lg font-semibold text-gray-900">
           Alerts & Notifications
@@ -51,7 +51,7 @@ const AlertCard = () => {
         {alerts.map((alert) => (
           <div
             key={alert.id}
-            className="bg-gray-50 rounded-xl flex items-start justify-between gap-3 p-2"
+            className="bg-gray-50 rounded-2xl flex items-start justify-between gap-3 p-2"
           >
             <div className="flex items-start gap-3">
               <div

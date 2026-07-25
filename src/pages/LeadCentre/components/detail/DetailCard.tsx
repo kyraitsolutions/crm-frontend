@@ -46,7 +46,7 @@ const DetailCard = ({ lead }: { lead: ILead | null }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden">
+    <div className="bg-white rounded-2xl overflow-hidden">
       <div
         onClick={() => setHideDetails((prev) => !prev)}
         className={`${hideDetails && "border-b"} cursor-pointer  px-5 py-3 font-semibold text-md`}

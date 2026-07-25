@@ -134,8 +134,8 @@ const LeadTable = () => {
   }
 
   return (
-    <div className=" overlead-hidden mt-5 hide-scrollbar bg-white rounded-xl px-5">
-      <Table className="border-b rounded-xl! overflow-hidden">
+    <div className=" overlead-hidden mt-5 hide-scrollbar bg-white rounded-2xl px-5">
+      <Table className="border-b rounded-2xl! overflow-hidden">
         <TableHeader className="bg-muted/30 ">
           <TableRow className="hover:bg-transparent">
             <TableHead className="text-xs font-semibold uppercase tracking-wide text-white bg-primary p-3">
@@ -293,7 +293,7 @@ const LeadTable = () => {
                       </Button>
                     </DropdownMenuTrigger>
 
-                    <DropdownMenuContent align="end" className="rounded-xl">
+                    <DropdownMenuContent align="end" className="rounded-2xl">
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() =>

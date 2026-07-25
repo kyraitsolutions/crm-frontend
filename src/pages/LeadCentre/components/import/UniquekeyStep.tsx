@@ -8,7 +8,7 @@ const UniquekeyStep = ({ step, setStep, handleStep }: { step: number, setStep: a
 
     return (
         <div className='flex flex-col gap-20 w-fit'>
-            <div className="border border-gray-200 w-fit mt-20 ml-20 bg-white p-5 rounded-xl flex flex-col gap-4">
+            <div className="border border-gray-200 w-fit mt-20 ml-20 bg-white p-5 rounded-2xl flex flex-col gap-4">
                 <h2 className="text-md text-[#111827]">
                     What do you want to do with the records in the file?
                 </h2>

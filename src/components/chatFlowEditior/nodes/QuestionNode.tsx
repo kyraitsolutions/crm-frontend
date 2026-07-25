@@ -46,12 +46,12 @@ export default function QuestionNode({ id, data }: TQuestionNodeProps) {
       nds.map((node) =>
         node.id === id
           ? {
-              ...node,
-              data: {
-                ...node.data,
-                payload: updatedPayload,
-              },
-            }
+            ...node,
+            data: {
+              ...node.data,
+              payload: updatedPayload,
+            },
+          }
           : node,
       ),
     );
@@ -62,7 +62,7 @@ export default function QuestionNode({ id, data }: TQuestionNodeProps) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="w-90 bg-card shadow-lg"
+      className="w-90 bg-card shadow-lg rounded-xl! overflow-hidden"
     >
       {/* HEADER */}
       <NodeHeader

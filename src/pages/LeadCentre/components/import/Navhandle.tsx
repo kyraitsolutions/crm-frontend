@@ -5,7 +5,7 @@ const Navhandle = ({ step, isSelected, handleStep }: { step: any, isSelected?: a
             <Button
                 disabled={step === 0}
                 onClick={() => handleStep("sub")}
-                className="rounded-xl border border-gray-300 bg-white px-6 py-2 text-gray-700 hover:bg-gray-50"
+                className="rounded-2xl border border-gray-300 bg-white px-6 py-2 text-gray-700 hover:bg-gray-50"
             >
                 Prev
             </Button>
@@ -13,7 +13,7 @@ const Navhandle = ({ step, isSelected, handleStep }: { step: any, isSelected?: a
             <Button
                 disabled={!isSelected}
                 onClick={() => handleStep("add")}
-                className="rounded-xl bg-primary px-6 py-2 font-medium text-white"
+                className="rounded-2xl bg-primary px-6 py-2 font-medium text-white"
             >
                 Next
             </Button>

@@ -50,7 +50,7 @@ const TokenPopup: React.FC<TokenPopupProps> = ({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-            <div className="relative w-full max-w-xl rounded-xl bg-white shadow-2xl">
+            <div className="relative w-full max-w-xl rounded-2xl bg-white shadow-2xl">
 
                 {/* Close */}
                 <button

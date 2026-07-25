@@ -388,7 +388,7 @@
 //           max-h-[calc(100vh-270px)]
 //           sm:max-h-[calc(100vh-220px)]
 //           border border-[rgba(50,45,43,0.12)]
-//           rounded-xl
+//           rounded-2xl
 //           shadow-none
 //         "
 //             loading={loading}

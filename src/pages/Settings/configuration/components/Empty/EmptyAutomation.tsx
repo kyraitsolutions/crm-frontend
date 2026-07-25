@@ -1,6 +1,6 @@
 const EmptyAutomation = () => {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-gray-200 rounded-xl">
+    <div className="flex flex-col items-center bg-white justify-center py-16 text-center border-2 border-dashed border-gray-200 rounded-2xl">
       <div className="w-12 h-12 rounded-full bg-violet-50 flex items-center justify-center mb-3">
         <svg
           className="w-6 h-6 text-violet-400"

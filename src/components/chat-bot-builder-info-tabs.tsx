@@ -53,12 +53,12 @@ export default function ChatBotBuilderInfoTabs({
   };
 
   return (
-    <div className="mt-4 px-4  items-center justify-between ">
+    <div className="mt-4 px-4 items-center justify-between ">
 
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         {/* Tabs Header */}
-        <TabsList className="flex justify-between w-full flex-wrap h-auto bg-transparent gap-2">
+        <TabsList className="flex justify-between w-full flex-wrap h-auto bg-transparent gap-2 sticky">
           <div className="flex flex-wrap h-auto bg-transparent gap-2">
 
             {tabs.map((tab) => {
@@ -102,7 +102,7 @@ export default function ChatBotBuilderInfoTabs({
               ) && (
                 <div className="flex justify-end px-4">
                   <Button
-                    className="actions-btn px-4! py-2!"
+                    className="actions-btn px-4! rounded-xl! py-2!"
                     type="submit"
                     disabled={isFormSubmitting}
                   >
@@ -124,7 +124,11 @@ export default function ChatBotBuilderInfoTabs({
         </TabsList>
 
         {/* Tabs Content */}
-        <TabsContent value={activeTab}>{tabsMaps[activeTab]}</TabsContent>
+        <div className="h-[68vh] overflow-y-scroll hide-scrollbar">
+
+          <TabsContent value={activeTab}>{tabsMaps[activeTab]}</TabsContent>
+        </div>
+
       </Tabs>
 
     </div>

@@ -29,7 +29,7 @@ export const ButtonStrategySelector = () => {
             type="button"
             onClick={() => setButtonStrategy(strategy)}
             className={cn(
-              "border px-3 py-1.5! text-xs font-medium transition-all rounded-xl",
+              "border px-3 py-1.5! text-xs font-medium transition-all rounded-2xl",
               buttonStrategy === strategy
                 ? "border-green-600 bg-green-600 text-white hover:bg-green-700"
                 : "border-gray-200 text-gray-700 hover:border-green-300 hover:text-green-700 bg-transparent!",

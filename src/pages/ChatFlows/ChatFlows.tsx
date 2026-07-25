@@ -20,7 +20,7 @@ const ChatFlows = () => {
   }, [accountId]);
 
   return (
-    <div>
+    <div className="mx-24 py-10">
       <FlowHeader
         onCreateFlow={() =>
           navigate("/dashboard/settings/chatflows/flow-builder")

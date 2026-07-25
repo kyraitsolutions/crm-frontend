@@ -159,7 +159,9 @@ export const ChatBotBuilder = () => {
         }}
         className="flex h-full w-full flex-col"
       >
+
         <ChatBotBuilderInfo />
+
         <ChatBotBuilderInfoTabs isFormSubmitting={isSubmitting} />
       </form>
     </FormProvider>

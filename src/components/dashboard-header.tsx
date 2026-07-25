@@ -67,7 +67,7 @@ export function DashboardHeader() {
             </button>
 
             {/* Example Dropdown */}
-            {/* <div className="absolute left-0 top-12 z-50 min-w-[180px] rounded-xl border border-neutral-200 bg-white p-2 shadow-xl">
+            {/* <div className="absolute left-0 top-12 z-50 min-w-[180px] rounded-2xl border border-neutral-200 bg-white p-2 shadow-xl">
               <button className="w-full rounded-lg px-3 py-2 text-left text-sm transition hover:bg-neutral-100">
                 All Modules
               </button>
@@ -91,7 +91,7 @@ export function DashboardHeader() {
         <div className="relative">
           <button
             onClick={() => setShowDropdown((prev) => !prev)}
-            className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50"
+            className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50"
           >
             <CalendarIcon size={14} className="text-neutral-500" />
 
@@ -105,28 +105,28 @@ export function DashboardHeader() {
             <div className="absolute right-0 top-14 z-50 w-[240px] rounded-2xl border border-neutral-200 bg-white p-2 shadow-2xl">
               <button
                 onClick={() => handleSelect("today")}
-                className="w-full rounded-xl px-4 py-3 text-left text-sm transition hover:bg-neutral-100"
+                className="w-full rounded-2xl px-4 py-3 text-left text-sm transition hover:bg-neutral-100"
               >
                 Today
               </button>
 
               <button
                 onClick={() => handleSelect("7days")}
-                className="w-full rounded-xl px-4 py-3 text-left text-sm transition hover:bg-neutral-100"
+                className="w-full rounded-2xl px-4 py-3 text-left text-sm transition hover:bg-neutral-100"
               >
                 Last 7 Days
               </button>
 
               <button
                 onClick={() => handleSelect("30days")}
-                className="w-full rounded-xl px-4 py-3 text-left text-sm transition hover:bg-neutral-100"
+                className="w-full rounded-2xl px-4 py-3 text-left text-sm transition hover:bg-neutral-100"
               >
                 Last 30 Days
               </button>
 
               <button
                 onClick={() => handleSelect("custom")}
-                className="w-full rounded-xl px-4 py-3 text-left text-sm transition hover:bg-neutral-100"
+                className="w-full rounded-2xl px-4 py-3 text-left text-sm transition hover:bg-neutral-100"
               >
                 Custom Range
               </button>

@@ -15,7 +15,7 @@ interface PhoneNumberCardProps {
 
 export function PhoneNumberCard({ data }: PhoneNumberCardProps) {
   return (
-    <GlassCard className="p-5">
+    <GlassCard className="p-5 rounded-2xl">
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-500">

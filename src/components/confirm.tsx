@@ -125,7 +125,7 @@ export default function ConfirmModal({
       <div
         ref={containerRef}
         className={
-          "relative z-10 w-96 rounded-xl bg-white p-6 shadow-xl ring-1 ring-black/5" +
+          "relative z-10 w-96 rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5" +
           className
         }
         onClick={(e) => e.stopPropagation()}

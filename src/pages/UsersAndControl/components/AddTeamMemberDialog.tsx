@@ -101,7 +101,7 @@ const AddTeamMemberDialog = ({
         } // 🔥 clear form on close
       }}
     >
-      <DialogOverlay className="bg-primary/10 backdrop-blur-sm" />
+      <DialogOverlay className="bg-white/10 backdrop-blur-sm" />
       <DialogContent className="max-h-[80vh] overflow-y-auto rounded-2xl p-6">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">

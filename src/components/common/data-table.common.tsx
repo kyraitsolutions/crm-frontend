@@ -133,7 +133,7 @@ export function DataTable<T extends Record<string, any>>({
       >
         {loading ? (
           <div className="w-full">
-            <Skeleton className="h-[155px] w-full rounded-xl" />
+            <Skeleton className="h-[155px] w-full rounded-2xl" />
           </div>
         ) : (
           <table className={cn("w-full text-sm", tableClassName)}>
@@ -185,8 +185,8 @@ export function DataTable<T extends Record<string, any>>({
                   <tr
                     key={row.id || idx}
                     className={`${onRowClick
-                        ? "cursor-pointer hover:bg-gray-50 transition"
-                        : ""
+                      ? "cursor-pointer hover:bg-gray-50 transition"
+                      : ""
                       } ${rowClassName}`}
                     onClick={() => onRowClick?.(row)}
                   >

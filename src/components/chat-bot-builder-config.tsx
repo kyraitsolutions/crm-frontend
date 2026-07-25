@@ -12,9 +12,9 @@ export default function ChatBotBuilderConfiguration() {
   const config = watch("config") ?? {};
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-6 px-2">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-6 border rounded-2xl px-5">
       {/* ───────── Chatbot Behavior ───────── */}
-      <section className="space-y-6 bg-transparent">
+      <section className="space-y-4 bg-transparent">
         <h2 className="text-lg font-medium text-[#37322F]">Chatbot Behavior</h2>
         <p className="text-sm text-[#847971]">
           Control how your chatbot behaves on the website
@@ -77,7 +77,7 @@ export default function ChatBotBuilderConfiguration() {
       </section>
 
       {/* ───────── Branding ───────── */}
-      <section className="space-y-6 bg-transparent">
+      <section className="space-y-4 bg-transparent">
         <h2 className="text-lg font-medium text-[#37322F]">Branding</h2>
         <p className="text-sm text-[#847971]">
           Customize how branding appears inside the chatbot
@@ -161,7 +161,7 @@ export default function ChatBotBuilderConfiguration() {
       </section>
 
       {/* ───────── Activation ───────── */}
-      <section className=" space-y-6 bg-transparent">
+      <section className=" space-y-4 bg-transparent">
         <h2 className="text-lg font-medium text-[#37322F]">
           Chatbot Activation
         </h2>

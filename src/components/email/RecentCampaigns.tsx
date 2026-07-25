@@ -63,7 +63,7 @@ export const RecentCampaigns = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.3 }}
-            className="rounded-xl bg-card p-6 shadow-md border border-border/50"
+            className="rounded-2xl bg-card p-6 shadow-md border border-border/50"
         >
             <div className="mb-6 flex items-center justify-between">
                 <div>

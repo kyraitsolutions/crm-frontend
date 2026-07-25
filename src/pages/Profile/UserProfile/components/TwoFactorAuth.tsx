@@ -4,7 +4,7 @@ import { useState } from 'react';
 const TwoFactorAuth = () => {
   const [twoFactor, setTwoFactor] = useState(false);
   return (
-    <div className="w-sm rounded-xl border border-gray-300 bg-white p-6">
+    <div className="w-sm rounded-2xl border border-gray-300 bg-white p-6">
       {/* Header */}
       <div className="flex flex-col items-start gap-2">
         <div className='flex items-center gap-2'>

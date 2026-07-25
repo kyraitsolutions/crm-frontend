@@ -36,7 +36,7 @@ const MakeCall = () => {
         <div className="relative inline-block">
             <Button
                 onClick={() => setOpenCallPopup((p) => !p)}
-                className="border border-primary text-primary bg-primary/20 rounded-xl hover:text-white duration-200 transition-all"
+                className="border border-primary text-primary bg-primary/20 rounded-2xl hover:text-white duration-200 transition-all"
             >
                 <Phone className="mr-0 h-4 w-4 rotate-270" />
                 CALL
@@ -66,7 +66,7 @@ const MakeCall = () => {
                         />
                         {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
                         <div className="flex items-center justify-between pb-4 mt-4">
-                            <Button onClick={makeCall} className="rounded-xl">CALL</Button>
+                            <Button onClick={makeCall} className="rounded-2xl">CALL</Button>
 
                             <button className="text-sm text-blue-600">Advanced</button>
                         </div>

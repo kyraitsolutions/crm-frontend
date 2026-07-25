@@ -82,7 +82,7 @@ export default function TestimonialsSection() {
             {/* <img
               src={testimonials[activeTestimonial].image}
               alt={testimonials[activeTestimonial].name}
-              className="h-24 w-24 rounded-xl object-cover border border-gray-200"
+              className="h-24 w-24 rounded-2xl object-cover border border-gray-200"
               style={{
                 opacity: isTransitioning ? 0.6 : 1,
                 transform: isTransitioning ? "scale(0.96)" : "scale(1)",

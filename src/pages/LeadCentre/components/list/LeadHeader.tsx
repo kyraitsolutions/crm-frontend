@@ -60,23 +60,23 @@ const LeadHeader = ({ onClick, lead }: LeadHeaderProps) => {
             <ButtonWithTitle
               onClick={onClick}
               title="Send mail to current user"
-              className="cursor-pointer bg-primary border border-primary py-1.5 px-3 text-white rounded-xl text-sm"
+              className="cursor-pointer bg-primary border border-primary py-1.5 px-3 text-white rounded-2xl text-sm"
             >
               Send Email
             </ButtonWithTitle>
 
             <ButtonWithTitle
               title="Convert lead into booking"
-              className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-xl text-sm"
+              className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-2xl text-sm"
             >
               Convert
             </ButtonWithTitle>
 
-            {/* <ButtonWithTitle title="Convert lead into booking" className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-xl text-sm">
+            {/* <ButtonWithTitle title="Convert lead into booking" className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-2xl text-sm">
                             Convert
                         </ButtonWithTitle>
 
-                        <ButtonWithTitle title="Convert lead into booking" className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-xl text-sm">
+                        <ButtonWithTitle title="Convert lead into booking" className="border border-primary text-primary bg-primary/10 py-1.5 px-3 rounded-2xl text-sm">
                             Edit
                         </ButtonWithTitle> */}
 

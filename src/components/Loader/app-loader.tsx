@@ -3,10 +3,10 @@ import Loader from "../Loader";
 const AppLoader = () => {
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-100/90">
-      <div className="bg-white shadow-xs rounded-xl p-8 flex flex-col items-center">
+      <div className="bg-white shadow-xs rounded-2xl p-8 flex flex-col items-center">
         {/* Logo / Brand */}
         <div className="mb-6 flex items-center gap-2">
-          <div className="size-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-lg">
+          <div className="size-10 rounded-2xl bg-primary flex items-center justify-center text-white font-bold text-lg">
             K
           </div>
           <span className="text-lg font-semibold text-gray-700">

@@ -19,7 +19,7 @@ export function WorkspaceHeader({
   phoneNumber,
 }: WorkspaceHeaderProps) {
   return (
-    <GlassCard className="relative overflow-hidden bg-slate-900 px-9 py-8">
+    <GlassCard className="relative overflow-hidden bg-slate-900 px-9 py-8 rounded-2xl">
       {/* Glow background */}
       <div className="absolute -right-14 -top-14 size-96 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 
@@ -56,19 +56,19 @@ export function WorkspaceHeader({
 
           {/* Pills */}
           <div className="flex flex-wrap gap-2.5 text-sm">
-            <div className="flex items-center gap-1.5 rounded-xl bg-emerald-950 px-3 py-1.5 ring-1 ring-green-600">
+            <div className="flex items-center gap-1.5 rounded-2xl bg-emerald-950 px-3 py-1.5 ring-1 ring-green-600">
               <Zap className="size-3.5 fill-emerald-400 text-emerald-400" />
               <span className="font-semibold text-emerald-400">LIVE</span>
             </div>
 
-            <div className="flex items-center gap-1.5 rounded-xl bg-slate-800 px-3 py-1.5 ring-1 ring-slate-600">
+            <div className="flex items-center gap-1.5 rounded-2xl bg-slate-800 px-3 py-1.5 ring-1 ring-slate-600">
               <Smartphone className="size-3.5 text-slate-300" />
               <span className="font-semibold text-slate-300">
                 {phoneNumber}
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 rounded-xl bg-blue-950/60 px-3 py-1.5 ring-1 ring-blue-800">
+            <div className="flex items-center gap-1.5 rounded-2xl bg-blue-950/60 px-3 py-1.5 ring-1 ring-blue-800">
               <ShieldCheck className="size-3.5 text-blue-400" />
               <span className="font-semibold text-blue-400">
                 WABA Connected
@@ -155,18 +155,18 @@ export function WorkspaceHeader({
 
 //           {/* Pills */}
 //           <div className="flex flex-wrap gap-3 text-sm">
-//             <div className="flex items-center gap-1 rounded-xl bg-emerald-950 px-2 py-1.5 shadow-sm ring-1 ring-emerald-600">
+//             <div className="flex items-center gap-1 rounded-2xl bg-emerald-950 px-2 py-1.5 shadow-sm ring-1 ring-emerald-600">
 //               <Zap className="size-4 text-emerald-400" />
 //               <span className="font-medium text-emerald-400">LIVE</span>
 //             </div>
 
-//             <div className="flex items-center gap-1 rounded-xl bg-slate-700 px-2 py-1.5 shadow-sm ring-1 ring-slate-600">
+//             <div className="flex items-center gap-1 rounded-2xl bg-slate-700 px-2 py-1.5 shadow-sm ring-1 ring-slate-600">
 //               <Smartphone className="size-4 text-slate-300" />
 
 //               <span className="font-medium text-slate-300">{phoneNumber}</span>
 //             </div>
 
-//             <div className="flex items-center gap-1 rounded-xl bg-sky-950 px-2 py-1.5 shadow-sm ring-1 ring-sky-800">
+//             <div className="flex items-center gap-1 rounded-2xl bg-sky-950 px-2 py-1.5 shadow-sm ring-1 ring-sky-800">
 //               <ShieldCheck className="size-4 text-sky-400" />
 
 //               <span className="font-medium text-sky-400">WABA Connected</span>

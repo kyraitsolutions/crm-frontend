@@ -25,12 +25,12 @@ export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Type</label>
 
-          <Select value="CUSTOM" onValueChange={() => {}}>
-            <SelectTrigger className="input-field w-full">
+          <Select value="CUSTOM" onValueChange={() => { }}>
+            <SelectTrigger className="input-field w-full rounded-xl!">
               <SelectValue />
             </SelectTrigger>
 
-            <SelectContent>
+            <SelectContent className="rounded-xl!">
               <SelectItem value="CUSTOM">Custom</SelectItem>
 
               <SelectItem value="PRE_CONFIGURED">
@@ -51,7 +51,7 @@ export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
               value={button.label}
               maxLength={40}
               placeholder="Quick Reply"
-              className="input-field pr-14"
+              className="input-field rounded-xl! pr-14"
               onChange={(e) =>
                 updateButton(button.id, {
                   label: e.target.value,
