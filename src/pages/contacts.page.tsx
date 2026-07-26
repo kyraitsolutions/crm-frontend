@@ -9,7 +9,8 @@ import { Pagination } from "@/components/pagination";
 import ContactFilter from "./Contact/components/ContactFilter";
 import DataLoader from "@/components/Loader/data-loader";
 import useDebounce from "@/hooks/useDebounce";
-
+import SendTemplate from "./Channels/whatsapp/components/popup/SendTemplate";
+import { Input } from "@/components/ui/input";
 
 const Contacts = () => {
   const {
@@ -26,6 +27,7 @@ const Contacts = () => {
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
   const { accountId } = useAuthStore((state) => state);
   const [openFilter, setOpenFilter] = useState(false);
+  const [openTemplatePopup, setOpenTemplatePopup] = useState(false);
 
 
   const debouncedSearchQuery = useDebounce(contactQuery.search, 1000);
@@ -62,12 +64,12 @@ const Contacts = () => {
           <div className="flex gap-2 items-center w-full">
             {/* Search */}
             <div className="relative w-full max-w-sm">
-              <input
+              <Input
                 type="text"
                 placeholder="Search name, phone, email"
                 value={contactQuery.search}
                 onChange={(e) => setContactQuery({ search: e.target.value, })}
-                className="w-full bg-gray-100 rounded-xl! px-4 border-gray-300 py-2.5 pr-8 text-sm text-[#37322F] placeholder:text-[#847971] focus:outline-none focus:border-gray-300 transition"
+                className="input-field"
               />
 
               {/* Right icon */}
@@ -121,7 +123,7 @@ const Contacts = () => {
       </div>
 
 
-      {!loadingContacts ? <div className="border rounded-2xl! overflow-">
+      {!loadingContacts ? <div className="border rounded-2xl! overflow-hidden">
         <table className="w-full text-sm ">
           <thead className="bg-muted text-muted-foreground">
             <tr className="text-primary">
@@ -141,7 +143,7 @@ const Contacts = () => {
 
           <tbody>
             {contacts?.map((contact) => (
-              <tr key={contact._id} className="even:bg-muted capitalize">
+              <tr onClick={() => setOpenTemplatePopup(true)} key={contact._id} className="even:bg-muted capitalize">
                 <td className="p-3">
                   <input type="checkbox"
                     checked={selectedContacts.includes(
@@ -195,8 +197,7 @@ const Contacts = () => {
             ))}
           </tbody>
         </table>
-      </div> :
-        <DataLoader />}
+      </div> : <DataLoader />}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -205,6 +206,7 @@ const Contacts = () => {
         }}
       />
 
+      {openTemplatePopup && <SendTemplate open={openTemplatePopup} setOpen={setOpenTemplatePopup} />}
 
 
       <ContactPopup />

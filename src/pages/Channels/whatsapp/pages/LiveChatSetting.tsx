@@ -26,9 +26,9 @@ const LiveChatSetting = () => {
                 />
                 <div className='h-auto w-px bg-gray-200' />
                 <MessageConfig
-                    responseTitle={"Welcome Message"}
-                    responseDescription={"Configure automated reply for user's first query during working hours"}
-                    message={"Hi! Thanks for connecting. Someone from our team will get in touch soon."}
+                    responseTitle={"Off Hours Message"}
+                    responseDescription={"Configure automated reply for user's first query during off hours"}
+                    message={"Hi! Thanks for connecting. Our team is unavailable right now. We’ll be back at 9am tomorrow."}
                     autoResponseEnabled={autoWelcomeMessage}
                     onToggle={setAutoWelcomeMessage}
                     onConfigure={() => console.log("Configure Welcome message")}

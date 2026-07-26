@@ -7,6 +7,7 @@ import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { useLeadsStore } from "../store/lead.store";
 import { useConfigurationStore } from "@/pages/Settings/configuration/store/configuration.store";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const suggestedTags = [
   "Hot Lead",
@@ -190,7 +191,7 @@ const AddLead = () => {
   }, [activeTab]);
 
   return (
-    <div className="bg-gray-200 p-6">
+    <div className="bg-gray-200 p-6 h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar">
       <div className="flex items-center gap-4">
         <ButtonWithTitle
           onClick={() => navigate(`/dashboard/account/${accountId}/leads`)}
@@ -221,7 +222,7 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="name">
                   Full Name <span className="text-red-500">*</span>
                 </label>
-                <input
+                <Input
                   name="name"
                   placeholder="Full Name"
                   required
@@ -233,7 +234,7 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="email">
                   Email<span className="text-red-500">*</span>
                 </label>
-                <input
+                <Input
                   name="email"
                   placeholder="Email"
                   required
@@ -245,10 +246,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="title">
                   Title
                 </label>
-                <input
+                <Input
                   name="title"
                   placeholder="Title"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -262,7 +263,7 @@ const AddLead = () => {
                     value={form.countryCode}
                     onChange={handleChange}
                     required
-                    className="input-field py-[6.5px] shadow-xs border border-primary outline-none w-28"
+                    className="input-field py-[6.5px] px-2 shadow-xs border border-primary outline-none w-28"
                   >
                     <option value="+91">🇮🇳 +91</option>
                     <option value="+1">🇺🇸 +1</option>
@@ -270,7 +271,7 @@ const AddLead = () => {
                     <option value="+61">🇦🇺 +61</option>
                     <option value="+971">🇦🇪 +971</option>
                   </select>
-                  <input
+                  <Input
                     name="phone"
                     placeholder="Phone"
                     required
@@ -283,10 +284,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="company">
                   Company
                 </label>
-                <input
+                <Input
                   name="company"
                   placeholder="Company"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -294,10 +295,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="website">
                   Website
                 </label>
-                <input
+                <Input
                   name="website"
                   placeholder="Website"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -305,10 +306,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="mobile">
                   Whatsapp Number
                 </label>
-                <input
+                <Input
                   name="mobile"
                   placeholder="Whatsapp Number"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -316,10 +317,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="message">
                   Message
                 </label>
-                <input
+                <Input
                   name="message"
                   placeholder="Message"
-                  className="border py-1.5 rounded px-4 bg-gray-50 outline-primary text-sm"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -346,7 +347,7 @@ const AddLead = () => {
             <div className="space-y-3">
               {customFields.map((field, index) => (
                 <div key={index} className="flex gap-3">
-                  <input
+                  <Input
                     placeholder="Key"
                     value={field.key.split(" ").join("_").toLowerCase()}
                     onChange={(e) =>
@@ -434,10 +435,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="sourceurl">
                   Source URL
                 </label>
-                <input
+                <Input
                   name="sourceurl"
                   placeholder="Source URL"
-                  className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -454,10 +455,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="address">
                   Address
                 </label>
-                <input
+                <Input
                   name="address"
                   placeholder="Address"
-                  className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -465,10 +466,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="city">
                   City
                 </label>
-                <input
+                <Input
                   name="city"
                   placeholder="City"
-                  className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -476,10 +477,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="state">
                   State
                 </label>
-                <input
+                <Input
                   name="state"
                   placeholder="State"
-                  className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -487,10 +488,10 @@ const AddLead = () => {
                 <label className="text-sm" htmlFor="country">
                   Country
                 </label>
-                <input
+                <Input
                   name="country"
                   placeholder="Country"
-                  className="py-1.5 outline-primary text-sm bg-gray-50 border px-4 rounded"
+                  className="input-field"
                   onChange={handleChange}
                 />
               </div>
@@ -511,11 +512,11 @@ const AddLead = () => {
               <label className="text-sm" htmlFor="description">
                 Description
               </label>
-              <textarea
+              <Textarea
                 name="description"
                 placeholder="Enter the additional information"
-                rows={6}
-                className="py-1.5 resize-none outline-primary text-sm bg-gray-50 border px-4 rounded w-full"
+                rows={10}
+                className="input-field min-h-36!"
                 onChange={handleChange}
               />
             </div>
@@ -595,14 +596,14 @@ const AddLead = () => {
           <div className="flex justify-end gap-3">
             <button
               onClick={handleCancel}
-              className="px-4 py-2 border rounded-2xl text-sm"
+              className="px-3 py-1 border rounded-2xl text-sm"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="px-4 py-2 bg-primary rounded-2xl text-white text-sm"
+              className="px-3 py-1 bg-primary rounded-xl text-white text-sm"
             >
               {loading ? "Creating..." : "Create Lead"}
             </button>

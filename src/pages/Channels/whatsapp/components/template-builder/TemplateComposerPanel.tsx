@@ -376,6 +376,11 @@
 //   );
 // };
 
+import {
+  FormProvider,
+  useFormContext,
+  type SubmitHandler,
+} from "react-hook-form";
 import { BodyEditor } from "./content/BodyEditor";
 import { ButtonsEditor } from "./content/ButtonEditor";
 import { FooterEditor } from "./content/FooterEditor";
@@ -383,10 +388,14 @@ import { HeaderEditor } from "./content/header/HeaderEditor";
 import { VariableTypeSelector } from "./content/VariableTypeSelector";
 import { FooterActions } from "./shared/FooterActions";
 import { TemplateDetailsPanel } from "./TemplateDetailsPanel";
+import { useTemplateForm } from "../../hooks/useTemplateForm";
+import type { TemplateForm } from "../../validations/template.schema";
 
 interface ITemplateComposerPanelProps {
   onDiscard: () => void;
-  onSubmit: () => void;
+  // onSubmit: () => void;
+  // onSubmit: SubmitHandler<TemplateForm>;
+  onSubmit: (data: TemplateForm) => void | Promise<void>;
   isSubmitting?: boolean;
 }
 
@@ -395,20 +404,44 @@ export const TemplateComposerPanel = ({
   isSubmitting,
   onDiscard,
 }: ITemplateComposerPanelProps) => {
+  const { handleSubmit } = useFormContext<TemplateForm>();
+
   return (
-    <div className="space-y-4">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(onSubmit)();
+      }}
+      className="space-y-4"
+    >
       <TemplateDetailsPanel />
       <VariableTypeSelector />
       <HeaderEditor />
       <BodyEditor />
       <FooterEditor />
       <ButtonsEditor />
+
       <FooterActions
         onDiscard={onDiscard}
-        onNext={onSubmit}
         nextLabel="Submit for Review"
+        submit
         isSubmitting={isSubmitting}
       />
-    </div>
+    </form>
   );
 };
+
+// <div className="space-y-4">
+//   <TemplateDetailsPanel />
+//   <VariableTypeSelector />
+//   <HeaderEditor />
+//   <BodyEditor />
+//   <FooterEditor />
+//   <ButtonsEditor />
+//   <FooterActions
+//     onDiscard={onDiscard}
+//     onNext={onSubmit}
+//     nextLabel="Submit for Review"
+//     isSubmitting={isSubmitting}
+//   />
+// </div>

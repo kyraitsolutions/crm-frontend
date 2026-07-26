@@ -4,6 +4,7 @@ import ReactFlow, {
   Background,
   BackgroundVariant,
   Controls,
+  MiniMap,
   useEdgesState,
   useNodesState,
 } from "reactflow";
@@ -406,13 +407,27 @@ export default function ChatbotFlowEditor() {
           defaultEdgeOptions={{
             type: "custom",
           }}
+
+
         >
-          <Controls showFitView className="bg-gray-100! rounded-md" />
+          {/* <Controls showFitView className="bg-gray-100! rounded-md" /> */}
+          <Controls
+            showFitView
+            position="bottom-left"
+            className="rounded-xl bottom-4! border mb-4 border-gray-200 bg-white shadow-none!"
+          />
+          <MiniMap
+            position="bottom-right"
+            pannable
+            zoomable
+            className="rounded-xl bottom-4! border-none! bg-white shadow-none! "
+            nodeBorderRadius={12}
+          />
           <Background
-            variant={BackgroundVariant.Lines}
-            gap={100}
+            // variant={BackgroundVariant.Lines}
+            gap={20}
             size={2}
-            className="bg-gray-100"
+            className="bg-gray-50"
           />
 
           <div className="flex z-50 w-full h-16 justify-between! items-center px-5 bg-gray-50 absolute shadow">

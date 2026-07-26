@@ -1,10 +1,13 @@
 import { Input } from "@/components/ui/input";
-import { useTemplateStore } from "../../../store/template-builder.store";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
+import type { TemplateForm } from "../../../validations/template.schema";
+
+const MAX_FOOTER_LEN = 60;
 
 export const FooterEditor = () => {
-  const { footerText, setFooterText } = useTemplateStore();
-
-  const footerMaxLen = 60;
+  // const { footerText, setFooterText } = useTemplateStore();
+  const { control } = useFormContext<TemplateForm>();
+  const footerText = useWatch({ control, name: "footerText" });
 
   return (
     <section className="rounded-2xl border border-gray-200 px-5 py-3">
@@ -22,16 +25,29 @@ export const FooterEditor = () => {
       </div>
 
       <div className="relative">
-        <Input
+        {/* <Input
           value={footerText}
           maxLength={footerMaxLen}
           placeholder="Footer text..."
           className="input-field pr-16 rounded-xl!"
           onChange={(e) => setFooterText(e.target.value)}
+        /> */}
+        <Controller
+          control={control}
+          name="footerText"
+          render={({ field }) => (
+            <Input
+              value={field.value}
+              maxLength={MAX_FOOTER_LEN}
+              placeholder="Footer text..."
+              className="input-field pr-16"
+              onChange={field.onChange}
+            />
+          )}
         />
 
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-          {footerText.length}/{footerMaxLen}
+          {footerText.length}/{MAX_FOOTER_LEN}
         </span>
       </div>
 

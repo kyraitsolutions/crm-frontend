@@ -1,9 +1,11 @@
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 
 interface IFooterActionsProps {
-  onNext: () => void;
+  onNext?: () => void;
   onDiscard?: () => void;
   nextLabel?: string;
+  submit?: boolean;
   isSubmitting?: boolean;
 }
 
@@ -11,23 +13,31 @@ export const FooterActions = ({
   onDiscard,
   onNext,
   nextLabel = "Next",
+  submit = false,
   isSubmitting = false,
 }: IFooterActionsProps) => {
   return (
     <div className="flex items-center justify-between">
       {onDiscard ? (
-        <Button onClick={onDiscard} className="actions-btn rounded-xl! py-1.5! px-4!">
+        <Button type="button" onClick={onDiscard} className="actions-btn rounded-xl! py-1.5! px-4!">
           Discard
         </Button>
       ) : (
         <span />
       )}
       <Button
-        onClick={onNext}
+        type={submit ? "submit" : "button"}
+        onClick={submit ? undefined : onNext}
         disabled={isSubmitting}
-        className="rounded-xl! py-1.5! px-4!"
+        className="rounded-xl! py-1.5! px-4! flex"
       >
-        {isSubmitting ? "Submitting..." : nextLabel}
+        {isSubmitting ? (
+          <span className="flex items-center gap-2">
+            Submitting... <Loader />
+          </span>
+        ) : (
+          nextLabel
+        )}
       </Button>
     </div>
   );

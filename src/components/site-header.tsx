@@ -11,6 +11,7 @@ import { useNotificationStore } from "@/pages/Notification/store/notification.st
 import ButtonWithTitle from "./ui/Buttons/ButtonWithTitle";
 import GlobalSearch from "./globalSearch/GlobalSearch";
 import { SubscriptionPlan } from "@/enums/subscription.enum";
+import { Input } from "./ui/input";
 
 export function SiteHeader() {
   const navigate = useNavigate();
@@ -91,12 +92,12 @@ export function SiteHeader() {
                   : "opacity-0 translate-x-full w-0"
                   }`}
               >
-                <input
+                <Input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search anything..."
-                  className="bg-gray-100 text-sm rounded-2xl w-full py-2 px-3 focus:outline-none focus:ring-offset-2"
+                  className="input-field"
                 />
               </div>
             )}
