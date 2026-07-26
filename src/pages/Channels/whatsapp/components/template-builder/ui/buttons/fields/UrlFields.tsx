@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 
 interface IUrlFieldsProps {
   button: TemplateButton;
@@ -32,11 +32,11 @@ export function UrlFields({ button }: IUrlFieldsProps) {
             })
           }
         >
-          <SelectTrigger className="input-field">
+          <SelectTrigger className="input-field rounded-xl!">
             <SelectValue />
           </SelectTrigger>
 
-          <SelectContent>
+          <SelectContent className="rounded-xl!">
             <SelectItem value="STATIC">Static</SelectItem>
 
             <SelectItem value="DYNAMIC">Dynamic</SelectItem>
@@ -50,7 +50,7 @@ export function UrlFields({ button }: IUrlFieldsProps) {
 
         <div className="relative">
           <Input
-            className="input-field pr-16"
+            className="input-field pr-16 rounded-xl!"
             placeholder="https://www.example.com"
             maxLength={2000}
             value={url}

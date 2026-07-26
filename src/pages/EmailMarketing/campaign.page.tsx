@@ -413,7 +413,7 @@ const Campaign = () => {
 
             {/* Step Content */}
             <div
-              className="rounded-xl border bg-card shadow-sm p-6 lg:p-8  animate-fade-up"
+              className="rounded-2xl border bg-card shadow-sm p-6 lg:p-8  animate-fade-up"
               style={{ animationDelay: "160ms" }}
             >
               {/* STEP 1: COMPOSE */}

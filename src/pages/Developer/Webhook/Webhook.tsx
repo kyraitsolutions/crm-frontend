@@ -114,8 +114,8 @@ export default function Webhook() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className=" mx-auto space-y-6">
+    <div className="py-10 h-[calc(100vh-114px)] overflow-y-scroll hide-scrollbar bg-gray-50">
+      <div className="mx-24 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -136,7 +136,7 @@ export default function Webhook() {
           </div>
         </div>
 
-        <div className="border rounded-xl! overflow- bg-white">
+        <div className="border rounded-2xl! overflow- bg-white">
           <table className="w-full text-sm ">
             <thead className="text-muted-foreground border-b">
               <tr className="text-primary">
@@ -208,7 +208,7 @@ export default function Webhook() {
               <button
                 key={tab}
                 onClick={() => setDevTab(tab)}
-                className={`px-3 py-1 rounded-lg text-sm ${devTab === tab ? "bg-primary text-white" : "bg-gray-100"
+                className={`px-3 py-1 rounded-xl text-sm ${devTab === tab ? "bg-primary text-white" : "bg-gray-100"
                   }`}
               >
                 {tab.toUpperCase()}
@@ -217,7 +217,7 @@ export default function Webhook() {
           </div>
 
           {/* Code Blocks */}
-          <pre className="bg-black text-green-400 p-4 rounded-lg text-sm overflow-auto">
+          <pre className="bg-black text-green-400 p-4 rounded-xl text-sm overflow-auto">
             {devTab === "fetch" &&
               `// Example: Send lead using fetch
 fetch("${webhookUrl}", {
@@ -300,7 +300,7 @@ await axios.post(
 
         <section className="bg-white p-6">
           <h2 className="text-xl font-semibold mb-3">Response</h2>
-          <pre className="bg-black text-green-400 p-4 rounded-lg text-sm">
+          <pre className="bg-black text-green-400 p-4 rounded-xl text-sm">
             {`{
   "success": true,
   "message": "Lead created successfully"

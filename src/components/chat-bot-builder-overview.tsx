@@ -25,10 +25,10 @@ export default function ChatBotBuilderOverview() {
   const { control } = useFormContext<ChatBotFormData>();
 
   return (
-    <section className="grid gap-8 w-full">
-      <div className="space-y-0">
+    <section className="grid gap-8 w-full py-0.5">
+      <div className="space-y-0 border px-5 rounded-2xl">
         {/* BASIC INFORMATION */}
-        <Card className="border-none shadow-none bg-transparent px-2">
+        <Card className="shadow-none bg-transparent rounded-2xl border-none">
           <CardHeader className="px-0 pb-0">
             <CardTitle className="text-xl font-medium text-[#37322F]">
               Basic Information
@@ -48,7 +48,7 @@ export default function ChatBotBuilderOverview() {
                   <Input
                     {...field}
                     placeholder="Ex: Chatbot Name"
-                    className="input-field border-none! py-5! bg-gray-100"
+                    className="input-field border-none! py-5! bg-gray-100 rounded-xl! shadow-none"
                   />
                 )}
               />
@@ -66,7 +66,7 @@ export default function ChatBotBuilderOverview() {
                   <Textarea
                     {...field}
                     placeholder="Summarize what your chatbot helps with....."
-                    className="input-field border-none bg-gray-100 min-h-40"
+                    className="input-field border-none bg-gray-100 min-h-40 rounded-xl! shadow-none"
                   />
                 )}
               />
@@ -92,11 +92,10 @@ export default function ChatBotBuilderOverview() {
                   <div
                     className={`
                   mt-0.5 flex h-5 w-5 items-center justify-center rounded-full
-                  ${
-                    index < 2
-                      ? "bg-[rgba(55,50,47,0.10)]"
-                      : "border border-[rgba(55,50,47,0.20)]"
-                  }
+                  ${index < 2
+                        ? "bg-[rgba(55,50,47,0.10)]"
+                        : "border border-[rgba(55,50,47,0.20)]"
+                      }
                 `}
                   >
                     {index < 2 ? (

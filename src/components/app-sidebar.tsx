@@ -9,7 +9,7 @@ import {
   IconChevronRight,
   IconUsers,
 } from "@tabler/icons-react";
-import { Gauge, MessagesSquare } from "lucide-react";
+import { Book, BookUser, Gauge, MessagesSquare } from "lucide-react";
 import { useState } from "react";
 import { MdOutlineContacts } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
@@ -56,6 +56,12 @@ export function AppSidebar() {
         icon: IconUsers,
         active: hasPermission(permissions, PERMISSIONS.LEADS.VIEW),
       },
+      // {
+      //   title: "Calls",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/calls`,
+      //   icon: BookUser,
+      //   active: true,
+      // },
       // {
       //   title: "Deals",
       //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/deals`,
@@ -125,7 +131,7 @@ export function AppSidebar() {
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 bg-primary text-white rounded-xl cursor-pointer "
+          className="p-2 bg-primary text-white rounded-2xl cursor-pointer "
         >
           {collapsed ? (
             <IconChevronRight size={18} />
@@ -153,7 +159,7 @@ export function AppSidebar() {
       {/* <div className="px-3 py-3">
         <Link
           to="/dashboard/subscription"
-          className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-white bg-primary hover:bg-primary/90 transition"
+          className="flex items-center gap-3 px-3 py-2 rounded-2xl text-sm font-medium text-white bg-primary hover:bg-primary/90 transition"
         >
           <span className="text-lg">⚡</span>
           {!collapsed && (

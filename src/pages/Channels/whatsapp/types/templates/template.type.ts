@@ -1,13 +1,15 @@
-// Template Types
-export type TemplateCategory = "Marketing" | "Utility" | "Authentication";
+// // Template Types
 
-export type TemplateType =
-  | "CUSTOM"
-  | "CATALOGUE"
-  | "CALLING_PERMISSIONS_REQUEST";
+import type {
+  ButtonKind,
+  HeaderType,
+  TemplateCategory,
+  TemplateType,
+  UrlType,
+  VariableType,
+  WhatsAppActiveFor,
+} from "./template.enums";
 
-export type HeaderType = "Text" | "Image" | "Video" | "Document" | "Location";
-export type VariableType = "Name" | "Number";
 export type TemplateHeaderMedia = {
   file: File;
   previewUrl: string;
@@ -26,19 +28,6 @@ export interface TemplateTypeOption {
   title: string;
   description: string;
 }
-
-// Template Buttons
-export type ButtonKind =
-  | "QUICK_REPLY"
-  | "URL"
-  | "PHONE_NUMBER"
-  | "CALL_ON_WHATSAPP"
-  | "COPY_CODE"
-  | "SHARE_CONTACT";
-
-export type UrlType = "STATIC" | "DYNAMIC";
-
-export type WhatsAppActiveFor = "7_DAYS" | "30_DAYS" | "90_DAYS";
 
 export interface ButtonErrors {
   label?: string;
@@ -85,7 +74,7 @@ export interface ButtonTypeConfig {
   editableLabel?: boolean;
 }
 
-// Store State
+// Store State for Template Builder
 export interface TemplateState {
   // Step 1
   templateName: string;
@@ -168,3 +157,5 @@ export interface TemplatePayload {
   category: string;
   components: TemplateComponent[];
 }
+
+// Store State for Template Lists

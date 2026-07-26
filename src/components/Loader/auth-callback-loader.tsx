@@ -3,10 +3,10 @@ import Loader from "../Loader";
 export const AuthCallbackLoader = () => {
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100/90">
-      <div className="bg-white p-8 rounded-xl shadow-md flex flex-col items-center">
+      <div className="bg-white p-8 rounded-2xl shadow-md flex flex-col items-center">
         {/* Logo */}
         <div className="flex items-center gap-3 mb-4">
-          <div className="size-12 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-lg">
+          <div className="size-12 rounded-2xl bg-primary flex items-center justify-center text-white font-bold text-lg">
             K
           </div>
           <h1 className="text-xl font-semibold text-gray-800">Kyra AI CRM</h1>

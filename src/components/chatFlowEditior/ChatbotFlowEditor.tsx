@@ -340,13 +340,13 @@ export default function ChatbotFlowEditor() {
         const response =
           (chatflowId && flowName) || flowId
             ? await chatflowService.updateChatFlow(
-                String(chatflowId || flowId),
-                payloadData,
-              )
+              String(chatflowId || flowId),
+              payloadData,
+            )
             : await chatflowService.createChatFlow(
-                String(accountId),
-                payloadData,
-              );
+              String(accountId),
+              payloadData,
+            );
 
         if (response?.status === 200 || response?.status === 201) {
           toastMessageService.success(
@@ -412,14 +412,14 @@ export default function ChatbotFlowEditor() {
             variant={BackgroundVariant.Lines}
             gap={100}
             size={2}
-            className="bg-gray-200"
+            className="bg-gray-100"
           />
 
-          <div className="flex z-50 w-full h-16 justify-between! items-center px-5 bg-gray-100 absolute">
+          <div className="flex z-50 w-full h-16 justify-between! items-center px-5 bg-gray-50 absolute shadow">
             <div className="flex items-center gap-4">
               <Button
                 onClick={() => navigate(-1)}
-                className=" cursor-pointer bg-gray-300 rounded-full size-8 text-primary"
+                className=" cursor-pointer bg-gray-100 rounded-full size-8 text-primary hover:bg-primary/40"
               >
                 <ArrowLeft size={12} />
                 {/* <span className="text-sm text-white">Back</span> */}
@@ -446,49 +446,48 @@ export default function ChatbotFlowEditor() {
               permissions,
               PERMISSIONS.CHATBOTS.CREATE || PERMISSIONS.CHATBOTS.UPDATE,
             ) && (
-              <div className="flex items-center gap-3.5">
-                <Button
-                  disabled={!flowName || !nodes?.length}
-                  className="actions-btn p-2!"
-                  onClick={() => publishChanges("draft")}
-                >
-                  <MdOutlineDrafts size={18} />
-
-                  <span>Draft</span>
-
-                  {publishLoading && currentPublishStatus === "draft" && (
-                    <Loader color="#a5a0a0" />
-                  )}
-                </Button>
-
-                <Button
-                  disabled={publishLoading}
-                  onClick={() => publishChanges("published")}
-                  className="bg-primary text-white px-5 py-2 rounded-xl flex items-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed"
-                >
-                  <Upload size={16} />
-
-                  <span>Publish</span>
-
-                  {publishLoading && currentPublishStatus === "published" && (
-                    <Loader />
-                  )}
-                </Button>
-
-                <button
-                  onClick={handleFieldOpen}
-                  className="flex cursor-pointer bg-primary text-white p-2 rounded-full justify-end"
-                >
-                  <div
-                    className={`${
-                      fieldOpen && "-rotate-45"
-                    } transition-all duration-300`}
+                <div className="flex items-center gap-3.5">
+                  <Button
+                    disabled={!flowName || !nodes?.length}
+                    className="actions-btn px-4!  rounded-xl! py-2!"
+                    onClick={() => publishChanges("draft")}
                   >
-                    <MdAdd size={20} />
-                  </div>
-                </button>
-              </div>
-            )}
+                    <MdOutlineDrafts size={18} />
+
+                    <span>Draft</span>
+
+                    {publishLoading && currentPublishStatus === "draft" && (
+                      <Loader color="#a5a0a0" />
+                    )}
+                  </Button>
+
+                  <Button
+                    disabled={publishLoading}
+                    onClick={() => publishChanges("published")}
+                    className="bg-primary text-white px-5 py-2 rounded-xl! flex items-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed"
+                  >
+                    <Upload size={16} />
+
+                    <span>Publish</span>
+
+                    {publishLoading && currentPublishStatus === "published" && (
+                      <Loader />
+                    )}
+                  </Button>
+
+                  <button
+                    onClick={handleFieldOpen}
+                    className="flex cursor-pointer bg-primary text-white p-2 rounded-full justify-end"
+                  >
+                    <div
+                      className={`${fieldOpen && "-rotate-45"
+                        } transition-all duration-300`}
+                    >
+                      <MdAdd size={20} />
+                    </div>
+                  </button>
+                </div>
+              )}
           </div>
 
           {/* NODE SETTING SIDEBAR RENDERER  */}

@@ -63,7 +63,7 @@ export function AccountSwitcher({
       <button
         onClick={() => setOpen(!open)}
         className={cn(
-          " w-full flex items-center rounded-xl justify-between px-3 py-2  transition-all duration-400 text-sm",
+          " w-full flex items-center rounded-2xl justify-between px-3 py-2  transition-all duration-400 text-sm",
           collapsed && "justify-center",
           !collapsed && "bg-primary/90 text-white hover:bg-primary"
         )}
@@ -99,7 +99,7 @@ export function AccountSwitcher({
       {open && (
         <div
           ref={htmlDivRefForDropDown}
-          className={`mt-2 bg-white rounded-xl border p-2 space-y-2 ${collapsed && "absolute left-[110%] min-w-60  top-0 z-50 "}`}
+          className={`mt-2 bg-white rounded-2xl border p-2 space-y-2 ${collapsed && "absolute left-[110%] min-w-60  top-0 z-50 "}`}
         >
           {/* Search */}
           <Input
@@ -152,11 +152,11 @@ export function AccountSwitcher({
 
 
           <div>
-            <Link to={`${ROUTES.DASHBOARD}/settings/workspace`} className="flex items-center gap-2 px-3 py-2 hover:bg-primary duration-300  rounded-xl text-gray-500 hover:text-white">
+            <Link to={`${ROUTES.DASHBOARD}/settings/workspace`} className="flex items-center gap-2 px-3 py-2 hover:bg-primary duration-300  rounded-2xl text-gray-500 hover:text-white">
               <MdManageAccounts size={20} />
               <span className="text-sm">Manage accounts</span>
             </Link>
-            <Link to={`${ROUTES.DASHBOARD}/settings`} className="flex gap-2 items-center px-3 py-2 hover:bg-primary  duration-300  rounded-xl text-gray-500 hover:text-white">
+            <Link to={`${ROUTES.DASHBOARD}/settings`} className="flex gap-2 items-center px-3 py-2 hover:bg-primary  duration-300  rounded-2xl text-gray-500 hover:text-white">
               <Settings size={17} />
               <span className="text-sm">Company settings</span>
             </Link>

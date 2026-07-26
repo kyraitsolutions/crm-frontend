@@ -14,7 +14,7 @@ const RolesSkeleton = () => {
         {[1, 2, 3].map((_, i) => (
           <div
             key={i}
-            className="flex items-center justify-between p-5 bg-white border rounded-xl"
+            className="flex items-center justify-between p-5 bg-white border rounded-2xl"
           >
             {/* Left */}
             <div className="flex items-center gap-4">

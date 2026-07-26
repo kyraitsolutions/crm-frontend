@@ -147,7 +147,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden">
+    <div className="bg-white rounded-2xl overflow-hidden">
       {/* Header */}
       <div
         onClick={() => {
@@ -176,7 +176,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
             onClick={(e) => e.stopPropagation()}
             value={sortType}
             onChange={handleSortChange}
-            className="border border-primary  font-medium rounded-xl px-4 py-1 text-sm bg-primary/10 text-primary outline-none  hover:bg-primary/20"
+            className="border border-primary  font-medium rounded-2xl px-4 py-1 text-sm bg-primary/10 text-primary outline-none  hover:bg-primary/20"
           >
             Recent Last ▾<option value="recent_first">Recent First</option>
             <option value="recent_last">Recent Last</option>
@@ -196,7 +196,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
                 <div className="flex flex-col gap-2">
                   {/* Avatar */}
 
-                  <div className="capitalize text-xs text-gray-600 bg-gray-200 w-fit px-2 py-1 rounded-xl flex items-center gap-1">
+                  <div className="capitalize text-xs text-gray-600 bg-gray-200 w-fit px-2 py-1 rounded-2xl flex items-center gap-1">
                     <span>Had conversation on</span>{" "}
                     {activityMap[note.activitySource]}
                   </div>
@@ -255,7 +255,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
 
           {/* Note Editor */}
           {showNoteEditor && (
-            <div className="border border-primary/40 rounded-xl max-w-4xl overflow-hidden">
+            <div className="border border-primary/40 rounded-2xl max-w-4xl overflow-hidden">
               {/* Textarea */}
               <div className="p-4">
                 <div className="flex items-center justify-between mb-2">
@@ -317,7 +317,7 @@ const Notes = ({ lead }: { lead: ILead }) => {
                   <Button
                     disabled={!noteTitle || loading}
                     onClick={handleSaveNote}
-                    className="rounded-xl py-1.5!"
+                    className="rounded-2xl py-1.5!"
                   >
                     <Save /> Save {loading && <Loader />}
                   </Button>

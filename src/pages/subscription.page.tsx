@@ -265,7 +265,7 @@ function PricingCard({
 //     hidden group-hover:block
 //     z-50
 //     w-[220px]
-//     rounded-xl
+//     rounded-2xl
 //     border border-gray-200
 //     bg-white
 //     px-4 py-3

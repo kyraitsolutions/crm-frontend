@@ -578,11 +578,10 @@ const AddLead = () => {
                       type="button"
                       onClick={() => addTag(tag)}
                       className={`px-3 py-1 rounded-full text-sm border transition
-                            ${
-                              isSelected
-                                ? "bg-primary text-white border-primary"
-                                : "bg-gray-100 hover:bg-gray-200"
-                            }`}
+                            ${isSelected
+                          ? "bg-primary text-white border-primary"
+                          : "bg-gray-100 hover:bg-gray-200"
+                        }`}
                     >
                       {tag}
                     </button>
@@ -596,14 +595,14 @@ const AddLead = () => {
           <div className="flex justify-end gap-3">
             <button
               onClick={handleCancel}
-              className="px-4 py-2 border rounded-xl text-sm"
+              className="px-4 py-2 border rounded-2xl text-sm"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="px-4 py-2 bg-primary rounded-xl text-white text-sm"
+              className="px-4 py-2 bg-primary rounded-2xl text-white text-sm"
             >
               {loading ? "Creating..." : "Create Lead"}
             </button>

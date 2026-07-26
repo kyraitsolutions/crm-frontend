@@ -40,7 +40,7 @@ const RecentLeads = () => {
   const recentLeads = (dashboardOverview?.recentLeads as any) || [];
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
+    <div className="rounded-2xl border border-gray-200 bg-white">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3">
         <h2 className="text-sm font-semibold text-[#111827]">Recent Leads</h2>
@@ -109,11 +109,10 @@ const RecentLeads = () => {
                   return (
                     <td
                       key={header.key}
-                      className={`px-3 py-3 whitespace-nowrap text-[12px] ${
-                        header.key === "name"
+                      className={`px-3 py-3 whitespace-nowrap text-[12px] ${header.key === "name"
                           ? "font-medium text-[#111827]"
                           : "text-[#4B5563]"
-                      }`}
+                        }`}
                     >
                       {value}
                     </td>
@@ -160,7 +159,7 @@ export default RecentLeads;
 //   const { dashboardOverview } = useDashboardStore((state) => state);
 //   console.log(dashboardOverview);
 //   return (
-//     <div className="rounded-xl border bg-white">
+//     <div className="rounded-2xl border bg-white">
 //       {/* Header */}
 //       <div className="flex items-center justify-between px-6 py-5">
 //         <h2 className="text-[20px] font-semibold text-[#111827]">

@@ -448,9 +448,9 @@ const CarouselCardItem = ({
   };
 
   return (
-    <div className="group/card border border-white/5 rounded-xl p-2 space-y-4 relative shadow-sm bg-black/10">
+    <div className="group/card border border-white/5 rounded-2xl p-2 space-y-4 relative shadow-sm bg-black/10">
       {/* 🔹 HEADER SECTION */}
-      <div className="space-y-3 bg-white/6 p-3 rounded-xl">
+      <div className="space-y-3 bg-white/6 p-3 rounded-2xl">
         <label className="text-sm text-gray-400 inline-block">
           Header Media *
         </label>
@@ -543,7 +543,7 @@ const CarouselCardItem = ({
       </div>
 
       {/* 🔹 BODY SECTION */}
-      <div className="space-y-2 bg-white/6 p-3 rounded-xl">
+      <div className="space-y-2 bg-white/6 p-3 rounded-2xl">
         <label
           className="text-sm text-gray-400 inline-block"
           htmlFor={`card-body-${card.card_index}`}
@@ -581,7 +581,7 @@ const CarouselCardItem = ({
       </div>
 
       {/* 🔹 ACTION SECTION */}
-      <div className="space-y-2 bg-white/6 p-3 rounded-xl">
+      <div className="space-y-2 bg-white/6 p-3 rounded-2xl">
         <label className="text-sm text-gray-400 inline-block">
           {mode === "url" ? "CTA Button" : "Quick Replies"}
         </label>
@@ -660,7 +660,7 @@ const CarouselCardItem = ({
 };
 
 {
-  /* <div className="space-y-2 bg-white/6 p-3 rounded-xl">
+  /* <div className="space-y-2 bg-white/6 p-3 rounded-2xl">
   <label className="text-sm text-gray-400 inline-block">
     {mode === "url" ? "CTA Button" : "Quick Replies"}
   </label>

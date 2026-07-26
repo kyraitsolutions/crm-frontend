@@ -30,7 +30,7 @@ export default function StickyTable() {
   return (
     <div className="p-4 w-full! overflow-auto!">
       {/* Scroll Wrapper */}
-      <div className="overflow-x-auto rounded-xl w-full">
+      <div className="overflow-x-auto rounded-2xl w-full">
         ugyhfhbmn,
         {/* <Table className="">
 

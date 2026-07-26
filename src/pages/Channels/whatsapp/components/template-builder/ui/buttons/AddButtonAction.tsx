@@ -19,7 +19,7 @@ export const AddButtonAction = () => {
       <DropdownMenuTrigger asChild>
         <Button
           disabled={totalReached}
-          className="gap-2 actions-btn px-3! py-2!"
+          className="gap-2 actions-btn px-3! py-1.5! rounded-xl!"
         >
           <Plus className="h-4 w-4" />
           Add button
@@ -75,7 +75,7 @@ export const AddButtonAction = () => {
 //       </Button>
 
 //       {open && (
-//         <div className="absolute z-10 mt-1 w-64 rounded-xl border border-gray-200 bg-white shadow-lg py-1">
+//         <div className="absolute z-10 mt-1 w-64 rounded-2xl border border-gray-200 bg-white shadow-lg py-1">
 //           {(Object.keys(BUTTON_TYPE_CONFIG) as ButtonKind[]).map((kind) => {
 //             const config = BUTTON_TYPE_CONFIG[kind];
 //             const used = countByKind[kind] ?? 0;

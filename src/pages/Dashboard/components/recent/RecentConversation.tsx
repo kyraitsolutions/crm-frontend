@@ -37,7 +37,7 @@ const RecentConversation = () => {
   const recentConversations = dashboardOverview?.recentConversations || [];
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
+    <div className="rounded-2xl border border-gray-200 bg-white">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3">
         <h2 className="text-[15px] font-semibold text-[#111827]">

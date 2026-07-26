@@ -345,7 +345,7 @@ const Media = () => {
                 {filterData.map((item) => (
                     <div
                         key={item.id}
-                        className="border rounded-xl p-4 hover:shadow-md transition cursor-pointer bg-white"
+                        className="border rounded-2xl p-4 hover:shadow-md transition cursor-pointer bg-white"
                     >
                         <div className="h-28 flex items-center justify-center bg-gray-50 rounded-lg mb-3">
                             {item.url && item.type === "image" ? (

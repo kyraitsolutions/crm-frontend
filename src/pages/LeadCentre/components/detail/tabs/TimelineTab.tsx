@@ -135,11 +135,11 @@ const TimelineTab = ({ lead }: TimelineTabProps) => {
     <div className="p-5 overflow-y-auto hide-scrollbar ">
       <div>
         {/* Top Actions */}
-        <div className="bg-white rounded-xl px-5 pt-4 flex items-center justify-between">
+        <div className="bg-white rounded-2xl px-5 pt-4 flex items-center justify-between">
           {/* <div className="flex items-center gap-3">
             <h2 className="text-md font-semibold">Timeline History</h2>
 
-            <button className=" bg-gray-200 rounded-xl text-gray-500 py-2 px-3 hover:opacity-90">
+            <button className=" bg-gray-200 rounded-2xl text-gray-500 py-2 px-3 hover:opacity-90">
               <Filter size={16} />
             </button>
           </div> */}
@@ -171,7 +171,7 @@ export default TimelineTab;
   {Object.entries(groupedTimeline).map(([date, items]) => (
     <div key={date} className="mb-10">
       Date Badge
-      <div className="inline-flex border border- rounded-xl px-4 py-1 text-sm text-gray-500 bg-gray-50 mb-6">
+      <div className="inline-flex border border- rounded-2xl px-4 py-1 text-sm text-gray-500 bg-gray-50 mb-6">
         {date}
       </div>
 

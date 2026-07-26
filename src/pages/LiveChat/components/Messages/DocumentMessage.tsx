@@ -43,7 +43,7 @@ const DocumentMessage = ({ message }: TDocumentMessageProps) => {
         target="_blank"
         download
         rel="noopener noreferrer"
-        className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition"
+        className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 hover:bg-gray-100 transition"
       >
         llll
         {/* ICON */}

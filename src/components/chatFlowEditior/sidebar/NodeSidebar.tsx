@@ -88,7 +88,7 @@ const NodeSidebar = ({ onAddNode, onClose }: NodeSidebarProps) => {
               key={index}
               onClick={() => onAddNode(item.type as TNodeType, item.label)}
               className={`
-                group cursor-pointer rounded-xl p-4 flex flex-col items-center gap-3
+                group cursor-pointer rounded-2xl p-4 flex flex-col items-center gap-3
                 transition-all duration-200
                 ${color.bg}
                 hover:bg-white/10

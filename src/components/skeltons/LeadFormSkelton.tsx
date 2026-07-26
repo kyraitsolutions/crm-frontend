@@ -93,7 +93,7 @@ export default function LeadFormSkeleton() {
             <Skeleton className="h-44 w-full rounded-t-2xl" />
 
             {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-10 w-full rounded-xl" />
+              <Skeleton key={i} className="h-10 w-full rounded-2xl" />
             ))}
 
             <Skeleton className="h-12 w-full rounded-full mt-4" />

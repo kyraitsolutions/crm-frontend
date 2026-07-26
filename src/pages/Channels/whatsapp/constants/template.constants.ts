@@ -4,7 +4,7 @@ import type {
   TemplateCategory,
   TemplateType,
   VariableType,
-} from "../types/template.type";
+} from "../types/templates/template.type";
 
 export const TEMPLATE_CATEGORIES: {
   label: string;

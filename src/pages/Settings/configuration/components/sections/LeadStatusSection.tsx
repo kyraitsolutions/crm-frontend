@@ -1,6 +1,6 @@
 // LeadStatusSection.tsx
 
-import { Circle, GripVertical, Lock, Pencil } from "lucide-react";
+import { Circle, GripVertical, Lock, Pencil, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import StatsCard from "../cards/StatsCard";
@@ -42,7 +42,7 @@ const LeadStatusSection = () => {
       key: "order",
       title: "Order",
       render: (value: number) => (
-        <div className="flex h-10 w-14 items-center justify-center rounded-xl border border-[#E5E7EB] text-sm font-medium">
+        <div className="flex h-10 w-14 items-center justify-center rounded-2xl border border-[#E5E7EB] text-sm font-medium">
           {value}
         </div>
       ),
@@ -190,8 +190,8 @@ const LeadStatusSection = () => {
           </p>
         </div>
 
-        <Button onClick={handleCreate} className="actions-btn p-2!">
-          + Add Status
+        <Button onClick={handleCreate} className="actions-btn flex items-center gap-2! px-4! py-2! rounded-xl!">
+          <Plus size={16} /> Add Status
         </Button>
       </div>
 
@@ -254,7 +254,7 @@ const LeadStatusSection = () => {
           <DataTable columns={columns} data={configurationItems} />
 
           {/* ALERT */}
-          <div className="mt-5 rounded-2xl border border-[#DCFCE7] bg-[#F0FDF4] px-5 py-4 text-sm text-[#15803D]">
+          <div className="mt-5 rounded-2xl shadow-sm border border-[#DCFCE7] bg-[#F0FDF4] px-5 py-4 text-sm text-[#15803D]">
             System statuses cannot be deleted but you can edit their name and
             color.
           </div>
@@ -291,7 +291,7 @@ const LeadStatusSection = () => {
           </div> */}
 
           {/* TIPS */}
-          <div className="rounded-3xl border border-[#DCFCE7] bg-[#F0FDF4] p-6">
+          <div className="rounded-2xl shadow-sm border border-[#DCFCE7] bg-[#F0FDF4] p-6">
             <h3 className="mb-4 text-lg font-semibold text-[#166534]">Tips</h3>
 
             <ul className="space-y-3 text-sm leading-6 text-[#166534]">
@@ -413,7 +413,7 @@ export default LeadStatusSection;
 //           </p>
 //         </div>
 
-//         <button className="rounded-xl bg-[#16a34a] px-5 py-3 text-sm font-medium text-white">
+//         <button className="rounded-2xl bg-[#16a34a] px-5 py-3 text-sm font-medium text-white">
 //           + Add Status
 //         </button>
 //       </div>

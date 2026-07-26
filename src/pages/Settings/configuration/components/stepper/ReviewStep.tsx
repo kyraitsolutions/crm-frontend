@@ -151,7 +151,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
               });
             }}
             disabled={!name.trim() || loading}
-            className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-xl hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-2xl hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           >
             Save Automation{" "}
             {loading && currentButton === "published" && <Loader />}

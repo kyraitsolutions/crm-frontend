@@ -12,7 +12,7 @@ interface StatsCardProps {
 
 const StatsCard = ({ title, value, icon, iconBg }: StatsCardProps) => {
   return (
-    <div className="rounded-xl border border-[#E5E7EB] bg-white p-6">
+    <div className="rounded-2xl bg-white p-6">
       <div className="flex items-start gap-4">
         <div
           className={`flex size-8 items-center justify-center rounded-full ${iconBg}`}

@@ -1,5 +1,5 @@
 import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import { ButtonCard } from "../ButtonCard";
 import { TypeOfActionField } from "../fields/TypeOfActionField";
 import { UrlFields } from "../fields/UrlFields";

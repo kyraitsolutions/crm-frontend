@@ -10,7 +10,7 @@ interface WhatsappConnectProps {
 
 export default function WhatsappConnect({ onConnect }: WhatsappConnectProps) {
   return (
-    <div className="relative w-full p-4 overflow-hidden">
+    <div className="relative w-full overflow-hidden">
       {/* Background glow */}
       <BackgroundGlow />
 

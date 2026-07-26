@@ -39,7 +39,7 @@ const DashboardOverviewPage = () => {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-50 overflow-y-scroll h-[calc(100vh-64px)] hide-scrollbar">
       <DashboardHeader />
 
       {loading ? (

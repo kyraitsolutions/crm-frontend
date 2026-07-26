@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 
 import { ButtonCard } from "../ButtonCard";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
 
 interface Props {
@@ -33,11 +33,11 @@ export function UrlButtonEditor({ button }: Props) {
             </label>
 
             <Select value="URL" onValueChange={() => {}}>
-              <SelectTrigger className="input-field">
+              <SelectTrigger className="input-field rounded-xl!">
                 <SelectValue />
               </SelectTrigger>
 
-              <SelectContent>
+              <SelectContent className="rounded-xl!">
                 <SelectItem value="URL">Visit website</SelectItem>
               </SelectContent>
             </Select>
@@ -51,7 +51,7 @@ export function UrlButtonEditor({ button }: Props) {
 
             <div className="relative">
               <Input
-                className="input-field pr-16"
+                className="input-field pr-16 rounded-xl!"
                 maxLength={40}
                 value={button.label}
                 placeholder="Visit website"

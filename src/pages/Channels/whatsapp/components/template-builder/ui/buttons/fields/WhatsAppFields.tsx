@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
 
 interface IWhatsAppFieldsProps {
@@ -77,7 +77,7 @@ export function WhatsAppFields({ button }: IWhatsAppFieldsProps) {
             })
           }
         >
-          <SelectTrigger className="input-field">
+          <SelectTrigger className="input-field rounded-xl!">
             <SelectValue />
           </SelectTrigger>
 

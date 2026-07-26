@@ -72,7 +72,7 @@ export function DashboardHeader() {
             </div>
           </SelectTrigger>
 
-          <SelectContent className="rounded-xl shadow-sm">
+          <SelectContent className="rounded-2xl shadow-sm">
             {MODULE_OPTIONS.map((item) => (
               <SelectItem
                 className="text-sm hover:bg-gray-100! data-[state=checked]:bg-gray-200/70 data-[state=checked]:text-primary"

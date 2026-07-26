@@ -26,7 +26,7 @@ export default function DealCard({ deal, onDragStart, onDragEnd, isDragging }: D
             draggable
             onDragStart={(e) => onDragStart(e, deal)}
             onDragEnd={onDragEnd}
-            className={` w-full rounded-xl p-4 bg-white cursor-grab active:cursor-grabbing shadow-sm transition ${isDragging ? "opacity-40" : "opacity-100"
+            className={` w-full rounded-2xl p-4 bg-white cursor-grab active:cursor-grabbing shadow-sm transition ${isDragging ? "opacity-40" : "opacity-100"
                 }`}
         >
             <div className="flex justify-between">

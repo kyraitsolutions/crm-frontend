@@ -1,7 +1,8 @@
 import { FileText, Users } from 'lucide-react';
 import { useRef } from 'react'
+import Navhandle from './Navhandle';
 
-const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setSelectedFile: any }) => {
+const UploadStep = ({ selectedFile, setSelectedFile, isSelected, step, setStep, handleStep }: { selectedFile: any, setSelectedFile: any, isSelected: any, step: number, setStep: any, handleStep: any }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleBrowseClick = () => {
@@ -23,10 +24,10 @@ const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setS
         console.log("Selected File:", file);
     };
     return (
-        <div className="flex items-center justify-center px-6 py-16">
+        <div className="flex flex-col items-center  justify-between px-6 py-16 gap-20">
             <div className="flex items-center gap-10">
                 {/* Left Card */}
-                <div className="relative flex h-100 w-95 flex-col rounded-xl border border-[#d7d9f1] bg-white px-7 py-6">
+                <div className="relative flex h-100 w-95 flex-col rounded-2xl border border-[#d7d9f1] bg-white px-7 py-6">
                     <div className="flex items-center gap-3">
                         <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#22c55e]">
                             <FileText className="text-[#22c55e]" size={14} />
@@ -55,7 +56,7 @@ const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setS
 
                         <button
                             onClick={handleBrowseClick}
-                            className="rounded-xl bg-linear-to-b from-primary/90 to-primary px-4 py-1.5 text-white shadow-sm hover:opacity-90">
+                            className="rounded-2xl bg-linear-to-b from-primary/90 to-primary px-4 py-1.5 text-white shadow-sm hover:opacity-90">
                             Browse
                         </button>
                         {/* Selected file name */}
@@ -96,7 +97,7 @@ const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setS
                 </div>
 
                 {/* Right Card */}
-                <div className="flex h-100 w-95 flex-col rounded-xl border border-[#d7d9f1] bg-white px-7 py-6">
+                <div className="flex h-100 w-95 flex-col rounded-2xl border border-[#d7d9f1] bg-white px-7 py-6">
                     <div className="flex items-center gap-3">
                         <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#22c55e]">
                             <Users className="text-[#22c55e]" size={16} />
@@ -108,7 +109,7 @@ const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setS
                     </div>
 
                     <div className="mt-20 flex justify-center">
-                        <button className="rounded-xl bg-[#2c3348] px-4 py-1.5 text-white shadow-md hover:opacity-90">
+                        <button className="rounded-2xl bg-[#2c3348] px-4 py-1.5 text-white shadow-md hover:opacity-90">
                             Kyra CRM
                         </button>
                     </div>
@@ -128,6 +129,9 @@ const UploadStep = ({ selectedFile, setSelectedFile }: { selectedFile: any, setS
                     </div>
                 </div>
             </div>
+
+            <Navhandle step={step} isSelected={selectedFile} handleStep={handleStep} />
+
         </div>
     )
 }

@@ -178,7 +178,7 @@ export default function Onboarding() {
           <div className="relative z-10 space-y-5">
             {features.map((f) => (
               <div key={f.title} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 bg-white/10">
+                <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0 bg-white/10">
                   {f.icon}
                 </div>
                 <div>
@@ -196,7 +196,7 @@ export default function Onboarding() {
 
         {!showSuccess && (
           <main className="flex flex-1 justify-center py-3 bg-gray-200/40 h-full">
-            <div className="w-full max-w-5xl rounded-xl p-6 space-y-7">
+            <div className="w-full max-w-5xl rounded-2xl p-6 space-y-7">
               {/* Header */}
               <div className="space-y-1">
                 <h2 className="text-xl font-semibold text-gray-900">
@@ -225,7 +225,7 @@ export default function Onboarding() {
                   <Field label="Email" required error={errors.email?.message}>
                     <Input type="email" {...register("email")} placeholder="jane@company.com" aria-invalid={!!errors.email} className="input-field" />
                   </Field>
-                  <Button type="button" onClick={nextStep} className="w-full rounded-xl">
+                  <Button type="button" onClick={nextStep} className="w-full rounded-2xl">
                     Continue →
                   </Button>
                 </div>
@@ -536,7 +536,7 @@ export default function Onboarding() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full rounded-xl py-3 text-sm font-semibold"
+                  className="w-full rounded-2xl py-3 text-sm font-semibold"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
@@ -754,7 +754,7 @@ function Field({
 //         <div className="relative z-10 space-y-5">
 //           {features.map((f) => (
 //             <div key={f.title} className="flex items-start gap-4">
-//               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-white/10">
+//               <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl flex-shrink-0 bg-white/10">
 //                 {f.icon}
 //               </div>
 //               <div>
@@ -802,7 +802,7 @@ function Field({
 //                 <Field label="Email" required error={errors.email?.message}>
 //                   <Input type="email" {...register("email")} placeholder="jane@company.com" aria-invalid={!!errors.email} />
 //                 </Field>
-//                 <Button type="button" onClick={nextStep} className="w-full rounded-xl">
+//                 <Button type="button" onClick={nextStep} className="w-full rounded-2xl">
 //                   Continue →
 //                 </Button>
 //               </div>
@@ -997,7 +997,7 @@ function Field({
 //               <Button
 //                 type="submit"
 //                 disabled={isSubmitting}
-//                 className="w-full rounded-xl py-3 text-sm font-semibold"
+//                 className="w-full rounded-2xl py-3 text-sm font-semibold"
 //               >
 //                 {isSubmitting ? (
 //                   <span className="flex items-center justify-center gap-2">
@@ -1219,7 +1219,7 @@ function Field({
 //           {features.map((f) => (
 //             <div key={f.title} className="flex items-start gap-4">
 //               <div
-//                 className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+//                 className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl flex-shrink-0"
 //                 style={{ background: "rgba(255,255,255,0.12)" }}
 //               >
 //                 {f.icon}
@@ -1322,7 +1322,7 @@ function Field({
 //                     />
 //                   </Field>
 
-//                   <Button onClick={nextStep} className="w-full rounded-xl">
+//                   <Button onClick={nextStep} className="w-full rounded-2xl">
 //                     Continue
 //                   </Button>
 
@@ -1460,7 +1460,7 @@ function Field({
 //                     >
 //                       ← Back
 //                     </Button>
-//                     <Button className="flex-1 rounded-xl">
+//                     <Button className="flex-1 rounded-2xl">
 //                       {isSubmitting ? (
 //                         <span className="flex items-center justify-center gap-2">
 //                           Finishing… <Loader size={18} />
@@ -1601,7 +1601,7 @@ function Field({
 //   return (
 //     <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 md:px-4">
 //       {!showSuccess && (
-//         <div className="w-full max-w-3xl md:max-h-[95vh] max-h-full overflow-y-auto bg-white rounded-xl shadow-sm p-6 space-y-8">
+//         <div className="w-full max-w-3xl md:max-h-[95vh] max-h-full overflow-y-auto bg-white rounded-2xl shadow-sm p-6 space-y-8">
 //           {/* HEADER */}
 //           <div className="space-y-2">
 //             <h1 className="text-2xl font-semibold">Welcome 👋</h1>
@@ -1669,7 +1669,7 @@ function Field({
 //                 <button
 //                   type="button"
 //                   onClick={nextStep}
-//                   className="w-full bg-primary text-white py-3 rounded-xl hover:bg-primary/90 transition cursor-pointer"
+//                   className="w-full bg-primary text-white py-3 rounded-2xl hover:bg-primary/90 transition cursor-pointer"
 //                 >
 //                   Continue
 //                 </button>
@@ -1813,7 +1813,7 @@ function Field({
 //                   <button
 //                     type="button"
 //                     onClick={() => setStep(1)}
-//                     className="w-full border rounded-xl py-3 cursor-pointer"
+//                     className="w-full border rounded-2xl py-3 cursor-pointer"
 //                   >
 //                     Back
 //                   </button>
@@ -1821,7 +1821,7 @@ function Field({
 //                   <button
 //                     type="submit"
 //                     disabled={isSubmitting}
-//                     className="w-full bg-primary text-white rounded-xl py-3 hover:bg-green-700 cursor-pointer "
+//                     className="w-full bg-primary text-white rounded-2xl py-3 hover:bg-green-700 cursor-pointer "
 //                   >
 //                     {isSubmitting ? (
 //                       <span className="flex items-center justify-center gap-4">

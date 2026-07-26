@@ -55,9 +55,8 @@ export function SurveyCreateModal({
         >
           <Label
             htmlFor="scratch"
-            className={`cursor-pointer rounded-xl border-2 p-2 transition ${
-              value === "scratch" ? "border-primary" : "border-muted"
-            }`}
+            className={`cursor-pointer rounded-2xl border-2 p-2 transition ${value === "scratch" ? "border-primary" : "border-muted"
+              }`}
           >
             <Card className="w-full h-full py-0">
               <CardContent className="flex flex-col items-start gap-2 p-4">
@@ -76,9 +75,8 @@ export function SurveyCreateModal({
 
           <Label
             htmlFor="ai"
-            className={`cursor-pointer rounded-xl border-2 p-2 transition ${
-              value === "ai" ? "border-primary" : "border-muted"
-            }`}
+            className={`cursor-pointer rounded-2xl border-2 p-2 transition ${value === "ai" ? "border-primary" : "border-muted"
+              }`}
           >
             <Card className="w-full h-full py-0">
               <CardContent className="flex flex-col items-start gap-2 p-4">

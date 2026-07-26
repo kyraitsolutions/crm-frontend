@@ -27,7 +27,7 @@ const FlowModal = ({ open, onClose, handleSave }: TFlowModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogOverlay className="bg-slate-900/10 backdrop-blur-[1px]" />
-      <DialogContent className="sm:max-w-md rounded-xl ">
+      <DialogContent className="sm:max-w-md rounded-2xl ">
         <DialogHeader>
           <DialogTitle>Create New Flow</DialogTitle>
         </DialogHeader>
@@ -35,21 +35,21 @@ const FlowModal = ({ open, onClose, handleSave }: TFlowModalProps) => {
         <div className="space-y-4 mt-4">
           <Input
             placeholder="Enter flow name"
-            className="input-field"
+            className="input-field rounded-xl!"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
 
           <div className="flex justify-end gap-2">
             <Button
-              className="actions-btn px-6! py-2! bg-red-500! text-red-100!"
+              className="actions-btn px-6! py-2! bg-red-600! text-red-100! rounded-xl!"
               onClick={onClose}
             >
               Cancel
             </Button>
 
             <Button
-              className="actions-btn px-6! py-2! hover:bg-primary! hover:text-white!"
+              className="actions-btn px-6! py-2! hover:bg-primary! hover:text-white! rounded-xl!"
               onClick={handleCreate}
             >
               Save

@@ -43,7 +43,7 @@ export const VariableAccordion = ({
         </AccordionTrigger>
 
         <AccordionContent>
-          <div className="rounded-lg border border-gray-200">
+          <div className="rounded-xl overflow-hidden border border-gray-200">
             {/* Header */}
             <div className="grid grid-cols-[32px_1fr_1fr_45px] items-center gap-2 border-b border-gray-200 bg-muted/40 px-2 py-2 text-xs font-medium text-muted-foreground">
               <span className="text-center">#</span>

@@ -7,17 +7,24 @@ import {
   type WizardStepKey,
 } from "./TemplateStepIndicator";
 import { TemplateSetupStep } from "./TemplateSetupStep";
-import { useTemplateStore } from "../../store/template-builder.store";
+// import { useTemplateStore } from "../../store/template-builder.store";
 import { mapTemplateToPayload } from "../../utils/template/mapper";
 import { whatsappTemplateService } from "../../services/whatsapp-template.service";
 import { useAuthStore } from "@/stores";
-import type { TemplateForm } from "../../types/template.type";
+// import type { TemplateForm } from "../../types/template.type";
 import { FormProvider } from "react-hook-form";
 import { useTemplateForm } from "../../hooks/useTemplateForm";
+import type { TemplateForm } from "../../validations/template.schema";
+import { ToastMessageService } from "@/services";
+import type { ApiError } from "@/types";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants";
 // import { useTemplateStore } from "../../store/template-builder.store";
 
 export const TemplateBuilder: React.FC = () => {
   const methods = useTemplateForm();
+  const taostService = new ToastMessageService();
+  const navigate = useNavigate();
 
   const [step, setStep] = useState<WizardStepKey>("setup");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,18 +37,25 @@ export const TemplateBuilder: React.FC = () => {
 
     console.log("payload", payload);
 
-    const response = await whatsappTemplateService.create(
-      String(accountId),
-      payload,
-    );
-
     try {
-      console.log("Template data");
-      // await api.createTemplate(templateData) — build payload from your store here
       setStep("review");
+      const response = await whatsappTemplateService.create(
+        String(accountId),
+        payload,
+      );
+
+      if (response?.status === 201 || response.status === 200) {
+        const message = response?.message || "Template created successfully";
+        taostService.success(message);
+
+        navigate(
+          `${ROUTES.DASHBOARD}/account/${accountId}/whatsapp/template-messages`,
+        );
+      }
     } catch (err) {
-      console.error(err);
-      // surface error to the user, e.g. toast
+      const error = err as ApiError;
+      if (error)
+        taostService.error(error.message || "Failed to create template");
     } finally {
       setIsSubmitting(false);
     }
@@ -65,9 +79,8 @@ export const TemplateBuilder: React.FC = () => {
         return null;
     }
   };
-
   return (
-    <section>
+    <section className="max-w-7xl mx-auto py-10 h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar">
       {/* <TemplateHeader /> */}
       <FormProvider {...methods}>
         <TemplateStepIndicator currentStep={step} />

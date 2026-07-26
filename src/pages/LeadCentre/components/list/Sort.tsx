@@ -20,7 +20,7 @@ const Sort = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
     <div className="absolute inset-0 z-50" onClick={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative mt-10 w-100 rounded-xl border border-primary/50 bg-white shadow-xl p-4"
+        className="relative mt-10 w-100 rounded-2xl border border-primary/50 bg-white shadow-xl p-4"
       >
         <div className="absolute -top-2 left-6 h-4 w-4 rotate-45 border-l border-t border-primary/50 bg-white" />
 
@@ -111,10 +111,10 @@ export default Sort;
 //           className="absolute inset-0 z-50 "
 //           onClick={() => setOpenSort(false)}
 //         >
-//           {/* <div onClick={(e) => e.stopPropagation()} className=" relative top-52 left-48 w-105 rounded-xl border border-primary bg-white shadow-xl p-4 -z-20"> */}
+//           {/* <div onClick={(e) => e.stopPropagation()} className=" relative top-52 left-48 w-105 rounded-2xl border border-primary bg-white shadow-xl p-4 -z-20"> */}
 //           <div
 //             onClick={(e) => e.stopPropagation()}
-//             className=" relative mt-10 w-105 rounded-xl border border-primary/50 bg-white shadow-xl p-4 -z-20"
+//             className=" relative mt-10 w-105 rounded-2xl border border-primary/50 bg-white shadow-xl p-4 -z-20"
 //           >
 //             <div>
 //               <div className="h-5.5 w-5.5 bg-white border-l border-t border-primary rotate-45 -mt-7" />

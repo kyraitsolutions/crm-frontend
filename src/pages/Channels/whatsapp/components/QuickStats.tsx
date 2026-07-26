@@ -22,7 +22,7 @@ export function QuickStats({ data }: Props) {
   const quality = data.qualityRating ?? "UNKNOWN";
 
   return (
-    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
       {/* Phone Number */}
       <StatCard
         title="Phone Number"

@@ -29,11 +29,11 @@ export default function WhyConnect() {
         {features.map(({ title, description, icon }) => (
           <div
             key={title}
-            className="relative bg-white/3 border border-primary/20 rounded-xl p-3.5 backdrop-blur-md overflow-hidden"
+            className="relative bg-white/3 border border-primary/20 rounded-2xl p-3.5 backdrop-blur-md overflow-hidden"
           >
             {/* top sheen */}
             <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/15 to-transparent" />
-            <div className="size-10 rounded-xl bg-primary/5 text-primary border border-primary/20 flex items-center justify-center mb-2.5">
+            <div className="size-10 rounded-2xl bg-primary/5 text-primary border border-primary/20 flex items-center justify-center mb-2.5">
               {icon}
             </div>
             <p className="text-gray-400 text-sm font-semibold mb-1 leading-snug">

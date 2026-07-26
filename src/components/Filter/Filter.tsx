@@ -99,9 +99,9 @@ const Filter = ({
       selectedDays !== undefined
         ? getDateRange({ days: selectedDays })
         : {
-            startDate: localFilters.startDate ?? "",
-            endDate: localFilters.endDate ?? "",
-          };
+          startDate: localFilters.startDate ?? "",
+          endDate: localFilters.endDate ?? "",
+        };
 
     onApply({
       source: localFilters.source,
@@ -134,7 +134,7 @@ const Filter = ({
     <div className="absolute inset-0 z-50" onClick={() => setOpenFilter(false)}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative mt-10 w-117 rounded-xl border border-primary/50 bg-white p-5 shadow-xl"
+        className="relative mt-10 w-117 rounded-2xl border border-primary/50 bg-white p-5 shadow-xl"
       >
         <div className="absolute -top-3 left-8 h-5.5 w-5.5 rotate-45 rounded-sm border-l border-t border-primary bg-white" />
 
@@ -151,11 +151,10 @@ const Filter = ({
                 <button
                   key={day}
                   onClick={() => setSelectedDays(day)}
-                  className={`flex-1 whitespace-nowrap rounded-xl border px-3 py-1.5 text-sm transition ${
-                    selectedDays === day
+                  className={`flex-1 whitespace-nowrap rounded-2xl border px-3 py-1.5 text-sm transition ${selectedDays === day
                       ? "border-primary bg-primary text-white"
                       : "hover:border-primary"
-                  }`}
+                    }`}
                 >
                   {day === 1 ? "Today's" : `${day} Days`}
                 </button>
@@ -167,14 +166,14 @@ const Filter = ({
                 type="date"
                 value={computedStartDate}
                 onChange={(e) => updateFilter("startDate", e.target.value)}
-                className="rounded-xl border px-3 py-2 text-sm"
+                className="rounded-2xl border px-3 py-2 text-sm"
               />
 
               <input
                 type="date"
                 value={computedEndDate}
                 onChange={(e) => updateFilter("endDate", e.target.value)}
-                className="rounded-xl border px-3 py-2 text-sm"
+                className="rounded-2xl border px-3 py-2 text-sm"
               />
             </div>
           </div>
@@ -183,7 +182,7 @@ const Filter = ({
             <select
               value={localFilters.status}
               onChange={(e) => updateFilter("status", e.target.value)}
-              className="w-full rounded-xl border px-3 py-2 text-sm"
+              className="w-full rounded-2xl border px-3 py-2 text-sm"
             >
               <option value="">All Status</option>
               {statusOptions.map((item) => (
@@ -196,7 +195,7 @@ const Filter = ({
             <select
               value={localFilters.source}
               onChange={(e) => updateFilter("source", e.target.value)}
-              className="w-full rounded-xl border px-3 py-2 text-sm"
+              className="w-full rounded-2xl border px-3 py-2 text-sm"
             >
               <option value="">All Sources</option>
               {sourceOptions.map((item) => (
@@ -213,7 +212,7 @@ const Filter = ({
                 <select
                   value={localFilters.stage}
                   onChange={(e) => updateFilter("stage", e.target.value)}
-                  className="w-full rounded-xl border px-3 py-2 text-sm"
+                  className="w-full rounded-2xl border px-3 py-2 text-sm"
                 >
                   <option value="">All Stages</option>
                   {stageOptions.map((item) => (
@@ -235,7 +234,7 @@ const Filter = ({
                       e.target.value === "" ? null : e.target.value === "true",
                     )
                   }
-                  className="w-full rounded-xl border px-3 py-2 text-sm"
+                  className="w-full rounded-2xl border px-3 py-2 text-sm"
                 >
                   <option value="">All</option>
                   <option value="true">Read</option>
@@ -248,7 +247,7 @@ const Filter = ({
           <div className="flex justify-end gap-2 pt-2">
             <button
               onClick={() => setOpenFilter(false)}
-              className="rounded-xl border px-4 py-1.5 text-sm"
+              className="rounded-2xl border px-4 py-1.5 text-sm"
             >
               Cancel
             </button>
@@ -256,7 +255,7 @@ const Filter = ({
             {hasActiveFilters && (
               <button
                 onClick={handleReset}
-                className="rounded-xl bg-primary px-4 py-1.5 text-sm text-white"
+                className="rounded-2xl bg-primary px-4 py-1.5 text-sm text-white"
               >
                 Reset
               </button>
@@ -264,7 +263,7 @@ const Filter = ({
 
             <button
               onClick={handleApplyFilter}
-              className="rounded-xl bg-primary px-4 py-1.5 text-sm text-white"
+              className="rounded-2xl bg-primary px-4 py-1.5 text-sm text-white"
             >
               Apply
             </button>

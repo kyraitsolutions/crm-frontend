@@ -6,10 +6,10 @@ const ChatMessagebox = () => {
       <input
         type="text"
         placeholder="Type your message here..."
-        className="w-full bg-gray-100 text-sm rounded-xl py-5 px-3 focus:outline-none focus:ring-1 focus:ring-primary focus:ring-offset-0"
+        className="w-full bg-gray-100 text-sm rounded-2xl py-5 px-3 focus:outline-none focus:ring-1 focus:ring-primary focus:ring-offset-0"
       />
 
-      <button className="absolute right-13 bottom-11 rounded-xl  transform translate-1/2 text-white bg-primary p-3">
+      <button className="absolute right-13 bottom-11 rounded-2xl  transform translate-1/2 text-white bg-primary p-3">
         <MdSend size={20} />
       </button>
     </div>

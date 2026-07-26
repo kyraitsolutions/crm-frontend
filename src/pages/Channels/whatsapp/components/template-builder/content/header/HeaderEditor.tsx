@@ -53,7 +53,7 @@ export const HeaderEditor = () => {
   const canAddVariable = headerType === "Text" && headerVariables.length === 0;
 
   return (
-    <section className="rounded-xl border border-gray-200 space-y-3 p-2">
+    <section className="rounded-2xl border border-gray-200 space-y-3 px-5 py-3">
       <div className="flex items-center justify-between">
         <div>
           <span className="text-sm font-semibold text-gray-800">Header</span>
@@ -81,11 +81,11 @@ export const HeaderEditor = () => {
               setValue("headerType", value, { shouldValidate: true })
             }
           >
-            <SelectTrigger className="input-field">
+            <SelectTrigger className="input-field rounded-xl!">
               <SelectValue />
             </SelectTrigger>
 
-            <SelectContent>
+            <SelectContent className="rounded-xl!">
               {HEADER_TYPES.map((type) => (
                 <SelectItem key={type} value={type}>
                   {type}
@@ -101,7 +101,7 @@ export const HeaderEditor = () => {
               <Input
                 value={headerText}
                 maxLength={headerMaxLen}
-                className="input-field"
+                className="input-field rounded-xl!"
                 placeholder="Header text..."
                 onChange={(e) =>
                   setValue("headerText", e.target.value, {

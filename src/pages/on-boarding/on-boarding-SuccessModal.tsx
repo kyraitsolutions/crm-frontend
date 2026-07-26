@@ -39,7 +39,7 @@ export const OnboardingSuccessModal = ({ open, onContinue }: Props) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs">
-      <div className="w-full max-w-md mx-4 rounded-xl p-10 text-center flex flex-col items-center gap-5 bg-white border border-violet-100 shadow-2xl shadow-violet-200/50">
+      <div className="w-full max-w-md mx-4 rounded-2xl p-10 text-center flex flex-col items-center gap-5 bg-white border border-violet-100 shadow-2xl shadow-violet-200/50">
         {/* CONFETTI */}
         <div className="flex gap-2 text-2xl animate-bounce">🎉 ✨ 🚀</div>
 
@@ -88,12 +88,12 @@ export const OnboardingSuccessModal = ({ open, onContinue }: Props) => {
         </p>
 
         {/* ACTIONS */}
-        <Button onClick={onContinue} className="w-full rounded-xl bg-primary">
+        <Button onClick={onContinue} className="w-full rounded-2xl bg-primary">
           Go to Dashboard →
         </Button>
         {/* <button
           onClick={onContinue}
-          className="w-full py-3 rounded-xl text-sm font-semibold text-white bg--to-br from-violet-600 to-purple-500 shadow-lg shadow-violet-300/50 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet-300/60 transition-all duration-150 cursor-pointer"
+          className="w-full py-3 rounded-2xl text-sm font-semibold text-white bg--to-br from-violet-600 to-purple-500 shadow-lg shadow-violet-300/50 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet-300/60 transition-all duration-150 cursor-pointer"
         >
           Go to Dashboard →
         </button> */}
@@ -153,7 +153,7 @@ export const OnboardingSuccessModal = ({ open, onContinue }: Props) => {
 //         {/* ACTION */}
 //         <button
 //           onClick={onContinue}
-//           className="w-full bg-primary text-white py-3 rounded-xl font-medium hover:opacity-90 transition"
+//           className="w-full bg-primary text-white py-3 rounded-2xl font-medium hover:opacity-90 transition"
 //         >
 //           Go to Dashboard Now
 //         </button>

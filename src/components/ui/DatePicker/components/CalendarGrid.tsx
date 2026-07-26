@@ -21,7 +21,7 @@ export const CalendarGrid: React.FC<TCalendarGridProps> = ({
         {WEEK_DAYS.map((day) => (
           <div
             key={day}
-            className="py-2 w-full rounded-xl flex items-center justify-center bg-slate-600 text-white text-xs text-center font-medium"
+            className="py-2 w-full rounded-2xl flex items-center justify-center bg-slate-600 text-white text-xs text-center font-medium"
           >
             {day}
           </div>

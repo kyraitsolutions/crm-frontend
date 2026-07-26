@@ -1,4 +1,4 @@
-import type { TemplateButton } from "../../../../types/template.type";
+import type { TemplateButton } from "../../../../types/templates/template.type";
 import { CallToActionButtonEditor } from "./editors/CallToActionButtonEditor";
 import { QuickReplyButtonEditor } from "./editors/QuickReplyButtonEditor";
 // import { UrlButtonEditor } from "./editors/UrlButtonEditor";

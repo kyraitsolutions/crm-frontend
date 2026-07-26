@@ -9,7 +9,7 @@ import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-build
 import type {
   ButtonKind,
   TemplateButton,
-} from "@/pages/Channels/whatsapp/types/template.type";
+} from "@/pages/Channels/whatsapp/types/templates/template.type";
 
 interface Props {
   button: TemplateButton;
@@ -58,11 +58,11 @@ export function TypeOfActionField({ button }: Props) {
           changeButtonKind(button.id, value as ButtonKind)
         }
       >
-        <SelectTrigger className="input-field">
+        <SelectTrigger className="input-field rounded-xl!">
           <SelectValue />
         </SelectTrigger>
 
-        <SelectContent>
+        <SelectContent className="rounded-xl!">
           {CTA_OPTIONS.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}

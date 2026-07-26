@@ -7,10 +7,13 @@ const SettingLayout = () => {
     <div className="flex">
       {/* <AppSidebar /> */}
 
-      <main className="w-full">
+      <main className="w-full ">
         {/* <SiteHeader /> */}
         <Header />
-        <Outlet />
+        <div className="h-[calc(100vh-64px)] overflow-hidden ">
+          <Outlet />
+
+        </div>
       </main>
     </div>
   );

@@ -78,7 +78,7 @@ export function LeadFormPage() {
     ({ row, accountId }: { row: ILeadFormListItem; accountId: string }) => (
       <div className="flex gap-1.5">
         <Link
-          className="rounded-xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-[#166534]
+          className="rounded-2xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-[#166534]
                 transition-all
                 hover:bg-[#16A34A]/10
                 hover:border-[#16A34A]/50"
@@ -87,7 +87,7 @@ export function LeadFormPage() {
           <Eye size={16} />
         </Link>
         <Link
-          className="rounded-xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-[#166534]
+          className="rounded-2xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-[#166534]
                 transition-all
                 hover:bg-[#16A34A]/10
                 hover:border-[#16A34A]/50"
@@ -96,7 +96,7 @@ export function LeadFormPage() {
           <Edit size={16} />
         </Link>
         <button
-          className="rounded-xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-red-400
+          className="rounded-2xl border border-[#16A34A]/30 bg-[#16A34A]/5 p-1 text-sm font-medium text-red-400
                 transition-all
                 hover:bg-[#16A34A]/10
                 hover:border-[#16A34A]/50 cursor-pointer"
@@ -239,7 +239,7 @@ export function LeadFormPage() {
           max-h-[calc(100vh-270px)]
           sm:max-h-[calc(100vh-220px)]
           border border-[rgba(50,45,43,0.12)]
-          rounded-xl
+          rounded-2xl
           shadow-none
         "
             loading={loading}

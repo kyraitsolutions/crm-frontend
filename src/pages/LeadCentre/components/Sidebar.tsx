@@ -38,7 +38,7 @@
 //                             {item}
 
 //                             {(counts[item] ?? 0) > 0 && (
-//                                 <span className="bg-primary/20 px-2 py-px rounded-xl ml-2 text-primary text-xs min-w-5.5 text-center">
+//                                 <span className="bg-primary/20 px-2 py-px rounded-2xl ml-2 text-primary text-xs min-w-5.5 text-center">
 //                                     {counts[item]}
 //                                 </span>
 //                             )}

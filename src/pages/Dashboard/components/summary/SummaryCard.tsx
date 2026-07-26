@@ -15,7 +15,7 @@ const DashboardSummaryCard = ({ card, filters }: DashboardSummaryCardProps) => {
   }));
 
   return (
-    <div className={`rounded-xl border border-gray-200 p-3 bg-white flex-1`}>
+    <div className={`rounded-2xl border border-gray-200 p-3 bg-white flex-1`}>
       <div className="flex items-start">
         <div className="flex md:flex-row flex-col md:items-start items-center md:gap-6 gap-1.5">
           <div

@@ -7,7 +7,7 @@ const EmptyFlowState = () => {
 
   return (
     <div className="flex justify-center items-start min-h-screen bg-primary/10">
-      <div className="w-full max-w-lg border rounded-xl bg-card p-10 shadow-sm mt-12">
+      <div className="w-full max-w-lg border rounded-2xl bg-card p-10 shadow-sm mt-12">
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center justify-center size-20 rounded-2xl bg-muted">
             <Workflow className="size-10 text-muted-foreground" />

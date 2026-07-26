@@ -15,11 +15,11 @@ const ImageMessage = ({ message }: TImageMessageProps) => {
   return (
     <div>
       {/* IMAGE */}
-      <div className="overflow-hidden rounded-xl">
+      <div className="overflow-hidden rounded-2xl">
         <img
           src={imageLink}
           alt={caption || "image"}
-          className="w-full h-auto object-cover rounded-xl"
+          className="w-full h-auto object-cover rounded-2xl"
         />
       </div>
 

@@ -96,7 +96,7 @@ export function SiteHeader() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search anything..."
-                  className="bg-gray-100 text-sm rounded-xl w-full py-2 px-3 focus:outline-none focus:ring-offset-2"
+                  className="bg-gray-100 text-sm rounded-2xl w-full py-2 px-3 focus:outline-none focus:ring-offset-2"
                 />
               </div>
             )}

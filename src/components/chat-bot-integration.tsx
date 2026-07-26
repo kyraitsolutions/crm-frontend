@@ -65,7 +65,7 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
             {/* Header */}
             <div className="flex flex-col max-w-2xl">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50">
+                <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-indigo-50">
                   <Code2
                     className="h-4.5 w-4.5 text-indigo-600"
                     strokeWidth={2}
@@ -117,8 +117,8 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
                   type="button"
                   onClick={() => handleCopy(scriptCode, 1)}
                   className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium shadow-sm transition-colors cursor-pointer ${copiedId === 1
-                      ? "bg-green-600 text-white"
-                      : "bg-slate-900 text-white hover:bg-slate-700"
+                    ? "bg-green-600 text-white"
+                    : "bg-slate-900 text-white hover:bg-slate-700"
                     }`}
                 >
                   {copiedId === 1 ? (
@@ -135,7 +135,7 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
                 </button>
               </div>
 
-              <div className="overflow-hidden rounded-xl border border-slate-800/50 shadow-sm">
+              <div className="overflow-hidden rounded-2xl border border-slate-800/50 shadow-sm">
                 <SyntaxHighlighter
                   language="jsx"
                   style={oneDark}
@@ -161,8 +161,8 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
                   type="button"
                   onClick={() => handleCopy(scriptCode2, 2)}
                   className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium shadow-sm transition-colors cursor-pointer ${copiedId === 2
-                      ? "bg-green-600 text-white"
-                      : "bg-slate-900 text-white hover:bg-slate-700"
+                    ? "bg-green-600 text-white"
+                    : "bg-slate-900 text-white hover:bg-slate-700"
                     }`}
                 >
                   {copiedId === 2 ? (
@@ -179,7 +179,7 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
                 </button>
               </div>
 
-              <div className="overflow-hidden rounded-xl border border-slate-800/50 shadow-sm">
+              <div className="overflow-hidden rounded-2xl border border-slate-800/50 shadow-sm">
                 <SyntaxHighlighter
                   language="html"
                   style={oneDark}
@@ -315,7 +315,7 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
 //                 style={oneDark}
 //                 wrapLines
 //                 showLineNumbers
-//                 className="rounded-xl overflow-auto"
+//                 className="rounded-2xl overflow-auto"
 //               >
 //                 {scriptCode}
 //               </SyntaxHighlighter>
@@ -340,7 +340,7 @@ export default function ChatbotIntegration({ setActiveTab }: any) {
 //                 style={oneDark}
 //                 wrapLines
 //                 showLineNumbers
-//                 className="rounded-xl overflow-auto"
+//                 className="rounded-2xl overflow-auto"
 //               >
 //                 {scriptCode2}
 //               </SyntaxHighlighter>

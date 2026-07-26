@@ -68,7 +68,7 @@ const activities = [
 
 const ActivityCard = () => {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 h-full">
+    <div className="bg-white border border-gray-200 rounded-2xl p-5 h-full">
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-lg font-semibold text-gray-900">Live Activity</h2>
       </div>

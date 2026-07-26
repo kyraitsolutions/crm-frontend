@@ -79,7 +79,7 @@ const PermissionManager: React.FC<PermissionManagerProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-700">
+    <div className="h-[calc(100vh-114px)] overflow-y-scroll hide-scrollbar bg-gray-50 text-slate-700">
       {/* HEADER */}
       <header className="flex items-center justify-between bg-white px-6 py-4 border-b">
         <div className="flex items-center gap-3">

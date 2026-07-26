@@ -209,7 +209,7 @@ export default function LeadFormNew() {
                 sticky top-44
                 z-50
                 inline-flex items-center gap-2
-                rounded-xl border border-[#16A34A]/30
+                rounded-2xl border border-[#16A34A]/30
                 bg-[#16A34A]/5 px-3 py-1.5
                 text-sm font-medium text-[#166534]
                 transition-all
@@ -539,7 +539,7 @@ export default function LeadFormNew() {
                       <Input
                         placeholder="Name"
                         disabled
-                        className="rounded-xl"
+                        className="rounded-2xl"
                       />
                     )}
 
@@ -547,7 +547,7 @@ export default function LeadFormNew() {
                       <Input
                         placeholder="Phone Number"
                         disabled
-                        className="rounded-xl"
+                        className="rounded-2xl"
                       />
                     )}
 
@@ -555,7 +555,7 @@ export default function LeadFormNew() {
                       <Input
                         placeholder="Email"
                         disabled
-                        className="rounded-xl"
+                        className="rounded-2xl"
                       />
                     )}
 
@@ -563,7 +563,7 @@ export default function LeadFormNew() {
                       <Textarea
                         placeholder="Message"
                         disabled
-                        className="rounded-xl"
+                        className="rounded-2xl"
                       />
                     )}
 
@@ -574,7 +574,7 @@ export default function LeadFormNew() {
                             key={i}
                             placeholder={f.label || "Custom Field"}
                             disabled
-                            className="rounded-xl"
+                            className="rounded-2xl"
                           />
                         ),
                     )}

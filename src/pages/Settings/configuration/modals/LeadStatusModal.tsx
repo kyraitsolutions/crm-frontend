@@ -86,7 +86,7 @@ const LeadStatusModal = ({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogOverlay className="bg-black/10 backdrop-blur-[2px]" />
-      <DialogContent className="max-w-xl! w-full rounded-xl border-0 p-4">
+      <DialogContent className="max-w-xl! w-full rounded-2xl border-0 p-4">
         {/* HEADER */}
         <DialogHeader className="border-b">
           <DialogTitle className="text-xl font-semibold text-[#111827]">
@@ -121,7 +121,7 @@ const LeadStatusModal = ({
                 Generated Key
               </label>
 
-              <div className="flex h-10 border p-2 text-gray-400 rounded-xl">
+              <div className="flex h-10 border p-2 text-gray-400 rounded-2xl">
                 {generatedKey || "status_key"}
               </div>
 
@@ -153,10 +153,9 @@ const LeadStatusModal = ({
                     size-9
                     rounded-full
                     transition-all
-                    ${
-                      form.color === color
-                        ? "scale-110 ring-4 ring-offset-2 ring-[#D1FAE5]"
-                        : ""
+                    ${form.color === color
+                      ? "scale-110 ring-4 ring-offset-2 ring-[#D1FAE5]"
+                      : ""
                     }
                   `}
                   style={{
@@ -191,7 +190,7 @@ const LeadStatusModal = ({
                   h-12
                   w-16
                   cursor-pointer
-                  rounded-xl
+                  rounded-2xl
                   border
                   border-[#E5E7EB]
                   bg-transparent
@@ -230,7 +229,7 @@ const LeadStatusModal = ({
             <Button
               type="button"
               onClick={onClose}
-              className="rounded-xl actions-btn px-5!"
+              className="rounded-2xl actions-btn px-5!"
             >
               Cancel
             </Button>
@@ -239,7 +238,7 @@ const LeadStatusModal = ({
               type="button"
               onClick={handleSubmit}
               disabled={!form.label.trim() || isSubmitting}
-              className="rounded-xl"
+              className="rounded-2xl"
             >
               {initialData ? <Save /> : <Plus />}
               {initialData ? "Save Changes" : "Create Status"}
@@ -343,7 +342,7 @@ export default LeadStatusModal;
 //                 }))
 //               }
 //               placeholder="Interested"
-//               className="h-11 w-full rounded-xl border border-[#E5E7EB] px-4 outline-none"
+//               className="h-11 w-full rounded-2xl border border-[#E5E7EB] px-4 outline-none"
 //             />
 //           </div>
 
@@ -362,7 +361,7 @@ export default LeadStatusModal;
 //                 }))
 //               }
 //               placeholder="interested"
-//               className="h-11 w-full rounded-xl border border-[#E5E7EB] px-4 outline-none"
+//               className="h-11 w-full rounded-2xl border border-[#E5E7EB] px-4 outline-none"
 //             />
 //           </div>
 

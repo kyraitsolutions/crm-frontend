@@ -120,7 +120,7 @@ const ConversationStatusSection = () => {
       key: "order",
       title: "Order",
       render: (value: number) => (
-        <div className="flex h-10 w-14 items-center justify-center rounded-xl border border-[#E5E7EB] text-sm font-medium">
+        <div className="flex h-10 w-14 items-center justify-center rounded-2xl border border-[#E5E7EB] text-sm font-medium">
           {value}
         </div>
       ),
@@ -202,7 +202,7 @@ const ConversationStatusSection = () => {
             </p>
           </div>
 
-          <Button onClick={handleCreate} className="actions-btn p-2!">
+          <Button onClick={handleCreate} className="actions-btn flex items-center gap-2! px-4! py-2! rounded-xl!">
             + Add Status
           </Button>
         </div>

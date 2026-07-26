@@ -131,6 +131,7 @@ export const useLeadsStore = create<ILeadsStoreState>((set, get) => ({
   fetchLeads: async (accountId) => {
     const { currentPage, leadQuery } = get();
 
+    console.log(currentPage)
     try {
       set({
         loadingLeads: true,

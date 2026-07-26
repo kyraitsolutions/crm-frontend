@@ -2,7 +2,7 @@ import { mapHeader } from "./header.mapper";
 import { mapBody } from "./body.mapper";
 import { mapFooter } from "./footer.mapper";
 import { mapButtons } from "./button.mapper";
-import type { TemplateState } from "../../../types/template.type";
+import type { TemplateState } from "../../../types/templates/template.type";
 
 export const mapTemplateToPayload = (state: TemplateState) => {
   const components = [

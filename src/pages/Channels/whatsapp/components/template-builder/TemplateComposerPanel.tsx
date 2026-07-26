@@ -171,7 +171,7 @@
 //   return (
 //     <div className="flex flex-col gap-5">
 //       {/* ── Header ─────────────────────────────────────── */}
-//       <section className="border border-gray-200 rounded-xl p-4">
+//       <section className="border border-gray-200 rounded-2xl p-4">
 //         <div className="flex items-center justify-between mb-3">
 //           <div>
 //             <span className="font-semibold text-sm text-gray-800">Header</span>
@@ -245,7 +245,7 @@
 //       </section>
 
 //       {/* ── Body ───────────────────────────────────────── */}
-//       <section className="border border-gray-200 rounded-xl p-4">
+//       <section className="border border-gray-200 rounded-2xl p-4">
 //         <div className="flex items-center justify-between mb-3">
 //           <span className="font-semibold text-sm text-gray-800">Body</span>
 //           <button
@@ -292,7 +292,7 @@
 //       </section>
 
 //       {/* ── Footer ─────────────────────────────────────── */}
-//       <section className="border border-gray-200 rounded-xl p-4">
+//       <section className="border border-gray-200 rounded-2xl p-4">
 //         <div className="flex items-center justify-between mb-3">
 //           <div>
 //             <span className="font-semibold text-sm text-gray-800">Footer</span>
@@ -315,7 +315,7 @@
 //       </section>
 
 //       {/* ── Buttons ────────────────────────────────────── */}
-//       <section className="border border-gray-200 rounded-xl p-4">
+//       <section className="border border-gray-200 rounded-2xl p-4">
 //         <div className="flex items-center justify-between mb-1">
 //           <div>
 //             <span className="font-semibold text-sm text-gray-800">Buttons</span>

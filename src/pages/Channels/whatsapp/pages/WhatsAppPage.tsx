@@ -68,13 +68,13 @@ export const Whatsapp = () => {
   }
 
   return (
-    <main>
-      {/* {integration?.connected ? (
+    <main className="h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar py-10">
+      {integration?.connected ? (
         <WhatsAppWorkspace />
       ) : (
         <WhatsappConnect onConnect={handleWhatsAppConnect} />
-      )} */}
-      <TemplatesPage />
+      )}
+      {/* <TemplatesPage /> */}
     </main>
   );
 };

@@ -103,10 +103,10 @@ export const Instagram = () => {
   );
 };
 
-export const Whatsapp = () => {
+export const Whatsapp = ({ h = "14px", w = "16px" }: { h: string, w: string }) => {
   return (<svg
-    width="16px"
-    height="14px"
+    width={w}
+    height={h}
     viewBox="0 0 48 48"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"

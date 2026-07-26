@@ -20,7 +20,7 @@ interface BusinessCardProps {
 
 export const BusinessCard = ({ data }: BusinessCardProps) => {
   return (
-    <GlassCard className="p-5 space-y-4">
+    <GlassCard className="p-5 space-y-4 rounded-2xl">
       {/* ── Section 1: Business Information ── */}
       <div>
         <div className="mb-3 flex items-center justify-between">

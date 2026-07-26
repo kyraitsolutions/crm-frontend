@@ -43,7 +43,7 @@ const Toolbar = () => {
         <div className="relative">
           <ButtonWithTitle
             onClick={() => setOpenFilter((prev) => !prev)}
-            className="flex items-center gap-2 rounded-xl px-3 py-1.5 transition hover:bg-gray-100"
+            className="flex items-center gap-2 rounded-2xl px-3 py-1.5 transition hover:bg-gray-100"
           >
             <Funnel size={16} />
             <span className="text-sm font-medium">Filter</span>
@@ -56,7 +56,7 @@ const Toolbar = () => {
         <div className="relative">
           <ButtonWithTitle
             onClick={() => setOpenSort((prev) => !prev)}
-            className="flex items-center gap-2 rounded-xl px-3 py-1.5 transition hover:bg-gray-100 hover:text-black"
+            className="flex items-center gap-2 rounded-2xl px-3 py-1.5 transition hover:bg-gray-100 hover:text-black"
           >
             <ArrowUpDown size={16} />
             <span className="text-sm font-medium">Sort</span>
@@ -90,7 +90,7 @@ const Toolbar = () => {
 
       {/* Actions */}
       <div className="flex items-center gap-4">
-        <div className="relative flex rounded-xl shadow-sm">
+        <div className="relative flex rounded-2xl shadow-sm">
           <Button
             onClick={() => navigate(LEADS_ROUTES.CREATE)}
             className="actions-btn rounded-none! rounded-l-xl! border-r-0! pr-2! border-white! py-1.5 bg-primary! text-white!"
@@ -107,7 +107,7 @@ const Toolbar = () => {
           </Button>
 
           {openDropdown && (
-            <div className="absolute left-0 top-8 z-50 w-fit rounded-xl border bg-white shadow-lg">
+            <div className="absolute left-0 top-8 z-50 w-fit rounded-2xl border bg-white shadow-lg">
               <button
                 onClick={() => {
                   navigate(LEADS_ROUTES.IMPORT);
@@ -134,7 +134,7 @@ const Toolbar = () => {
         </div>
         <ButtonWithTitle
           title="Actions"
-          className="h-7 w-10 border rounded-xl flex items-center justify-center text-gray-600 hover:bg-gray-100 transition"
+          className="h-7 w-10 border rounded-2xl flex items-center justify-center text-gray-600 hover:bg-gray-100 transition"
         >
           <Ellipsis size={16} />
         </ButtonWithTitle>
@@ -194,7 +194,7 @@ export default Toolbar;
 //         <div className="relative">
 //           <ButtonWithTitle
 //             onClick={() => setOpenFilter(!openFilter)}
-//             className="flex items-center gap-2 rounded-xl px-3 py-1.5 hover:bg-gray-100 transition"
+//             className="flex items-center gap-2 rounded-2xl px-3 py-1.5 hover:bg-gray-100 transition"
 //           >
 //             <Funnel size={16} />
 //             <span className="text-sm font-medium">Filter</span>
@@ -208,7 +208,7 @@ export default Toolbar;
 //         <div className="relative">
 //           <ButtonWithTitle
 //             onClick={() => setOpenSort(!openSort)}
-//             className="flex items-center gap-2 rounded-xl px-3 py-1.5 hover:text-black hover:bg-gray-100 transition"
+//             className="flex items-center gap-2 rounded-2xl px-3 py-1.5 hover:text-black hover:bg-gray-100 transition"
 //           >
 //             <ArrowUpDown size={16} />
 //             <span className="text-sm font-medium">Sort</span>
@@ -251,7 +251,7 @@ export default Toolbar;
 //       </div>
 
 //       <div className="flex gap-4 items-center">
-//         <div className="relative flex rounded-xl! shadow-sm">
+//         <div className="relative flex rounded-2xl! shadow-sm">
 //           <Button
 //             onClick={() => navigate(`${LEADS_ROUTES.CREATE}`)}
 //             className="actions-btn px-2! py-1.5! rounded-none! rounded-l-xl!  hover:bg-primary! duration-500 hover:text-white!"
@@ -267,21 +267,21 @@ export default Toolbar;
 //           </Button>
 
 //           {openDropdown && (
-//             <div className="absolute inset-0 top-9.5 rounded-xl! left-0 bg-white z-50 w-fit">
+//             <div className="absolute inset-0 top-9.5 rounded-2xl! left-0 bg-white z-50 w-fit">
 //               <div
 //                 onClick={() => navigate(`${LEADS_ROUTES.IMPORT}`)}
-//                 className="bg-white w-full p-2 rounded-xl border"
+//                 className="bg-white w-full p-2 rounded-2xl border"
 //               >
-//                 <button className="text-sm text-start px-3 py-1.5 hover:bg-gray-100 w-full rounded-xl">
+//                 <button className="text-sm text-start px-3 py-1.5 hover:bg-gray-100 w-full rounded-2xl">
 //                   Import Lead
 //                 </button>
-//                 <button className="text-sm  text-start px-3 py-1.5 hover:bg-gray-100 w-full rounded-xl">
+//                 <button className="text-sm  text-start px-3 py-1.5 hover:bg-gray-100 w-full rounded-2xl">
 //                   Import Notes
 //                 </button>
-//                 <button className="text-sm  text-start px-3 py-1.5 hover:bg-gray-100 w-full whitespace-nowrap rounded-xl">
+//                 <button className="text-sm  text-start px-3 py-1.5 hover:bg-gray-100 w-full whitespace-nowrap rounded-2xl">
 //                   Sync Facebook Ads
 //                 </button>
-//                 <button className="text-sm  text-start px-3 py-1.5 hover:bg-gray-100 w-full rounded-xl">
+//                 <button className="text-sm  text-start px-3 py-1.5 hover:bg-gray-100 w-full rounded-2xl">
 //                   Sync Linkedin Ads
 //                 </button>
 //               </div>
@@ -292,7 +292,7 @@ export default Toolbar;
 //         {/* More Menu */}
 //         {/* <ButtonWithTitle
 //           title="Actions"
-//           className="h-9 w-13 border rounded-xl flex items-center justify-center text-gray-600 hover:bg-gray-100 transition"
+//           className="h-9 w-13 border rounded-2xl flex items-center justify-center text-gray-600 hover:bg-gray-100 transition"
 //         >
 //           <Ellipsis size={20} />
 //         </ButtonWithTitle> */}

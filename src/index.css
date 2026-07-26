@@ -346,15 +346,15 @@ body {
 }
 
 .actions-btn{
-  @apply focus-visible:border-primary/60  rounded-xl border border-primary/30 bg-primary/5 p-1 text-sm font-medium text-primary transition-all hover:bg-primary/10 hover:border-primary/5 cursor-pointer 
+  @apply focus-visible:border-primary/60  rounded-2xl border border-primary/30 bg-primary/5 p-1 text-sm font-medium text-primary transition-all hover:bg-primary/10 hover:border-primary/5 cursor-pointer 
 }
 
 .input-field{
-  @apply focus-visible:ring-0 focus-visible:border-primary/40 border-primary/30 rounded-xl
+  @apply focus-visible:ring-0 focus-visible:border-primary/40 border-primary/30 rounded-2xl
 }
 
 .node-setting-header-types{
-  @apply px-3 py-1 text-xs hover:bg-emerald-500 rounded-xl hover:text-white transition cursor-pointer
+  @apply px-3 py-1 text-xs hover:bg-emerald-500 rounded-2xl hover:text-white transition cursor-pointer
 }
 
 .node-setting-input-field{
@@ -362,7 +362,7 @@ body {
 }
 
 .node-setting-footer-btns{
-  @apply py-2! border border-white/60 bg-transparent hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-300 rounded-xl
+  @apply py-2! border border-white/60 bg-transparent hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-300 rounded-2xl
 }
 .node-setting-footer-btns-save{
   @apply bg-primary text-white hover:bg-primary/90 border-none

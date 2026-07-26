@@ -113,7 +113,7 @@ const AutomationSection: React.FC = () => {
         </div>
         <Button
           onClick={() => setIsCreating(true)}
-          className="actions-btn py-2! px-4!"
+          className="actions-btn flex items-center gap-2! px-4! py-2! rounded-xl!"
         >
           <Plus className="size-4" /> Create Automation
         </Button>

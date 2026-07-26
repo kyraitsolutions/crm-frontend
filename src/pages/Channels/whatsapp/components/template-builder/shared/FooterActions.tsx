@@ -64,7 +64,7 @@ export const FooterActions = ({
 //       ) : (
 //         <span />
 //       )}
-//       <Button onClick={onNext} className="rounded-xl py-2!">
+//       <Button onClick={onNext} className="rounded-2xl py-2!">
 //         Next
 //       </Button>
 //     </div>

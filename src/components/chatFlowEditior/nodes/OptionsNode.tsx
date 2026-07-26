@@ -1,6 +1,6 @@
 export function OptionsNode({ data }: any) {
   return (
-    <div className="bg-white border border-gray-400 rounded-md p-3 w-60 shadow-sm">
+    <div className="bg-white border border-gray-400 rounded-xl p-3 w-60 shadow-sm">
       <h4 className="font-bold mb-2 text-sm">Question Node</h4>
       <input
         className="w-full text-xs border rounded p-1 mb-1"

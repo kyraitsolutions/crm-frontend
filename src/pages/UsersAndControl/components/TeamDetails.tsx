@@ -129,18 +129,18 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
             {isEditing ? (
               <div className="grid grid-cols-2 gap-2">
                 <Input
-                  className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl"
+                  className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-2xl"
                   value={formData.firstName}
                   onChange={(e) => handleChange("firstName", e.target.value)}
                 />
                 <Input
-                  className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl"
+                  className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-2xl"
                   value={formData.lastName}
                   onChange={(e) => handleChange("lastName", e.target.value)}
                 />
 
                 <Select value={selectedRole} onValueChange={setSelectedRole}>
-                  <SelectTrigger className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl w-full">
+                  <SelectTrigger className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-2xl w-full">
                     <SelectValue placeholder="Select Role" />
                   </SelectTrigger>
 
@@ -156,7 +156,7 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
                 </Select>
 
                 <Input
-                  className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl"
+                  className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-2xl"
                   value={formData.email}
                   onChange={(e) => handleChange("email", e.target.value)}
                 />
@@ -198,7 +198,7 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
           <Phone size={16} className="text-gray-400" />
           {isEditing ? (
             <Input
-              className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl"
+              className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-2xl"
               placeholder="Mobile"
               value={formData.phone}
               onChange={(e) => handleChange("phone", e.target.value)}
@@ -222,7 +222,7 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
         </h3>
 
         {isEditing ? (
-          <div className="border rounded-xl divide-y">
+          <div className="border rounded-2xl divide-y">
             {accounts.map((acc: any) => {
               const selected = selectedAccounts.find(
                 (a) => a.accountId === acc.id,
@@ -251,7 +251,7 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
                         value={selected.roleId}
                         onValueChange={(val) => handleRoleChange(acc.id, val)}
                       >
-                        <SelectTrigger className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-xl w-full">
+                        <SelectTrigger className="focus-visible:ring-0 focus-visible:border-primary/60 border-primary/60 rounded-2xl w-full">
                           <SelectValue placeholder="Role" />
                         </SelectTrigger>
 

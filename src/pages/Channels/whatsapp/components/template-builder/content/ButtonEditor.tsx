@@ -4,7 +4,7 @@ import { ButtonsList } from "../ui/buttons/ButtonList";
 
 export const ButtonsEditor = () => {
   return (
-    <section className="rounded-xl border border-gray-200 p-4">
+    <section className="rounded-2xl border border-gray-200 px-5 py-3">
       <div>
         <div className="flex items-center justify-between">
           <div>

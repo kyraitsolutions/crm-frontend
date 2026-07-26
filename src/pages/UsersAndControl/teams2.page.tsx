@@ -108,7 +108,7 @@ const Teams = () => {
       teamStoreManager.setTeams(res.data.docs);
 
       if (res.data.docs.length > 0) {
-        setSelectedUser(res.data.docs[0]);
+        // setSelectedUser(res.data.docs[0]);
       }
     } catch (err) {
       console.log(err);
@@ -145,10 +145,10 @@ const Teams = () => {
       {!teams || teams.length === 0 ? (
         <CreateTeamMemberModal onCreate={() => setOpenAdd(true)} />
       ) : (
-        <div className="grid grid-cols-2 gap-4 bg-white">
+        <div className="grid grid-cols-2 gap-4 bg-white mx-24  py-10">
           {/* LEFT SIDE */}
-          <div className="border-r">
-            <div className="flex justify-between items-center p-4">
+          <div className="">
+            <div className="flex justify-between items-center mb-5">
               <h2 className="font-semibold">Team Members</h2>
 
               {hasPermission(user?.permissions, "teams.create") && (
@@ -167,6 +167,7 @@ const Teams = () => {
             />
           </div>
 
+
           {/* RIGHT SIDE */}
           <div className="p-4">
             {selectedUser ? (
@@ -179,9 +180,17 @@ const Teams = () => {
                 editLoading={editLoading}
               />
             ) : (
-              <p>Select user</p>
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  No User Selected
+                </h3>
+                <p className="mt-2 max-w-md text-sm text-gray-500">
+                  Select a user from the sidebar to view, manage, and create WhatsApp templates.
+                </p>
+              </div>
             )}
           </div>
+
         </div>
       )}
 

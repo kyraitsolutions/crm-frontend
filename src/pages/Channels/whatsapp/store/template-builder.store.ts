@@ -3,7 +3,7 @@ import type {
   TemplateState,
   TemplateVariable,
   VariableType,
-} from "../types/template.type";
+} from "../types/templates/template.type";
 import { generateId } from "@/utils/generateId.utils";
 import { createButton } from "../utils/template/template.utils";
 

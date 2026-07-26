@@ -121,7 +121,7 @@ const NotificationProvider = ({ children }: Props) => {
                   <button
                     onClick={requestPermission}
                     disabled={loading}
-                    className="inline-flex h-10 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-white transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
+                    className="inline-flex h-10 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-medium text-white transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
                   >
                     {loading ? (
                       <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -135,7 +135,7 @@ const NotificationProvider = ({ children }: Props) => {
 
                   <button
                     onClick={handleClose}
-                    className="inline-flex h-10 items-center justify-center rounded-xl border border-gray-200 bg-white px-5 text-sm font-medium text-gray-600 transition hover:bg-gray-50 cursor-pointer"
+                    className="inline-flex h-10 items-center justify-center rounded-2xl border border-gray-200 bg-white px-5 text-sm font-medium text-gray-600 transition hover:bg-gray-50 cursor-pointer"
                   >
                     Maybe Later
                   </button>

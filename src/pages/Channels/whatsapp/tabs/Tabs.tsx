@@ -8,7 +8,7 @@ export function Tabs() {
   const { activeTab, setActiveTab } = useWhatsAppStore((state) => state);
 
   return (
-    <div className="border-b border-white/[0.07] bg-slate-900 w-full rounded-xl">
+    <div className="border-b border-white/[0.07] bg-slate-900 w-full rounded-2xl">
       <div className="flex items-stretch overflow-x-auto">
         {TABS.map((tab) => {
           const Icon = getIcons(tab.key as WhatsAppTab);
@@ -19,10 +19,9 @@ export function Tabs() {
               key={tab.key}
               onClick={() => setActiveTab(tab.key as WhatsAppTab)}
               className={`relative flex items-center gap-1 px-8! py-4 text-sm font-medium tracking-wide whitespace-nowrap border-b-2 bg-transparent
-                ${
-                  isActive
-                    ? "text-white border-primary bg-primary/10!"
-                    : "text-slate-400 border-transparent hover:text-slate-200 hover:bg-white/4"
+                ${isActive
+                  ? "text-white border-primary bg-primary/10!"
+                  : "text-slate-400 border-transparent hover:text-slate-200 hover:bg-white/4"
                 }
               `}
             >

@@ -54,7 +54,7 @@ export function HeaderMediaPreview({
   };
 
   return (
-    <div className="space-y-4 rounded-xl border p-4">
+    <div className="space-y-4 rounded-2xl border p-4">
       {renderPreview()}
 
       <div className="flex items-center justify-between">

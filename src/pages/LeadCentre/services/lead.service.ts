@@ -42,6 +42,12 @@ export class LeadService extends ApiService {
   ): Promise<ApiResponse<ILead>> {
     return this.post(`/account/${accountId}/lead`, payload);
   }
+  createBulkLead(
+    accountId: string,
+    payload: ICreateLead | ICreateLead[],
+  ): Promise<ApiResponse<ILead>> {
+    return this.post(`/account/${accountId}/lead/bulk-write`, payload);
+  }
 
   updateLead(
     accountId: string,
@@ -90,6 +96,10 @@ export class LeadService extends ApiService {
       (payload as any)[crmField] = trimmed;
     }
 
+    // ensure source.name is set properly instead of using an invalid dotted key
+    (payload as any).source ??= {};
+    (payload as any).source.name = "import";
+
     return payload;
   }
 
@@ -101,8 +111,10 @@ export class LeadService extends ApiService {
     const payloads = csvRows
       .map((row) => this.buildLeadPayload(row, mapping))
       .filter((payload) => Object.keys(payload).length > 0);
+      console.log(payloads); 
 
-    return this.createLead(accountId, payloads);
+    return payloads;    
+      // return this.createLead(accountId, payloads);
   }
 }
 

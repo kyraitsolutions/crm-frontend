@@ -107,7 +107,7 @@ export default TextMessage;
 //       >
 //         {/* REPLY CONTEXT */}
 //         {repliedContext && (
-//           <div className="rounded-xl border border-black/10  px-3 py-2 text-xs">
+//           <div className="rounded-2xl border border-black/10  px-3 py-2 text-xs">
 //             <div className="flex items-center gap-1 opacity-60 mb-1">
 //               <Reply size={12} />
 //               <span>Replying to</span>

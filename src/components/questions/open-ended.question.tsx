@@ -68,7 +68,7 @@ export default OpenEnded;
 //               onChange={(e) => onChange(e.target.value)}
 //               onKeyDown={handleKeyDown}
 //               placeholder={question.placeholder}
-//               className="min-h-[150px] text-lg rounded-xl border border-border bg-card text-foreground focus-visible:ring-2 focus-visible:ring-primary transition-all"
+//               className="min-h-[150px] text-lg rounded-2xl border border-border bg-card text-foreground focus-visible:ring-2 focus-visible:ring-primary transition-all"
 //             />
 //           ) : (
 //             <Input
@@ -77,7 +77,7 @@ export default OpenEnded;
 //               onChange={(e) => onChange(e.target.value)}
 //               onKeyDown={handleKeyDown}
 //               placeholder={question.placeholder}
-//               className="h-14 text-lg rounded-xl border border-border bg-card text-foreground focus-visible:ring-2 focus-visible:ring-primary transition-all"
+//               className="h-14 text-lg rounded-2xl border border-border bg-card text-foreground focus-visible:ring-2 focus-visible:ring-primary transition-all"
 //             />
 //           )}
 //         </div>

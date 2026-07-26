@@ -208,7 +208,7 @@ export default ChatBotKnowledge;
 //                       : "",
 //                 }}
 //                 className={cn(
-//                   "flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed p-8 text-center transition-colors",
+//                   "flex flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed p-8 text-center transition-colors",
 //                   "border-muted bg-muted/20 hover:border-primary/50 hover:bg-primary/5 cursor-pointer"
 //                 )}
 //                 onClick={() =>

@@ -45,7 +45,7 @@ const InteractiveButtonMessage = ({
     switch (type) {
       case "image":
         return image?.link ? (
-          <div className="w-full aspect-[4/2.5] overflow-hidden rounded-xl bg-black/5">
+          <div className="w-full aspect-[4/2.5] overflow-hidden rounded-2xl bg-black/5">
             <img
               src={image?.link}
               alt="image"
@@ -53,12 +53,12 @@ const InteractiveButtonMessage = ({
             />
           </div>
         ) : (
-          <div className="overflow-hidden rounded-xl bg-black/5 h-40" />
+          <div className="overflow-hidden rounded-2xl bg-black/5 h-40" />
         );
 
       case "video":
         return video?.link ? (
-          <div className="overflow-hidden rounded-xl bg-black">
+          <div className="overflow-hidden rounded-2xl bg-black">
             <video
               src={video.link}
               controls
@@ -77,7 +77,7 @@ const InteractiveButtonMessage = ({
         );
 
         return (
-          <div className="rounded-xl flex flex-col items-center justify-center gap-3 border p-2 bg-gray-100">
+          <div className="rounded-2xl flex flex-col items-center justify-center gap-3 border p-2 bg-gray-100">
             <div
               style={{
                 backgroundColor: doc?.badgeBg || "#ffffff",

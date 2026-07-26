@@ -8,7 +8,7 @@ const Email = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Left Card */}
-                <div className="bg-white border rounded-xl p-5">
+                <div className="bg-white border rounded-2xl p-5">
                     <p className="text-sm font-medium mb-4">Storage Details</p>
 
                     {/* Circle */}
@@ -38,7 +38,7 @@ const Email = () => {
                 </div>
 
                 {/* Right Table */}
-                <div className="md:col-span-2 bg-white border rounded-xl">
+                <div className="md:col-span-2 bg-white border rounded-2xl">
                     <div className="p-4 border-b flex justify-between items-center">
                         <span className="text-sm font-medium">User usage details</span>
                         <input className="border rounded px-2 py-1 text-sm" placeholder="Search" />
