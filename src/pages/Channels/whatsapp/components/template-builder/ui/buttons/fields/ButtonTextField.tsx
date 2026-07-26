@@ -1,14 +1,34 @@
 import { Input } from "@/components/ui/input";
 import { BUTTON_TYPE_CONFIG } from "@/pages/Channels/whatsapp/constants/template.constants";
-import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
 import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { useFormContext } from "react-hook-form";
 
 interface IButtonTextFieldProps {
   button: TemplateButton;
 }
 
 export function ButtonTextField({ button }: IButtonTextFieldProps) {
-  const { updateButton } = useTemplateStore((state) => state);
+  // const { updateButton } = useTemplateStore((state) => state);
+
+  const { getValues, setValue } = useFormContext<TemplateForm>();
+
+  const updateButton = (id: string, data: any) => {
+    console.log("data", data);
+    const buttons = getValues("buttons");
+    console.log("buttons", buttons);
+    const newButtons = buttons?.map((button) =>
+      button.id === id
+        ? {
+            ...button,
+            ...data,
+          }
+        : button,
+    );
+    console.log("newButtons", newButtons);
+    setValue("buttons", newButtons);
+  };
+
   const maxLength = 40;
 
   const config = BUTTON_TYPE_CONFIG[button.kind];

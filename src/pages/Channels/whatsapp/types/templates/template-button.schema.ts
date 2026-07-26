@@ -11,25 +11,15 @@ export const ButtonErrorsSchema = z.object({
 
 export const ButtonSchema = z.object({
   id: z.string(),
-
   kind: z.enum(BUTTON_KINDS),
-
   label: z.string(),
-
   url: z.string().optional(),
-
   urlType: z.enum(URL_TYPES).optional(),
-
   trackConversions: z.boolean().optional(),
-
   country: z.string().optional(),
-
   phoneNumber: z.string().optional(),
-
   activeFor: z.enum(WHATSAPP_ACTIVE_FOR).optional(),
-
   offerCode: z.string().optional(),
-
   errors: ButtonErrorsSchema.optional(),
 });
 

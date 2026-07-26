@@ -1,8 +1,10 @@
-import { Globe, MessageCircle, Phone, Copy, User } from "lucide-react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { useTemplateStore } from "../../../../store/template-builder.store";
-import type { ButtonKind } from "../../../../types/templates/template.type";
+import { createButton } from "@/pages/Channels/whatsapp/utils/template/template.utils";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { Copy, Globe, MessageCircle, Phone, User } from "lucide-react";
+import { useFormContext, useWatch } from "react-hook-form";
 import { BUTTON_TYPE_CONFIG } from "../../../../constants/template.constants";
+import type { ButtonKind } from "@/pages/Channels/whatsapp/types/templates";
 
 const ICONS = {
   QUICK_REPLY: MessageCircle,
@@ -14,26 +16,33 @@ const ICONS = {
 };
 
 export const ButtonMenuItem = () => {
-  const { buttons, addButton } = useTemplateStore();
+  // const { buttons, addButton } = useTemplateStore();
+  const { setValue, control } = useFormContext<TemplateForm>();
 
-  const counts = buttons.reduce<Record<string, number>>((acc, button) => {
-    acc[button.kind] = (acc[button.kind] ?? 0) + 1;
-    return acc;
-  }, {});
+  const buttons = useWatch({ control, name: "buttons" });
+
+  const counts =
+    buttons &&
+    buttons.reduce<Record<string, number>>((acc, button) => {
+      acc[button.kind] = (acc[button.kind] ?? 0) + 1;
+      return acc;
+    }, {});
 
   return (
     <div className="py-1">
       {(Object.keys(BUTTON_TYPE_CONFIG) as ButtonKind[]).map((kind) => {
         const config = BUTTON_TYPE_CONFIG[kind];
-        const used = counts[kind] ?? 0;
+        const used = (counts && counts[kind as keyof typeof counts]) ?? 0;
         const disabled = used >= config.maxCount;
-        const Icon = ICONS[kind];
+        const Icon = ICONS[kind as keyof typeof ICONS];
 
         return (
           <DropdownMenuItem
             key={kind}
             disabled={disabled}
-            onClick={() => addButton(kind)}
+            onClick={() =>
+              setValue("buttons", [...(buttons || []), createButton(kind)])
+            }
             className="flex cursor-pointer items-start gap-3 px-4 py-3"
           >
             <Icon className="mt-0.5 h-4 w-4 text-muted-foreground" />

@@ -50,6 +50,7 @@ export interface TemplateButton {
 
   // Phone Button
   country?: string;
+  countryCode?: string;
   phoneNumber?: string;
 
   // Call on WhatsApp

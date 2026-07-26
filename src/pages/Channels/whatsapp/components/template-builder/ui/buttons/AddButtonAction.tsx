@@ -1,18 +1,23 @@
-import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Plus } from "lucide-react";
 
-import { useTemplateStore } from "../../../../store/template-builder.store";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { useFormContext, useWatch } from "react-hook-form";
 import { MAX_TEMPLATE_BUTTONS } from "../../../../constants/template.constants";
 import { ButtonMenuItem } from "./ButtonMenuItem";
 
 export const AddButtonAction = () => {
-  const { buttons } = useTemplateStore();
-  const totalReached = buttons.length >= MAX_TEMPLATE_BUTTONS;
+  // const { buttons } = useTemplateStore();
+
+  const { control } = useFormContext<TemplateForm>();
+  const button = useWatch({ control, name: "buttons" });
+
+  const totalReached = button && button?.length >= MAX_TEMPLATE_BUTTONS;
 
   return (
     <DropdownMenu>

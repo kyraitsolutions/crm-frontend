@@ -11,7 +11,7 @@ export const TemplateVariableMappingSchema = z.object({
 });
 
 export const TemplateComponentSchema = z.object({
-  type: z.enum(["header", "body", "footer"]),
+  type: z.enum(["header", "body", "footer", "buttons"]),
   text: z.string().optional(),
   format: z.string().optional(),
   variableMappings: z.array(TemplateVariableMappingSchema).default([]),

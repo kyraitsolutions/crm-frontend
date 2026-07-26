@@ -51,13 +51,11 @@ export function mapHeader(header: HeaderData): TemplateComponent | null {
   return {
     type: "HEADER",
     format: header.headerType.toUpperCase(),
-    example: {
-      header_handle: [header.headerMedia.previewUrl],
-      file: {
-        name: header.headerMedia.name,
-        size: header.headerMedia.size,
-        mimeType: header.headerMedia.mimeType,
-      },
+    media: {
+      link: header.headerMedia.previewUrl,
+      name: header.headerMedia.name,
+      size: header.headerMedia.size,
+      mimeType: header.headerMedia.mimeType,
     },
   };
 }

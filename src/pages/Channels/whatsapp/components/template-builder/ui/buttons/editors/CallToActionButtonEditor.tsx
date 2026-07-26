@@ -1,19 +1,26 @@
-import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
 import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { useFormContext } from "react-hook-form";
 import { ButtonCard } from "../ButtonCard";
+import { ButtonTextField } from "../fields/ButtonTextField";
+import { CopyCodeFields } from "../fields/CopyCodeFields";
+import { PhoneFields } from "../fields/PhoneFields";
 import { TypeOfActionField } from "../fields/TypeOfActionField";
 import { UrlFields } from "../fields/UrlFields";
-import { ButtonTextField } from "../fields/ButtonTextField";
-import { PhoneFields } from "../fields/PhoneFields";
 import { WhatsAppFields } from "../fields/WhatsAppFields";
-import { CopyCodeFields } from "../fields/CopyCodeFields";
 
 interface ICallToActionProps {
   button: TemplateButton;
 }
 
 export function CallToActionButtonEditor({ button }: ICallToActionProps) {
-  const { removeButton } = useTemplateStore((state) => state);
+  const { getValues, setValue } = useFormContext<TemplateForm>();
+  const removeButton = (id: string) => {
+    const buttons = getValues("buttons");
+    const newButtons = buttons?.filter((button) => button.id !== id);
+
+    setValue("buttons", newButtons);
+  };
 
   const renderFields = () => {
     switch (button.kind) {

@@ -1,15 +1,30 @@
 import { CountryCodeSelect } from "@/components/common/CountryCodeSelect";
 import { Input } from "@/components/ui/input";
-import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
 import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import type { CountryCode } from "libphonenumber-js/core";
+import { useFormContext } from "react-hook-form";
+import { getCountryCallingCode } from "react-phone-number-input";
 
 interface IPhoneFieldsProps {
   button: TemplateButton;
 }
 
 export function PhoneFields({ button }: IPhoneFieldsProps) {
-  const { updateButton } = useTemplateStore((state) => state);
-  console.log(button);
+  const { setValue, getValues } = useFormContext<TemplateForm>();
+
+  const updateButton = (id: string, data: any) => {
+    const buttons = getValues("buttons");
+    const newButtons = buttons?.map((button) =>
+      button.id === id
+        ? {
+            ...button,
+            ...data,
+          }
+        : button,
+    );
+    setValue("buttons", newButtons);
+  };
 
   return (
     <>
@@ -20,9 +35,9 @@ export function PhoneFields({ button }: IPhoneFieldsProps) {
         <CountryCodeSelect
           value={button.country ?? "IN"}
           onChange={(value) => {
-            console.log(value);
             updateButton(button.id, {
               country: value,
+              countryCode: `+${getCountryCallingCode(value as CountryCode)}`,
             });
           }}
         />

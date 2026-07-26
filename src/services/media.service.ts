@@ -10,3 +10,5 @@ export class MediaService extends ApiService {
     );
   }
 }
+
+export const mediaService = new MediaService();

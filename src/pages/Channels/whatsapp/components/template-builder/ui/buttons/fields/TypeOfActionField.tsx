@@ -5,11 +5,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
-import type {
-  ButtonKind,
-  TemplateButton,
-} from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type { ButtonKind } from "@/pages/Channels/whatsapp/types/templates";
+// import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 
 interface Props {
   button: TemplateButton;
@@ -38,15 +36,12 @@ const CTA_OPTIONS: {
 ];
 
 export function TypeOfActionField({ button }: Props) {
-  const { changeButtonKind } = useTemplateStore((state) => state);
-  console.log(button);
+  // const { changeButtonKind } = useTemplateStore((state) => state);
 
-  const counts = CTA_OPTIONS.reduce<Record<string, number>>((acc, button) => {
-    acc[button.value] = (acc[button.value] ?? 0) + 1;
-    return acc;
-  }, {});
-
-  console.log(counts);
+  // const counts = CTA_OPTIONS.reduce<Record<string, number>>((acc, button) => {
+  //   acc[button.value] = (acc[button.value] ?? 0) + 1;
+  //   return acc;
+  // }, {});
 
   return (
     <div className="col-span-3 space-y-1.5">
@@ -54,9 +49,9 @@ export function TypeOfActionField({ button }: Props) {
 
       <Select
         value={button.kind}
-        onValueChange={(value) =>
-          changeButtonKind(button.id, value as ButtonKind)
-        }
+        // onValueChange={(value) =>
+        //   changeButtonKind(button.id, value as ButtonKind)
+        // }
       >
         <SelectTrigger className="input-field rounded-xl!">
           <SelectValue />

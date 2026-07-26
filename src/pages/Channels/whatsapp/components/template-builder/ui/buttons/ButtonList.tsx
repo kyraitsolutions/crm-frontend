@@ -1,11 +1,17 @@
-import { groupButtons } from "@/pages/Channels/whatsapp/utils/template/template.utils";
-import { useTemplateStore } from "../../../../store/template-builder.store";
-import { ButtonRow } from "./ButtonRow";
 import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import { groupButtons } from "@/pages/Channels/whatsapp/utils/template/template.utils";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { useFormContext, useWatch } from "react-hook-form";
+import { ButtonRow } from "./ButtonRow";
 
 export const ButtonsList = () => {
-  const { buttons } = useTemplateStore();
-  const { callToAction, quickReply } = groupButtons(buttons);
+  // const { buttons } = useTemplateStore();
+
+  const { control } = useFormContext<TemplateForm>();
+
+  const buttons = useWatch({ control, name: "buttons" });
+
+  const { callToAction, quickReply } = groupButtons(buttons || []);
 
   return (
     <div className="space-y-6">
@@ -42,30 +48,3 @@ export function ButtonSection({ title, buttons }: IButtonSectionProps) {
     </section>
   );
 }
-
-// import { useTemplateStore } from "../../../../store/template-builder.store";
-// import { ButtonRow } from "./ButtonRow";
-
-// export const ButtonsList = () => {
-//   const { buttons } = useTemplateStore((state) => state);
-
-//   if (!buttons.length) {
-//     return null;
-//   }
-
-//   return (
-//     <div className="space-y-4">
-//       {buttons.map((button) => (
-//         <ButtonRow
-//           key={button.id}
-//           button={button}
-//           // type={button.type}
-//           // label={button.label}
-//           // value={button.value}
-//           // onUpdate={(id, field, value) => updateButton(id, field, value)}
-//           // onRemove={removeButton}
-//         />
-//       ))}
-//     </div>
-//   );
-// };

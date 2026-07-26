@@ -1,16 +1,22 @@
 import { useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
 
 import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import { useFormContext, useWatch } from "react-hook-form";
 import { HeaderMediaPreview } from "./HeaderMediaPreview";
 import { UploadDropzone } from "./UploadDropzone";
 import { HEADER_MEDIA_CONFIG } from "./header-media.constants";
+import { ToastMessageService } from "@/services";
+import type { ApiError } from "@/types";
+import { mediaService } from "@/services/media.service";
+import { uploadFileToS3WithPresignedUrl } from "@/utils/s3-upload.utils";
 
 export function HeaderMediaUploader() {
   // const { headerType, headerMedia, setHeaderMedia, clearHeaderMedia } =
   //   useTemplateStore((state) => state);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
+  const toastService = new ToastMessageService();
   const { control, setValue } = useFormContext<TemplateForm>();
 
   const headerType = useWatch({
@@ -34,49 +40,72 @@ export function HeaderMediaUploader() {
 
   const validateFile = (file: File) => {
     if (file.size > config.maxSize) {
-      toast.error(`Maximum file size is ${config.maxSizeLabel}.`);
+      toastService.error(`Maximum file size is ${config.maxSizeLabel}.`);
       return false;
     }
 
     return true;
   };
 
-  const handleSelectFile = (file: File) => {
+  const handleSelectFile = async (file: File) => {
     if (!validateFile(file)) return;
-
-    setValue(
-      "headerMedia",
-      {
-        file: file,
-        previewUrl: URL.createObjectURL(file),
-        name: file.name,
-        size: file.size,
-        mimeType: file.type,
-      },
-      {
-        shouldDirty: true,
-        shouldValidate: true,
-      },
-    );
-
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
-
     setPreviewUrl(URL.createObjectURL(file));
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const uploadPayload = {
+        fileName: file.name,
+        mimeType: file.type,
+        fileSize: file.size,
+        type: "template",
+      };
+
+      // 🔹 get signed url
+      const response =
+        await mediaService.getMediaUploadPresignedUrl(uploadPayload);
+
+      const doc = response.data?.doc;
+
+      if (response.status === 200 || response.status === 201) {
+        // 🔹 upload to s3
+        await uploadFileToS3WithPresignedUrl(
+          doc.uploadUrl,
+          file,
+          (progress) => {
+            setUploadProgress(progress);
+          },
+        );
+      }
+
+      setValue(
+        "headerMedia",
+        {
+          file: file,
+          previewUrl: doc?.fileUrl,
+          name: file.name,
+          size: file.size,
+          mimeType: file.type,
+        },
+        {
+          shouldDirty: true,
+          shouldValidate: true,
+        },
+      );
+
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastService.apiError(err.message || "Failed to upload file");
+      }
+    } finally {
+      setIsUploading(false);
+    }
   };
-
-  // const handleSelectFile = (file: File) => {
-  //   if (!validateFile(file)) return;
-
-  //   setHeaderMedia(file);
-
-  //   if (previewUrl) {
-  //     URL.revokeObjectURL(previewUrl);
-  //   }
-
-  //   setPreviewUrl(URL.createObjectURL(file));
-  // };
 
   const handleReplace = () => {
     inputRef.current?.click();
@@ -120,6 +149,25 @@ export function HeaderMediaUploader() {
             <br />
             Maximum file size: {config.maxSizeLabel}
           </p>
+
+          {isUploading && (
+            <div className="rounded-lg border p-6">
+              <p className="text-sm font-medium">Uploading...</p>
+
+              <div className="mt-3 h-2 w-full rounded bg-gray-200">
+                <div
+                  className="h-full rounded bg-blue-600 transition-all"
+                  style={{
+                    width: `${uploadProgress}%`,
+                  }}
+                />
+              </div>
+
+              <p className="mt-2 text-xs text-muted-foreground">
+                {uploadProgress}%
+              </p>
+            </div>
+          )}
         </>
       ) : (
         <HeaderMediaPreview
