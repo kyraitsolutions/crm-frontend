@@ -1,6 +1,9 @@
 import { generateId } from "@/utils/generateId.utils";
 import { BUTTON_TYPE_CONFIG } from "../../constants/template.constants";
-import type { ButtonKind, TemplateButton } from "../../types/template.type";
+import type {
+  ButtonKind,
+  TemplateButton,
+} from "../../types/templates/template.type";
 
 export interface ButtonValidationError {
   buttonId?: string;
@@ -134,4 +137,16 @@ export function groupButtons(buttons: TemplateButton[]) {
       QUICK_REPLY_BUTTONS.includes(button.kind),
     ),
   };
+}
+
+
+
+export function getTemplateType(components:any){
+  if(components[0].type==="HEADER" && components[0]?.format){
+    return components[0]?.format;
+  }
+  else{
+    return "text";
+  }
+  
 }

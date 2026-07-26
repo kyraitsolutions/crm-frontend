@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 
 interface IUrlFieldsProps {
   button: TemplateButton;

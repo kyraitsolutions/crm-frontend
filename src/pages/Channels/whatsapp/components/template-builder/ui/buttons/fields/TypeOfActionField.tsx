@@ -9,7 +9,7 @@ import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-build
 import type {
   ButtonKind,
   TemplateButton,
-} from "@/pages/Channels/whatsapp/types/template.type";
+} from "@/pages/Channels/whatsapp/types/templates/template.type";
 
 interface Props {
   button: TemplateButton;
@@ -19,23 +19,23 @@ const CTA_OPTIONS: {
   value: ButtonKind;
   label: string;
 }[] = [
-    {
-      value: "URL",
-      label: "Visit website",
-    },
-    {
-      value: "CALL_ON_WHATSAPP",
-      label: "Call on WhatsApp",
-    },
-    {
-      value: "PHONE_NUMBER",
-      label: "Call Phone Number",
-    },
-    {
-      value: "COPY_CODE",
-      label: "Copy offer code",
-    },
-  ];
+  {
+    value: "URL",
+    label: "Visit website",
+  },
+  {
+    value: "CALL_ON_WHATSAPP",
+    label: "Call on WhatsApp",
+  },
+  {
+    value: "PHONE_NUMBER",
+    label: "Call Phone Number",
+  },
+  {
+    value: "COPY_CODE",
+    label: "Copy offer code",
+  },
+];
 
 export function TypeOfActionField({ button }: Props) {
   const { changeButtonKind } = useTemplateStore((state) => state);

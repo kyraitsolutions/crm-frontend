@@ -36,7 +36,7 @@ const OptCard = ({
     onSave,
 }: OptCardProps) => {
     return (
-        <div className="rounded-xl bg-white p-10">
+        <div className="rounded-2xl bg-white p-10">
             <div className="grid grid-cols-2 gap-16">
                 {/* Left */}
                 <div>

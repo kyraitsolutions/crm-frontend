@@ -1,4 +1,4 @@
-import type { TemplateComponent } from "../../../types/template.type";
+import type { TemplateComponent } from "../../../types/templates/template.type";
 import type { TemplateForm } from "../../../validations/template.schema";
 
 type HeaderData = Pick<

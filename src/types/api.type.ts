@@ -9,7 +9,7 @@ export interface ApiResponse<T> {
       total: number;
       totalPages: number;
     };
-    pagination?:Record<string,any>
+    pagination?: Record<string, any>;
   };
   status: number;
   message?: string;
@@ -38,3 +38,11 @@ export interface RequestConfig {
 }
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export type QueryParams = {
+  search?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+};

@@ -91,18 +91,23 @@ export const API_ENDPOINT_PATH = {
 
   WHATSAPP: {
     REGISTER_PHONE_NUMBER: "whatsapp/phone-number/register",
-    getTemplateCreatePath: (id: string) => `/whatsapp/accounts/${id}/templates`,
+
+    TEMPLATES: {
+      getTemplateCreatePath: (id: string) =>
+        `/whatsapp/accounts/${id}/templates`,
+      getTemplateListPath: (id: string) => `/whatsapp/accounts/${id}/templates`,
+    },
   },
 
   ACTIVITY_LOGS: {
     getActivityLogsPath: (id: string) => `/activity-logs/${id}`,
   },
   CALLS: {
-    GET_NUMBERS:"twilio/voice/get-available-numbers",
-    PURCHASE_NUMBERS:"twilio/voice/purchase-number",
-    GET_MY_NUMBERS:"twilio/voice/my-numbers",
-    GET_MY_NUMBERS_DETAILS:"twilio/voice/my-number/details",
-    MAKE_CALL:"twilio/voice/make-call",
+    GET_NUMBERS: "twilio/voice/get-available-numbers",
+    PURCHASE_NUMBERS: "twilio/voice/purchase-number",
+    GET_MY_NUMBERS: "twilio/voice/my-numbers",
+    GET_MY_NUMBERS_DETAILS: "twilio/voice/my-number/details",
+    MAKE_CALL: "twilio/voice/make-call",
     getCallsLogsPath: (id: string) => `/calls/${id}`,
   },
 };

@@ -1,7 +1,7 @@
 import { groupButtons } from "@/pages/Channels/whatsapp/utils/template/template.utils";
 import { useTemplateStore } from "../../../../store/template-builder.store";
 import { ButtonRow } from "./ButtonRow";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 
 export const ButtonsList = () => {
   const { buttons } = useTemplateStore();

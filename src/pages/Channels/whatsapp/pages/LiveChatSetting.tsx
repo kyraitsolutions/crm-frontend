@@ -7,7 +7,7 @@ const LiveChatSetting = () => {
     const [autoResolve, setAutoResolve] = useState<boolean>(false);
     const [autoWelcomeMessage, setAutoWelcomeMessage] = useState<boolean>(false)
     return (
-        <div className='max-w-7xl space-y-8  mx-auto py-10 h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar'>
+        <div className='max-w-7xl space-y-8  mx-auto py-10'>
             <CampaignOptout
                 title="Auto Resolve Chats"
                 description="Disable auto resolve intervened chats."
@@ -15,7 +15,7 @@ const LiveChatSetting = () => {
                 onChange={setAutoResolve}
             />
 
-            <div className='flex gap-10 bg-white p-10'>
+            <div className='flex gap-10 bg-white p-10 rounded-2xl'>
                 <MessageConfig
                     responseTitle={"Welcome Message"}
                     responseDescription={"Configure automated reply for user's first query during working hours"}

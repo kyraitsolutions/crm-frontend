@@ -14,7 +14,7 @@ const CampaignOptout = ({
     onChange,
 }: CampaignOptoutProps) => {
     return (
-        <div className="flex items-center justify-between rounded-xl bg-white p-10">
+        <div className="flex items-center justify-between rounded-2xl bg-white p-10">
             <div>
                 <h2 className="text-md font-medium text-gray-900">
                     {title}

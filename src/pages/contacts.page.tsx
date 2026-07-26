@@ -136,6 +136,7 @@ const Contacts = () => {
               <th className="p-3 text-left font-medium">Status</th>
               <th className="p-3 text-left font-medium">Tags</th>
               <th className="p-3 text-left font-medium">Source</th>
+              <th className="p-3 text-left font-medium">Added</th>
               <th className="p-3 text-left font-medium">Last Activity</th>
               {/* <th className="p-3  flex justify-center font-medium">Actions</th> */}
             </tr>
@@ -179,6 +180,9 @@ const Contacts = () => {
                   </div>
                 </td>
                 <td className="p-3">{contact.source}</td>
+                <td className="p-3 text-muted-foreground whitespace-nowrap">
+                  {formatDateTime(String(contact.createdAt))}
+                </td>
                 <td className="p-3 text-muted-foreground whitespace-nowrap">
                   {formatDateTime(String(contact.lastActivity))}
                 </td>

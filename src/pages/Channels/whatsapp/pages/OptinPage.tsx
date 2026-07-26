@@ -7,7 +7,7 @@ const OptinPage = () => {
     const [optInEnabled, setOptInEnabled] = useState(false);
     const [campaignOptout, setCampaignOptout] = useState(true);
     return (
-        <div className="space-y-8 max-w-7xl mx-auto py-10 h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar">
+        <div className="space-y-8 max-w-7xl mx-auto py-10">
             <CampaignOptout
                 title="API Campaign Opt-out"
                 description="Enable this if you don't wish to send API campaign to opted-out contacts."

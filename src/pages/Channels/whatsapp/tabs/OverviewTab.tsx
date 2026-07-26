@@ -9,7 +9,7 @@ interface OverviewTabProps {
 
 export const OverviewTab = ({ data }: OverviewTabProps) => {
   return (
-    <div className="space-y-5">
+    <div className="space-y-8">
       <QuickStats data={data} />
 
       <div className="grid gap-5 lg:grid-cols-3">

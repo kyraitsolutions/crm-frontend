@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import React from "react";
 
 interface ICopyCodeFieldsProps {

@@ -1,4 +1,4 @@
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 
 export function mapCopyCodeButton(button: TemplateButton) {
   return {

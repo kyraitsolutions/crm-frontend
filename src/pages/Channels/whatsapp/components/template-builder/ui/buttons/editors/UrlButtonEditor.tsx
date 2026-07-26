@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 
 import { ButtonCard } from "../ButtonCard";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
 
 interface Props {
@@ -32,7 +32,7 @@ export function UrlButtonEditor({ button }: Props) {
               Type of action
             </label>
 
-            <Select value="URL" onValueChange={() => { }}>
+            <Select value="URL" onValueChange={() => {}}>
               <SelectTrigger className="input-field rounded-xl!">
                 <SelectValue />
               </SelectTrigger>

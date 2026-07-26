@@ -1,7 +1,7 @@
 import { Globe, MessageCircle, Phone, Copy, User } from "lucide-react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useTemplateStore } from "../../../../store/template-builder.store";
-import type { ButtonKind } from "../../../../types/template.type";
+import type { ButtonKind } from "../../../../types/templates/template.type";
 import { BUTTON_TYPE_CONFIG } from "../../../../constants/template.constants";
 
 const ICONS = {

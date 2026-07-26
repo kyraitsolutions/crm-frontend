@@ -68,7 +68,7 @@ export const Whatsapp = () => {
   }
 
   return (
-    <main className="h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar py-10">
+    <main className="">
       {integration?.connected ? (
         <WhatsAppWorkspace />
       ) : (

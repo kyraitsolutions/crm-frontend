@@ -7,7 +7,7 @@ import { mapShareContactButton } from "./button/share-contact.mapper";
 import type {
   TemplateButton,
   TemplateComponent,
-} from "../../../types/template.type";
+} from "../../../types/templates/template.type";
 
 export function mapButtons(
   buttons: TemplateButton[],

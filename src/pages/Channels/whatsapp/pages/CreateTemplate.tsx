@@ -2,7 +2,7 @@ import { TemplateBuilder } from '../components/template-builder/TemplateBuilder'
 
 const CreateTemplate = () => {
     return (
-        <div className='p-5'>
+        <div >
             <TemplateBuilder />
         </div>
     )

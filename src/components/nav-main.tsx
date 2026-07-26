@@ -58,20 +58,20 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
               {item.children ? (
                 <button
                   onClick={() => toggleMenu(item.title)}
-                  className={` w-full flex items-center justify-between px-3 py-2.5 rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-100`}
+                  className={` w-full flex items-center justify-between text-white/70 hover:text-white text-sm font-medium hover:bg-primary/50`}
                 >
                   <div
-                    className={`flex  ${collapsed ? "justify-center" : "justify-end "} items-center gap-3`}
+                    className={`flex  ${collapsed ? "flex flex-col justify-center" : "justify-end "} px-3 py-2 items-center gap-3`}
                   >
                     {Icon && <Icon size={22} />}
                     {!collapsed &&
-                      <span>{item.title}</span>
+                      <span className="text-xs">{item.title}</span>
                     }
                   </div>
 
                   {!collapsed && (
                     <span className="text-md">
-                      {isOpen ? (
+                      {!isOpen ? (
                         <MdOutlineKeyboardArrowUp />
                       ) : (
                         <MdOutlineKeyboardArrowDown />
@@ -86,7 +86,7 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                     to={item.url}
                     onClick={handleClick}
                     className={cn(
-                      `group relative flex ${collapsed ? "flex-col justify-center gap-1 py-3" : "px-3 gap-3 rounded-2xl py-2.5 "} items-center    text-sm font-medium transition-all`,
+                      `group relative flex ${collapsed ? "flex-col justify-center gap-1 py-2.5" : "px-3 gap-3 rounded-2xl py-2.5 "} items-center text-sm font-medium transition-all`,
                       active
                         ? "bg-primary text-white"
                         : "text-white/70 hover:bg-primary/50 hover:text-white",
@@ -121,10 +121,10 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
                         key={child.title}
                         to={child.url}
                         className={cn(
-                          "block px-3 py-2 text-sm items-center rounded-lg gap-1",
+                          "block px-3 py-2 text-sm items-center flex rounded-2xl gap-3",
                           childActive
-                            ? "bg-primary/10 flex text-primary"
-                            : "text-gray-600 flex hover:bg-gray-100",
+                            ? "bg-primary flex text-white"
+                            : "text-white/70 hover:bg-primary/50",
                         )}
                       >
                         <ChildIcon size={18} />
@@ -137,7 +137,7 @@ export function NavMain({ items, collapsed = false }: NavMainProps) {
             </div>
           );
         })}
-    </nav>
+    </nav >
   );
 }
 

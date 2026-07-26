@@ -26,7 +26,7 @@ const WhatsAppWorkspace = () => {
   };
 
   return (
-    <div className="space-y-5 max-w-7xl mx-auto">
+    <div className="space-y-8 max-w-7xl mx-auto py-10">
       <WorkspaceHeader
         businessName={whatsappAccountData?.businessInfo.name}
         phoneNumber={whatsappAccountData?.phoneNumberInfo.displayPhoneNumber}

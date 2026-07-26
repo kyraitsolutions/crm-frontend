@@ -19,7 +19,7 @@ import {
   Phone,
   Shapes,
 } from "lucide-react";
-import { formatDate } from "@/utils/date-utils";
+import { formatDateTime } from "@/utils/date-utils";
 import { useAuthStore } from "@/stores";
 import {
   Facebook,
@@ -180,7 +180,7 @@ const LeadTable = () => {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock3 className="size-4" />
 
-                  {formatDate(lead.createdAt)}
+                  {formatDateTime(lead.createdAt)}
                 </div>
               </TableCell>
               {/* lead Name*/}
@@ -275,7 +275,7 @@ const LeadTable = () => {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock3 className="size-4" />
 
-                  {formatDate(lead.updatedAt)}
+                  {formatDateTime(lead.updatedAt)}
                 </div>
               </TableCell>
 

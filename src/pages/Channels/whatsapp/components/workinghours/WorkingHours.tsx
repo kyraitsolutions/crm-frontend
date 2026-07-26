@@ -15,7 +15,7 @@ const WorkingHours = () => {
     };
 
     return (
-        <div className="rounded-xl bg-white p-10">
+        <div className="rounded-2xl bg-white p-10">
             <h2 className="text-md">Working Hours</h2>
 
             <p className="mt-1 text-sm text-gray-500">

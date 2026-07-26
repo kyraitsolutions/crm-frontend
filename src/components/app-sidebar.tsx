@@ -11,7 +11,7 @@ import {
 } from "@tabler/icons-react";
 import { Book, BookUser, Gauge, MessagesSquare } from "lucide-react";
 import { useState } from "react";
-import { MdOutlineContacts } from "react-icons/md";
+import { MdEmail, MdOutlineCampaign, MdOutlineContacts, MdWhatsapp } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
@@ -74,29 +74,24 @@ export function AppSidebar() {
       //   icon: IconFileText,
       //   active: hasPermission(permissions, PERMISSIONS.LEADS_FORMS.VIEW),
       // },
-      // {
-      //   title: "Broadcast",
-      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast`,
-      //   icon: MdOutlineCampaign,
-      //   active: true,
-      //   children: [
-      //     {
-      //       title: "Email",
-      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/email`,
-      //       icon: MdEmail,
-      //     },
-      //     {
-      //       title: "WhatsApp",
-      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
-      //       icon: MdWhatsapp,
-      //     },
-      //     {
-      //       title: "Templates",
-      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/templates`,
-      //       icon: BookTemplateIcon,
-      //     },
-      //   ],
-      // },
+      {
+        title: "Broadcast",
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
+        icon: MdOutlineCampaign,
+        // active: true,
+        children: [
+          {
+            title: "WhatsApp",
+            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
+            icon: MdWhatsapp,
+          },
+          {
+            title: "Email",
+            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/email`,
+            icon: MdEmail,
+          },
+        ],
+      },
       {
         title: "Contacts",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/contacts`,

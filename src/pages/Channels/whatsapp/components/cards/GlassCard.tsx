@@ -9,7 +9,7 @@ export function GlassCard({ children, className }: GlassCardProps) {
   return (
     <div
       className={cn(
-        `relative overflow-hidden rounded-2xl border border-gray-200  bg-white/40 backdrop-blur-xl`,
+        `relative overflow-hidden rounded-2xl border border-gray-200  bg-white backdrop-blur-xl`,
         className,
       )}
     >

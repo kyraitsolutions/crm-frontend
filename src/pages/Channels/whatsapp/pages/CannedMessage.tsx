@@ -2,7 +2,7 @@ import MessageTable from "../components/canned/MessageTable"
 
 const CannedMessage = () => {
     return (
-        <div className="max-w-7xl mx-auto h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar">
+        <div className="max-w-7xl mx-auto">
             <MessageTable type="all" />
         </div>
     )

@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { WHATSAPP_PATHS } from '@/constants/routes/whatsapp.path';
 import { useAuthStore } from '@/stores';
 import { Copy, Plus, Trash2 } from 'lucide-react';
@@ -43,12 +44,12 @@ const MessageTable = ({ type }: { type: string }) => {
         <div className="mt-6 overflow-hidden ">
             <div className="flex justify-between items-center py-6">
                 <div className="relative max-w-sm w-full ">
-                    <input
+                    <Input
                         type="text"
                         placeholder="Search templates (status, name etc.)"
                         value={""}
                         // onChange={(e) => setContactQuery({ search: e.target.value, })}
-                        className="w-full bg-gray-100 rounded-xl! px-4 border-gray-300 py-2.5 pr-8 text-sm text-[#37322F] placeholder:text-[#847971] focus:outline-none focus:border-gray-300 transition"
+                        className="input-field bg-white!"
                     />
 
 
@@ -57,7 +58,7 @@ const MessageTable = ({ type }: { type: string }) => {
 
                     <Button
                         onClick={() => navigate(WHATSAPP_PATHS.createCannedMessage(String(accountId)))}
-                        className="rounded">
+                        className="rounded py-1.5!">
                         <Plus />Create
                     </Button>
                     {/* <Button className="rounded action-btn! bg-teal-900 hover:bg-teal-900/80 text-white  hover:text-white transition-all duration-300">

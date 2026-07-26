@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
 
 interface IWhatsAppFieldsProps {

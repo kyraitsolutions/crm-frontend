@@ -21,7 +21,7 @@ export const StatCard = ({
   badge,
 }: StatCardProps) => {
   return (
-    <GlassCard className="bg-gray-50 p-5 rounded-2xl">
+    <GlassCard className="bg-white p-5 rounded-2xl">
       <div className="flex items-center justify-between gap-5">
         {/* Left: icon pill */}
         <div

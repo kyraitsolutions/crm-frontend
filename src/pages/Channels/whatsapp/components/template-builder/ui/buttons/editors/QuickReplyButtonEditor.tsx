@@ -9,7 +9,7 @@ import {
 
 import { ButtonCard } from "../ButtonCard";
 import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 
 interface IQuickReplyButtonProps {
   button: TemplateButton;
@@ -25,7 +25,7 @@ export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Type</label>
 
-          <Select value="CUSTOM" onValueChange={() => { }}>
+          <Select value="CUSTOM" onValueChange={() => {}}>
             <SelectTrigger className="input-field w-full rounded-xl!">
               <SelectValue />
             </SelectTrigger>

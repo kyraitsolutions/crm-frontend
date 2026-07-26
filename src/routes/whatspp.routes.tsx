@@ -9,42 +9,42 @@ import TemplatesPage from "@/pages/Channels/whatsapp/pages/TemplatesPage";
 import { Whatsapp } from "@/pages/Channels/whatsapp/pages/WhatsAppPage";
 import type { RouteObject } from "react-router-dom";
 export const whatsappRoutes: RouteObject[] = [
-    {
-        path: WHATSAPP_PATHS.ROOT,
-        element: <WhatsappLayout />,
-        children: [
-            {
-                element: <Whatsapp />,
-                index: true,
-            },
-            {
-                element: <TemplatesPage />,
-                path: "template-messages",
-            },
-            {
-                element: <TemplateBuilder />,
-                path: "template-messages/create",
-            },
-            {
-                element: <OptinPage />,
-                path: "optin",
-            },
-            {
-                element: <LiveChatSetting />,
-                path: "chat-setting",
-            },
-            {
-                element: <CannedMessage />,
-                path: "canned-messages",
-            },
-            {
-                element: <CreateMessage />,
-                path: "canned-messages/create",
-            },
-            {
-                element: <TemplatesPage />,
-                path: "call-settings",
-            },
-        ],
-    },
+  {
+    path: WHATSAPP_PATHS.ROOT,
+    element: <WhatsappLayout />,
+    children: [
+      {
+        element: <Whatsapp />,
+        index: true,
+      },
+      {
+        element: <TemplatesPage />,
+        path: "template-messages",
+      },
+      {
+        element: <TemplateBuilder />,
+        path: "template-messages/create",
+      },
+      {
+        element: <OptinPage />,
+        path: "optin",
+      },
+      {
+        element: <LiveChatSetting />,
+        path: "chat-setting",
+      },
+      {
+        element: <CannedMessage />,
+        path: "canned-messages",
+      },
+      {
+        element: <CreateMessage />,
+        path: "canned-messages/create",
+      },
+      {
+        element: <TemplatesPage />,
+        path: "call-settings",
+      },
+    ],
+  },
 ];

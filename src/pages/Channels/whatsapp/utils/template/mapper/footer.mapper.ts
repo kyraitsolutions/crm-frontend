@@ -1,7 +1,7 @@
 import type {
   TemplateComponent,
   TemplateState,
-} from "../../../types/template.type";
+} from "../../../types/templates/template.type";
 
 type FooterData = Pick<TemplateState, "footerText">;
 

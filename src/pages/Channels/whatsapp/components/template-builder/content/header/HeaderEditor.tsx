@@ -80,7 +80,6 @@ export const HeaderEditor = () => {
             onValueChange={(value) =>
               setValue("headerType", value, { shouldValidate: true })
             }
-
           >
             <SelectTrigger className="input-field">
               <SelectValue />
