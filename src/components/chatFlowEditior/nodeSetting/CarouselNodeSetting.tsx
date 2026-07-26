@@ -65,7 +65,6 @@ const CarouselNodeSetting = ({
   const [cards, setCards] = useState<TCarouselCard[]>([]);
 
   const validate = () => {
-    console.log(cards);
     if (!bodyText.trim()) return toast.error("Body text is required");
 
     if (cards.length < MIN_CARDS)
@@ -117,21 +116,21 @@ const CarouselNodeSetting = ({
         "buttons" in card.action
           ? card.action.buttons
           : [
-            {
-              type: "quick_replys",
-              quick_reply: {
-                id: `card_${index + 1}_btn_1_${createId()}`,
-                title: "Option 1",
+              {
+                type: "quick_replys",
+                quick_reply: {
+                  id: `card_${index + 1}_btn_1_${createId()}`,
+                  title: "Option 1",
+                },
               },
-            },
-            {
-              type: "quick_reply",
-              quick_reply: {
-                id: `card_${index + 1}_btn_2_${createId()}`,
-                title: "Option 2",
+              {
+                type: "quick_reply",
+                quick_reply: {
+                  id: `card_${index + 1}_btn_2_${createId()}`,
+                  title: "Option 2",
+                },
               },
-            },
-          ];
+            ];
 
       return {
         ...card,
@@ -147,7 +146,7 @@ const CarouselNodeSetting = ({
 
   const handleModeSwitch = (newMode: TMode) => {
     const transformedCards = transformCardsByMode(cards, newMode);
-    console.log(transformedCards);
+
     setCards(transformedCards);
     setMode(newMode);
   };
@@ -292,8 +291,9 @@ const CarouselNodeSetting = ({
               <Button
                 key={m}
                 onClick={() => handleModeSwitch(m as TMode)}
-                className={`px-3 py-1! text-xs rounded cursor-pointer hover:bg-emerald-500 hover:text-white ${mode === m ? "bg-emerald-500" : "bg-white/5 text-gray-400"
-                  }`}
+                className={`px-3 py-1! text-xs rounded cursor-pointer hover:bg-emerald-500 hover:text-white ${
+                  mode === m ? "bg-emerald-500" : "bg-white/5 text-gray-400"
+                }`}
               >
                 {m}
               </Button>
@@ -349,7 +349,7 @@ const CarouselCards = ({
             mode={mode}
             onUpdateCard={updateCard}
             onRemoveCard={removeCard}
-          // onUpdateMode={updateMode}
+            // onUpdateMode={updateMode}
           />
         </div>
       ))}
@@ -397,15 +397,15 @@ const CarouselCardItem = ({
         type: currentType,
         ...(currentType === "image"
           ? {
-            image: {
-              link: previewUrl,
-            },
-          }
+              image: {
+                link: previewUrl,
+              },
+            }
           : {
-            video: {
-              link: previewUrl,
-            },
-          }),
+              video: {
+                link: previewUrl,
+              },
+            }),
       });
 
       // 🔹 upload payload
@@ -431,15 +431,15 @@ const CarouselCardItem = ({
           type: currentType,
           ...(currentType === "image"
             ? {
-              image: {
-                link: doc.fileUrl,
-              },
-            }
+                image: {
+                  link: doc.fileUrl,
+                },
+              }
             : {
-              video: {
-                link: doc.fileUrl,
-              },
-            }),
+                video: {
+                  link: doc.fileUrl,
+                },
+              }),
         });
       }
     } catch (error: any) {
@@ -470,10 +470,11 @@ const CarouselCardItem = ({
                         : { video: { link: "" } }),
                     })
                   }
-                  className={`node-setting-header-types rounded-full! ${card.header.type === type
-                    ? "bg-emerald-500 text-white"
-                    : "bg-white/5 text-gray-400 hover:bg-white/10"
-                    }`}
+                  className={`node-setting-header-types rounded-full! ${
+                    card.header.type === type
+                      ? "bg-emerald-500 text-white"
+                      : "bg-white/5 text-gray-400 hover:bg-white/10"
+                  }`}
                 >
                   {type}
                 </Button>

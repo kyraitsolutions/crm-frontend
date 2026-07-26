@@ -1,10 +1,8 @@
-import type {
-  TemplateComponent,
-  TemplateState,
-} from "../../../types/templates/template.type";
+import type { TemplateComponent } from "../../../types/templates/template.type";
+import type { TemplateForm } from "../../../validations/template.schema";
 
 type BodyData = Pick<
-  TemplateState,
+  TemplateForm,
   "bodyText" | "bodyVariables" | "variableType"
 >;
 

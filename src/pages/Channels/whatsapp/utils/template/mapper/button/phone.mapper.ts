@@ -4,6 +4,6 @@ export function mapPhoneButton(button: TemplateButton) {
   return {
     type: "PHONE_NUMBER",
     text: button.label,
-    phone_number: `${button.country}${button.phoneNumber}`,
+    phone_number: `${button.countryCode || "+91"}${button.phoneNumber}`,
   };
 }

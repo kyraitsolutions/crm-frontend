@@ -7,16 +7,37 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { ButtonCard } from "../ButtonCard";
-import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
 import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { useFormContext } from "react-hook-form";
+import { ButtonCard } from "../ButtonCard";
 
 interface IQuickReplyButtonProps {
   button: TemplateButton;
 }
 
 export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
-  const { updateButton, removeButton } = useTemplateStore((state) => state);
+  // const { updateButton, removeButton } = useTemplateStore((state) => state);
+  const { getValues, setValue } = useFormContext<TemplateForm>();
+  const removeButton = (id: string) => {
+    const buttons = getValues("buttons");
+    const newButtons = buttons?.filter((button) => button.id !== id);
+
+    setValue("buttons", newButtons);
+  };
+
+  const updateButton = (id: string, data: any) => {
+    const buttons = getValues("buttons");
+    const newButtons = buttons?.map((button) =>
+      button.id === id
+        ? {
+            ...button,
+            ...data,
+          }
+        : button,
+    );
+    setValue("buttons", newButtons);
+  };
 
   return (
     <ButtonCard onDelete={() => removeButton(button.id)}>

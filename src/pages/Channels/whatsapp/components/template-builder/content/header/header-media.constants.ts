@@ -20,7 +20,7 @@ export const HEADER_MEDIA_CONFIG = {
   Document: {
     accept: ".pdf",
     maxSize: 100 * 1024 * 1024,
-    maxSizeLabel: "100 MB",
+    maxSizeLabel: "5 MB",
     supportedFormats: "PDF",
     icon: FileText,
   },

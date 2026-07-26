@@ -9,7 +9,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
-import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { useFormContext } from "react-hook-form";
 
 interface IWhatsAppFieldsProps {
   button: TemplateButton;
@@ -31,37 +32,24 @@ const ACTIVE_FOR_OPTIONS = [
 ] as const;
 
 export function WhatsAppFields({ button }: IWhatsAppFieldsProps) {
-  const { updateButton } = useTemplateStore((state) => state);
+  // const { updateButton } = useTemplateStore((state) => state);
+  const { setValue, getValues } = useFormContext<TemplateForm>();
+
+  const updateButton = (id: string, data: any) => {
+    const buttons = getValues("buttons");
+    const newButtons = buttons?.map((button) =>
+      button.id === id
+        ? {
+            ...button,
+            ...data,
+          }
+        : button,
+    );
+    setValue("buttons", newButtons);
+  };
 
   return (
     <div className="col-span-5 ">
-      {/* Button Text */}
-      {/* <div className="col-span-4 space-y-1.5">
-        <label className="text-sm font-medium">Button text</label>
-
-        <div className="relative">
-          <Input
-            className="input-field pr-14"
-            placeholder="Call on WhatsApp"
-            maxLength={40}
-            value={button.label}
-            onChange={(e) =>
-              updateButton(button.id, {
-                label: e.target.value,
-              })
-            }
-          />
-
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-            {button.label.length}/40
-          </span>
-        </div>
-
-        {button.errors?.label && (
-          <p className="text-xs text-destructive">{button.errors.label}</p>
-        )}
-      </div> */}
-
       {/* Active For */}
       <div className="space-y-1">
         <label className="flex items-center gap-1 text-sm font-medium">

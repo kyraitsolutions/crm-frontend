@@ -376,11 +376,8 @@
 //   );
 // };
 
-import {
-  FormProvider,
-  useFormContext,
-  type SubmitHandler,
-} from "react-hook-form";
+import { useFormContext } from "react-hook-form";
+import type { TemplateForm } from "../../validations/template.schema";
 import { BodyEditor } from "./content/BodyEditor";
 import { ButtonsEditor } from "./content/ButtonEditor";
 import { FooterEditor } from "./content/FooterEditor";
@@ -388,8 +385,6 @@ import { HeaderEditor } from "./content/header/HeaderEditor";
 import { VariableTypeSelector } from "./content/VariableTypeSelector";
 import { FooterActions } from "./shared/FooterActions";
 import { TemplateDetailsPanel } from "./TemplateDetailsPanel";
-import { useTemplateForm } from "../../hooks/useTemplateForm";
-import type { TemplateForm } from "../../validations/template.schema";
 
 interface ITemplateComposerPanelProps {
   onDiscard: () => void;
