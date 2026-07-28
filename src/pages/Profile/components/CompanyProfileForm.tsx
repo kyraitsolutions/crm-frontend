@@ -7,7 +7,7 @@ import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 
 const CompanyProfileView = ({ data, onEdit, role }: any) => {
   return (
-    <section className="bg-white rounded">
+    <section className="bg-white rounded-2xl">
       <div className="flex justify-between items-center px-6 py-4 border-b">
         <div className="flex items-center gap-4">
           <h2 className="text-primary">Company Profile</h2>

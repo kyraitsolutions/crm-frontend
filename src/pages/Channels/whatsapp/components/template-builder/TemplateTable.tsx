@@ -77,7 +77,7 @@ const TemplateTable = ({ type }: { type: string }) => {
                     </td>
 
                     <td className="px-6 py-5">{timeAgo(item.createdAt)}</td>
-                    <td className="px-6 py-5">{timeAgo(item.lastUsedAt)}</td>
+                    <td className="px-6 py-5">{item.lastUsedAt && timeAgo(item.lastUsedAt)}</td>
 
                     <td className="px-6 py-5 rounded-r-xl">
                       <div className="flex items-center justify-end gap-3 text-gray-500">

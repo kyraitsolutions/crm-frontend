@@ -145,7 +145,7 @@ const Teams = () => {
       {!teams || teams.length === 0 ? (
         <CreateTeamMemberModal onCreate={() => setOpenAdd(true)} />
       ) : (
-        <div className="grid grid-cols-2 gap-4 bg-white mx-24  py-10">
+        <div className="grid grid-cols-2 gap-4  mx-24  py-10 mt-10">
           {/* LEFT SIDE */}
           <div className="">
             <div className="flex justify-between items-center mb-5">

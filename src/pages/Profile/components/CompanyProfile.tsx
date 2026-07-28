@@ -9,8 +9,9 @@ const CompanyProfileForm = ({
   onSave,
   isEdit,
 }: any) => {
+
   return (
-    <div className="bg-white rounded p-10 max-w-5xl mx-auto">
+    <div className="bg-white! rounded-2xl p-10 max-w-5xl mx-auto">
       <CompanyLogo
         name={formData.companyName}
         logo={formData.logoUrl}
@@ -22,25 +23,60 @@ const CompanyProfileForm = ({
         <InputRow
           {...{ formData, setFormData }}
           label="Company Name"
-          name="companyName"
+          name="name"
         />
         <InputRow
           {...{ formData, setFormData }}
-          label="Address"
-          name="address"
+          label="Line 1"
+          name="address.line1"
           isTextArea
         />
         <InputRow
           {...{ formData, setFormData }}
-          label="Website URL"
-          name="websiteUrl"
+          label="Line 2"
+          name="address.line2"
+          isTextArea
         />
-        <InputRow {...{ formData, setFormData }} label="Phone" name="phone" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4">
+
+          <InputRow
+            {...{ formData, setFormData }}
+            label="City"
+            name="address.city"
+          />
+          <InputRow
+            {...{ formData, setFormData }}
+            label="State"
+            name="address.state"
+          />
+
+          <InputRow
+            {...{ formData, setFormData }}
+            label="Country"
+            name="address.country"
+          />
+
+          <InputRow
+            {...{ formData, setFormData }}
+            label="Pincode"
+            name="address.pincode"
+          />
+        </div>
+
         <InputRow
           {...{ formData, setFormData }}
-          label="Industry"
-          name="industry"
+          label="Website URL"
+          name="website"
         />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4">
+          <InputRow {...{ formData, setFormData }} label="Phone" name="phone" />
+          <InputRow
+            {...{ formData, setFormData }}
+            label="Industry"
+            name="industry"
+          />
+        </div>
+
         <InputRow
           {...{ formData, setFormData }}
           label="Privacy Policy"
@@ -49,7 +85,7 @@ const CompanyProfileForm = ({
         <InputRow
           {...{ formData, setFormData }}
           label="Terms"
-          name="termsOfUse"
+          name="terms"
         />
       </div>
 

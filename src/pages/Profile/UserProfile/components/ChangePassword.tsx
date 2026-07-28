@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ChangePasswordSchema } from "../types/profile.type";
+import { Input } from "@/components/ui/input";
 
 const ChangePassword = () => {
     const [showOld, setShowOld] = useState(false);
@@ -46,13 +47,13 @@ const ChangePassword = () => {
             </label>
 
             <div className="relative mt-1">
-                <Lock className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                {/* <Lock className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" /> */}
 
-                <input
+                <Input
                     type={visible ? "text" : "password"}
                     placeholder={placeholder}
                     {...register(registerName)}
-                    className="h-12 w-full rounded-2xl border border-gray-300 bg-white pl-11 pr-12 text-sm transition-all outline-none placeholder:text-gray-400 focus:border-primary focus:ring-4 focus:ring-primary/10"
+                    className="input-field"
                 />
 
                 <button
@@ -123,7 +124,7 @@ const ChangePassword = () => {
                     <Button
                         type="button"
                         variant="outline"
-                        className="rounded-2xl px-6"
+                        className="rounded-xl px-3 py-1.5"
                     >
                         Cancel
                     </Button>
@@ -131,7 +132,7 @@ const ChangePassword = () => {
                     <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="rounded-2xl px-6"
+                        className="rounded-xl px-3 py-1.5"
                     >
                         {isSubmitting ? "Updating..." : "Update Password"}
                     </Button>

@@ -117,7 +117,7 @@ const AddTeamMemberDialog = ({
               <Input
                 placeholder="First Name"
                 {...register("firstName")}
-                className="focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="input-field"
               />
               {errors.firstName && (
                 <p className="text-red-500 text-xs">
@@ -131,7 +131,7 @@ const AddTeamMemberDialog = ({
               <Input
                 placeholder="Last Name"
                 {...register("lastName")}
-                className="focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="input-field"
               />
             </div>
           </div>
@@ -141,7 +141,7 @@ const AddTeamMemberDialog = ({
             <Input
               placeholder="Email"
               {...register("email")}
-              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="input-field"
             />
             {errors.email && (
               <p className="text-red-500 text-xs">{errors.email.message}</p>
@@ -155,7 +155,7 @@ const AddTeamMemberDialog = ({
             </p>
 
             <Select onValueChange={(value) => setValue("roleId", value)}>
-              <SelectTrigger className="w-full focus:ring-0 focus:ring-offset-0">
+              <SelectTrigger className="w-full input-field">
                 <SelectValue placeholder="Select Role (optional)" />
               </SelectTrigger>
 
@@ -210,7 +210,7 @@ const AddTeamMemberDialog = ({
                             handleRoleChange(acc.id, value)
                           }
                         >
-                          <SelectTrigger className="h-8 text-xs focus:ring-0">
+                          <SelectTrigger className="h-8 text-xs input-field">
                             <SelectValue placeholder="Select Role" />
                           </SelectTrigger>
 
@@ -246,6 +246,7 @@ const AddTeamMemberDialog = ({
                 reset();
                 setSelectedAccounts([]);
               }}
+              className="rounded-xl py-1.5"
             >
               Cancel
             </Button>
@@ -253,7 +254,7 @@ const AddTeamMemberDialog = ({
             <Button
               disabled={loading}
               type="submit"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 rounded-xl py-1.5"
             >
               Add {loading && <Loader />}
             </Button>

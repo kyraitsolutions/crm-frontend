@@ -6,28 +6,50 @@ import { useEffect, useState } from "react";
 import { OrganizationService } from "@/services/organization.service";
 
 type FormDataType = {
-  companyName: string;
-  address: string;
-  websiteUrl: string;
+  name: string;
+  address: {
+    line1: string,
+    line2: string,
+    city: string,
+    state: string,
+    country: string,
+    pincode: string,
+  };
+  website: string;
   phone: string;
   industry: string;
   privacyPolicy: string;
-  termsOfUse: string;
   logoUrl: string;
+  taxId?: string;
+  companySize?: string;
+  currency?: string;
+  terms?: string;
+  slug?: string;
 };
 
 /* =========================
    INITIAL STATE
 ========================= */
 const initialData: FormDataType = {
-  companyName: "",
-  address: "",
-  websiteUrl: "",
+  name: "",
+  address: {
+    line1: "14 East Clarendon Drive",
+    line2: "Quisquam alias exerc",
+    city: "Tabaquite",
+    state: "Couva-Tabaquite-Talparo Regional Corporation",
+    country: "Trinidad And Tobago",
+    pincode: "326453",
+  },
+  website: "",
   phone: "",
   industry: "",
   privacyPolicy: "",
-  termsOfUse: "",
+  terms: "",
   logoUrl: "https://cdn-icons-png.flaticon.com/512/3061/3061341.png",
+  taxId: "",
+  companySize: "",
+  currency: "",
+  slug: ""
 };
 
 const CompanyDetails = () => {
@@ -67,23 +89,24 @@ const CompanyDetails = () => {
   useEffect(() => {
     if (organizationDetails) {
       setFormData({
-        companyName: organizationDetails.name || "",
-        address: [
-          organizationDetails?.address?.line1,
-          organizationDetails?.address?.line2,
-          organizationDetails?.address?.city,
-          organizationDetails?.address?.state,
-          organizationDetails?.address?.country,
-          organizationDetails?.address?.pincode,
-        ]
-          .filter(Boolean)
-          .join(", "),
-        websiteUrl: organizationDetails.website || "",
+        name: organizationDetails.name || "",
+        address: {
+          line1: organizationDetails?.address?.line1,
+          line2: organizationDetails?.address?.line2,
+          city: organizationDetails?.address?.city,
+          state: organizationDetails?.address?.state,
+          country: organizationDetails?.address?.country,
+          pincode: organizationDetails?.address?.pincode,
+        },
+        // .filter(Boolean)
+        // .join(", "),
+        website: organizationDetails.website || "",
         phone: organizationDetails.phone || "",
         industry: organizationDetails.industry || "",
         privacyPolicy: organizationDetails.privacyPolicy || "",
-        termsOfUse: organizationDetails.terms || "",
+        terms: organizationDetails.terms || "",
         logoUrl: organizationDetails.logoUrl || initialData.logoUrl,
+        slug: organizationDetails.slug || initialData.slug,
       });
     }
   }, [organizationDetails]);
@@ -91,13 +114,24 @@ const CompanyDetails = () => {
   /* =========================
      SAVE HANDLER
   ========================= */
-  const handleSave = () => {
-    console.log("Updated Data:", formData);
-    setIsEdit(false);
+  const handleSave = async () => {
+    // console.log("Updated Data:", formData);
+    try {
+      const res = await organizationService.updateOrganizationProfile(user?.organization?.id as string, { ...formData, slug: formData.slug });
+
+      // console.log(res)
+      if (res.status === 200) {
+        fetchCompanyDetails()
+        setIsEdit(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
+
   return (
-    <div className="min-h-screen bg-[#f3f7f9] p-6">
+    <div className="p-10 mx-24">
       {!isEdit ? (
         <>
           <CompanyProfileView
@@ -105,7 +139,7 @@ const CompanyDetails = () => {
             data={organizationDetails}
             onEdit={() => setIsEdit(true)}
           />
-          <OrganizationInfo user={user} />
+          {/* <OrganizationInfo user={user} /> */}
         </>
       ) : (
         <CompanyProfileForm

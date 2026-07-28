@@ -15,4 +15,12 @@ export class OrganizationService extends ApiService {
       `${API_ENDPOINT_PATH?.ORGANIZATION?.getOrganizationDetailsByOrganizationIdPath(id)}`,
     );
   }
+
+
+    async updateOrganizationProfile(id:string,data: any): Promise<ApiResponse<any>> {
+      return await this.post(
+      `${API_ENDPOINT_PATH?.ORGANIZATION?.updateOrganizationPath(id)}`,
+        data
+    );
+    }
 }

@@ -6,19 +6,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
-import { Camera, Mail, Pencil, Phone } from "lucide-react";
+import { Camera, Locate, Mail, Pencil, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import TwoFactorAuth from "../components/TwoFactorAuth";
 import ChangePassword from "../components/ChangePassword";
+import { userProfileService } from "../service/userprofile.service";
+import { ToastMessageService } from "@/services";
+import { validateFile } from "@/utils/media.utils";
+import { uploadFileToS3WithPresignedUrl } from "@/utils/s3-upload.utils";
+import type { ApiError } from "@/types";
+import { mediaService } from "@/services/media.service";
+import ImageViewer from "../components/ImageViewer";
 
 // ---- Types ----
 type ProfileState = {
   firstName: string;
   lastName: string;
+  phone: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  addressLine1: string;
+  addressLine2: string;
   fullName: string;
   accountType: string;
   accountName: string;
-  phone: string;
   avatar: string | null;
   emails: string[];
   supportEmail: string;
@@ -27,43 +40,109 @@ type ProfileState = {
 export default function ProfilePage() {
   const { user } = useAuthStore((state) => state);
 
+  console.log(user)
+
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   const [profile, setProfile] = useState<ProfileState>({
     firstName: "",
     lastName: "",
+    phone: "",
+    city: "",
+    state: "",
+    country: "",
+    pincode: "",
+    addressLine1: "",
+    addressLine2: "",
+
+
+
     fullName: "",
     accountType: "",
     accountName: "",
-    phone: "",
     avatar: null,
     emails: [],
     supportEmail: "",
   });
 
-  // ---- Avatar Upload ----
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoading(true);
+  const toastService = new ToastMessageService();
+  const [open, setOpen] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadingProgress, setUploadProgress] = useState(0);
+
+  const handleSelectFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () =>
-      setProfile((prev) => ({ ...prev, avatar: reader.result as string }));
-    reader.readAsDataURL(file);
-    setLoading(false);
+    if (!validateFile(file)) {
+      toastService.error(`Maximum file size is 10mb.`);
+      return
+    };
+    setPreviewUrl(URL.createObjectURL(file));
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const uploadPayload = {
+        fileName: file.name,
+        mimeType: file.type,
+        fileSize: file.size,
+        type: "template",
+      };
+
+      // 🔹 get signed url
+      const response = await mediaService.getMediaUploadPresignedUrl(uploadPayload);
+
+      const doc = response.data?.doc;
+      console.log(doc)
+
+      if (response.status === 200 || response.status === 201) {
+        // 🔹 upload to s3
+        await uploadFileToS3WithPresignedUrl(
+          doc.uploadUrl,
+          file,
+          (progress: any) => {
+            setUploadProgress(progress);
+          },
+        );
+      }
+      setProfile((prev) => ({ ...prev, avatar: doc?.fileUrl as string }));
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastService.apiError(err.message || "Failed to upload file");
+      }
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // const payload = {
+    //   accountName: profile.accountName,
+    //   emails: profile.emails,
+    //   supportEmail: profile.supportEmail,
+    //   phone: profile.phone,
+    //   avatar: profile.avatar,
+    // };
     const payload = {
-      accountName: profile.accountName,
-      emails: profile.emails,
-      supportEmail: profile.supportEmail,
-      phone: profile.phone,
-      avatar: profile.avatar,
+      ...profile,
     };
 
-    console.log("SAVE", payload);
+    try {
+      const response = await userProfileService.updateUserProfile(payload as any);
+      console.log(response)
+
+    } catch (error) {
+      console.log("Error saving profile", error)
+    }
+
+    // console.log("SAVE", payload);
     setEditMode(false);
   };
 
@@ -72,12 +151,18 @@ export default function ProfilePage() {
     setProfile({
       firstName: data?.userProfile?.firstName || "",
       lastName: data?.userProfile?.lastName || "",
+      phone: data?.userProfile?.phone || "",
+      city: data?.userProfile?.address?.city || "",
+      state: data?.userProfile?.address?.state || "",
+      country: data?.userProfile?.address?.country || "",
+      pincode: data?.userProfile?.address?.pincode || "",
+      addressLine1: data?.userProfile?.address?.addressLine1 || "",
+      addressLine2: data?.userProfile?.address?.addressLine2 || "",
       fullName:
         `${data?.userProfile?.firstName || ""} ${data?.userProfile?.lastName || ""}`.trim(),
 
       accountType: data?.userProfile?.accountType || "",
       accountName: data?.organization?.name || "",
-      phone: data?.phone || "",
       avatar: data?.userProfile?.profilePicture || null,
       emails: user?.email ? [user.email] : [],
       supportEmail: data?.supportEmail || "",
@@ -91,14 +176,25 @@ export default function ProfilePage() {
   // const is_admin = isAdmin(user?.roleId);
 
   return (
-    <div className="h-[calc(100vh-114px)] overflow-y-scroll hide-scrollbar bg-gray-50">
+    <div className="bg-gray-50 py-10">
 
-      <div className="p-6 mx-auto max-w-4xl space-y-6 ">
+      <div className="px-6 mx-auto max-w-4xl space-y-6 ">
         {/* HEADER */}
-        <div className="bg-linear-to-r from-blue-100 to-yellow-100 p-6 rounded flex items-center justify-between">
+        <div className="relative bg-slate-900 p-6 rounded-2xl flex items-center justify-between overflow-hidden">
+          {/* <div className="absolute -right-14 -top-14 size-96 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" /> */}
+
+          {/* Particles */}
+          <div className="absolute left-100 top-14 size-1.5 rounded-full bg-cyan-400 shadow-[0_0_12px_2px_rgba(34,211,238,0.9)]" />
+          <div className="absolute left-120 top-22 size-1 rounded-full bg-violet-500 shadow-[0_0_10px_2px_rgba(168,85,247,0.9)]" />
+          <div className="absolute left-70 top-6 size-1 rounded-full bg-violet-500 shadow-[0_0_10px_2px_rgba(168,85,247,0.9)]" />
+          <div className="absolute left-130 bottom-12 size-2 rounded-full bg-emerald-400 shadow-[0_0_14px_3px_rgba(74,222,128,0.8)]" />
+          <div className="absolute right-60 top-10 size-1 rounded-full bg-blue-400 shadow-[0_0_10px_2px_rgba(96,165,250,0.9)]" />
+          <div className="absolute right-56 bottom-14 size-1.5 rounded-full bg-cyan-400 shadow-[0_0_12px_2px_rgba(34,211,238,0.9)]" />
+          <div className="absolute left-44 bottom-4 size-1 rounded-full bg-pink-400 shadow-[0_0_8px_2px_rgba(244,114,182,0.8)]" />
+
           <div className="flex items-center gap-4">
             <div className="relative">
-              <Avatar className="w-16 h-16">
+              <Avatar onClick={() => setOpen(true)} className="w-16 h-16">
                 {profile.avatar && (
                   <AvatarImage className="object-cover" src={profile.avatar} />
                 )}
@@ -113,15 +209,15 @@ export default function ProfilePage() {
                   <input
                     type="file"
                     className="hidden"
-                    onChange={handleImageChange}
+                    onChange={handleSelectFile}
                   />
                 </label>
               )}
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold">{profile?.firstName}</h2>
-              <p className="text-sm text-gray-600">
+              <h2 className="text-lg font-semibold text-white capitalize" >{profile?.firstName}</h2>
+              <p className="text-sm text-white">
                 {profile.emails[0] || "No email"}
               </p>
             </div>
@@ -138,12 +234,13 @@ export default function ProfilePage() {
         </div>
 
         {/* FORM */}
-        <div className="bg-white rounded p-6 space-y-6">
+        <div className="bg-white rounded-2xl p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">First Name</Label>
+
               <Input
-                className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl"
+                className="input-field"
                 value={profile.firstName}
                 disabled={!editMode}
                 onChange={(e) =>
@@ -155,7 +252,7 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">Last Name</Label>
               <Input
-                className=" border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl"
+                className="input-field"
                 value={profile.lastName}
                 disabled={!editMode}
                 onChange={(e) =>
@@ -167,12 +264,12 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">Phone</Label>
               <div className="relative">
-                <Phone className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
+                <Phone className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
                 <Input
-                  className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
+                  className="input-field pl-8"
                   value={profile.phone}
                   disabled={!editMode}
-                  placeholder="9199999999"
+                  placeholder="91xxxxxxxxxx"
                   onChange={(e) =>
                     setProfile((p) => ({ ...p, phone: e.target.value }))
                   }
@@ -181,38 +278,98 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm text-gray-500">Email</Label>
+              <Label className="text-sm text-gray-500">City</Label>
               <div className="relative">
-                <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
+                <Locate className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
                 <Input
-                  className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
-                  value={profile.emails[0]}
+                  className="input-field pl-8"
+                  value={profile?.city}
                   disabled={!editMode}
-                  placeholder="9199999999"
+                  placeholder="Delhi"
                   onChange={(e) =>
-                    setProfile((p) => ({ ...p, emails: [e.target.value] }))
+                    setProfile((p) => ({ ...p, city: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-500">State</Label>
+              <div className="relative">
+                <Locate className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                <Input
+                  className="input-field pl-8"
+                  value={profile?.state}
+                  disabled={!editMode}
+                  placeholder="Delhi"
+                  onChange={(e) =>
+                    setProfile((p) => ({ ...p, state: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-500">Country</Label>
+              <div className="relative">
+                <Locate className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                <Input
+                  className="input-field pl-8"
+                  value={profile?.country}
+                  disabled={!editMode}
+                  placeholder="India"
+                  onChange={(e) =>
+                    setProfile((p) => ({ ...p, country: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-500">Pincode</Label>
+              <div className="relative">
+                <Locate className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                <Input
+                  className="input-field pl-8"
+                  value={profile?.pincode}
+                  disabled={!editMode}
+                  placeholder="2323241"
+                  onChange={(e) =>
+                    setProfile((p) => ({ ...p, pincode: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-500">Address Line</Label>
+              <div className="relative">
+                <Locate className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                <Input
+                  className="input-field pl-8"
+                  value={profile?.addressLine1}
+                  disabled={!editMode}
+                  placeholder="674, near pg"
+                  onChange={(e) =>
+                    setProfile((p) => ({ ...p, addressLine1: e.target.value }))
                   }
                 />
               </div>
             </div>
 
             {/* <div className="space-y-2">
-            <Label className="text-xs text-gray-400">Email</Label>
+              <Label className="text-xs text-gray-400">Email</Label>
 
-            <div className="relative">
-              <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
-              <Input
-                className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
-                value={profile.emails[0]}
-                disabled={!editMode}
-                onChange={(e) => {
-                  // const updated = [...profile.emails];
-                  // updated[index] = e.target.value;
-                  // setProfile((p) => ({ ...p, emails: updated }));
-                }}
-              />
-            </div>
-          </div> */}
+              <div className="relative">
+                <Mail className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  className="border-0 border shadow-none rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
+                  value={profile.emails[0]}
+                  disabled={!editMode}
+                  onChange={(e) => {
+                    // const updated = [...profile.emails];
+                    // updated[index] = e.target.value;
+                    // setProfile((p) => ({ ...p, emails: updated }));
+                  }}
+                />
+              </div>
+            </div> */}
           </div>
 
           {/* EMAILS */}
@@ -291,18 +448,19 @@ export default function ProfilePage() {
 
           {editMode && (
             <div className="flex justify-end pt-4">
-              <Button onClick={handleSave} disabled={loading}>
+              <Button onClick={handleSave} disabled={loading} className="rounded-xl py-1.5! px-3">
                 Save Changes
               </Button>
             </div>
           )}
         </div>
 
-        <div className="flex gap-6 justify-between w-full bg-white p-6">
+        {/* <div className="flex gap-6 justify-between w-full rounded-2xl bg-white p-6">
           <ChangePassword />
           <TwoFactorAuth />
-        </div>
+        </div> */}
       </div>
+      {open && <ImageViewer url={profile.avatar || ""} setOpen={setOpen} />}
     </div>
 
   );

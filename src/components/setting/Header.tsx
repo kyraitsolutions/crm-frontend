@@ -27,11 +27,11 @@ const Header = () => {
   const breadcrumbs = getBreadcrumbs(location.pathname);
 
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header className="flex bg-white z-10 h-(--header-height) sticky top-0 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <div className="flex items-center gap-4 lg:px-6 px-4">
         <Button
           onClick={handleHistoryBack}
-          className="actions-btn rounded-full! mt-2!"
+          className="actions-btn rounded-full! mt-1!"
         >
           <ArrowLeft />
         </Button>

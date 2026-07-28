@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { CheckCircle, Lock, Trash2 } from 'lucide-react'
 import { useState } from 'react';
 
@@ -62,9 +63,9 @@ const TwoFactorAuth = () => {
         <h3 className="font-semibold text-sm text-gray-900">Whatsapp Recovery</h3>
         <p className="text-xs text-gray-500">Add your whatsapp number</p>
 
-        <button className="w-fit mt-2 rounded border border-gray-400 bg-white px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
+        <Button className="w-fit mt-2 rounded border border-gray-400 bg-white px-3 py-1.5! text-sm font-medium text-gray-700 hover:bg-gray-100">
           Setup
-        </button>
+        </Button>
       </div>
     </div>
   )

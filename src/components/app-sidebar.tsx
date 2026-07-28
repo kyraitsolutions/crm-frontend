@@ -74,24 +74,24 @@ export function AppSidebar() {
       //   icon: IconFileText,
       //   active: hasPermission(permissions, PERMISSIONS.LEADS_FORMS.VIEW),
       // },
-      {
-        title: "Broadcast",
-        url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
-        icon: MdOutlineCampaign,
-        // active: true,
-        children: [
-          {
-            title: "WhatsApp",
-            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
-            icon: MdWhatsapp,
-          },
-          {
-            title: "Email",
-            url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/email`,
-            icon: MdEmail,
-          },
-        ],
-      },
+      // {
+      //   title: "Broadcast",
+      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
+      //   icon: MdOutlineCampaign,
+      //   // active: true,
+      //   children: [
+      //     {
+      //       title: "WhatsApp",
+      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
+      //       icon: MdWhatsapp,
+      //     },
+      //     {
+      //       title: "Email",
+      //       url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/email`,
+      //       icon: MdEmail,
+      //     },
+      //   ],
+      // },
       {
         title: "Contacts",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/contacts`,

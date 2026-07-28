@@ -1,5 +1,11 @@
+import { ToastMessageService } from "@/services";
+import { mediaService } from "@/services/media.service";
+import type { ApiError } from "@/types";
+import { validateFile } from "@/utils/media.utils";
+import { uploadFileToS3WithPresignedUrl } from "@/utils/s3-upload.utils";
 import { Camera } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState, type Dispatch, type SetStateAction } from "react";
+import ImageViewer from "../UserProfile/components/ImageViewer";
 
 const CompanyLogo = ({
   name,
@@ -10,26 +16,73 @@ const CompanyLogo = ({
   name: string;
   logo: string;
   isEdit: boolean;
-  setFormData?: (data: any) => void;
+  setFormData?: Dispatch<SetStateAction<any>>;
 }) => {
+  const toastService = new ToastMessageService();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
+  const [open, setOpen] = useState<boolean>(false);
 
-      // update parent form state
-      if (setFormData)
-        setFormData((prev: any) => ({
-          ...prev,
-          logoUrl: previewUrl,
-          logoFile: file, // optional (for API upload later)
-        }));
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadingProgress, setUploadProgress] = useState(0);
+
+
+
+  const handleSelectFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!validateFile(file)) {
+      toastService.error(`Maximum file size is 10mb.`);
+      return
+    };
+    setPreviewUrl(URL.createObjectURL(file));
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const uploadPayload = {
+        fileName: file.name,
+        mimeType: file.type,
+        fileSize: file.size,
+        type: "template",
+      };
+
+      // 🔹 get signed url
+      const response = await mediaService.getMediaUploadPresignedUrl(uploadPayload);
+
+      const doc = response.data?.doc;
+      console.log(doc)
+
+      if (response.status === 200 || response.status === 201) {
+        // 🔹 upload to s3
+        await uploadFileToS3WithPresignedUrl(
+          doc.uploadUrl,
+          file,
+          (progress) => {
+            setUploadProgress(progress);
+          },
+        );
+      }
+      setFormData?.((prev: any) => ({
+        ...prev,
+        logoUrl: doc?.fileUrl,
+      }));
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastService.apiError(err.message || "Failed to upload file");
+      }
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -42,7 +95,7 @@ const CompanyLogo = ({
           onClick={() => isEdit && handleImageClick()}
         >
           {logo ? (
-            <img src={logo} alt="logo" className="w-full h-full object-cover" />
+            <img onClick={() => setOpen(true)} src={logo} alt="logo" className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <Camera size={20} className="text-gray-500" />
@@ -72,11 +125,14 @@ const CompanyLogo = ({
       {/* Hidden Input */}
       <input
         type="file"
+        // accept=".png,.jpg,.jpeg,.webp"
         ref={fileInputRef}
         className="hidden"
         accept="image/*"
-        onChange={handleFileChange}
+        onChange={handleSelectFile}
       />
+
+      {open && <ImageViewer url={logo || ""} setOpen={setOpen} />}
     </div>
   );
 };

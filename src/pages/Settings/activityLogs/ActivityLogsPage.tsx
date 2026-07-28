@@ -12,7 +12,7 @@ const ActivityLogsPage = () => {
   }, [accountId]);
 
   return (
-    <main className="p-4">
+    <main className="mx-24 py-10">
       {/* <Card>
         <CardHeader>
           <CardTitle>Activity Timeline</CardTitle>

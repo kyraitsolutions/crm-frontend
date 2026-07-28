@@ -67,7 +67,7 @@ const TeamList = ({
   };
 
   return (
-    <div className="border rounded-2xl overflow-hidden">
+    <div className="border rounded-2xl overflow-hidden bg-white">
       {/* 🔍 SEARCH */}
       <div className="p-3 border-b bg-white">
         <Input
