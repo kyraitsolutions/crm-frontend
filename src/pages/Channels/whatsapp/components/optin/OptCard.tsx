@@ -1,6 +1,3 @@
-import { Switch } from "@/components/ui/switch";
-import { Whatsapp } from "@/icons/icons";
-import { Pencil } from "lucide-react";
 import MessageConfig from "../cards/MessageConfig";
 
 interface OptCardProps {

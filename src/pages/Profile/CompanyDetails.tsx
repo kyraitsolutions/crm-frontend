@@ -1,7 +1,6 @@
 import { useAuthStore } from "@/stores";
 import CompanyProfileForm from "./components/CompanyProfile";
 import CompanyProfileView from "./components/CompanyProfileForm";
-import OrganizationInfo from "./components/OrganizationInfo";
 import { useEffect, useState } from "react";
 import { OrganizationService } from "@/services/organization.service";
 

@@ -1,6 +1,6 @@
 import {
-    Phone,
-    Settings,
+    // Phone,
+    // Settings,
     MessageCircleMore,
     SquareCheckBig,
     Layers,

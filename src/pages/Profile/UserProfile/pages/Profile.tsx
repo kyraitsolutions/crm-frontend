@@ -6,10 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
-import { Camera, Locate, Mail, Pencil, Phone } from "lucide-react";
+import { Camera, Locate, Pencil, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
-import TwoFactorAuth from "../components/TwoFactorAuth";
-import ChangePassword from "../components/ChangePassword";
+// import TwoFactorAuth from "../components/TwoFactorAuth";
+// import ChangePassword from "../components/ChangePassword";
 import { userProfileService } from "../service/userprofile.service";
 import { ToastMessageService } from "@/services";
 import { validateFile } from "@/utils/media.utils";
@@ -42,7 +42,7 @@ export default function ProfilePage() {
 
   console.log(user)
 
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   const [profile, setProfile] = useState<ProfileState>({
@@ -71,6 +71,7 @@ export default function ProfilePage() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadingProgress, setUploadProgress] = useState(0);
+  console.log(isUploading, uploadingProgress)
 
   const handleSelectFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

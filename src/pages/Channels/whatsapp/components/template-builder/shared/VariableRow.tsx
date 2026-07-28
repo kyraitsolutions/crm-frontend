@@ -30,7 +30,9 @@ export const VariableRow = ({
     formState: { errors },
   } = useFormContext<TemplateForm>();
 
-  const { suggestedVariables: SUGGESTED_VARIABLES, variableType } =
+  const { suggestedVariables: SUGGESTED_VARIABLES,
+    // variableType 
+  } =
     useTemplateStore((state) => state);
 
   const [open, setOpen] = useState(false);

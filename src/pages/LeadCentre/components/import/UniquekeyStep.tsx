@@ -2,9 +2,13 @@ import { ChevronDown } from 'lucide-react';
 import { useState } from 'react'
 import Navhandle from './Navhandle';
 
-const UniquekeyStep = ({ step, setStep, handleStep }: { step: number, setStep: any, handleStep: any }) => {
+const UniquekeyStep = ({ step,
+    // setStep, 
+    handleStep }: { step: number, setStep: any, handleStep: any }) => {
     const [actionType, setActionType] = useState("new");
     const [uniqueKey, setUniqueKey] = useState("");
+
+    console.log(step)
 
     return (
         <div className='flex flex-col gap-20 w-fit'>

@@ -30,6 +30,7 @@ const CompanyLogo = ({
   const [previewUrl, setPreviewUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadingProgress, setUploadProgress] = useState(0);
+  console.log(isUploading, uploadingProgress)
 
 
 

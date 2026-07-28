@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { MessageCircleHeartIcon, X } from 'lucide-react'
 
 const SendTemplate = ({ open, setOpen }: { open: boolean, setOpen: any }) => {
+  console.log(open)
   return (
     <div
       onClick={() => setOpen(false)}

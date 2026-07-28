@@ -7,15 +7,15 @@ import Papa from "papaparse";
 import { leadService } from "../../services/lead.service";
 import { useAuthStore } from "@/stores";
 import Uploading from "./Uploading";
-import { useNavigate } from "react-router-dom";
-import { ACCOUNT_PATHS } from "@/constants";
+// import { useNavigate } from "react-router-dom";
+// import { ACCOUNT_PATHS } from "@/constants";
 
 const MAX_STEP = 4;
 const CHUNK_SIZE = 1000; // matches backend BATCH_SIZE, one bulk request per chunk
 const CONCURRENT_CHUNKS = 3; // small concurrency, not full fan-out
 
 const ImportLeadStep = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { accountId } = useAuthStore((state) => state);
   const [step, setStep] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);

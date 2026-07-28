@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import ButtonWithTitle from '@/components/ui/Buttons/ButtonWithTitle';
 import ContactFilter from '@/pages/Contact/components/ContactFilter';
 import { Funnel, RefreshCw, Search, X } from 'lucide-react';
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const CallFilter = () => {
     const [openFilter, setOpenFilter] = useState(false);

@@ -8,7 +8,9 @@ const MakeCall = () => {
     const { accountId } = useAuthStore((store) => store)
     const [openCallPopup, setOpenCallPopup] = useState(false);
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [
+        loading,
+        setLoading] = useState(false);
     const [form, setForm] = useState({
         customerPhone: "",
         guestId: "1223",
@@ -32,6 +34,8 @@ const MakeCall = () => {
             setLoading(false)
         }
     }
+
+    console.log(loading)
     return (
         <div className="relative inline-block">
             <Button

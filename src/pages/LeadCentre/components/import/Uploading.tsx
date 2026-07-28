@@ -4,6 +4,8 @@ const Uploading = ({
     progress,
     uploadStats
 }: { step: any, progress: any, uploadStats: any }) => {
+
+    console.log(step)
     return (
         <div className="flex items-center justify-center">
             <div className="">

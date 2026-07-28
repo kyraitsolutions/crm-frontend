@@ -2,7 +2,6 @@ import { HEADER_MEDIA_TYPES } from "@/components/chatFlowEditior/config"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useRef, useState } from "react"
-import { HeaderMediaUploader } from "../template-builder/content/header/HeaderMediaUploader"
 import { Textarea } from "@/components/ui/textarea"
 import { formatWhatsappMessage } from "@/utils/textFormat"
 import { Button } from "@/components/ui/button"
@@ -11,10 +10,12 @@ import { ArrowLeft } from "lucide-react"
 
 const CreateMessage = () => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const [templateName, setTemplateName] = useState<string>("abhi");
+    const [templateName,
+        // setTemplateName
+    ] = useState<string>("abhi");
     const [messageType, setMessageType] = useState<"text" | "image" | "video" | "document">("text")
     const [messageText, setMessageText] = useState<string>("")
-    const [media, setMedia] = useState<string>("");
+    // const [media, setMedia] = useState<string>("");
 
     return (
 

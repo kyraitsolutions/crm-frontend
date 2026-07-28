@@ -1,36 +1,40 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { stageOptions } from '@/constants';
-import { timeAgo } from '@/utils/date.utils';
-import { ArrowDownLeft, ArrowUpRight, BookUser, CirclePlay, Clock3, Phone } from 'lucide-react';
-import { formatCallDuration } from '../utils/call.util';
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+// import { stageOptions } from '@/constants';
+// import { timeAgo } from '@/utils/date.utils';
+// import { formatCallDuration } from '../utils/call.util';
+
+// import {
+//      ArrowDownLeft, ArrowUpRight, BookUser, CirclePlay, Clock3, 
+//     Phone
+// } from 'lucide-react';
 
 const CallTable = () => {
 
-    const getCorrectStatus = (status: string | undefined) => {
-        switch (status) {
-            case "completed":
-                return {
-                    icon: <Phone className="size-4 text-green-600 rotate-270" />,
-                    value: "Call was successful"
-                };
-            case "busy":
-                return {
-                    icon: <Phone className="size-4 text-orange-600 rotate-270" />,
-                    value: "Client unanswered"
-                };
-            case "missed":
-                return {
-                    icon: <Phone className="size-4 text-yellow-500 rotate-270" />,
-                    value: "No agent answered"
-                };;
-            default:
-                return status || "Unknown status";
-        }
-    };
-    const handleStatusChange = (sid: any, value: any) => {
-        console.log("Changed", sid, value);
-    }
+    // const getCorrectStatus = (status: string | undefined) => {
+    //     switch (status) {
+    //         case "completed":
+    //             return {
+    //                 icon: <Phone className="size-4 text-green-600 rotate-270" />,
+    //                 value: "Call was successful"
+    //             };
+    //         case "busy":
+    //             return {
+    //                 icon: <Phone className="size-4 text-orange-600 rotate-270" />,
+    //                 value: "Client unanswered"
+    //             };
+    //         case "missed":
+    //             return {
+    //                 icon: <Phone className="size-4 text-yellow-500 rotate-270" />,
+    //                 value: "No agent answered"
+    //             };;
+    //         default:
+    //             return status || "Unknown status";
+    //     }
+    // };
+    // const handleStatusChange = (sid: any, value: any) => {
+    //     console.log("Changed", sid, value);
+    // }
 
     return (
         <div className=" bg-white rounded-2xl! px-5!">

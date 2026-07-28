@@ -104,7 +104,7 @@ export class LeadService extends ApiService {
   }
 
   async buildAllLeadPayloads(
-    accountId: string,
+    // accountId: string,
     csvRows: Record<string, string>[],
     mapping: Record<string, string>,
   ) {

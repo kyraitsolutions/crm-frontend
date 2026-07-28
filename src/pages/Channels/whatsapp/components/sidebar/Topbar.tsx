@@ -38,22 +38,16 @@ const tabs = [
     label: "Action Required",
     icon: AlertCircle,
   },
-];
+] as const;
+
+type TabId = typeof tabs[number]["id"];
 
 const Topbar = ({
   active,
   onChange,
 }: {
-  active: string;
-  onChange?: (
-    id:
-      | "explore"
-      | "all"
-      | "draft"
-      | "pending"
-      | "approved"
-      | "action-required",
-  ) => void;
+  active: TabId | string;
+  onChange?: (id: TabId) => void;
 }) => {
   return (
     <div className="w-full border-b bg-white  ">

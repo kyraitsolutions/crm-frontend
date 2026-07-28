@@ -2,7 +2,11 @@ import { FileText, Users } from 'lucide-react';
 import { useRef } from 'react'
 import Navhandle from './Navhandle';
 
-const UploadStep = ({ selectedFile, setSelectedFile, isSelected, step, setStep, handleStep }: { selectedFile: any, setSelectedFile: any, isSelected: any, step: number, setStep: any, handleStep: any }) => {
+const UploadStep = ({ selectedFile, setSelectedFile,
+    // isSelected,
+    step,
+    // setStep,
+    handleStep }: { selectedFile: any, setSelectedFile: any, isSelected: any, step: number, setStep: any, handleStep: any }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleBrowseClick = () => {

@@ -9,9 +9,12 @@ import {
   IconChevronRight,
   IconUsers,
 } from "@tabler/icons-react";
-import { Book, BookUser, Gauge, MessagesSquare } from "lucide-react";
+import { Gauge, MessagesSquare } from "lucide-react";
 import { useState } from "react";
-import { MdEmail, MdOutlineCampaign, MdOutlineContacts, MdWhatsapp } from "react-icons/md";
+import {
+  // MdWhatsapp ,  MdEmail, MdOutlineCampaign,
+  MdOutlineContacts,
+} from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { AccountSwitcher } from "./accountSwitcher/AccountSwitcher";
 import { NavMain } from "./nav-main";
