@@ -6,7 +6,8 @@ import { useWhatsAppStore } from "../store/whatsapp.store";
 import DataLoader from "@/components/Loader/data-loader";
 import WhatsAppWorkspace from "../sections/WhatsAppWorkspace";
 import WhatsappConnect from "../sections/WhatsAppConnect";
-import TemplatesPage from "./TemplatesPage";
+// import TemplatesPage from "./TemplatesPage";
+// import axios from "axios";
 
 export const Whatsapp = () => {
   const { accountId } = useAuthStore();
@@ -25,12 +26,17 @@ export const Whatsapp = () => {
 
   // const handleWhatsAppConnect = async () => {
   //   window.FB.login(
-  //     (response: any) => {
+  //     async (response: any) => {
   //       if (!response.authResponse) return;
 
   //       const code = response.authResponse.code;
   //       console.log(code);
 
+  //       try {
+  //         const response = await axios.post("http:")
+  //       } catch (error) {
+  //         console.log("error", error)
+  //       }
   //       // call backend
   //       // await connect(code, accountId);
   //     },
