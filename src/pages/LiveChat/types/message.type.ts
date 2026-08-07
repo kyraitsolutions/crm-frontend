@@ -50,6 +50,15 @@ export const BaseMessageSchema = z.object({
       message: z.string().optional(),
     })
     .optional(),
+  error: z
+    .object({
+      code: z.number(),
+      title: z.string(),
+      message: z.string(),
+      details: z.string(),
+    })
+    .optional(),
+
   createdAt: z.date(),
   updateAt: z.date(),
 });

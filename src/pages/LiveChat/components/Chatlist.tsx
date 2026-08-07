@@ -59,8 +59,9 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
       {conversationList?.length > 0 &&
         conversationList?.map((conv) => {
           const name =
-            conv?.profile?.displayName ||
+            conv?.contact?.name ||
             buildAndGetVisitorDisplayNameByVisitorId(conv?.visitorId);
+          const phoneNumber = conv?.contact?.phoneNumber || "";
 
           const previewText = conv.searchPreview || null;
           const lastMessage = conv?.lastMessage?.text || "No messages yet";
@@ -78,10 +79,10 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
               {/* Avatar */}
               <div className="relative">
                 <Avatar className="size-11 border border-gray-300 flex items-center justify-center bg-gray-100">
-                  {conv?.profile?.avatar ? (
+                  {conv?.contact?.profilePicture ? (
                     <AvatarImage
                       className="object-cover"
-                      src={conv.profile.avatar}
+                      src={conv.contact?.profilePicture}
                     />
                   ) : (
                     <MdOutlinePeopleOutline
@@ -107,10 +108,17 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
               <div className="flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <h3
-                    className={`truncate ${activeChat === conv.id ? "font-semibold" : "font-medium"
-                      } text-gray-700 text-sm`}
+                    className={`truncate flex flex-col gap-1 ${
+                      activeChat === conv.id ? "font-semibold" : "font-medium"
+                    } text-gray-700 text-sm`}
                   >
                     {name}
+
+                    {phoneNumber && (
+                      <span className="text-xs text-primary">
+                        {phoneNumber}
+                      </span>
+                    )}
                   </h3>
 
                   <span className="text-xs text-gray-400 whitespace-nowrap">

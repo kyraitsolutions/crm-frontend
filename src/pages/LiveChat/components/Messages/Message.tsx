@@ -9,6 +9,7 @@ import VideoMessage from "./VideoMessage";
 
 const Message = ({ message }: { message: TMessage }) => {
   const isIncoming = message.from === "user";
+
   const renderMessage = () => {
     switch (message.type) {
       case "text":
@@ -34,11 +35,19 @@ const Message = ({ message }: { message: TMessage }) => {
     }
   };
 
+  if (!message) return null;
+
+  const retryMessage = (message: any) => {
+    console.log(message);
+  };
+
   return (
     <MessageWrapper
       isIncoming={isIncoming}
       status={message?.status}
       timestamp={String(message?.createdAt)}
+      error={message?.error}
+      onRetry={() => retryMessage(message)}
     >
       {renderMessage()}
     </MessageWrapper>

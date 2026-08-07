@@ -92,6 +92,16 @@ export const API_ENDPOINT_PATH = {
   WHATSAPP: {
     REGISTER_PHONE_NUMBER: "whatsapp/phone-number/register",
 
+    MESSAGES: {
+      getSendMessagePath: (accountId: string) =>
+        `/whatsapp/account/${accountId}/message/send`,
+    },
+
+    MEDIA: {
+      getMediaPath: (accountId: string, mediaId: string) =>
+        `/whatsapp/account/${accountId}/message/media/${mediaId}`,
+    },
+
     TEMPLATES: {
       getTemplateCreatePath: (id: string) =>
         `/whatsapp/accounts/${id}/templates`,

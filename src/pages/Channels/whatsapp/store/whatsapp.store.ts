@@ -74,14 +74,14 @@ export const useWhatsAppStore = create<WhatsAppStore>((set) => ({
     }
   },
 
-  connect: async (accountId: string) => {
+  connect: async (payload) => {
     try {
-      set({connecting: true});
+      set({ connecting: true });
 
-      const response = await integrationService.connectWhatsApp(accountId);
+      const response = await integrationService.connectWhatsApp(payload);
       return response.doc;
     } finally {
-      set({connecting: false,});
+      set({ connecting: false });
     }
   },
 

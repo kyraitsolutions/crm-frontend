@@ -205,6 +205,11 @@ class ApiService {
 
     return this.post<T>(url, formData, uploadConfig);
   }
+
+  getBaseUrl() {
+    return this.instance.defaults.baseURL!;
+  }
 }
 
+export const api = new ApiService();
 export { ApiService };

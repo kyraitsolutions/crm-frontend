@@ -6,22 +6,23 @@ import { useConversationStore } from "../store/conversation.store";
 import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDisplayName";
 import { formatDate } from "@/utils/date.utils";
 import { MdOutlinePeopleOutline } from "react-icons/md";
+import { getWhatsappMediaUrl } from "../utils/getWhatsappMediaUrl";
+import { useAuthStore } from "@/stores";
 
 const ChatProfile = () => {
+  const accountId = useAuthStore((state) => state.accountId);
   const { messages } = useMessageStore((state) => state);
   const { conversations, selectedConversationId } = useConversationStore(
     (state) => state,
   );
   const sharedMedia = extractSharedMedia(messages);
 
-  console.log("Shared Media", sharedMedia);
-
   const selectedConversation = conversations.find(
     (conversation) => conversation.id === selectedConversationId,
   );
 
   if (!selectedConversation) {
-    return null
+    return null;
     // return (
     //   <div className="h-full flex flex-col items-center justify-center px-6 text-center border">
     //     <div className="size-20 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200 shadow-sm">
@@ -48,7 +49,7 @@ const ChatProfile = () => {
         </h1>
         <div className="flex flex-col items-center mt-5 justify-center gap-2 py-4 bg-gray-100 rounded-2xl px-3 mt-2">
           <div>
-            {selectedConversation?.profile?.avatar ? (
+            {selectedConversation?.contact?.profilePicture ? (
               <Avatar className="h-30 w-30 flex items-center justify-center bg-gray-100">
                 <AvatarImage
                   className="object-cover bg-orange-600 text-white"
@@ -65,7 +66,7 @@ const ChatProfile = () => {
             )}
           </div>
           <h1 className="text-sm font-bold">
-            {selectedConversation?.profile?.displayName ||
+            {selectedConversation?.contact?.name ||
               buildAndGetVisitorDisplayNameByVisitorId(
                 String(selectedConversation?.visitorId),
               )}
@@ -89,7 +90,9 @@ const ChatProfile = () => {
           >
             {media.type === "image" && (
               <img
-                src={media.url}
+                src={
+                  media.url || getWhatsappMediaUrl(String(accountId), media.id)
+                }
                 alt=""
                 className="w-full h-full object-cover"
               />
@@ -99,7 +102,7 @@ const ChatProfile = () => {
               <video
                 src={media.url}
                 className="w-full h-full object-cover"
-              // controls
+                // controls
               />
             )}
 

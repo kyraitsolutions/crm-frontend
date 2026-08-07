@@ -79,7 +79,7 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
   selectedConversationId: null,
   loadingConversations: false,
   conversationQuery: {
-    limit: 5,
+    limit: 50,
     search: "",
     platform: "all",
     status: [],
