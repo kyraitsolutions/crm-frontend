@@ -11,6 +11,7 @@ export const extractSharedMedia = (messages: TMessage[]) => {
       media.push({
         type: "image",
         url: message.media?.image?.link,
+        id: message.media?.image?.id,
         messageId: message.messageId,
         createdAt: message.createdAt,
       });

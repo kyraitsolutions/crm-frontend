@@ -30,11 +30,12 @@ export const ConversationSchema = z.object({
   lastMessage: LastMessageSchema.optional(),
   searchPreview: z.string().nullable().optional(),
   matchedMessageId: z.string().nullable().optional(),
-  profile: z
+  contact: z
     .object({
-      displayName: z.string().nullable().optional(),
-      avatar: z.string().nullable().optional(),
-      phone: z.string().nullable().optional(),
+      name: z.string().nullable().optional(),
+      email: z.string().nullable().optional(),
+      phoneNumber: z.string().nullable().optional(),
+      profilePicture: z.string().nullable().optional(),
     })
     .optional(),
   unreadCount: z.number().default(0),

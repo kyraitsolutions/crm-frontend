@@ -6,55 +6,60 @@ import { useWhatsAppStore } from "../store/whatsapp.store";
 import DataLoader from "@/components/Loader/data-loader";
 import WhatsAppWorkspace from "../sections/WhatsAppWorkspace";
 import WhatsappConnect from "../sections/WhatsAppConnect";
-// import TemplatesPage from "./TemplatesPage";
-// import axios from "axios";
+import TemplatesPage from "./TemplatesPage";
+import type { ApiError } from "@/types";
+import { ToastMessageService } from "@/services";
 
 export const Whatsapp = () => {
+  const toastService = new ToastMessageService();
   const { accountId } = useAuthStore();
   const { connect } = useWhatsAppStore();
   const { getIntegration, integration, loading } = useIntegrationStore(
     (state) => state,
   );
 
-  const handleWhatsAppConnect = async () => {
-    const data = await connect(String(accountId));
+  const handleWhatsAppConnectFnc = async (payload: any) => {
+    try {
+      const response = await connect(payload);
 
-    if (data && data?.connectUrl) {
-      window.open(data.connectUrl, "_blank");
+      console.log(response);
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastService.error(err.message || "Failed to connect");
+      }
     }
   };
 
-  // const handleWhatsAppConnect = async () => {
-  //   window.FB.login(
-  //     async (response: any) => {
-  //       if (!response.authResponse) return;
+  const handleWhatsAppConnect = async () => {
+    window.FB.login(
+      (response: any) => {
+        if (!response.authResponse) return;
 
-  //       const code = response.authResponse.code;
-  //       console.log(code);
+        const code = response.authResponse.code;
 
-  //       try {
-  //         const response = await axios.post("http:")
-  //       } catch (error) {
-  //         console.log("error", error)
-  //       }
-  //       // call backend
-  //       // await connect(code, accountId);
-  //     },
-  //     {
-  //       config_id: "887392707164005",
-  //       response_type: "code",
-  //       override_default_response_type: true,
-  //       // extras: {
-  //       //   feature: "whatsapp_coexistence",
-  //       // },
-  //       extras: {
-  //         setup: {},
-  //         featureType: "whatsapp_business_app_onboarding", // set to 'whatsapp_business_app_onboarding'
-  //         sessionInfoVersion: "3",
-  //       },
-  //     },
-  //   );
-  // };
+        const payload = {
+          code,
+          accountId: String(accountId),
+        };
+
+        handleWhatsAppConnectFnc(payload);
+      },
+      {
+        config_id: "887392707164005",
+        response_type: "code",
+        override_default_response_type: true,
+        // extras: {
+        //   feature: "whatsapp_coexistence",
+        // },
+        extras: {
+          setup: {},
+          featureType: "whatsapp_business_app_onboarding", // set to 'whatsapp_business_app_onboarding'
+          sessionInfoVersion: "3",
+        },
+      },
+    );
+  };
 
   const getWhatsappIntegration = async () => {
     await getIntegration("WHATSAPP", String(accountId));
@@ -65,6 +70,25 @@ export const Whatsapp = () => {
     getWhatsappIntegration();
   }, [accountId]);
 
+  // useEffect(() => {
+  //   const handleMessage = (event: MessageEvent) => {
+  //     // Always verify the origin
+  //     if (!event.origin.includes("facebook.com")) {
+  //       return;
+  //     }
+
+  //     console.log("Meta Message:", JSON.parse(event.data));
+
+  //     // You can inspect the payload here
+  //   };
+
+  //   window.addEventListener("message", handleMessage);
+
+  //   return () => {
+  //     window.removeEventListener("message", handleMessage);
+  //   };
+  // }, []);
+
   if (loading) {
     return (
       <div>
@@ -74,13 +98,15 @@ export const Whatsapp = () => {
   }
 
   return (
-    <main className="">
-      {integration?.connected ? (
+    <main className="h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar py-10">
+      {/* {!integration?.connected ? (
         <WhatsAppWorkspace />
       ) : (
         <WhatsappConnect onConnect={handleWhatsAppConnect} />
-      )}
+      )} */}
       {/* <TemplatesPage /> */}
+
+      <WhatsappConnect onConnect={handleWhatsAppConnect} />
     </main>
   );
 };

@@ -37,9 +37,9 @@ const ChatArea = ({ messages, selectedMessageId }: ChatAreaProps) => {
   return (
     <div
       ref={containerRef}
-      className="h-[70vh] overflow-y-auto p-4 hide-scrollbar"
+      className="p-4 h-full overflow-y-auto hide-scrollbar"
     >
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col h-full gap-3">
         {messages?.map((message, index) => {
           const previousMessage = messages[index - 1];
 

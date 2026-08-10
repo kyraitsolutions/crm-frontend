@@ -60,27 +60,31 @@ const LiveChat = () => {
   }
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 ${selectedConversationId ? "lg:grid-cols-[3fr_6fr_3fr]" : "lg:grid-cols-[3fr_9fr]"}  `}>
-      <div className="bg-white border-r h-[calc(100vh-64px)]! w-full overflow-hidden">
+    <div
+      className={`grid grid-cols-1 md:grid-cols-2 ${selectedConversationId ? "lg:grid-cols-[3fr_6fr_3fr]" : "lg:grid-cols-[3fr_9fr]"} h-[calc(100vh-64px)] overflow-hidden`}
+    >
+      <div className="flex flex-col border-r bg-white min-h-0">
         <ChatFilter />
 
         <div
-          className=" bg- overflow-y-auto hide-scrollbar"
+          className="overflow-y-auto hide-scrollbar flex-1"
           onScroll={(e) => handleScroll(e)}
         >
           <Chatlist conversationList={conversations || []} />
         </div>
       </div>
 
-      <div>
-        <ChatWindow />
-      </div>
+      <ChatWindow />
 
-      {selectedConversationId && <div className="bg-white p-4 border-l ">
-        <ChatProfile />
-      </div>}
+      {selectedConversationId && (
+        <div className="bg-white p-4 border-l ">
+          <ChatProfile />
+        </div>
+      )}
     </div>
   );
 };
 
 export default LiveChat;
+
+// h-[calc(100vh-64px)]!
