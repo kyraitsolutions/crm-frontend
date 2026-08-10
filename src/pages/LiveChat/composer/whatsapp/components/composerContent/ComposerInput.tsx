@@ -16,7 +16,7 @@ const ComposerInput = ({
   placeholder = "Type your message here...",
   onChange,
   onSend,
-  inputRef,
+  // inputRef,
   disabled,
 }: IComposerInputProps) => {
   const canSend = value.trim().length > 0 && !disabled;

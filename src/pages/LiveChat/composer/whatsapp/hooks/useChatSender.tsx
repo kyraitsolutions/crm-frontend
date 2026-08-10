@@ -10,7 +10,7 @@ export const useChatSender = () => {
     appendMessage(optimisticId, outgoing);
 
     try {
-      const response = await whatsappService.sendMessage(accountId, outgoing);
+      await whatsappService.sendMessage(accountId, outgoing);
     } catch (err) {
       console.log(err);
       throw err;

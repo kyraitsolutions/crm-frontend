@@ -3,7 +3,7 @@ import { WorkspaceHeader } from "../components/WorkspaceHeader";
 import { useWhatsAppStore } from "../store/whatsapp.store";
 import { OverviewTab } from "../tabs/OverviewTab";
 import { SettingsTab } from "../tabs/SettingsTabs";
-import { Tabs } from "../tabs/Tabs";
+// import { Tabs } from "../tabs/Tabs";
 import type { TWhatsAppAccount } from "../types/whatsapp.type";
 
 const WhatsAppWorkspace = () => {

@@ -1,16 +1,12 @@
-import { cn } from "@/lib/utils";
-import { useTemplateStore } from "../../../store/template-builder.store";
-import { Button } from "@/components/ui/button";
-
-const BUTTON_STRATEGIES = [
-  "No Buttons",
-  "Quick Replies",
-  "Call To Action",
-  "Mixed Actions",
-] as const;
+// const BUTTON_STRATEGIES = [
+//   "No Buttons",
+//   "Quick Replies",
+//   "Call To Action",
+//   "Mixed Actions",
+// ] as const;
 
 export const ButtonStrategySelector = () => {
-  const { buttonStrategy, setButtonStrategy } = useTemplateStore();
+  // const { buttonStrategy, setButtonStrategy } = useTemplateStore();
 
   return (
     <div className="space-y-2 p-2">
@@ -23,7 +19,7 @@ export const ButtonStrategySelector = () => {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {BUTTON_STRATEGIES.map((strategy) => (
+        {/* {BUTTON_STRATEGIES.map((strategy) => (
           <Button
             key={strategy}
             type="button"
@@ -37,7 +33,7 @@ export const ButtonStrategySelector = () => {
           >
             {strategy}
           </Button>
-        ))}
+        ))} */}
       </div>
     </div>
   );

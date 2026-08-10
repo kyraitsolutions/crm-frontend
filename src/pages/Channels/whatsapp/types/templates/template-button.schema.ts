@@ -21,6 +21,7 @@ export const ButtonSchema = z.object({
   activeFor: z.enum(WHATSAPP_ACTIVE_FOR).optional(),
   offerCode: z.string().optional(),
   errors: ButtonErrorsSchema.optional(),
+  value: z.string().optional(),
 });
 
 export type ButtonErrors = z.infer<typeof ButtonErrorsSchema>;

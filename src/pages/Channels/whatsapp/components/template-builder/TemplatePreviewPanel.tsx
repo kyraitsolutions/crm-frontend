@@ -90,7 +90,7 @@ export const TemplatePreviewPanel: React.FC = () => {
 
   const isMobile = viewMode === "Mobile View";
 
-  const renderButtonPreview = (btn: (typeof buttons)[0]) => {
+  const renderButtonPreview = (btn: any) => {
     const icon =
       btn.type === "URL Button" ? (
         <ExternalLink size={12} />
@@ -120,10 +120,11 @@ export const TemplatePreviewPanel: React.FC = () => {
             <button
               key={mode}
               onClick={() => setViewMode(mode)}
-              className={`flex-1 py-2 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors ${viewMode === mode
-                ? "bg-gray-100 text-gray-900"
-                : "bg-white text-gray-500 hover:bg-gray-50"
-                }`}
+              className={`flex-1 py-2 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors ${
+                viewMode === mode
+                  ? "bg-gray-100 text-gray-900"
+                  : "bg-white text-gray-500 hover:bg-gray-50"
+              }`}
             >
               {mode === "Mobile View" ? (
                 <Smartphone size={13} />
@@ -135,12 +136,11 @@ export const TemplatePreviewPanel: React.FC = () => {
           ))}
         </div>
         <div className="px-3">
-
-
           {/* Phone mockup */}
           <div
-            className={`mx-auto rounded-2xl overflow-hidden shadow-lg bg-[#ECE5DD] ${isMobile ? "max-w-65" : "max-w-full"
-              }`}
+            className={`mx-auto rounded-2xl overflow-hidden shadow-lg bg-[#ECE5DD] ${
+              isMobile ? "max-w-65" : "max-w-full"
+            }`}
           >
             {/* WhatsApp header bar */}
             <div className="bg-[#075E54] flex items-center gap-2 px-3 py-2">
@@ -208,7 +208,6 @@ export const TemplatePreviewPanel: React.FC = () => {
             </div>
           )}
         </div>
-
       </div>
 
       {/* Meta Validation */}

@@ -108,13 +108,14 @@ export class LeadService extends ApiService {
     csvRows: Record<string, string>[],
     mapping: Record<string, string>,
   ) {
+    console.log("accountId", accountId);
     const payloads = csvRows
       .map((row) => this.buildLeadPayload(row, mapping))
       .filter((payload) => Object.keys(payload).length > 0);
-      console.log(payloads); 
+    console.log(payloads);
 
-    return payloads;    
-      // return this.createLead(accountId, payloads);
+    return payloads;
+    // return this.createLead(accountId, payloads);
   }
 }
 

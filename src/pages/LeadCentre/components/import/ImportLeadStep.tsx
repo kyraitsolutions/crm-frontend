@@ -7,15 +7,15 @@ import Papa from "papaparse";
 import { leadService } from "../../services/lead.service";
 import { useAuthStore } from "@/stores";
 import Uploading from "./Uploading";
-import { useNavigate } from "react-router-dom";
-import { ACCOUNT_PATHS } from "@/constants";
+// import { useNavigate } from "react-router-dom";
+// import { ACCOUNT_PATHS } from "@/constants";
 
 const MAX_STEP = 4;
 const CHUNK_SIZE = 1000; // matches backend BATCH_SIZE, one bulk request per chunk
 const CONCURRENT_CHUNKS = 3; // small concurrency, not full fan-out
 
 const ImportLeadStep = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { accountId } = useAuthStore((state) => state);
   const [step, setStep] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -26,8 +26,8 @@ const ImportLeadStep = () => {
   const [progress, setProgress] = useState(0);
 
   // captured from UniquekeyStep — was never being stored before
-  const [uniqueKey, setUniqueKey] = useState<string>("");
-  const [mode, setMode] = useState<"upsert" | "insert" | "skip">("skip");
+  const [uniqueKey] = useState<string>("");
+  const [mode] = useState<"upsert" | "insert" | "skip">("skip");
 
   const [uploadStats, setUploadStats] = useState({
     total: 0,
@@ -95,7 +95,9 @@ const ImportLeadStep = () => {
       return next();
     }
 
-    await Promise.all(Array.from({ length: Math.min(limit, items.length) }, next));
+    await Promise.all(
+      Array.from({ length: Math.min(limit, items.length) }, next),
+    );
   }
 
   async function handleMappingComplete(mapping: Record<string, string>) {
@@ -126,44 +128,49 @@ const ImportLeadStep = () => {
       errors: [],
     });
 
-    await runWithConcurrency(chunks, CONCURRENT_CHUNKS, async (chunk, chunkIndex) => {
-      try {
-        const res = await leadService.createBulkLead(String(accountId), {
-          leads: chunk,
-          uniqueKey,
-          mode,
-        } as any);
+    await runWithConcurrency(
+      chunks,
+      CONCURRENT_CHUNKS,
+      async (chunk, chunkIndex) => {
+        try {
+          const res = await leadService.createBulkLead(String(accountId), {
+            leads: chunk,
+            uniqueKey,
+            mode,
+          } as any);
 
-        const data = (res as any)?.data ?? {};
-        uploaded += data.inserted || 0;
-        duplicates += data.duplicates?.length || 0;
-        failed += data.failed || 0;
+          const data = (res as any)?.data ?? {};
+          uploaded += data.inserted || 0;
+          duplicates += data.duplicates?.length || 0;
+          failed += data.failed || 0;
 
-        if (data.errors?.length) {
-          allErrors.push(
-            ...data.errors.map((e: any) => ({
-              index: chunkIndex * CHUNK_SIZE + e.index,
-              message: e.message,
-            })),
-          );
+          if (data.errors?.length) {
+            allErrors.push(
+              ...data.errors.map((e: any) => ({
+                index: chunkIndex * CHUNK_SIZE + e.index,
+                message: e.message,
+              })),
+            );
+          }
+        } catch (err) {
+          // whole chunk failed (network error, server 500, etc)
+          console.error(err);
+          failed += chunk.length;
         }
-      } catch (err) {
-        // whole chunk failed (network error, server 500, etc)
-        failed += chunk.length;
-      }
 
-      processedChunks++;
-      setProgress((processedChunks / chunks.length) * 100);
-      setUploadStats((prev) => ({
-        ...prev,
-        uploaded,
-        failed,
-        duplicates,
-        currentChunk: processedChunks,
-        status: `Uploaded ${processedChunks}/${chunks.length} chunks`,
-        errors: allErrors,
-      }));
-    });
+        processedChunks++;
+        setProgress((processedChunks / chunks.length) * 100);
+        setUploadStats((prev) => ({
+          ...prev,
+          uploaded,
+          failed,
+          duplicates,
+          currentChunk: processedChunks,
+          status: `Uploaded ${processedChunks}/${chunks.length} chunks`,
+          errors: allErrors,
+        }));
+      },
+    );
 
     setUploadStats((prev) => ({ ...prev, status: "Completed" }));
     // setTimeout(() => {
@@ -192,11 +199,11 @@ const ImportLeadStep = () => {
               step={step}
               setStep={setStep}
               handleStep={handleStep}
-            // csvHeaders={csvHeaders}
-            // uniqueKey={uniqueKey}
-            // setUniqueKey={setUniqueKey}
-            // mode={mode}
-            // setMode={setMode}
+              // csvHeaders={csvHeaders}
+              // uniqueKey={uniqueKey}
+              // setUniqueKey={setUniqueKey}
+              // mode={mode}
+              // setMode={setMode}
             />
           </div>
         )}
@@ -213,7 +220,11 @@ const ImportLeadStep = () => {
         )}
         {step === 3 && (
           <div>
-            <Uploading progress={progress} uploadStats={uploadStats} step={step} />
+            <Uploading
+              progress={progress}
+              uploadStats={uploadStats}
+              step={step}
+            />
           </div>
         )}
       </div>

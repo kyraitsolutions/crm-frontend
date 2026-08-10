@@ -2,10 +2,10 @@ import { create } from "zustand";
 import type {
   TemplateState,
   TemplateVariable,
-  VariableType,
 } from "../types/templates/template.type";
 import { generateId } from "@/utils/generateId.utils";
 import { createButton } from "../utils/template/template.utils";
+import type { VariableType } from "../types/templates";
 
 let _bodyCursorPos: number | undefined = undefined;
 export const setBodyCursorPos = (pos: number) => {

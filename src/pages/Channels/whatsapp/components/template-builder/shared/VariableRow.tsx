@@ -30,8 +30,9 @@ export const VariableRow = ({
     formState: { errors },
   } = useFormContext<TemplateForm>();
 
-  const { suggestedVariables: SUGGESTED_VARIABLES, variableType } =
-    useTemplateStore((state) => state);
+  const { suggestedVariables: SUGGESTED_VARIABLES } = useTemplateStore(
+    (state) => state,
+  );
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState(name);
@@ -178,10 +179,11 @@ export const VariableRow = ({
                           e.preventDefault();
                           handleSelect(v);
                         }}
-                        className={`cursor-pointer px-3 py-1.5 text-xs transition-colors hover:bg-green-50 hover:text-green-700 ${name === v
-                          ? "bg-green-50 font-medium text-green-700"
-                          : "text-gray-700"
-                          }`}
+                        className={`cursor-pointer px-3 py-1.5 text-xs transition-colors hover:bg-green-50 hover:text-green-700 ${
+                          name === v
+                            ? "bg-green-50 font-medium text-green-700"
+                            : "text-gray-700"
+                        }`}
                       >
                         {v}
                       </li>

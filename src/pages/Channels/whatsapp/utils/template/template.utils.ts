@@ -1,9 +1,7 @@
 import { generateId } from "@/utils/generateId.utils";
 import { BUTTON_TYPE_CONFIG } from "../../constants/template.constants";
-import type {
-  ButtonKind,
-  TemplateButton,
-} from "../../types/templates/template.type";
+import type { TemplateButton } from "../../types/templates/template.type";
+import type { ButtonKind } from "../../types/templates";
 
 export interface ButtonValidationError {
   buttonId?: string;
@@ -34,13 +32,9 @@ export function validateButtons(
     }
   });
 
-  const hasStandalone = buttons.some(
-    (b) => BUTTON_TYPE_CONFIG[b.kind]?.standaloneOnly,
-  );
+  const hasStandalone = buttons.some((b) => BUTTON_TYPE_CONFIG[b.kind]);
   if (hasStandalone && buttons.length > 1) {
-    const standaloneBtn = buttons.find(
-      (b) => BUTTON_TYPE_CONFIG[b.kind]?.standaloneOnly,
-    )!;
+    const standaloneBtn = buttons.find((b) => BUTTON_TYPE_CONFIG[b.kind])!;
     errors.push({
       message: `${BUTTON_TYPE_CONFIG[standaloneBtn.kind].label} can't be combined with other buttons.`,
     });
@@ -109,6 +103,13 @@ export function createButton(kind: ButtonKind): TemplateButton {
       };
 
     case "SHARE_CONTACT":
+      return {
+        id: generateId(),
+        kind,
+        label: "",
+      };
+
+    default:
       return {
         id: generateId(),
         kind,

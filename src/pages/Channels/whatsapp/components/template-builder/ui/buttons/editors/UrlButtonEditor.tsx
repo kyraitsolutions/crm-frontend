@@ -1,7 +1,7 @@
 import { CircleHelp } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 
 import {
   Select,
@@ -12,15 +12,37 @@ import {
 } from "@/components/ui/select";
 
 import { ButtonCard } from "../ButtonCard";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
-import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
+
+import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates";
+import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
+import { useFormContext } from "react-hook-form";
 
 interface Props {
   button: TemplateButton;
 }
 
 export function UrlButtonEditor({ button }: Props) {
-  const { updateButton, removeButton } = useTemplateStore((state) => state);
+  // const { updateButton, removeButton } = useTemplateStore((state) => state);
+  const { getValues, setValue } = useFormContext<TemplateForm>();
+  const removeButton = (id: string) => {
+    const buttons = getValues("buttons");
+    const newButtons = buttons?.filter((button) => button.id !== id);
+
+    setValue("buttons", newButtons);
+  };
+
+  const updateButton = (id: string, data: any) => {
+    const buttons = getValues("buttons");
+    const newButtons = buttons?.map((button) =>
+      button.id === id
+        ? {
+            ...button,
+            ...data,
+          }
+        : button,
+    );
+    setValue("buttons", newButtons);
+  };
 
   return (
     <ButtonCard onDelete={() => removeButton(button.id)}>
@@ -106,7 +128,7 @@ export function UrlButtonEditor({ button }: Props) {
                 placeholder="https://www.example.com"
                 onChange={(e) =>
                   updateButton(button.id, {
-                    value: e.target.value,
+                    value: e.target.value as string,
                   })
                 }
               />
