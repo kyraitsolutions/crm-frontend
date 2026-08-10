@@ -1,5 +1,6 @@
 interface TemplateListState {
-  templates: TTemplate[] | [];
+  // templates: TTemplate[] | [];
+  templates: any[];
 
   loading: boolean;
 
@@ -33,7 +34,7 @@ import { create } from "zustand";
 import type {
   TemplateCategory,
   TemplateStatus,
-  TTemplate,
+  // TTemplate,
 } from "../types/templates";
 import { whatsappTemplateService } from "../services/whatsapp-template.service";
 import type { Pagination } from "@/types/pagination.type";
@@ -78,7 +79,7 @@ export const useTemplateListStore = create<TemplateListState>((set, get) => ({
 
       set({
         templates: response.data?.docs ?? [],
-        pagination: response.data?.pagination,
+        pagination: response.data?.pagination as any,
       });
     } finally {
       set({ loading: false });

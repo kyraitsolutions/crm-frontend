@@ -32,6 +32,8 @@ export const useIntegrationStore = create<IntegrationStore>((set) => ({
         provider: provider,
       });
 
+      console.log("Integration response:", response);
+
       set({
         integration: response.doc,
       });

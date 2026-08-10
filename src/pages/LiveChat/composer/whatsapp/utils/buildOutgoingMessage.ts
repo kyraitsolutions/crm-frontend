@@ -10,7 +10,7 @@ export type OutgoingMessage =
   | {
       type: "media";
       payload: {
-        file: File;
+        file: File | Blob;
         attachmentType: AttachmentType;
         caption?: string;
       };
@@ -70,7 +70,7 @@ export const buildOutgoingMessage = (
     return {
       type: "media",
       payload: {
-        file: composer.recordedAudio,
+        file: composer.recordedAudio as Blob,
         attachmentType: "audio",
       },
     };

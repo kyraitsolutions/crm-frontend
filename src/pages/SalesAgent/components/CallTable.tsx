@@ -10,6 +10,30 @@
 // } from 'lucide-react';
 
 const CallTable = () => {
+    //   const getCorrectStatus = (status: string | undefined) => {
+    //     switch (status) {
+    //       case "completed":
+    //         return {
+    //           icon: <Phone className="size-4 text-green-600 rotate-270" />,
+    //           value: "Call was successful",
+    //         };
+    //       case "busy":
+    //         return {
+    //           icon: <Phone className="size-4 text-orange-600 rotate-270" />,
+    //           value: "Client unanswered",
+    //         };
+    //       case "missed":
+    //         return {
+    //           icon: <Phone className="size-4 text-yellow-500 rotate-270" />,
+    //           value: "No agent answered",
+    //         };
+    //       default:
+    //         return status || "Unknown status";
+    //     }
+    //   };
+    //   const handleStatusChange = (sid: any, value: any) => {
+    //     console.log("Changed", sid, value);
+    //   };
 
     // const getCorrectStatus = (status: string | undefined) => {
     //     switch (status) {
@@ -177,7 +201,7 @@ const CallTable = () => {
                 />
             </div> */}
         </div>
-    )
-}
+    );
+};
 
-export default CallTable
+export default CallTable;

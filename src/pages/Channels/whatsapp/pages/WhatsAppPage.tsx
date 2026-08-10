@@ -4,11 +4,10 @@ import { useEffect } from "react";
 import { useWhatsAppStore } from "../store/whatsapp.store";
 // import TemplatesPage from "./TemplatesPage";
 import DataLoader from "@/components/Loader/data-loader";
-import WhatsAppWorkspace from "../sections/WhatsAppWorkspace";
-import WhatsappConnect from "../sections/WhatsAppConnect";
-import TemplatesPage from "./TemplatesPage";
-import type { ApiError } from "@/types";
 import { ToastMessageService } from "@/services";
+import type { ApiError } from "@/types";
+import WhatsappConnect from "../sections/WhatsAppConnect";
+import WhatsAppWorkspace from "../sections/WhatsAppWorkspace";
 
 export const Whatsapp = () => {
   const toastService = new ToastMessageService();
@@ -89,6 +88,8 @@ export const Whatsapp = () => {
   //   };
   // }, []);
 
+  console.log("Integration Data:", integration);
+
   if (loading) {
     return (
       <div>
@@ -99,14 +100,13 @@ export const Whatsapp = () => {
 
   return (
     <main className="h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar py-10">
-      {/* {!integration?.connected ? (
+      {!integration?.connected ? (
         <WhatsAppWorkspace />
       ) : (
         <WhatsappConnect onConnect={handleWhatsAppConnect} />
-      )} */}
+      )}
       {/* <TemplatesPage /> */}
-
-      <WhatsappConnect onConnect={handleWhatsAppConnect} />
+      {/* <WhatsappConnect onConnect={handleWhatsAppConnect} /> */}
     </main>
   );
 };

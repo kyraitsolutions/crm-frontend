@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Bell, KeyRound, Megaphone } from "lucide-react";
 import React, { useState } from "react";
 import {
@@ -5,12 +6,9 @@ import {
   TYPE_OPTIONS_BY_CATEGORY,
 } from "../../constants/template.constants";
 import { useTemplateStore } from "../../store/template-builder.store";
-import type {
-  TemplateCategory,
-  TemplateType,
-} from "../../types/templates/template.type";
+
 import { FooterActions } from "./shared/FooterActions";
-import { Button } from "@/components/ui/button";
+import type { TemplateCategory, TemplateType } from "../../types/templates";
 
 const CATEGORY_ICONS: Record<TemplateCategory, React.ElementType> = {
   Marketing: Megaphone,
@@ -31,11 +29,17 @@ export const TemplateSetupStep: React.FC<TemplateSetupStepProps> = ({
   const activeCategory = (category ??
     TEMPLATE_CATEGORIES[0].value) as TemplateCategory;
 
-  const typeOptions = TYPE_OPTIONS_BY_CATEGORY[activeCategory];
+  const typeOptions =
+    TYPE_OPTIONS_BY_CATEGORY[
+      activeCategory as keyof typeof TYPE_OPTIONS_BY_CATEGORY
+    ];
 
   const handleCategoryChange = (next: TemplateCategory) => {
     setCategory(next);
-    setType(TYPE_OPTIONS_BY_CATEGORY[next][0].value);
+    setType(
+      TYPE_OPTIONS_BY_CATEGORY[next as keyof typeof TYPE_OPTIONS_BY_CATEGORY][0]
+        .value,
+    );
   };
 
   return (
@@ -82,7 +86,7 @@ export const TemplateSetupStep: React.FC<TemplateSetupStepProps> = ({
 
         {/* Type list */}
         <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
-          {typeOptions.map((opt) => {
+          {typeOptions.map((opt: any) => {
             const active = opt.value === type;
             return (
               <label

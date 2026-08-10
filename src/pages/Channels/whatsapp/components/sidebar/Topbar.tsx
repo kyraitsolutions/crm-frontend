@@ -58,10 +58,10 @@ const Topbar = ({
           return (
             <button
               key={tab.id}
-              onClick={() => onChange?.(tab.id)}
+              onClick={() => onChange?.(tab.id as any)}
               className={`relative flex items-center gap-2 px-10 py-4 text-sm font-medium transition-colors ${tab.id === active
-                ? "text-teal-700"
-                : "text-gray-600 hover:text-gray-900"
+                  ? "text-teal-700"
+                  : "text-gray-600 hover:text-gray-900"
                 }`}
             >
               <Icon size={18} strokeWidth={2} />

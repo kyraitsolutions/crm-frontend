@@ -1,10 +1,10 @@
 import type {
   ButtonKind,
-  ButtonTypeConfig,
   TemplateCategory,
   TemplateType,
   VariableType,
-} from "../types/templates/template.type";
+} from "../types/templates";
+import type { ButtonTypeConfig } from "../types/templates/template.type";
 
 export const TEMPLATE_CATEGORIES: {
   label: string;

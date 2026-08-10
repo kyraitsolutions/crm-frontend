@@ -28,14 +28,14 @@ const ComposerActions = ({
   showEmojiPicker,
   showAttachmentMenu,
   showTemplateMenu,
-  isRecording,
-  onCloseEmoji,
+  // isRecording,
+  // onCloseEmoji,
   onCloseAttachment,
   onTemplateSelected,
   onCloseTemplate,
   onEmojiSelect,
   onAttachmentSelected,
-  onVoiceRecorded,
+  // onVoiceRecorded,
 }: ComposerActionsProps) => {
   return (
     <>

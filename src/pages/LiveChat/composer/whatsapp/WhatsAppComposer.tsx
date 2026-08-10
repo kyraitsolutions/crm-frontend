@@ -1,18 +1,15 @@
-import AudioPreview from "./components/composerContent/AudioPreview";
 import ComposerActions from "./components/ComposerActions";
 import ComposerContent from "./components/ComposerContent";
-import ComposerInput from "./components/composerContent/ComposerInput";
 import ComposerPreview from "./components/ComposerPreview";
 import ComposerToolbar from "./components/ComposerToolbar";
-import VoiceRecorder from "./components/composerContent/VoiceRecorder";
 
-import { useWhatsappComposer } from "./hooks/useWhatsappComposer";
-import { useChatSender } from "./hooks/useChatSender";
 import { useAuthStore } from "@/stores";
-import { buildOutgoingMessage } from "./utils/buildOutgoingMessage";
 import { useConversationStore } from "../../store/conversation.store";
-import { buildWhatsappPayload } from "./utils/buildWhatsappPayload";
+import { useChatSender } from "./hooks/useChatSender";
+import { useWhatsappComposer } from "./hooks/useWhatsappComposer";
 import { buildFormData } from "./utils/buildFormData";
+import { buildOutgoingMessage } from "./utils/buildOutgoingMessage";
+import { buildWhatsappPayload } from "./utils/buildWhatsappPayload";
 
 const WhatsAppComposer = () => {
   const accountId = useAuthStore((state) => state.accountId);
