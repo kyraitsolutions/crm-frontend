@@ -104,7 +104,7 @@ const ImportLeadStep = () => {
     // setStep(3);
 
     const payloads = await leadService.buildAllLeadPayloads(
-      String(accountId),
+      // String(accountId),
       allRows,
       mapping,
     );
