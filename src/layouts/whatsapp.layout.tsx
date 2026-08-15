@@ -3,11 +3,10 @@ import { Outlet } from "react-router-dom";
 
 const WhatsappLayout = () => {
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       <Sidebar />
 
-      <main className="w-full h-[calc(100vh-64px)] overflow-hidden bg-gray-50">
-        {/* <SiteHeader /> */}
+      <main className="w-full h-full overflow-hidden bg-gray-50">
         <Outlet />
       </main>
     </div>

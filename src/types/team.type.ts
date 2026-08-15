@@ -9,8 +9,8 @@ export const addTeamMemberSchema = z.object({
   accounts: z
     .array(
       z.object({
-        accountId: z.string(),
-        roleId: z.string(),
+        accountId: z.string().min(1, "Account is required"),
+        roleId: z.string().min(1, "Role is required"),
       }),
     )
     .min(1, "Select at least one account"),

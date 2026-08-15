@@ -2,7 +2,6 @@ import { useIntegrationStore } from "@/stores/integration.store";
 import { WorkspaceHeader } from "../components/WorkspaceHeader";
 import { useWhatsAppStore } from "../store/whatsapp.store";
 import { OverviewTab } from "../tabs/OverviewTab";
-import { SettingsTab } from "../tabs/SettingsTabs";
 // import { Tabs } from "../tabs/Tabs";
 import type { TWhatsAppAccount } from "../types/whatsapp.type";
 
@@ -17,8 +16,8 @@ const WhatsAppWorkspace = () => {
       case "overview":
         return <OverviewTab data={whatsappAccountData} />;
 
-      case "settings":
-        return <SettingsTab data={whatsappAccountData} />;
+      // case "settings":
+      //   return <SettingsTab data={whatsappAccountData} />;
 
       default:
         return null;
@@ -26,14 +25,13 @@ const WhatsAppWorkspace = () => {
   };
 
   return (
-    <div className="space-y-5 max-w-7xl mx-auto">
+    <div className="space-y-4 max-w-7xl mx-auto">
       <WorkspaceHeader
         businessName={whatsappAccountData?.businessInfo.name}
         phoneNumber={whatsappAccountData?.phoneNumberInfo.displayPhoneNumber}
       />
 
       {/* <Tabs /> */}
-
       {renderTab()}
     </div>
   );

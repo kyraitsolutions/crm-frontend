@@ -7,6 +7,8 @@ import { timeAgo } from "@/utils/date.utils";
 import type { TokenData } from "./types/webhook.type";
 import TokenPopup from "./components/TokenPopup";
 import DataLoader from "@/components/Loader/data-loader";
+import { Button } from "@/components/ui/button";
+import Loader from "@/components/Loader";
 
 export default function Webhook() {
   const accountId = CookieUtils.getItem(COOKIES_STORAGE.accountId);
@@ -31,7 +33,9 @@ export default function Webhook() {
     website: "",
   });
 
-  const [customFields] = useState([{ key: "service", value: "Looking for homestay" }]);
+  const [customFields] = useState([
+    { key: "service", value: "Looking for homestay" },
+  ]);
 
   const [devTab, setDevTab] = useState("fetch");
   const [token, setToken] = useState<string>("");
@@ -72,21 +76,19 @@ export default function Webhook() {
     }
   };
 
-
   const getToken = async () => {
     try {
       setLoading(true);
       const response = await webhookService.getToken(String(accountId));
 
       // console.log(response?.data?.doc)
-      setTokenData(response?.data?.doc)
+      setTokenData(response?.data?.doc);
     } catch (error) {
-      console.error("Error", error)
-    }
-    finally {
+      console.error("Error", error);
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   const generateToken = async () => {
     try {
@@ -94,23 +96,23 @@ export default function Webhook() {
       // console.log(response)
       // console.log(response?.data?.doc)
       setPopupOpen(true);
-      setPopupType("success")
-      setToken(response?.data?.doc.token)
-      setTokenData(response?.data?.doc.savedToken)
+      setPopupType("success");
+      setToken(response?.data?.doc.token);
+      setTokenData(response?.data?.doc.savedToken);
     } catch (error) {
-      console.error("Error", error)
+      console.error("Error", error);
     }
-  }
+  };
 
   useEffect(() => {
-    getToken()
-  }, [])
+    getToken();
+  }, []);
 
   // console.log(tokenData)
   const payloadString = JSON.stringify(generatePayload(), null, 2);
 
   if (loading) {
-    return <DataLoader />
+    return <DataLoader />;
   }
 
   return (
@@ -123,16 +125,29 @@ export default function Webhook() {
               Incoming Webhook
             </h1>
             <p className="text-gray-500 text-sm mt-1">
-              This webhook allows you to send lead data from your website, CRM, or
-              any external system directly into the dashboard in real-time.
+              This webhook allows you to send lead data from your website, CRM,
+              or any external system directly into the dashboard in real-time.
               <br />
-              Whenever a user submits a form, you simply send a POST request with
-              JSON payload to the webhook URL.
+              Whenever a user submits a form, you simply send a POST request
+              with JSON payload to the webhook URL.
             </p>
           </div>
           <div className="flex flex-col w-fit gap-2">
-            {tokenData ? <button onClick={() => setPopupOpen(true)} className="text-md font-medium text-primary bg-primary/20 px-5 rounded-xl  py-1.75">Regenerate Token</button>
-              : <button onClick={() => generateToken()} className="text-md font-medium text-primary bg-primary/20 px-5 rounded-xl  py-1.75">Generate Token</button>}
+            {tokenData ? (
+              <Button
+                onClick={() => setPopupOpen(true)}
+                className="text-md font-medium text-primary bg-primary/20 px-5 rounded-xl cursor-pointer py-1.75"
+              >
+                Regenerate Token
+              </Button>
+            ) : (
+              <Button
+                onClick={() => generateToken()}
+                className="actions-btn px-4! py-2! rounded-xl!"
+              >
+                Generate Token
+              </Button>
+            )}
           </div>
         </div>
 
@@ -150,21 +165,34 @@ export default function Webhook() {
             </thead>
 
             <tbody>
-              {tokenData && <tr className="even:bg-muted capitalize">
+              {tokenData && (
+                <tr className="even:bg-muted capitalize">
+                  <td className="p-3 font-medium capitalize">
+                    {(tokenData as TokenData)?.name}
+                  </td>
+                  <td className="p-3 font-medium capitalize whitespace-nowrap">
+                    {(tokenData as TokenData)?.description ||
+                      "No description provided"}
+                  </td>
+                  <td className="p-3 ">
+                    {(tokenData as TokenData)?.isActive === true ? (
+                      <span>Active</span>
+                    ) : (
+                      <span>Inactive</span>
+                    )}
+                  </td>
 
-                <td className="p-3 font-medium capitalize">{(tokenData as TokenData)?.name}</td>
-                <td className="p-3 font-medium capitalize whitespace-nowrap">{(tokenData as TokenData)?.description || "No description provided"}</td>
-                <td className="p-3 ">{(tokenData as TokenData)?.isActive === true ? <span>Active</span> : <span>Inactive</span>}</td>
-
-                <td className="p-3 lowercase">{(tokenData as TokenData)?.tokenPrefix}</td>
-                <td className="p-3 text-muted-foreground whitespace-nowrap">
-                  {timeAgo(String((tokenData as TokenData)?.lastUsedAt))}
-                </td>
-                <td className="p-3 text-muted-foreground whitespace-nowrap">
-                  {timeAgo(String((tokenData as TokenData)?.createdAt))}
-                </td>
-
-              </tr>}
+                  <td className="p-3 lowercase">
+                    {(tokenData as TokenData)?.tokenPrefix}
+                  </td>
+                  <td className="p-3 text-muted-foreground whitespace-nowrap">
+                    {timeAgo(String((tokenData as TokenData)?.lastUsedAt))}
+                  </td>
+                  <td className="p-3 text-muted-foreground whitespace-nowrap">
+                    {timeAgo(String((tokenData as TokenData)?.createdAt))}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -208,8 +236,9 @@ export default function Webhook() {
               <button
                 key={tab}
                 onClick={() => setDevTab(tab)}
-                className={`px-3 py-1 rounded-xl text-sm ${devTab === tab ? "bg-primary text-white" : "bg-gray-100"
-                  }`}
+                className={`px-3 py-1 rounded-xl text-sm ${
+                  devTab === tab ? "bg-primary text-white" : "bg-gray-100"
+                }`}
               >
                 {tab.toUpperCase()}
               </button>
@@ -279,23 +308,27 @@ await axios.post(
           </pre>
         </div>
 
-
         {/* Action */}
         <div className="flex items-end justify-between gap-5 px-6">
           <div className="flex flex-col gap-2 w-full">
             <h2 className="text-md font-semibold">Enter copied api token</h2>
-            <Input setToken={setToken} value={token} type="text" placeholder="API Token" />
+            <Input
+              setToken={setToken}
+              value={token}
+              type="text"
+              placeholder="API Token"
+            />
           </div>
+
           <div className="">
-
-            <button
+            <Button
+              disabled={!token}
               onClick={sendTestLead}
-              className="flex items-center gap-2 whitespace-nowrap px-6 py-3 bg-primary text-white rounded-xl"
+              className="py-3.5! disabled:cursor-not-allowed!"
             >
-              <Send size={18} /> Send Test Lead
-            </button>
+              <Send size={18} /> Send Test Lead {loading && <Loader />}
+            </Button>
           </div>
-
         </div>
 
         <section className="bg-white p-6">
@@ -317,7 +350,6 @@ await axios.post(
         open={popupOpen}
         onClose={() => setPopupOpen(false)}
       />
-
     </div>
   );
 }

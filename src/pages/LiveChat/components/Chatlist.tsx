@@ -3,15 +3,26 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
 import { MdChatBubble, MdOutlinePeopleOutline } from "react-icons/md";
 import type { TConversation } from "../types/conversation.type";
-import { Bot, LucideInstagram, MessageSquareText } from "lucide-react";
+import {
+  Bot,
+  LucideInstagram,
+  MessageSquareText,
+  RefreshCcw,
+} from "lucide-react";
 import { useConversationStore } from "../store/conversation.store";
 import { ChatListSkeleton } from "./skeletons/ChatListSkeleton";
 import Loader from "@/components/Loader";
 import { formatTime } from "@/utils/date-utils";
 import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDisplayName";
 import { highlightText } from "@/utils/highlightText";
+import { Button } from "@/components/ui/button";
+import type { ApiError } from "@/types";
+import { ToastMessageService } from "@/services";
+import { whatsappService } from "@/pages/Channels/whatsapp/services/whatsapp.service";
+import { useAuthStore } from "@/stores";
 
 interface ChatListProps {
+  activeFilter: string;
   conversationList: TConversation[] | [];
 }
 
@@ -22,7 +33,8 @@ interface ChatListProps {
 //     hour12: true,
 //   }).format(new Date(date));
 // };
-const Chatlist = ({ conversationList }: ChatListProps) => {
+const Chatlist = ({ conversationList, activeFilter }: ChatListProps) => {
+  const accountId = useAuthStore((state) => state.accountId);
   const [activeChat, setActiveChat] = useState<string | null>(null);
   const {
     isRefetching,
@@ -30,6 +42,30 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
     setSelectConversationId,
     conversationQuery,
   } = useConversationStore((state) => state);
+
+  const toastMessageService = new ToastMessageService();
+
+  const [isContactSyncing, setIsContactSyncing] = useState(false);
+
+  const handleSyncContacts = async () => {
+    setIsContactSyncing(true);
+    try {
+      const response = await whatsappService.syncContacts(String(accountId));
+
+      if (response?.status === 200) {
+        toastMessageService.success(
+          response.message || "Contacts synced successfully",
+        );
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      if (err) {
+        toastMessageService.apiError(err.message || "Failed to sync contacts");
+      }
+    } finally {
+      setIsContactSyncing(false);
+    }
+  };
 
   if (isRefetching) {
     return <ChatListSkeleton />;
@@ -50,6 +86,19 @@ const Chatlist = ({ conversationList }: ChatListProps) => {
           There are no conversations available right now. Try changing filters
           or wait for new incoming chats.
         </p>
+
+        {activeFilter === "whatsapp" && (
+          <Button
+            disabled={isContactSyncing}
+            onClick={handleSyncContacts}
+            className="actions-btn mt-2 px-4! py-1.5! flex! items-center!"
+          >
+            Sync Contacts{" "}
+            <span className={`${isContactSyncing && "animate-spin"}`}>
+              <RefreshCcw className="size-4" />
+            </span>
+          </Button>
+        )}
       </div>
     );
   }

@@ -11,7 +11,6 @@ export const AuthCallbackPage = () => {
   useEffect(() => {
     const authCallbackHandler = async () => {
       const token = new URLSearchParams(location.search).get("token");
-      console.log(token);
       // const isOnboarding = new URLSearchParams(location.search).get(
       //   "onboarding",
       // );

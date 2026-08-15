@@ -56,6 +56,8 @@ const AddTeamMemberDialog = ({
     },
   });
 
+  console.log(errors.accounts);
+
   const [selectedAccounts, setSelectedAccounts] = useState<
     { accountId: string; roleId: string }[]
   >([]);
@@ -176,7 +178,7 @@ const AddTeamMemberDialog = ({
             <h3 className="text-sm font-semibold">Assign Accounts</h3>
 
             <div className="border rounded-xl p-3 space-y-3">
-              {accounts?.map((acc: any) => {
+              {accounts?.map((acc: any, index: number) => {
                 const selected = selectedAccounts.find(
                   (a) => a.accountId === acc.id,
                 );
@@ -224,6 +226,12 @@ const AddTeamMemberDialog = ({
                               ))}
                           </SelectContent>
                         </Select>
+                      )}
+
+                      {errors.accounts?.[index]?.roleId && (
+                        <p className="text-red-500 text-[10px] px-1 mt-0.5">
+                          {errors.accounts[index].roleId.message}
+                        </p>
                       )}
                     </div>
                   </div>

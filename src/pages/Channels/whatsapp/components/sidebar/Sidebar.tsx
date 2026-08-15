@@ -3,6 +3,7 @@ import {
   AtSign,
   Layers,
   MessageCircleMore,
+  Settings,
   SquareCheckBig,
   SquareUserRound,
 } from "lucide-react";
@@ -52,6 +53,13 @@ const Sidebar = () => {
       icon: <AtSign size={16} />,
       active: path === "canned-messages" ? true : false,
     },
+
+    {
+      url: "setting",
+      label: "Settings",
+      icon: <Settings size={16} />,
+      active: path === "setting" ? true : false,
+    },
   ];
 
   return (
@@ -70,15 +78,15 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <nav className="flex-1 overflow-y-auto py-4 space-y-1.5">
+      <nav className="flex-1 overflow-y-auto mt-4 space-y-2">
         {items.map((item, index) => (
-          <div key={index} className=" px-4 ">
+          <div key={index}>
             <Link
               to={item.url}
               key={item.label}
-              className={`flex w-full items-center gap-4 rounded-xl px-4 py-2.5 text-sm transition ${
+              className={`flex w-full items-center gap-4 rounded-xl text-sm transition px-4 py-3 ${
                 item.active
-                  ? "bg-teal-600/10 text-teal-900 font-"
+                  ? "bg-primary/10 text-primary font-semibold border-r-4 border-primary"
                   : "text-slate-700 transition-discrete duration-300"
               }`}
             >

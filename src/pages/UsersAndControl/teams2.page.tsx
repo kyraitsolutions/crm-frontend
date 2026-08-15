@@ -39,6 +39,7 @@ const Teams = () => {
     setAddLoading(true);
     try {
       const res = await teamService.createTeamMember(data);
+      console.log(res);
 
       if (res.status === 200) {
         const newTeamMember = res.data.doc;
@@ -135,7 +136,7 @@ const Teams = () => {
   }, []);
 
   if (loading) {
-    return <DataLoader />
+    return <DataLoader />;
   }
 
   // console.log(user);
@@ -167,7 +168,6 @@ const Teams = () => {
             />
           </div>
 
-
           {/* RIGHT SIDE */}
           <div className="p-4">
             {selectedUser ? (
@@ -185,12 +185,12 @@ const Teams = () => {
                   No User Selected
                 </h3>
                 <p className="mt-2 max-w-md text-sm text-gray-500">
-                  Select a user from the sidebar to view, manage, and create WhatsApp templates.
+                  Select a user from the sidebar to view, manage, and create
+                  WhatsApp templates.
                 </p>
               </div>
             )}
           </div>
-
         </div>
       )}
 

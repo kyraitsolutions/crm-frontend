@@ -91,7 +91,8 @@ export const API_ENDPOINT_PATH = {
 
   WHATSAPP: {
     REGISTER_PHONE_NUMBER: "whatsapp/phone-number/register",
-
+    syncContacts: (accountId: string) =>
+      `/whatsapp/account/${accountId}/sync-contacts`,
     MESSAGES: {
       getSendMessagePath: (accountId: string) =>
         `/whatsapp/account/${accountId}/message/send`,

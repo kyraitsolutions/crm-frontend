@@ -195,7 +195,7 @@ export default function Onboarding() {
         </aside>
 
         {!showSuccess && (
-          <main className="flex flex-1 justify-center py-3 bg-gray-200/40 h-full">
+          <main className="flex flex-1 justify-center py-3 bg-gray-200/40 h-full overflow-y-auto">
             <div className="w-full max-w-5xl rounded-2xl p-6 space-y-7">
               {/* Header */}
               <div className="space-y-1">
@@ -208,7 +208,10 @@ export default function Onboarding() {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-6 overflow-y-auto"
+              >
                 {/* ── STEP 1 — Personal Info (commented out) ─────────────
                 Restore this block + nextStep() + STEPS + step state
                 if you need to re-collect name/email in future.
@@ -536,7 +539,7 @@ export default function Onboarding() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full rounded-2xl py-3 text-sm font-semibold"
+                  className="w-full rounded-2xl py-3 mb-3 text-sm font-semibold"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">

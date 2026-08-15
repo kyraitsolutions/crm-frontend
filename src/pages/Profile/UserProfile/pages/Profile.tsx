@@ -27,6 +27,8 @@ type ProfileState = {
 export default function ProfilePage() {
   const { user } = useAuthStore((state) => state);
 
+  console.log("user", user);
+
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
@@ -77,7 +79,7 @@ export default function ProfilePage() {
 
       accountType: data?.userProfile?.accountType || "",
       accountName: data?.organization?.name || "",
-      phone: data?.phone || "",
+      phone: data?.userProfile?.phone || "",
       avatar: data?.userProfile?.profilePicture || null,
       emails: user?.email ? [user.email] : [],
       supportEmail: data?.supportEmail || "",
@@ -92,7 +94,6 @@ export default function ProfilePage() {
 
   return (
     <div className="h-[calc(100vh-114px)] overflow-y-scroll hide-scrollbar bg-gray-50">
-
       <div className="p-6 mx-auto max-w-4xl space-y-6 ">
         {/* HEADER */}
         <div className="bg-linear-to-r from-blue-100 to-yellow-100 p-6 rounded flex items-center justify-between">
@@ -169,7 +170,7 @@ export default function ProfilePage() {
               <div className="relative">
                 <Phone className="absolute left-2 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  className="border-0 shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
+                  className="shadow-none border rounded-none focus-visible:ring-0 disabled:border disabled:bg-gray-100 disabled:border-foreground/40 disabled:rounded-2xl px-8"
                   value={profile.phone}
                   disabled={!editMode}
                   placeholder="9199999999"
@@ -304,7 +305,6 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
-
   );
 }
 

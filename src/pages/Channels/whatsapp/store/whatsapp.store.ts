@@ -77,8 +77,8 @@ export const useWhatsAppStore = create<WhatsAppStore>((set) => ({
   connect: async (payload) => {
     try {
       set({ connecting: true });
-
       const response = await integrationService.connectWhatsApp(payload);
+      console.log(response);
       return response.doc;
     } finally {
       set({ connecting: false });

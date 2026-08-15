@@ -1,7 +1,7 @@
 import { LIVE_CHAT_SOCKET_EVENTS } from "@/constants/socketEvent.constatn";
 import { useAuthStore } from "@/stores";
 import { useSocketEvent } from "@/websocket/socket.hook";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ChatFilter from "./components/ChatFilter";
 import Chatlist from "./components/Chatlist";
 import ChatProfile from "./components/ChatProfile";
@@ -19,16 +19,15 @@ const LiveChat = () => {
     hasFetchedOnce,
     loadMoreConversations,
   } = useConversationStore((state) => state);
-  const { accountId } = useAuthStore((state) => state);
 
+  const { accountId } = useAuthStore((state) => state);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [activeFilter, setActiveFilter] = useState("all");
 
   const handleScroll = (e: any) => {
     const target = e.currentTarget;
 
     if (timeoutRef.current) return;
-
-    console.log("Scrolling");
 
     timeoutRef.current = setTimeout(() => {
       const bottomReached =
@@ -45,6 +44,7 @@ const LiveChat = () => {
   };
 
   useEffect(() => {
+    if (!accountId) return;
     fetchConversations(accountId || "");
   }, []);
 
@@ -59,18 +59,26 @@ const LiveChat = () => {
     return <FullChatSkeleton />;
   }
 
+  console.log("selectedConversationId", selectedConversationId);
+
   return (
     <div
       className={`grid grid-cols-1 md:grid-cols-2 ${selectedConversationId ? "lg:grid-cols-[3fr_6fr_3fr]" : "lg:grid-cols-[3fr_9fr]"} h-[calc(100vh-64px)] overflow-hidden`}
     >
       <div className="flex flex-col border-r bg-white min-h-0">
-        <ChatFilter />
+        <ChatFilter
+          activeFilter={activeFilter}
+          setActiveFilter={setActiveFilter}
+        />
 
         <div
           className="overflow-y-auto hide-scrollbar flex-1"
           onScroll={(e) => handleScroll(e)}
         >
-          <Chatlist conversationList={conversations || []} />
+          <Chatlist
+            conversationList={conversations || []}
+            activeFilter={activeFilter}
+          />
         </div>
       </div>
 

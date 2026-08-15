@@ -80,6 +80,29 @@ const ChatWindow = () => {
     (conversation) => conversation.id === selectedConversationId,
   );
 
+  if (!selectedConversation) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="text-center">
+          <img
+            src="/converted_image_transparent.png"
+            rel="preload"
+            fetchPriority="high"
+            alt="No chats yet"
+            className="w-75"
+          />
+          <h3 className="text-sm mt-2 font-semibold text-gray-800">
+            No messages yet
+          </h3>
+
+          <p className="mt-1 text-xs text-gray-500">
+            Start the conversation by sending a message.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full min-h-0 flex-col bg-gray-50">
       <ChatHeader
