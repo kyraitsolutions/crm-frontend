@@ -16,16 +16,15 @@ import Role from "@/pages/UsersAndControl/role.page";
 import Teams from "@/pages/UsersAndControl/teams2.page";
 // import { Teams } from "@/pages/UsersAndControl/teams.page";
 import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
+import Facebook from "@/pages/Channels/facebook.page";
+import Webhook from "@/pages/Developer/Webhook/Webhook";
+import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page";
+import ProfilePage from "@/pages/Profile/UserProfile/pages/Profile";
+import ActivityLogsPage from "@/pages/Settings/activityLogs/ActivityLogsPage";
+import ConfigurationPage from "@/pages/Settings/configuration/ConfigurationPage";
 import { PERMISSIONS } from "@/rbac";
 import { type RouteObject } from "react-router-dom";
 import { RequirePermission } from "./route-access/RequirePermission";
-import ConfigurationPage from "@/pages/Settings/configuration/ConfigurationPage";
-import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page";
-import ActivityLogsPage from "@/pages/Settings/activityLogs/ActivityLogsPage";
-import { Whatsapp } from "@/pages/Channels/whatsapp/pages/WhatsAppPage";
-import Webhook from "@/pages/Developer/Webhook/Webhook";
-import Facebook from "@/pages/Channels/facebook.page";
-import ProfilePage from "@/pages/Profile/UserProfile/pages/Profile";
 
 export const settingRoutes: RouteObject[] = [
   {
@@ -55,7 +54,7 @@ export const settingRoutes: RouteObject[] = [
           { path: "integrations", element: <Integrations /> },
 
           // Channels
-          { path: "whatsapp", element: <Whatsapp /> },
+          // { path: "whatsapp", element: <Whatsapp /> },
           { path: "instagram", element: <Instagram /> },
           { path: "telegram", element: <Telegram /> },
           { path: "facebook", element: <Facebook /> },

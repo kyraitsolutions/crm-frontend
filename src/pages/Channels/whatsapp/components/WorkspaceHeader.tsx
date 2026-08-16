@@ -19,7 +19,7 @@ export function WorkspaceHeader({
   phoneNumber,
 }: WorkspaceHeaderProps) {
   return (
-    <GlassCard className="relative overflow-hidden bg-slate-900 px-9 py-8 rounded-2xl">
+    <GlassCard className="relative overflow-hidden bg-slate-900 px-5 py-6 rounded-2xl">
       {/* Glow background */}
       <div className="absolute -right-14 -top-14 size-96 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 

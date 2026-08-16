@@ -19,6 +19,14 @@ export class WhatsAppService extends ApiService {
     );
     return response;
   }
+
+  async syncContacts(accountId: string) {
+    const response = await this.post(
+      API_ENDPOINT_PATH.WHATSAPP.syncContacts(accountId),
+    );
+
+    return response;
+  }
 }
 
 export const whatsappService = new WhatsAppService();

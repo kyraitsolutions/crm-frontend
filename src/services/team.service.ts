@@ -16,6 +16,8 @@ export class TeamService extends ApiService {
   }
 
   async deleteTeamMember(teamMembersIds: string[]): Promise<ApiResponse<any>> {
+    console.log(teamMembersIds);
+
     return await this.delete(`/team`, {
       teamMembersIds,
     });

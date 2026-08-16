@@ -5,8 +5,13 @@ import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { useConversationStore } from "../store/conversation.store";
 
-const ChatFilter = () => {
-  const [activeFilter, setActiveFilter] = useState("all");
+interface ChatFilterProps {
+  activeFilter: string;
+  setActiveFilter: (filter: string) => void;
+}
+
+const ChatFilter = ({ activeFilter, setActiveFilter }: ChatFilterProps) => {
+  // const [activeFilter, setActiveFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
   const [appliedFilter, setAppliedFilter] = useState<string[]>([]);
@@ -126,10 +131,11 @@ const ChatFilter = () => {
                       onClick={() => handleAddFilter(i)}
                       className={`
                                                     text-xs py-1 px-3 border rounded-full capitalize cursor-pointer transition
-                                                    ${appliedFilter.includes(i)
-                          ? "bg-second text-white border-second"
-                          : "bg-white hover:bg-gray-100"
-                        }
+                                                    ${
+                                                      appliedFilter.includes(i)
+                                                        ? "bg-second text-white border-second"
+                                                        : "bg-white hover:bg-gray-100"
+                                                    }
                                                 `}
                     >
                       {i}

@@ -74,6 +74,10 @@ export const appRoutes = createBrowserRouter([
             path: "/on-boarding",
             element: <OnBoardingPage />,
           },
+          // {
+          //   path: "/*",
+          //   element: ,
+          // },
         ],
       },
       {

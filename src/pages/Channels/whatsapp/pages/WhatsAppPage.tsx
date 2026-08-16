@@ -17,11 +17,12 @@ export const Whatsapp = () => {
     (state) => state,
   );
 
+  console.log("integration", integration);
+
   const handleWhatsAppConnectFnc = async (payload: any) => {
     try {
-      const response = await connect(payload);
-
-      console.log(response);
+      await connect(payload);
+      getWhatsappIntegration();
     } catch (error) {
       const err = error as ApiError;
       if (err) {
@@ -99,14 +100,14 @@ export const Whatsapp = () => {
   }
 
   return (
-    <main className="h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar py-10">
-      {!integration?.connected ? (
+    <section className="h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar px-3 py-2">
+      {integration && integration?.connected ? (
         <WhatsAppWorkspace />
       ) : (
         <WhatsappConnect onConnect={handleWhatsAppConnect} />
       )}
       {/* <TemplatesPage /> */}
       {/* <WhatsappConnect onConnect={handleWhatsAppConnect} /> */}
-    </main>
+    </section>
   );
 };
