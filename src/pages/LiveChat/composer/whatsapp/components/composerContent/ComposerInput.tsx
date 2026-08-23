@@ -28,8 +28,10 @@ const ComposerInput = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && canSend) {
+          if (e.key === "Enter" && canSend && !e.shiftKey) {
             onSend();
+            onChange("");
+            e.preventDefault();
           }
         }}
         placeholder={placeholder}

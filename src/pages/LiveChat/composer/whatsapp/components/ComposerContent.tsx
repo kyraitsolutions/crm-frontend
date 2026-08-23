@@ -8,6 +8,14 @@ interface ComposerContentProps {
 }
 
 const ComposerContent = ({ composer, onSend }: ComposerContentProps) => {
+  const handleSend = async () => {
+    composer.setMessage("");
+    composer.removeAttachment();
+    composer.setShowEmojiPicker(false);
+
+    onSend();
+  };
+
   if (composer.isRecording) {
     return (
       <VoiceRecorder
@@ -45,8 +53,8 @@ const ComposerContent = ({ composer, onSend }: ComposerContentProps) => {
       value={composer.message}
       onChange={composer.setMessage}
       inputRef={composer.inputRef}
-      disabled={composer.sending}
-      onSend={onSend}
+      disabled={composer.sending || composer.selectedAttachmentType}
+      onSend={handleSend}
     />
   );
 };

@@ -239,12 +239,12 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
       nds.map((node) =>
         node.id === id
           ? {
-            ...node,
-            data: {
-              ...node.data,
-              payload: newPayload,
-            },
-          }
+              ...node,
+              data: {
+                ...node.data,
+                payload: newPayload,
+              },
+            }
           : node,
       ),
     );
@@ -456,7 +456,10 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                     <div>
                       {item.document?.link ? (
                         (() => {
-                          const doc = getDocumentMeta(item.document.link || "");
+                          const doc = getDocumentMeta({
+                            fileName:
+                              item?.document?.link?.split("/").pop() || "",
+                          });
                           const Icon = doc?.icon;
 
                           return (
@@ -485,7 +488,7 @@ export default function SendMessageNode({ id, data }: TSendMessageNodeProps) {
                                   <p className="text-sm font-medium break-words">
                                     {decodeURIComponent(
                                       item?.document?.link?.split("/").pop() ||
-                                      "",
+                                        "",
                                     )}
                                   </p>
                                 </div>

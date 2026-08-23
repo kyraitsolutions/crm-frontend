@@ -1,6 +1,6 @@
 import type { AttachmentType } from "../hooks/useWhatsappComposer";
 
-export type OutgoingMessage =
+export type TOutgoingMessage =
   | {
       type: "text";
       payload: {
@@ -50,7 +50,7 @@ interface ComposerState {
 
 export const buildOutgoingMessage = (
   composer: ComposerState,
-): OutgoingMessage | null => {
+): TOutgoingMessage | null => {
   // Template
 
   if (composer.selectedTemplate) {

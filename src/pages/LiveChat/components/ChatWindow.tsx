@@ -12,8 +12,13 @@ import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDis
 const ChatWindow = () => {
   const { selectedConversationId, conversations, selectedMessageId } =
     useConversationStore((state) => state);
-  const { fetchMessages, messages, appendMessage, loadingMessages } =
-    useMessageStore((state) => state);
+  const {
+    fetchMessages,
+    messages,
+    appendMessage,
+    updateMessage,
+    loadingMessages,
+  } = useMessageStore((state) => state);
 
   const fetchMessagesByConversationId = async (conversationId: string) => {
     await fetchMessages(conversationId);
@@ -34,47 +39,15 @@ const ChatWindow = () => {
     ),
   );
 
-  // if (selectedConversationId) {
-  //   return (
-  //     <div className="flex h-full flex-col items-center justify-center bg-gray-50 border-l border-r">
-  //       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-  //         <MessageSquareMore className="h-10 w-10 text-primary" />
-  //       </div>
-
-  //       <h2 className="mt-6 text-2xl font-semibold text-gray-800">
-  //         Select a conversation
-  //       </h2>
-
-  //       <p className="mt-2 max-w-sm text-center text-sm text-gray-500">
-  //         Choose a conversation from the sidebar to start viewing messages and
-  //         replying to customers.
-  //       </p>
-  //     </div>
-  //   );
-  // }
-
-  // if (messages.length === 0) {
-  //   return (
-  //     <div className="flex h-full w-full items-center justify-center">
-  //       <div className="text-center">
-  //         <img
-  //           src="/converted_image_transparent.png"
-  //           rel="preload"
-  //           fetchPriority="high"
-  //           alt="No chats yet"
-  //           className="w-75"
-  //         />
-  //         <h3 className="text-sm mt-2 font-semibold text-gray-800">
-  //           No messages yet
-  //         </h3>
-
-  //         <p className="mt-1 text-xs text-gray-500">
-  //           Start the conversation by sending a message.
-  //         </p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  useSocketEvent(
+    LIVE_CHAT_SOCKET_EVENTS?.MESSAGES?.UPDATE_MESSAGE,
+    useCallback(
+      (data) => {
+        updateMessage(String(selectedConversationId), data?.message);
+      },
+      [selectedConversationId],
+    ),
+  );
 
   const selectedConversation = conversations.find(
     (conversation) => conversation.id === selectedConversationId,

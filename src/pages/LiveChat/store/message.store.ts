@@ -19,7 +19,9 @@ type TMessageState = {
   loadingMessages: boolean;
   fetchMessages: (conversationId: string) => Promise<void>;
   appendMessage: (conversationId: string, message: TMessage) => void;
+  updateMessage: (conversationId: string, message: TMessage) => void;
   clearMessages: (conversationId: string) => void;
+  replaceMessageId: (clientMessageId: string, messageId: string) => void;
   messageCache?: TMessageCache;
 };
 
@@ -82,12 +84,39 @@ export const useMessageStore = create<TMessageState>((set, get) => ({
     }));
   },
 
+  updateMessage: (conversationId, message) => {
+    if (String(message?.conversationId) !== String(conversationId)) return;
+
+    set((state) => ({
+      messages: state.messages.map((item) => {
+        if (item.messageId === message.messageId) {
+          return message;
+        }
+        return item;
+      }),
+    }));
+  },
+
   clearMessages: (conversationId) => {
     set((state) => ({
       messages: {
         ...state.messages,
         [conversationId]: [],
       },
+    }));
+  },
+
+  replaceMessageId: (clientMessageId, messageId) => {
+    console.log("replaceMessageId", clientMessageId, messageId);
+    set((state) => ({
+      messages: state.messages.map((item: any) =>
+        String(item.clientMessageId) === String(clientMessageId)
+          ? {
+              ...item,
+              messageId,
+            }
+          : item,
+      ),
     }));
   },
 }));

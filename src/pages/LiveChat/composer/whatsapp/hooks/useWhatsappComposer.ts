@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { getAttachmentType } from "../utils/getAttachmentType";
 
 export type AttachmentType = "image" | "document" | "video" | "audio";
 
@@ -45,21 +46,14 @@ export const useWhatsappComposer = () => {
     setSelectedFile(null);
     setPreviewUrl("");
     setCaption("");
+    setSelectedAttachmentType(null);
   };
 
   const handleAttachment = (file: File) => {
-    removeAttachment();
     setSelectedFile(file);
     // Only preview images/videos
     setPreviewUrl(URL.createObjectURL(file));
-    setSelectedAttachmentType(file.type.split("/")[0] as AttachmentType);
-    // if (
-    //   type === "image" &&
-    //   (file.type.startsWith("image") || file.type.startsWith("video"))
-    // ) {
-    //   setPreviewUrl(URL.createObjectURL(file));
-    // }
-
+    setSelectedAttachmentType(getAttachmentType(file));
     setShowAttachmentMenu(false);
   };
 

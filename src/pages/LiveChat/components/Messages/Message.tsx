@@ -1,4 +1,5 @@
 import type { TMessage } from "../../types/message.type";
+import AudioMessage from "./AudioMessage";
 import DocumentMessage from "./DocumentMessage";
 import ImageMessage from "./ImageMessage";
 import InteractiveMessage from "./InteractiveMessage";
@@ -26,6 +27,9 @@ const Message = ({ message }: { message: TMessage }) => {
 
       case "video":
         return <VideoMessage message={message} />;
+
+      case "audio":
+        return <AudioMessage message={message} />;
 
       case "document":
         return <DocumentMessage message={message} />;

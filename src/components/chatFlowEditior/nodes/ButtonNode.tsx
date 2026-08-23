@@ -31,7 +31,11 @@ const ButtonNode = ({ data }: TButtonNodeProps) => {
     if (!header) return null;
     const { type, text, image, video, document } = header;
 
-    const doc = type === "document" && getDocumentMeta(document?.link || "");
+    const doc =
+      type === "document" &&
+      getDocumentMeta({
+        fileName: document?.link?.split("/")?.pop() || "",
+      });
     const Icon = doc && doc.icon;
 
     return (

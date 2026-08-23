@@ -1,6 +1,7 @@
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { WHATSAPP_PATHS } from "@/constants/routes/whatsapp.path";
+import useDebounce from "@/hooks/useDebounce";
 import { useAuthStore } from "@/stores";
 import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -9,8 +10,6 @@ import Topbar from "../components/sidebar/Topbar";
 import Explore from "../components/template-builder/Explore";
 import TemplateTable from "../components/template-builder/TemplateTable";
 import { useTemplateListStore } from "../store/template-list.store";
-import useDebounce from "@/hooks/useDebounce";
-import { Input } from "@/components/ui/input";
 
 const TemplatesPage = () => {
   const navigate = useNavigate();
@@ -92,35 +91,28 @@ const TemplatesPage = () => {
   }, [filters, accountId]);
 
   return (
-    <div className="max-w-7xl mx-auto pb-10">
-      {/* margin on top div mt-10 if something comes below this comment */}
-
-      <div className="overflow-y-auto sticky top-0 bg-gray-50 z-10 pt-10">
-
-        <div className="flex justify-between items-center mb-10 ">
-          <div className="relative max-w-sm w-full ">
-            <Input
-              type="text"
-              placeholder="Search templates (status, name etc.)"
-              value={searchInputValue}
-              onChange={(e) => setSearchInputValue(e.target.value)}
-              className="input-field bg-white"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() =>
-                navigate(WHATSAPP_PATHS.createTemplates(String(accountId)))
-              }
-              className="rounded"
-            >
-              Create Template
-            </Button>
-            <Button className="rounded action-btn! bg-teal-900 hover:bg-teal-900/80 text-white  hover:text-white transition-all duration-300">
-              <RefreshCcw />
-              Sync Status
-            </Button>
-          </div>
+    <div className="max-w-7xl mx-auto">
+      <div className="flex justify-between items-center py-10">
+        <div className="relative max-w-sm w-full ">
+          <input
+            type="text"
+            placeholder="Search templates (status, name etc.)"
+            value={searchInputValue}
+            onChange={(e) => setSearchInputValue(e.target.value)}
+            className="w-full bg-gray-100 rounded-xl! px-4 border-gray-300 py-2.5 pr-8 text-sm text-[#37322F] placeholder:text-[#847971] focus:outline-none focus:border-gray-300 transition"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => navigate(WHATSAPP_PATHS.createTemplates())}
+            className="rounded"
+          >
+            Create Template
+          </Button>
+          <Button className="rounded action-btn! bg-teal-900 hover:bg-teal-900/80 text-white  hover:text-white transition-all duration-300">
+            <RefreshCcw />
+            Sync Status
+          </Button>
         </div>
 
         <Topbar active={active} onChange={handleTabChange} />

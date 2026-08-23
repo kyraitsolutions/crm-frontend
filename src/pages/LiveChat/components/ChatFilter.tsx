@@ -54,6 +54,7 @@ const ChatFilter = ({ activeFilter, setActiveFilter }: ChatFilterProps) => {
     value: "all" | "whatsapp" | "instagram" | "chatbot",
   ) => {
     setActiveFilter(value);
+    // setSelectConversationId("");
     await updateConversationQuery({
       platform: value,
     });

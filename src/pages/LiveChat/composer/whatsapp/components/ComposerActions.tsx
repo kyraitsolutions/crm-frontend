@@ -28,19 +28,22 @@ const ComposerActions = ({
   showEmojiPicker,
   showAttachmentMenu,
   showTemplateMenu,
-  // isRecording,
-  // onCloseEmoji,
   onCloseAttachment,
   onTemplateSelected,
   onCloseTemplate,
   onEmojiSelect,
   onAttachmentSelected,
+  onCloseEmoji,
   // onVoiceRecorded,
 }: ComposerActionsProps) => {
   return (
     <>
       {showEmojiPicker && (
-        <EmojiPopup open={showEmojiPicker} onSelect={onEmojiSelect} />
+        <EmojiPopup
+          open={showEmojiPicker}
+          onSelect={onEmojiSelect}
+          onClose={onCloseEmoji}
+        />
       )}
 
       <AttachmentPopup

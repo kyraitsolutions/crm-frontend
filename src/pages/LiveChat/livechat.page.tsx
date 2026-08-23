@@ -55,11 +55,16 @@ const LiveChat = () => {
     }, []),
   );
 
+  // useSocketEvent(
+  //   LIVE_CHAT_SOCKET_EVENTS?.MESSAGES?.UPDATE_MESSAGE,
+  //   useCallback((data) => {
+  //     updateConversationRealtime(data);
+  //   }, []),
+  // );
+
   if (isInitialLoading && !hasFetchedOnce) {
     return <FullChatSkeleton />;
   }
-
-  console.log("selectedConversationId", selectedConversationId);
 
   return (
     <div
