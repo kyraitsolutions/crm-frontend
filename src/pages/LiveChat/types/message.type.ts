@@ -31,13 +31,14 @@ const TMessageStatus = z.enum([
   "pending",
 ]);
 
-const MessageFromSchema = z.enum(["me", "user", "bot"]);
+const MessageFromSchema = z.enum(["me", "user", "bot", "agent"]);
 
 export const BaseMessageSchema = z.object({
   messageId: z.string(),
+  clientMessageId: z.string().optional(),
   conversationId: z.string(),
   accountId: z.string(),
-  visitorId: z.string(),
+  visitorId: z.string().optional(),
   chatbotId: z.string().optional(),
   from: MessageFromSchema,
   type: TMessageType,
@@ -80,6 +81,8 @@ export type TImageMessage = TBaseMessage & {
       link: string;
       id: string;
       caption: string;
+      mimetype: string;
+      size: number;
     };
   };
 };
@@ -91,6 +94,21 @@ export type TVideoMessage = TBaseMessage & {
     video: {
       link: string;
       id: string;
+      mimetype: string;
+      size: number;
+    };
+  };
+};
+
+export type TAudioMessage = TBaseMessage & {
+  type: "audio";
+  media: {
+    type: "audio";
+    audio: {
+      link: string;
+      id: string;
+      mimetype: string;
+      size: number;
     };
   };
 };
@@ -102,6 +120,9 @@ export type TDocumentMessage = TBaseMessage & {
     document: {
       link: string;
       id: string;
+      filename: string;
+      mimetype: string;
+      size: number;
     };
   };
 };
@@ -188,6 +209,7 @@ export type TMessage =
   | TTextMessage
   | TImageMessage
   | TVideoMessage
+  | TAudioMessage
   | TDocumentMessage
   | TInteractiveButtonMessage
   | TInteractiveListMessage

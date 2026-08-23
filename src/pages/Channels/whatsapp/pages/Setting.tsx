@@ -7,6 +7,8 @@ const Setting = () => {
   const { integration } = useIntegrationStore((state) => state);
   const whatsappAccountData = integration?.data as TWhatsAppAccount;
 
+  if (!whatsappAccountData) return <div>Whatsapp account not found</div>;
+
   return (
     <div className="space-y-4 px-4 py-2">
       <WorkspaceHeader

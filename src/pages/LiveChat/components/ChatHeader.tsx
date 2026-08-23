@@ -16,7 +16,7 @@ type ChatHeaderProps = {
     | "email";
 };
 
-const ChatHeader = ({ name, img, platform }: ChatHeaderProps) => {
+const ChatHeader = ({ name, img }: ChatHeaderProps) => {
   return (
     <div className="bg-white px-3 py-2 drop-shadow-xs border-gray-200 relative">
       <div className="flex items-center gap-4">
@@ -38,7 +38,8 @@ const ChatHeader = ({ name, img, platform }: ChatHeaderProps) => {
 
         <div className="relative">
           <h1 className="text-sm font-semibold">
-            {name} <span>{platform}</span>
+            {name}
+            {/* <span>{platform}</span> */}
           </h1>
           <ChatTags />
         </div>

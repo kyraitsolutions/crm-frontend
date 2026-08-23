@@ -1,6 +1,5 @@
 export const buildFormData = (payload: any) => {
   const formData = new FormData();
-
   formData.append("to", payload.to);
   formData.append("type", payload.type);
 

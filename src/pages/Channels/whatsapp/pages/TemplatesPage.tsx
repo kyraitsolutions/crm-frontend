@@ -85,9 +85,7 @@ const TemplatesPage = () => {
         </div>
         <div className="flex items-center gap-2">
           <Button
-            onClick={() =>
-              navigate(WHATSAPP_PATHS.createTemplates(String(accountId)))
-            }
+            onClick={() => navigate(WHATSAPP_PATHS.createTemplates())}
             className="rounded"
           >
             Create Template

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { formatTime } from "@/utils/date-utils";
 import { AlertCircle, Check, CheckCheck, User, X } from "lucide-react";
 import type { ReactNode } from "react";
@@ -23,7 +23,7 @@ const MessageWrapper = ({
   timestamp,
   status,
   error,
-  onRetry,
+  // onRetry,
 }: MessageWraperProps) => {
   const renderStatus = () => {
     if (isIncoming || !status) return null;
@@ -80,14 +80,14 @@ const MessageWrapper = ({
               {error.details || error.message}
             </p>
 
-            <div className="flex justify-end">
+            {/* <div className="flex justify-end">
               <Button
                 onClick={() => onRetry?.()}
                 className="actions-btn text-xs! px-4! bg-red-200! text-red-500!"
               >
                 Retry
               </Button>
-            </div>
+            </div> */}
           </div>
         )}
 

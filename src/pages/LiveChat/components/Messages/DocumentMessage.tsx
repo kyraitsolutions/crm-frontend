@@ -10,6 +10,8 @@ import {
 import type { TMessage } from "../../types/message.type";
 // import { FaFilePdf } from "react-icons/fa";
 import { getDocumentMeta } from "@/components/chatFlowEditior/utils/getDocumentMeta";
+import { getWhatsappMediaUrl } from "../../utils/getWhatsappMediaUrl";
+import { useAuthStore } from "@/stores";
 
 type TDocumentMessageProps = {
   message: TMessage;
@@ -26,49 +28,91 @@ const getFileName = (url?: string) => {
 };
 
 const DocumentMessage = ({ message }: TDocumentMessageProps) => {
+  const accountId = useAuthStore((state) => state.accountId);
+
   if (message.type !== "document") return null;
 
-  const documentLink = message.media?.document?.link;
+  const document = message.media?.document;
+
+  const documentLink = document?.id
+    ? `${getWhatsappMediaUrl(String(accountId), document?.id)}`
+    : document?.link || "";
 
   // const fileType = getFileType(documentLink);
-  const fileName = getFileName(documentLink);
-  const doc = getDocumentMeta(documentLink || "");
-  const icon = doc && doc.icon;
+  // const fileName = getFileName(documentLink);
+  const fileName = document.filename || getFileName(documentLink) || "Document";
+  const mimeType = document.mimetype || "";
 
+  const doc = getDocumentMeta({
+    fileName,
+    mimeType,
+  });
+
+  // PDF preview
+  if (["application/pdf"].includes(mimeType)) {
+    return (
+      <div className="w-full max-w-md overflow-hidden rounded-2xl border-0 bg-white">
+        {/* <iframe
+          src={documentLink}
+          title={fileName}
+          seamless
+          className="w-full h-40 overflow-hidden border-0"
+        /> */}
+
+        <div className="flex items-center gap-3 p-3 bg-gray-50">
+          <div
+            className="shrink-0"
+            style={{
+              color: doc?.iconColor,
+            }}
+          >
+            {<doc.icon className="size-6" />}
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-gray-800 break-all">
+              {fileName}
+            </p>
+          </div>
+
+          <a
+            href={documentLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0"
+          >
+            <Download className="size-5 text-blue-500" />
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // Other documents
   return (
-    <div>
-      {/* DOCUMENT CARD */}
+    <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50">
+      <div
+        className="shrink-0"
+        style={{
+          color: doc?.iconColor,
+        }}
+      >
+        {<doc.icon className="size-6" />}
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-medium text-gray-800 break-all">
+          {fileName}
+        </p>
+      </div>
+
       <a
         href={documentLink}
         target="_blank"
-        download
         rel="noopener noreferrer"
-        className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 hover:bg-gray-100 transition"
+        className="shrink-0 cursor-pointer"
       >
-        llll
-        {/* ICON */}
-        <div
-          className="shrink-0"
-          style={{
-            color: doc.iconColor,
-          }}
-        >
-          {icon && <doc.icon className="size-6" />}
-        </div>
-        {/* INFO */}
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-gray-800 break-words">
-            {fileName}
-          </p>
-
-          {/* <p className="text-xs text-gray-500 uppercase mt-1">
-            {fileType} document
-          </p> */}
-        </div>
-        {/* DOWNLOAD */}
-        <div className="shrink-0">
-          <Download className="size-5 text-blue-500" />
-        </div>
+        <Download className="size-5 text-blue-500" />
       </a>
     </div>
   );

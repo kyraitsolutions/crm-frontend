@@ -28,8 +28,6 @@ const WhatsAppComposer = () => {
   const handleSend = async () => {
     const outgoing = buildOutgoingMessage(composer as any);
 
-    console.log(outgoing);
-
     if (!outgoing) return;
 
     const payload = buildWhatsappPayload(
@@ -37,11 +35,13 @@ const WhatsAppComposer = () => {
       outgoing,
     );
 
-    console.log("payload", payload);
-
     const formData = buildFormData(payload);
-
-    await sendMessage(String(accountId), formData);
+    await sendMessage({
+      accountId: accountId as string,
+      formData,
+      outgoing,
+      conversationId: String(selectedConversationId),
+    });
   };
 
   return (
@@ -62,34 +62,29 @@ const WhatsAppComposer = () => {
         // inputRef={composer.inputRef}
         onTemplateSelected={composer.handleTemplate}
         onCloseEmoji={() => composer.setShowEmojiPicker(false)}
-        onCloseAttachment={() => composer.setShowAttachmentMenu(false)}
+        onCloseAttachment={() => {
+          composer.setShowAttachmentMenu(false);
+        }}
         onCloseTemplate={() => composer.setShowTemplateMenu(false)}
         onEmojiSelect={(emoji) => composer.setMessage((prev) => prev + emoji)}
         onAttachmentSelected={composer.handleAttachment}
       />
 
       <div className="flex lg:flex-row flex-col lg:items-center gap-2">
-        <ComposerToolbar
-          onEmojiClick={() => composer.setShowEmojiPicker((prev) => !prev)}
-          onAttachmentClick={() =>
-            composer.setShowAttachmentMenu((prev) => !prev)
-          }
-          onTemplateClick={() => composer.setShowTemplateMenu((prev) => !prev)}
-          onRecordClick={() => composer.setIsRecording((prev) => !prev)}
-        />
+        {!composer?.selectedAttachmentType && (
+          <ComposerToolbar
+            onEmojiClick={() => composer.setShowEmojiPicker((prev) => !prev)}
+            onAttachmentClick={() =>
+              composer.setShowAttachmentMenu((prev) => !prev)
+            }
+            onTemplateClick={() =>
+              composer.setShowTemplateMenu((prev) => !prev)
+            }
+            onRecordClick={() => composer.setIsRecording((prev) => !prev)}
+          />
+        )}
 
         <ComposerContent composer={composer} onSend={handleSend} />
-
-        {/* <ComposerInput
-          value={composer.message}
-          onChange={composer.setMessage}
-          inputRef={composer.inputRef}
-          disabled={composer.sending}
-          onSend={() => {
-            console.log(composer.message);
-            composer.setMessage("");
-          }}
-        /> */}
       </div>
     </div>
   );

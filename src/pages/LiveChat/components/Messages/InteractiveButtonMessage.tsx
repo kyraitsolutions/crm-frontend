@@ -69,7 +69,9 @@ const InteractiveButtonMessage = ({
         ) : null;
 
       case "document": {
-        const doc = getDocumentMeta(document?.link || "");
+        const doc = getDocumentMeta({
+          fileName: document?.link?.split("/").pop() || "Document",
+        });
         const Icon = doc?.icon;
 
         const fileName = decodeURIComponent(
