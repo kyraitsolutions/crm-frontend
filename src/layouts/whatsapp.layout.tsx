@@ -1,16 +1,28 @@
 import Sidebar from "@/pages/Channels/whatsapp/components/sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
 
-const WhatsappLayout = () => {
+export const WhatsappLayout = () => {
   return (
-    <div className="flex">
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden">
       <Sidebar />
 
-      <main className="w-full h-full overflow-hidden bg-gray-50">
+      <main className="min-w-0 flex-1 overflow-hidden bg-gray-50 p-2">
         <Outlet />
       </main>
     </div>
   );
 };
 
-export { WhatsappLayout };
+// const WhatsappLayout = () => {
+//   return (
+//     <div className="flex">
+//       <Sidebar />
+
+//       <main className="w-full h-full overflow-hidden bg-gray-50">
+//         <Outlet />
+//       </main>
+//     </div>
+//   );
+// };
+
+// export { WhatsappLayout };

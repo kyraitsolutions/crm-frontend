@@ -18,20 +18,20 @@ interface Props {
 }
 
 export function QuickStats({ data }: Props) {
-  const mode = data.phoneNumberInfo.accountMode; // "LIVE" | "SANDBOX" etc.
-  const quality = data.qualityRating ?? "UNKNOWN";
+  const mode = data?.phoneNumberInfo?.accountMode; // "LIVE" | "SANDBOX" etc.
+  const quality = data?.qualityRating ?? "UNKNOWN";
 
   return (
     <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
       {/* Phone Number */}
       <StatCard
         title="Phone Number"
-        value={data.phoneNumberInfo.displayPhoneNumber}
+        value={data?.phoneNumberInfo?.displayPhoneNumber}
         icon={Phone}
         iconBg="bg-violet-500/20"
         iconColor="text-violet-400"
         badge={
-          data.phoneNumberInfo.isVerified !== false
+          data?.phoneNumberInfo?.isVerified !== false
             ? { label: "Verified", color: "bg-emerald-100 text-emerald-500" }
             : undefined
         }
@@ -40,12 +40,12 @@ export function QuickStats({ data }: Props) {
       {/* Business Name */}
       <StatCard
         title="Business Name"
-        value={data.businessInfo.name}
+        value={data?.businessInfo?.name}
         icon={Building2}
         iconBg="bg-blue-500/20"
         iconColor="text-blue-400"
         badge={
-          data.businessInfo.isVerified !== false
+          data?.businessInfo?.isVerified !== false
             ? { label: "Verified", color: "bg-sky-100 text-sky-500" }
             : undefined
         }
@@ -75,9 +75,9 @@ export function QuickStats({ data }: Props) {
         badge={
           quality === "UNKNOWN"
             ? {
-              label: "Review Pending",
-              color: "bg-yellow-100 text-yellow-600",
-            }
+                label: "Review Pending",
+                color: "bg-yellow-100 text-yellow-600",
+              }
             : quality === "GREEN"
               ? { label: "Good", color: "bg-green-500/15 text-green-400" }
               : { label: "At Risk", color: "bg-red-500/15 text-red-400" }

@@ -86,6 +86,7 @@ export const API_ENDPOINT_PATH = {
       `/integration/${accountId}/${provider}`,
     WHATSAPP: {
       CONNECT_WHATSAPP: "integration/whatsapp/connect",
+      DISCONNECT_WHATSAPP: "integration/whatsapp/disconnect",
     },
   },
 

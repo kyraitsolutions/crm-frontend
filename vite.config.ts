@@ -21,6 +21,6 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
-    allowedHosts: ["simpsons-third-explain-schema.trycloudflare.com"],
+    allowedHosts: [""],
   },
 });

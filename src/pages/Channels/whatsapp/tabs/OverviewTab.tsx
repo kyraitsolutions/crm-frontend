@@ -14,17 +14,17 @@ export const OverviewTab = ({ data }: OverviewTabProps) => {
 
       <div className="grid gap-5 lg:grid-cols-3">
         <ConnectionStatusCard
-          connected={data.isConnected}
-          onboardingCompleted={data.onboardingCompleted}
-          webhookSubscribed={data.webhookSubscribed}
-          officialBusiness={data.phoneNumberInfo.isOfficialBusinessAccount}
+          connected={data?.isConnected}
+          onboardingCompleted={data?.onboardingCompleted}
+          webhookSubscribed={data?.webhookSubscribed}
+          officialBusiness={data?.phoneNumberInfo?.isOfficialBusinessAccount}
         />
 
-        <PhoneNumberCard data={data.phoneNumberInfo} />
+        <PhoneNumberCard data={data?.phoneNumberInfo} />
         <BusinessCard
           data={{
-            businessInfo: data.businessInfo,
-            wabaInfo: data.wabaInfo,
+            businessInfo: data?.businessInfo,
+            wabaInfo: data?.wabaInfo,
           }}
         />
       </div>
