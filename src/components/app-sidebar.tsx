@@ -9,7 +9,7 @@ import {
   IconChevronRight,
   IconUsers,
 } from "@tabler/icons-react";
-import { Gauge, MessagesSquare } from "lucide-react";
+import { BookUser, Gauge, MessagesSquare } from "lucide-react";
 import { useState } from "react";
 import {
   // MdWhatsapp ,  MdEmail, MdOutlineCampaign,
@@ -59,12 +59,12 @@ export function AppSidebar() {
         icon: IconUsers,
         active: hasPermission(permissions, PERMISSIONS.LEADS.VIEW),
       },
-      // {
-      //   title: "Calls",
-      //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/calls`,
-      //   icon: BookUser,
-      //   active: true,
-      // },
+      {
+        title: "Calls",
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/calls`,
+        icon: BookUser,
+        active: true,
+      },
       // {
       //   title: "Deals",
       //   url: `${ACCOUNT_PATHS.byId(String(accountId))}/deals`,
