@@ -15,14 +15,22 @@ export class IntegrationService extends ApiService {
     return response.data;
   }
   async connectWhatsApp(payload: any) {
-    // const queryParams = new URLSearchParams();
-    // if (accountId) queryParams.set("accountId", accountId);
-
     const response = await this.post(
       `${API_ENDPOINT_PATH.INTEGRATION.WHATSAPP.CONNECT_WHATSAPP}`,
       payload,
     );
     console.log("WhatsApp Connect Response:", response.data);
+    return response.data;
+  }
+
+  async disconnectWhatsApp(accountId: string, integrationId: string) {
+    const response = await this.post(
+      `${API_ENDPOINT_PATH.INTEGRATION.WHATSAPP.DISCONNECT_WHATSAPP}`,
+      {
+        accountId,
+        integrationId,
+      },
+    );
     return response.data;
   }
 }

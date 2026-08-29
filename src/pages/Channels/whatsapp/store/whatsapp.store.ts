@@ -17,6 +17,7 @@ interface WhatsAppStore {
     pin: string;
   }) => Promise<{ success: boolean }>;
   connect: (accountId: string) => Promise<{ connectUrl: string }>;
+  disconnect: (accountId: string, integrationId: string) => Promise<void>;
   reset: () => void;
 }
 
@@ -79,6 +80,19 @@ export const useWhatsAppStore = create<WhatsAppStore>((set) => ({
       set({ connecting: true });
       const response = await integrationService.connectWhatsApp(payload);
       console.log(response);
+      return response.doc;
+    } finally {
+      set({ connecting: false });
+    }
+  },
+
+  disconnect: async (accountId, integrationId) => {
+    try {
+      set({ connecting: true });
+      const response = await integrationService.disconnectWhatsApp(
+        accountId,
+        integrationId,
+      );
       return response.doc;
     } finally {
       set({ connecting: false });

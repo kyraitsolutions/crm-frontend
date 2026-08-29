@@ -21,14 +21,13 @@ type Items = {
 const Sidebar = () => {
   const location = useLocation();
   const path = location.pathname.split("/").at(-1);
-  console.log(path);
 
   const items: Items[] = [
     {
-      url: "",
+      url: "overview",
       label: "Business Profile",
       icon: <SquareUserRound size={16} />,
-      active: path === "whatsapp" ? true : false,
+      active: path === "overview" ? true : false,
     },
     {
       url: "template-messages",

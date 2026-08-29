@@ -12,7 +12,7 @@ interface IntegrationStore {
   getIntegration: (
     provider: IntegrationProvider,
     accountId: string,
-  ) => Promise<void>;
+  ) => Promise<{ connected: boolean }>;
 
   clearIntegration: () => void;
 }
@@ -37,6 +37,8 @@ export const useIntegrationStore = create<IntegrationStore>((set) => ({
       set({
         integration: response.doc,
       });
+
+      return response?.doc;
     } finally {
       set({
         loading: false,

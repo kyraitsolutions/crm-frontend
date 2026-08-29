@@ -1,10 +1,11 @@
 export type IntegrationProvider =
-  | "WHATSAPP"
-  | "FACEBOOK"
-  | "INSTAGRAM"
-  | "EXOTEL";
+  | "whatsapp"
+  | "facebook"
+  | "instagram"
+  | "exotel";
 
 export interface TIntegrationResponse {
+  id: string;
   connected: boolean;
   provider: IntegrationProvider;
   data: unknown;

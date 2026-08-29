@@ -17,7 +17,7 @@ export const OverviewTab = ({ data }: OverviewTabProps) => {
           connected={data?.isConnected}
           onboardingCompleted={data?.onboardingCompleted}
           webhookSubscribed={data?.webhookSubscribed}
-          officialBusiness={data?.phoneNumberInfo.isOfficialBusinessAccount}
+          officialBusiness={data?.phoneNumberInfo?.isOfficialBusinessAccount}
         />
 
         <PhoneNumberCard data={data?.phoneNumberInfo} />
