@@ -54,18 +54,18 @@ const LeadTable = () => {
 
   const {
     leads,
-    // fetchLeads,
+    fetchLeads,
     currentPage,
     setCurrentPage,
     totalPages,
     loadingLeads,
     updateLeadField,
-    // leadQuery,
+    leadQuery,
   } = useLeadsStore((state) => state);
 
-  // useEffect(() => {
-  //   fetchLeads(String(accountId));
-  // }, [accountId, currentPage, JSON.stringify({ ...leadQuery, search: "" })]);
+  useEffect(() => {
+    fetchLeads(String(accountId));
+  }, [accountId, currentPage, JSON.stringify({ ...leadQuery, search: "" })]);
 
   // useEffect(() => {
   //   if (!accountId) return;
