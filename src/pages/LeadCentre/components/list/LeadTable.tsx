@@ -110,7 +110,7 @@ const LeadTable = () => {
   const getIconForSource: Record<string, JSX.Element> = {
     website: <Website />,
     google_ads: <Google />,
-    whatsapp: <Whatsapp h="" w="" />,
+    whatsapp: <Whatsapp h="14px" w="16px" />,
     facebook: <Facebook />,
     instagram: <Instagram />,
     webform: <WebForm />,
