@@ -1,11 +1,11 @@
-import { TemplateBuilder } from '../components/template-builder/TemplateBuilder'
+import { TemplateBuilder } from "../components/template-builder/TemplateBuilder";
 
 const CreateTemplate = () => {
-    return (
-        <div >
-            <TemplateBuilder />
-        </div>
-    )
-}
+  return (
+    <div>
+      <TemplateBuilder />
+    </div>
+  );
+};
 
-export default CreateTemplate
+export default CreateTemplate;

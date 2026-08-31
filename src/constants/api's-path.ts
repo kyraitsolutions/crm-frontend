@@ -106,8 +106,8 @@ export const API_ENDPOINT_PATH = {
 
     TEMPLATES: {
       getTemplateCreatePath: (id: string) =>
-        `/whatsapp/accounts/${id}/templates`,
-      getTemplateListPath: (id: string) => `/whatsapp/accounts/${id}/templates`,
+        `/whatsapp/account/${id}/templates`,
+      getTemplateListPath: (id: string) => `/whatsapp/account/${id}/templates`,
     },
   },
 

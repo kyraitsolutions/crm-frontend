@@ -48,11 +48,9 @@ const TextMessage = ({ message }: TTextMessageProps) => {
       )}
 
       {/* MAIN MESSAGE */}
-      <div>
-        <p className={`text-sm w-fit leading-relaxed break-words`}>
-          {msg?.body?.text}
-        </p>
-      </div>
+      <pre className="text-sm w-full leading-relaxed whitespace-pre-wrap wrap-break-word">
+        {msg?.body?.text}
+      </pre>
     </div>
   );
 };
