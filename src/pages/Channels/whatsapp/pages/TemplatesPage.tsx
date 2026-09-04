@@ -126,12 +126,6 @@ const TemplatesPage = () => {
       ) : (
         <div className="overflow-y-scroll pb-5">
           {renderStep(active)}
-          {/* {active === "explore" && <Explore />}
-          {active === "all" && <TemplateTable type={"all"} />}
-          {active === "draft" && <TemplateTable type={"draft"} />}
-          {active === "pending" && <TemplateTable type={"pending"} />}
-          {active === "approved" && <TemplateTable type={"approved"} />}
-          {active === "action-required" && <TemplateTable type={"rejected"} />} */}
         </div>
       )}
     </div>

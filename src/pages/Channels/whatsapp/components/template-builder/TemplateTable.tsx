@@ -3,6 +3,7 @@ import { useTemplateListStore } from "../../store/template-list.store";
 import { getTemplateType } from "../../utils/template/template.utils";
 import { timeAgo } from "@/utils/date.utils";
 import { TbStarFilled } from "react-icons/tb";
+// import { TemplatePreviewPanel } from "./TemplatePreviewPanel";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -110,6 +111,8 @@ const TemplateTable = ({ type }: { type: string }) => {
           </tbody>
         </table>
       </div>
+
+      {/* <TemplatePreviewPanel /> */}
     </div>
   );
 };
