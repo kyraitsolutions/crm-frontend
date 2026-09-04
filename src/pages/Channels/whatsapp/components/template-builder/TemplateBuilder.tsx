@@ -49,9 +49,7 @@ export const TemplateBuilder: React.FC = () => {
         const message = response?.message || "Template created successfully";
         taostService.success(message);
 
-        navigate(
-          `${ROUTES.DASHBOARD}/account/${accountId}/whatsapp/template-messages`,
-        );
+        navigate(`${ROUTES.DASHBOARD}/settings/whatsapp/overview`);
       }
     } catch (err) {
       const error = err as ApiError;
@@ -85,7 +83,6 @@ export const TemplateBuilder: React.FC = () => {
       <div className="">
         {/* <TemplateHeader /> */}
 
-
         {/* <TemplateHeader /> */}
         <FormProvider {...methods}>
           <div className="sticky top-0 py-5 z-10 bg-gray-50">
@@ -97,7 +94,6 @@ export const TemplateBuilder: React.FC = () => {
                 <ArrowLeft />
               </Button>
               <TemplateStepIndicator currentStep={step} />
-
             </div>
           </div>
 
@@ -116,10 +112,8 @@ export const TemplateBuilder: React.FC = () => {
               <TemplatePreviewPanel />
             </div>
           </div>
-
         </FormProvider>
       </div>
-
     </section>
   );
 };
