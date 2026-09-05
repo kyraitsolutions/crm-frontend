@@ -4,7 +4,7 @@ import { API_ENDPOINT_PATH } from "@/constants/api's-path";
 
 export class AuthService extends ApiService {
   async getProfile(): Promise<ApiResponse<IUser>> {
-    return await this.get("/auth/profile");
+    return await this.getMe();
   }
 
   async getMe(): Promise<ApiResponse<IUser>> {

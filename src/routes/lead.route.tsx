@@ -7,12 +7,13 @@ import LeadCenter from "@/pages/LeadCentre/pages/leadCentre.page";
 import ImportLeadStep from "@/pages/LeadCentre/components/import/ImportLeadStep";
 import AddLead from "@/pages/LeadCentre/pages/AddLead.page";
 import LeadDetail from "@/pages/LeadCentre/pages/LeadDetails.page";
+import { LeadLayout } from "@/layouts/lead.layout";
 
 // import LeadsCentre from "@/pages/leads-center.page";
 export const leadRoutes: RouteObject[] = [
   {
     path: LEADS_PATHS.ROOT,
-    // element: <FormLayout />,
+    element: <LeadLayout />,
     children: [
       {
         element: (

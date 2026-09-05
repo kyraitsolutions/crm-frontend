@@ -6,6 +6,6 @@ export class AIService extends ApiService {
     accountId: string,
     aiPrompt: string,
   ): Promise<ApiResponse<any>> {
-    return await this.post(`account/${accountId}/ai-template`, { aiPrompt });
+    return await this.post(`/account/${accountId}/ai-template`, { aiPrompt });
   }
 }

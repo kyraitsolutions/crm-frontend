@@ -4,7 +4,7 @@ import { ApiService } from "@/services";
 export class WhatsAppService extends ApiService {
   async registerPhoneNumber(payload: { accountId: string; pin: string }) {
     const response = await this.post(
-      API_ENDPOINT_PATH.WHATSAPP.REGISTER_PHONE_NUMBER,
+      API_ENDPOINT_PATH.WHATSAPP.REGISTER_PHONE_NUMBER(payload.accountId),
       payload,
     );
 

@@ -85,13 +85,14 @@ export const API_ENDPOINT_PATH = {
     getIntegrationPath: (accountId: string, provider: string) =>
       `/integration/${accountId}/${provider}`,
     WHATSAPP: {
-      CONNECT_WHATSAPP: "integration/whatsapp/connect",
-      DISCONNECT_WHATSAPP: "integration/whatsapp/disconnect",
+      CONNECT_WHATSAPP: "/integration/whatsapp/connect",
+      DISCONNECT_WHATSAPP: "/integration/whatsapp/disconnect",
     },
   },
 
   WHATSAPP: {
-    REGISTER_PHONE_NUMBER: "whatsapp/phone-number/register",
+    REGISTER_PHONE_NUMBER: (accountId: string) =>
+      `/whatsapp/account/${accountId}/register-phone-number`,
     syncContacts: (accountId: string) =>
       `/whatsapp/account/${accountId}/sync-contacts`,
     MESSAGES: {
@@ -115,11 +116,11 @@ export const API_ENDPOINT_PATH = {
     getActivityLogsPath: (id: string) => `/activity-logs/${id}`,
   },
   CALLS: {
-    GET_NUMBERS: "twilio/voice/get-available-numbers",
-    PURCHASE_NUMBERS: "twilio/voice/purchase-number",
-    GET_MY_NUMBERS: "twilio/voice/my-numbers",
-    GET_MY_NUMBERS_DETAILS: "twilio/voice/my-number/details",
-    MAKE_CALL: "twilio/voice/make-call",
+    GET_NUMBERS: "/twilio/voice/get-available-numbers",
+    PURCHASE_NUMBERS: "/twilio/voice/purchase-number",
+    GET_MY_NUMBERS: "/twilio/voice/my-numbers",
+    GET_MY_NUMBERS_DETAILS: "/twilio/voice/my-number/details",
+    MAKE_CALL: "/twilio/voice/make-call",
     getCallsLogsPath: (id: string) => `/calls/${id}`,
   },
 };

@@ -169,11 +169,10 @@ const FieldMappingStep = ({
           {/* All */}
           <button
             onClick={() => setFilter("all")}
-            className={`rounded-full border px-4 py-1 text-sm font-medium transition-colors ${
-              filter === "all"
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-gray-300 text-gray-500 hover:border-gray-400"
-            }`}
+            className={`rounded-full border px-4 py-1 text-sm font-medium transition-colors ${filter === "all"
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-gray-300 text-gray-500 hover:border-gray-400"
+              }`}
           >
             All
           </button>
@@ -181,11 +180,10 @@ const FieldMappingStep = ({
           {/* Mapped */}
           <button
             onClick={() => setFilter("mapped")}
-            className={`rounded-full border px-4 py-1 text-sm font-medium transition-colors ${
-              filter === "mapped"
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-gray-300 text-gray-500 hover:border-gray-400"
-            }`}
+            className={`rounded-full border px-4 py-1 text-sm font-medium transition-colors ${filter === "mapped"
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-gray-300 text-gray-500 hover:border-gray-400"
+              }`}
           >
             Mapped ({mappedCount})
           </button>
@@ -193,11 +191,10 @@ const FieldMappingStep = ({
           {/* Unmapped */}
           <button
             onClick={() => setFilter("unmapped")}
-            className={`rounded-full border px-4 py-1 text-sm font-medium transition-colors ${
-              filter === "unmapped"
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-gray-300 text-gray-500 hover:border-gray-400"
-            }`}
+            className={`rounded-full border px-4 py-1 text-sm font-medium transition-colors ${filter === "unmapped"
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-gray-300 text-gray-500 hover:border-gray-400"
+              }`}
           >
             <span className="text-red-500">Unmapped ({unmappedCount})</span>
           </button>
@@ -300,11 +297,10 @@ const FieldMappingStep = ({
                     <select
                       value={mapping[field] || ""}
                       onChange={(e) => handleMapping(field, e.target.value)}
-                      className={`w-full appearance-none rounded-lg border px-4 py-2 pr-10 text-sm outline-none transition-colors focus:border-primary ${
-                        isMapped
-                          ? "border-green-400 bg-green-50 text-gray-800"
-                          : "border-gray-300 text-gray-500"
-                      }`}
+                      className={`w-full appearance-none rounded-lg border px-4 py-2 pr-10 text-sm outline-none transition-colors focus:border-primary ${isMapped
+                        ? "border-green-400 bg-green-50 text-gray-800"
+                        : "border-gray-300 text-gray-500"
+                        }`}
                     >
                       <option value="">Select field to import</option>
 

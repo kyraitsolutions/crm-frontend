@@ -160,3 +160,13 @@ export interface TemplatePayload {
 }
 
 // Store State for Template Lists
+
+export interface TemplateJourney {
+  name: string;
+  status: "APPROVED" | "PENDING" | "REJECTED";
+  createdAt: string;
+  updatedAt?: string;
+  components: TemplateComponent[];
+  message: string;
+  buttons: TemplateButton[] | null;
+}

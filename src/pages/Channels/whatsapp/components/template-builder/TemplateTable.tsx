@@ -3,6 +3,7 @@ import { useTemplateListStore } from "../../store/template-list.store";
 import { getTemplateType } from "../../utils/template/template.utils";
 import { timeAgo } from "@/utils/date.utils";
 import { TbStarFilled } from "react-icons/tb";
+import type { TemplateJourney } from "../../types/templates/template.type";
 // import { TemplatePreviewPanel } from "./TemplatePreviewPanel";
 
 const getStatusColor = (status: string) => {
@@ -18,7 +19,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-const TemplateTable = ({ type }: { type: string }) => {
+const TemplateTable = ({ selectedTemplate: _selectedTemplate, setSelectedTemplate, type }: { selectedTemplate: TemplateJourney | null; setSelectedTemplate: (template: TemplateJourney | null) => void; type: string }) => {
   const templates = useTemplateListStore((state) => state.templates);
 
   console.log("templates", templates);
@@ -52,6 +53,7 @@ const TemplateTable = ({ type }: { type: string }) => {
                 return (
                   <tr
                     key={item.id}
+                    onClick={() => setSelectedTemplate(item)}
                     className="hover:bg-gray-50 mt-1 rounded-2xl text-sm bg-white"
                   >
                     <td className="max-w-[220px] rounded-l-xl truncate px-6 py-5">

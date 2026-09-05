@@ -106,7 +106,7 @@ export default function Onboarding() {
 
   const handleContinue = async () => {
     const userRes: any = await authService.getMe();
-    authManager.setUser(userRes.data?.docs);
+    authManager.setUser(userRes.data?.doc ?? userRes.data?.docs);
     const accountsRes = await accountService.getAccounts();
     const updatedAccounts = accountsRes.data?.docs;
     accountStoreManager.setAccounts(updatedAccounts);

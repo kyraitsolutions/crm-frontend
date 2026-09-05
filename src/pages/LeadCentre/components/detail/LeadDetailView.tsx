@@ -12,6 +12,7 @@ import type { ITeam } from "@/types/teams.type";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import { timeAgo } from "@/utils/date.utils";
 import { Clock3 } from "lucide-react";
+import FollowUpsTab from "./tabs/FollowUpsTab";
 
 interface ILeadDetailViewProps {
   lead: ILead;
@@ -21,7 +22,7 @@ interface ILeadDetailViewProps {
 
 const LeadDetailView = ({ lead, users, leadStages }: ILeadDetailViewProps) => {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "timeline" | "aiSummary"
+    "overview" | "timeline" | "followUps" | "aiSummary"
   >("overview");
   const [openEmailEditor, setOpenEmailEditor] = useState(false);
 
@@ -104,6 +105,8 @@ const LeadDetailView = ({ lead, users, leadStages }: ILeadDetailViewProps) => {
 
       case "timeline":
         return <TimelineTab lead={lead} />;
+      case "followUps":
+        return <FollowUpsTab lead={lead} />;
 
       case "aiSummary":
         return <AILeadSummary leadId={String(lead.id)} />;

@@ -1,7 +1,8 @@
-// import { LeadService } from "@/services/lead.service";
 import { RefreshCw, Sparkles, Mail, Phone, Target } from "lucide-react";
 import { useState } from "react";
-// import { useParams } from "react-router-dom";
+import { leadService } from "@/pages/LeadCentre/services/lead.service";
+import { useAuthStore } from "@/stores";
+import { ToastMessageService } from "@/services";
 
 interface AILeadSummaryProps {
   leadId: string;
@@ -25,75 +26,32 @@ const priorityColor = (priority?: string) => {
 };
 
 const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
-  // const { accountId } = useParams();
-  // const leadService = new LeadService();
-  console.log(leadId);
-  const [
-    aiSummary,
-    //  setAiSummary
-  ] = useState<Record<string, any> | null>({
-    assessment: {
-      priority: "Medium-Low",
-      reasoning:
-        "The lead expressed clear intent, but no email or mobile/contact details were provided, making immediate automated follow-up impossible.",
-      recommendedAction:
-        "Check external webhook logs or associated account records for missing contact information to facilitate outreach.",
-    },
+  const { accountId } = useAuthStore((state) => state);
+  const toastService = new ToastMessageService();
+  const [aiSummary, setAiSummary] = useState<Record<string, any> | null>(null);
+  const [loading, setLoading] = useState(false);
 
-    contactInformation: {
-      emailProvided: false,
-      phoneProvided: false,
-      status: "Missing Contact Data",
-    },
+  const generateLeadSummary = async () => {
+    if (!accountId || !leadId) return;
 
-    leadDetails: {
-      intent: "Interested in your service",
-      source: "webhook",
-      stage: "new",
-      status: "active",
-      assignedTo: "6a289831f6e82207106298a8",
-    },
-
-    profile: {
-      name: "Abhijeet Doe",
-      location: "Delhi",
-      company: null,
-      title: null,
-    },
-
-    technicalMeta: {
-      browser: "Chrome 149 (Windows)",
-      ipAddress: "::1 (Localhost)",
-      referringUrl: "https://www.google.com",
-    },
-
-    message: "Lead summary fetched successfully",
-    status: 200,
-  });
-  const [
-    loading,
-    // setLoading
-  ] = useState(false);
-
-  // const generateLeadSummary = async (leadId: string) => {
-  //     console.log(leadId)
-  //     try {
-  //         setLoading(true);
-  //         const res = await leadService.getLeadSummary(String(accountId), leadId);
-  //         const doc = res?.data?.data?.leadSummary ?? res?.data?.doc ?? res?.data;
-  //         setAiSummary(doc ?? null);
-  //     } catch (error) {
-  //         console.log(error);
-  //     } finally {
-  //         setLoading(false);
-  //     }
-  // };
+    try {
+      setLoading(true);
+      const res = await leadService.getLeadSummary(String(accountId), leadId);
+      const doc = res?.data?.doc ?? null;
+      setAiSummary(doc);
+    } catch (error: any) {
+      toastService.apiError(error?.message || "Failed to generate AI summary");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!aiSummary) {
     return (
       <div>
         <button
-          // onClick={() => generateLeadSummary(leadId)}
+          onClick={generateLeadSummary}
+          disabled={loading}
           className="bg-primary/10 hover:bg-primary/20 cursor-pointer flex items-center mt-4 gap-2 px-4 py-2 text-sm rounded-2xl text-primary transition-colors"
         >
           {!loading ? (
@@ -113,8 +71,6 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
 
   const assessment = aiSummary.assessment ?? {};
   const contactInfo = aiSummary.contactInformation ?? {};
-  // const leadDetails = aiSummary.leadDetails ?? {};
-  // const profile = aiSummary.profile ?? {};
 
   const summaryText =
     aiSummary.summary ??
@@ -124,21 +80,12 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
   const priority = assessment.priority;
   const priorityStyle = priorityColor(priority);
 
-  // Build small stat chips from leadDetails (excluding ids/long values)
-  // const statChips =
-  // Object.entries(leadDetails)
-  //     .filter(([key, val]) => (typeof val === "string" || typeof val === "number"))
-  //     .filter(([key]) => !["assignedTo", "id", "_id"].includes(key))
-  //     .slice(0, 3);
-
-  // Contact flags
   const contactFlags = Object.entries(contactInfo).filter(([key]) =>
     key.toLowerCase().includes("provided"),
   );
 
   return (
     <div className="rounded-2xl bg-white p-5 max-w-md space-y-4">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
@@ -155,22 +102,8 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
         )}
       </div>
 
-      {/* Summary text */}
       <p className="text-sm text-gray-600 leading-relaxed">{summaryText}</p>
 
-      {/* Stat chips */}
-      {/* {statChips.length > 0 && (
-                <div className="grid grid-cols-3 gap-2">
-                    {statChips.map(([key, val]) => (
-                        <div key={key} className="bg-gray-50 rounded-2xl px-3 py-2">
-                            <p className="text-[11px] text-gray-400 mb-0.5">{formatLabel(key)}</p>
-                            <p className="text-[13px] font-medium text-gray-800 truncate">{String(val)}</p>
-                        </div>
-                    ))}
-                </div>
-            )} */}
-
-      {/* Contact info badges */}
       {contactFlags.length > 0 && (
         <div className="border-t pt-3 space-y-2">
           <p className="text-xs font-medium text-gray-500">
@@ -195,7 +128,6 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
         </div>
       )}
 
-      {/* Key requirements (if present) */}
       {Array.isArray(aiSummary.key_requirements) &&
         aiSummary.key_requirements.length > 0 && (
           <div className="border-t pt-3">
@@ -215,7 +147,6 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
           </div>
         )}
 
-      {/* Recommended action / next action */}
       {(assessment.recommendedAction || aiSummary.next_action) && (
         <div className="bg-blue-50 rounded-lg p-3">
           <p className="text-xs font-medium text-blue-600 mb-1 flex items-center gap-1">
@@ -227,9 +158,9 @@ const AILeadSummary = ({ leadId }: AILeadSummaryProps) => {
         </div>
       )}
 
-      {/* Regenerate button */}
       <button
-        // onClick={() => generateLeadSummary(leadId)}
+        onClick={generateLeadSummary}
+        disabled={loading}
         className="w-full flex items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 cursor-pointer px-4 py-2 text-sm rounded-2xl text-gray-700 transition-colors"
       >
         <RefreshCw size={15} className={loading ? "animate-spin" : ""} />

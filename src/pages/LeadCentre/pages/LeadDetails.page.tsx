@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { LeadService } from "@/services/lead.service";
+import { leadService } from "@/pages/LeadCentre/services/lead.service";
 import { useAuthStore } from "@/stores";
 import { useTeamsStore } from "@/stores/team.store";
 import {
@@ -19,8 +19,6 @@ import LeadNotFound from "../components/errors/LeadNotFound";
 
 const LeadDetailPage = () => {
   const { leadId } = useParams();
-
-  const leadService = new LeadService();
 
   const { accountId } = useAuthStore();
   const { getTeams } = useTeamsStore();
