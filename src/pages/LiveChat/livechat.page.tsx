@@ -2,6 +2,7 @@ import { LIVE_CHAT_SOCKET_EVENTS } from "@/constants/socketEvent.constatn";
 import { useAuthStore } from "@/stores";
 import { useSocketEvent } from "@/websocket/socket.hook";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import ChatFilter from "./components/ChatFilter";
 import Chatlist from "./components/Chatlist";
 import ChatProfile from "./components/ChatProfile";
@@ -18,9 +19,11 @@ const LiveChat = () => {
     isInitialLoading,
     hasFetchedOnce,
     loadMoreConversations,
+    updateConversationQuery,
   } = useConversationStore((state) => state);
 
   const { accountId } = useAuthStore((state) => state);
+  const [searchParams] = useSearchParams();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [activeFilter, setActiveFilter] = useState("all");
 
@@ -32,8 +35,6 @@ const LiveChat = () => {
     timeoutRef.current = setTimeout(() => {
       const bottomReached =
         target.scrollHeight - target.scrollTop <= target.clientHeight + 50;
-
-      console.log(bottomReached);
 
       if (bottomReached) {
         loadMoreConversations();
@@ -47,6 +48,18 @@ const LiveChat = () => {
     if (!accountId) return;
     fetchConversations(accountId || "");
   }, []);
+
+  useEffect(() => {
+    const channel = searchParams.get("channel");
+    if (
+      channel === "whatsapp" ||
+      channel === "chatbot" ||
+      channel === "instagram"
+    ) {
+      setActiveFilter(channel);
+      void updateConversationQuery({ platform: channel });
+    }
+  }, [searchParams, updateConversationQuery]);
 
   useSocketEvent(
     LIVE_CHAT_SOCKET_EVENTS?.MESSAGES?.NEW_MESSAGE,

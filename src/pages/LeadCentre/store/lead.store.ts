@@ -69,6 +69,8 @@ interface ILeadsStoreState {
 
   fetchLeads: (accountId: string) => Promise<void>;
 
+  prependLead: (lead: unknown) => void;
+
   updateLeadField: (
     accountId: string,
     leadId: string,
@@ -226,8 +228,41 @@ export const useLeadsStore = create<ILeadsStoreState>((set, get) => ({
     }
   },
 
+  prependLead: (incoming) => {
+    const raw = incoming as Record<string, unknown> | null;
+    if (!raw) return;
+
+    const id = String(raw.id || raw._id || "");
+    if (!id) return;
+
+    const lead = {
+      ...raw,
+      id,
+      accountId: String(raw.accountId || ""),
+    } as ILead;
+
+    set((state) => {
+      if (state.leads.some((item) => item.id === id)) {
+        return {
+          leads: state.leads.map((item) =>
+            item.id === id ? { ...item, ...lead } : item,
+          ),
+        };
+      }
+
+      return {
+        leads: [lead, ...state.leads],
+        totalItems: (state.totalItems || 0) + 1,
+      };
+    });
+  },
+
   addLead: async (accountId: string, payload: any) => {
-    await leadService.createLead(accountId, payload);
+    const response = await leadService.createLead(accountId, payload);
+    const created = (response.data as any)?.doc || response.data;
+    if (created) {
+      get().prependLead(created);
+    }
   },
 }));
 

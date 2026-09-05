@@ -1,292 +1,225 @@
-import { PaymentService } from "@/services/payment.service";
+import { BILLING_ROLES } from "@/constants/subscription.constant";
+import { PlanUpgradeOverlay } from "@/components/subscription/PlanUpgradeOverlay";
 import { SubscriptionService } from "@/services/subscription.service";
 import { useAuthStore } from "@/stores";
+import { useSubscription } from "@/hooks/useSubscription";
+import type { SubscriptionPlanView } from "@/types/subscription.type";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ToastMessageService } from "@/services";
+import { useNavigate } from "react-router-dom";
 
 declare global {
   interface Window {
     Razorpay: any;
   }
 }
-export interface SubscriptionPlan {
-  _id: string;
-  name: string;
-  accounts: string;
-  maxAccounts: number;
-  maxChatbots: number;
-  maxWebforms: number;
 
-  description: string;
-  price: { monthly: number; annually: number }; // or number if backend sends number
-  period: string;
-  button: string;
-  featured: boolean;
-  features: string[];
-  addons?: string[];
-}
+type ProcessingState = "checkout" | "activating" | null;
 
 export const SubscriptionPage = () => {
   const subscriptionService = new SubscriptionService();
-  const paymentService = new PaymentService();
-  const { user: authUser } = useAuthStore((state) => state);
-  const [plans, setPlans] = useState<SubscriptionPlan[] | []>([]);
-
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annually">(
+  const toastService = new ToastMessageService();
+  const navigate = useNavigate();
+  const { user } = useAuthStore((state) => state);
+  const { subscription, refresh } = useSubscription();
+  const [plans, setPlans] = useState<SubscriptionPlanView[]>([]);
+  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
     "monthly",
   );
+  const [processing, setProcessing] = useState<ProcessingState>(null);
+  const canBill = BILLING_ROLES.includes(String(user?.role?.name || "").toUpperCase());
 
-  const getSubscription = async () => {
+  const loadPlans = async () => {
     try {
-      const response = await subscriptionService.getAllSubscription();
-      setPlans(response.data.docs);
-    } catch (error) {
-      console.log("Error", error);
+      const response = await subscriptionService.getPlans();
+      setPlans(response.data?.docs || []);
+    } catch (error: any) {
+      toastService.error(error?.message || "Failed to load plans");
     }
-  };
-
-  const handleChoosePlan = async (id: string) => {
-    await handlePayment(id);
-  };
-
-  const handlePayment = async (id: string) => {
-    console.log("id", id);
-    // 1. Create order from backend
-    const amount = 799;
-    const data = await paymentService.createOrder(amount);
-    const result = data.data.docs as any;
-
-    if (!window.Razorpay) {
-      alert("Razorpay SDK not loaded");
-      return;
-    }
-
-    const options = {
-      key: "rzp_test_xxxxx", // test key
-      amount: result.amount,
-      currency: "INR",
-      name: "Your Company",
-      description: "Starter Plan",
-      order_id: result.id,
-
-      handler: function (response: any) {
-        console.log("Payment Success:", response);
-      },
-
-      prefill: {
-        name: "User Name",
-        email: "user@example.com",
-        contact: "9999999999",
-      },
-
-      theme: {
-        color: "#4f46e5",
-      },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
   };
 
   useEffect(() => {
-    getSubscription();
+    if (!processing) return;
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "Your plan is still being updated. Please wait.";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [processing]);
+
+  const handleChoosePlan = async (planId: string) => {
+    if (!canBill) {
+      toastService.error("Only organization owners and admins can change billing.");
+      return;
+    }
+    if (processing) return;
+
+    try {
+      setProcessing("checkout");
+      const checkout = await subscriptionService.checkout(planId, billingPeriod);
+      const result = checkout.data?.doc;
+      if (!window.Razorpay) {
+        toastService.error("Razorpay SDK is not loaded");
+        setProcessing(null);
+        return;
+      }
+
+      const options = {
+        key: result?.keyId,
+        amount: result?.order?.amount,
+        currency: result?.order?.currency || "INR",
+        name: "Kyra AI CRM",
+        description: result?.plan?.name,
+        order_id: result?.order?.id,
+        modal: {
+          ondismiss: () => {
+            setProcessing(null);
+          },
+        },
+        handler: async (response: any) => {
+          setProcessing("activating");
+          try {
+            await subscriptionService.verifyPayment(response);
+            await refresh();
+            toastService.success("Your plan has been upgraded");
+            navigate("/dashboard/settings/my-plan");
+          } catch (error: any) {
+            toastService.error(
+              error?.message || "Payment could not be verified. Your plan was not changed.",
+            );
+          } finally {
+            setProcessing(null);
+          }
+        },
+        prefill: {
+          email: user?.email,
+        },
+        theme: { color: "#4f46e5" },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", (failure: any) => {
+        setProcessing(null);
+        toastService.error(
+          failure?.error?.description || "Payment failed. Please try again.",
+        );
+      });
+      setProcessing(null);
+      rzp.open();
+    } catch (error: any) {
+      setProcessing(null);
+      toastService.error(error?.message || "Unable to start checkout");
+    }
+  };
+
+  useEffect(() => {
+    void loadPlans();
   }, []);
+
+  const overlay =
+    processing === "checkout"
+      ? {
+          title: "Preparing checkout",
+          description: "Creating your secure payment order. Please wait.",
+        }
+      : processing === "activating"
+        ? {
+            title: "Upgrading your plan",
+            description:
+              "Payment received. We are activating your subscription now. This can take a few seconds.",
+          }
+        : null;
 
   return (
     <div className="pb-24">
+      {overlay && (
+        <PlanUpgradeOverlay title={overlay.title} description={overlay.description} />
+      )}
       <div className="w-full flex flex-col justify-center items-center gap-2">
-        {/* Header Section */}
-        <div className="self-stretch px-6 md:px-24 pt-12 md:pt-16  flex justify-center items-center gap-6">
-          <div className="w-full max-w-5xl px-6 py-5 overflow-hidden rounded-lg flex flex-col justify-start items-center gap-4 shadow-none">
-            {/* Pricing Badge */}
-            <div className="px-3.5 py-1.5 bg-white  overflow-hidden rounded-[90px] flex justify-start items-center gap-2 border border-[rgba(2,6,23,0.08)] shadow-xs">
-              <div className="w-3.5 h-3.5 relative overflow-hidden flex items-center justify-center">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6 1V11M8.5 3H4.75C4.28587 3 3.84075 3.18437 3.51256 3.51256C3.18437 3.84075 3 4.28587 3 4.75C3 5.21413 3.18437 5.65925 3.51256 5.98744C3.84075 6.31563 4.28587 6.5 4.75 6.5H7.25C7.71413 6.5 8.15925 6.68437 8.48744 7.01256C8.81563 7.34075 9 7.78587 9 8.25C9 8.71413 8.81563 9.15925 8.48744 9.48744C8.15925 9.81563 7.71413 10 7.25 10H3.5"
-                    stroke="#16A34A"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-              <div className="text-center flex justify-center flex-col text-primary text-xs font-medium leading-3 font-sans">
-                Plans & Pricing
-              </div>
-            </div>
-
-            {/* Title */}
-            <div className="self-stretch text-center flex justify-center flex-col text-gray-900 text-3xl md:text-4xl font-semibold leading-tight md:leading-15 font-sans tracking-">
+        <div className="self-stretch px-6 md:px-24 pt-12 md:pt-16 flex justify-center items-center gap-6">
+          <div className="w-full max-w-5xl px-6 py-5 flex flex-col items-center gap-4">
+            <div className="text-center text-gray-900 text-3xl md:text-4xl font-semibold">
               Choose the perfect plan for your business
             </div>
-
-            <div className="self-stretch text-center text-[#605A57] text-base font-normal leading-7 font-sans">
-              Scale your operations with flexible pricing that grows with your
-              team.
-              <br />
-              Start free, upgrade when you're ready.
-            </div>
+            <p className="text-center text-[#605A57] text-base">
+              WhatsApp messaging is included. WhatsApp AI Agent is a premium capability.
+            </p>
           </div>
         </div>
 
-        <div className="self-stretch px-6 md:px-16 py-9 relative flex justify-center items-center gap-4">
-          <div>
-            <div className="p-0.5 bg-[#ffffff] shadow-[0px_1px_0px_white] rounded-[99px] border-[0.5px] border-[rgba(55,50,47,0.08)] flex justify-center items-center gap-0.5 relative">
-              <button
-                onClick={() => setBillingPeriod("monthly")}
-                className={`px-4 py-1 rounded-[99px] whitespace-nowrap flex justify-center items-center gap-2 transition-colors duration-300 relative z-10 flex-1 ${billingPeriod === "monthly" ? "text-white bg-primary" : "text-gray-600"}`}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setBillingPeriod("annually")}
-                className={`px-4 py-1 rounded-[99px] whitespace-nowrap flex justify-center items-center gap-2 transition-colors duration-300 relative z-10 flex-1 ${billingPeriod === "annually" ? "text-white bg-primary" : "text-gray-600"}`}
-              >
-                Annually (Save 30%)
-              </button>
-            </div>
+        <div className="py-6">
+          <div className="p-0.5 bg-white rounded-[99px] border flex">
+            <button
+              onClick={() => setBillingPeriod("monthly")}
+              className={`px-4 py-1 rounded-[99px] ${billingPeriod === "monthly" ? "text-white bg-primary" : "text-gray-600"}`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingPeriod("yearly")}
+              className={`px-4 py-1 rounded-[99px] ${billingPeriod === "yearly" ? "text-white bg-primary" : "text-gray-600"}`}
+            >
+              Yearly
+            </button>
           </div>
         </div>
 
-        <div className="max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
-            <div key={plan._id}>
-              <PricingCard
-                id={plan._id}
-                featured={plan.featured}
-                title={
-                  plan.name === "starter"
-                    ? "Free Forever"
-                    : plan.name === "professional"
-                      ? "Professional"
-                      : "Enterprise"
-                }
-                desc={plan.description}
-                price={plan?.price[billingPeriod as keyof typeof plan.price]}
-                period={plan.period}
-                button={plan.button}
-                features={plan.features}
-                addons={plan.addons}
-                handleChoosePlan={handleChoosePlan}
-                authUser={authUser}
-              />
-            </div>
-          ))}
+        <div className="max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
+          {plans.map((plan) => {
+            const price =
+              billingPeriod === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
+            const isCurrent = subscription?.plan?.id === plan.id;
+            return (
+              <div
+                key={plan.id}
+                className={`rounded-[10px] p-8 flex flex-col border border-gray-300 ${plan.featured ? "scale-[1.02]" : ""}`}
+              >
+                <h3 className="text-xl font-semibold mb-2 capitalize">{plan.name}</h3>
+                <p className="mb-6 text-gray-600">{plan.description}</p>
+                <div className="mb-6">
+                  <span className="text-4xl font-bold">₹{price}</span>
+                  <span className="ml-1 text-sm text-gray-500">
+                    / {billingPeriod === "yearly" ? "year" : "month"}
+                  </span>
+                </div>
+                <button
+                  disabled={isCurrent || !canBill || Boolean(processing)}
+                  onClick={() => handleChoosePlan(plan.id)}
+                  className="w-full py-3 mb-8 rounded-[10px] font-semibold bg-primary text-white disabled:opacity-60"
+                >
+                  {isCurrent ? "Current Plan" : plan.button || "Choose plan"}
+                </button>
+                <ul className="space-y-3 text-sm">
+                  <li>Team members: {plan.limits?.teamMembers}</li>
+                  <li>Chatbots: {plan.limits?.chatbots}</li>
+                  <li>Leads / month: {plan.limits?.leadsPerMonth?.toLocaleString()}</li>
+                  <li>
+                    WhatsApp messages:{" "}
+                    {plan.limits?.whatsappMessagesPerMonth?.toLocaleString()}
+                  </li>
+                  <li>Webhooks: {plan.limits?.webhooks}</li>
+                  <li>
+                    WhatsApp AI Agent:{" "}
+                    {plan.featureMap?.WHATSAPP_AI_AGENT
+                      ? `${plan.limits?.aiConversationsPerMonth?.toLocaleString()} conversations`
+                      : "Not included"}
+                  </li>
+                </ul>
+                <ul className="space-y-3 mt-6">
+                  {(plan.features || []).map((feature) => (
+                    <li key={feature} className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-primary" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
   );
 };
-
-function PricingCard({
-  id,
-  title,
-  desc,
-  price,
-  period,
-  authUser,
-  button,
-  features,
-  featured = false,
-  addons,
-  handleChoosePlan,
-}: any) {
-  console.log(authUser);
-  return (
-    <div
-      className={`rounded-[10px] h-full p-8 flex flex-col border border-gray-300 justify-between shadow-sm transition
-        ${featured === true ? "bg-white scale-[1.02]" : "bg-white"}`}
-    >
-      <div>
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className={`mb-6 text-gray-600`}>{desc}</p>
-
-        <div className="mb-6">
-          <span className="text-4xl font-bold">₹{price}</span>
-          <span className={`ml-1 text-sm text-gray-500`}>
-            {period}
-            {/* {billingPeriod === "monthly" ? "month" : "year"} */}
-          </span>
-        </div>
-
-        <button
-          onClick={() => handleChoosePlan(id)}
-          className={`w-full py-3 mb-8 rounded-[10px] font-semibold transition
-            
-          ${featured === true
-              ? "bg-primary text-white hover:bg-primary/90 cursor-pointer"
-              : id === authUser?.usersubscription?.planId
-                ? "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md disabled:"
-                : "bg-white border-2 border-gray-600 text-gray-600 hover:shadow-md cursor-pointer"
-            }
-              `}
-        >
-          {id === authUser?.usersubscription?.planId ? "Current Plan" : button}
-        </button>
-
-        <ul className="space-y-3 ">
-          {features.map((f: string, i: number) => (
-            <li key={i} className="flex items-center gap-3">
-              <Check className={`w-4 h-4 text-primary`} />
-              {/* <span className={`w-2 h-2 rounded-full ${featured ? "bg-white" : "bg-[#16A34A]"}`} /> */}
-              <span className="text-gray-700">{f}</span>
-            </li>
-          ))}
-        </ul>
-        <div>
-          <p className="font-medium mt-4 mb-2">Paid Add-ons</p>
-          <ul className="space-y-3 mb-8 text-gray-600">
-            {addons?.map((addon: string) => (
-              <li key={addon} className="flex items-center gap-3">
-                <Check className={`w-4 h-4 text-primary`} />
-                <span className="text-gray-700">{addon}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// const HelpPopup = () => {
-//   return (
-//     <div
-//       className="
-//     pointer-events-none
-//     absolute bottom-full left-1/2 mb-3 -translate-x-1/2
-//     hidden group-hover:block
-//     z-50
-//     w-[220px]
-//     rounded-2xl
-//     border border-gray-200
-//     bg-white
-//     px-4 py-3
-//     text-left
-//     text-xs
-//     text-gray-700
-//     shadow-xl
-//   "
-//     >
-//       Arrow
-//       <div className="absolute left-1/2 top-full -translate-x-1/2">
-//         <div className="h-2 w-2 rotate-45 border-b border-r border-gray-200 bg-white" />
-//       </div>
-
-//       <p className="font-semibold text-gray-900">
-//         Current Plan
-//       </p>
-//       <p className="mt-1 text-gray-600 leading-relaxed">
-//         This plan is already active on your account. You can upgrade anytime.
-//       </p>
-//     </div>
-
-//   )
-// }

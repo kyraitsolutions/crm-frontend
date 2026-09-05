@@ -1,4 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import { ExpirationPrompt } from "@/components/subscription/ExpirationPrompt";
+import { TrialBanner } from "@/components/subscription/TrialBanner";
 import { SiteHeader } from "@/components/site-header";
 import { COOKIES_STORAGE } from "@/constants";
 import { ACCOUNT_PATHS } from "@/constants/routes";
@@ -13,6 +15,7 @@ import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { SocketProvider } from "@/websocket/socket.provider";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import ContactPopup from "@/pages/Contact/components/ContactPopup";
 
 export function AppLayout() {
   // store managers
@@ -83,13 +86,16 @@ export function AppLayout() {
         <AppSidebar />
 
         <main className="w-full flex flex-col">
+          <TrialBanner />
+          <ExpirationPrompt />
           <SiteHeader />
 
-          <div className="flex-1 h-[calc(100vh-64px)] w-full overflow-hidden">
+          <div className="flex-1 h-[calc(100vh-124px)] w-full overflow-y-scroll">
             <Outlet />
           </div>
         </main>
       </div>
+      <ContactPopup />
     </SocketProvider>
   );
 }

@@ -60,6 +60,8 @@ export const API_ENDPOINT_PATH = {
 
   NOTIFICATIONS: {
     GET_NOTIFICATIONS: `/notification`,
+    MARK_READ: `/notification`,
+    MARK_ALL_READ: `/notification/read-all`,
   },
 
   CONFIGURATION: {

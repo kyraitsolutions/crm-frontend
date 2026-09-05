@@ -13,7 +13,11 @@ export const LEADS_ROUTES = {
 export const LEADS_PATHS = {
   ROOT: withAccount("/leads"),
   getList: (accountId: string) =>
-      `${ACCOUNT_PATHS.byId(accountId)}/${LEADS_ROUTES.LEADS}/:leadId`,
+      `${ACCOUNT_PATHS.byId(accountId)}/${LEADS_ROUTES.LEADS}`,
+  getCreate: (accountId: string) =>
+      `${ACCOUNT_PATHS.byId(accountId)}/${LEADS_ROUTES.LEADS}/${LEADS_ROUTES.CREATE}`,
+  getImport: (accountId: string) =>
+      `${ACCOUNT_PATHS.byId(accountId)}/${LEADS_ROUTES.LEADS}/${LEADS_ROUTES.IMPORT}`,
   getLeadDetail: (accountId: string,leadId: string) =>
       `${ACCOUNT_PATHS.byId(accountId)}/leads/${leadId}/lead-details`,
   //   getView: (accountId: string, formId: string) =>

@@ -2,7 +2,7 @@ import { useAuthStore } from "@/stores";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
-import { Bell, Plus, Search, Settings } from "lucide-react";
+import { Bell, Search, Settings } from "lucide-react";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { ROUTES } from "@/constants/routes";
 import { useEffect, useState } from "react";
@@ -10,14 +10,14 @@ import Notification from "@/pages/Notification/Notification";
 import { useNotificationStore } from "@/pages/Notification/store/notification.store";
 import ButtonWithTitle from "./ui/Buttons/ButtonWithTitle";
 import GlobalSearch from "./globalSearch/GlobalSearch";
-import { SubscriptionPlan } from "@/enums/subscription.enum";
 import { Input } from "./ui/input";
+import { QuickAddMenu } from "./quick-add-menu";
 
 export function SiteHeader() {
   const navigate = useNavigate();
 
   const { accountName, user } = useAuthStore((state) => state);
-  const { bellCount, clearBellCount } = useNotificationStore((state) => state);
+  const { bellCount } = useNotificationStore((state) => state);
   // const organizationName = user?.userprofile?.organizationName;
 
   const baseUrl = `${ROUTES.DASHBOARD}/settings`;
@@ -32,15 +32,6 @@ export function SiteHeader() {
     setOpenSearch(search.trim().length > 0);
   }, [search]);
 
-  const now = new Date();
-  const expiryDate = new Date(user?.subscription?.expiresAt as any);
-
-  const totalDaysLeft = Math.ceil(
-    (Number(expiryDate) - Number(now)) / (1000 * 60 * 60 * 24),
-  );
-
-
-  console.log(user)
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
@@ -65,26 +56,9 @@ export function SiteHeader() {
         </h1> */}
         <div className="ml-auto flex items-center gap-2">
           <div className="flex items-center gap-4">
-            {/* Trial Text */}
-            <span className="text-md text-primary font-medium">
-              {
-                SubscriptionPlan[
-                user?.subscription?.planId as keyof typeof SubscriptionPlan
-                ]
-              }{" "}
-              expires in {totalDaysLeft} days
-            </span>
-
-            {/* Upgrade Button */}
-            <button className="bg-primary hover:bg-primary/80 text-white text-sm px-4 py-1.5 rounded font-medium transition">
-              Upgrade
-            </button>
-
             {/* Add Button */}
 
-            <button className="p-1.5 flex items-center justify-center bg-second hover:bg-second/90 text-white rounded">
-              <Plus size={20} />
-            </button>
+            <QuickAddMenu />
             {searchEnable && (
               <div
                 className={`transition-all duration-300 ease-in-out overflow-hidden ${searchEnable
@@ -113,7 +87,6 @@ export function SiteHeader() {
               title="Notifications"
               onClick={() => {
                 setOpen(!open);
-                clearBellCount();
               }}
               className=" relative p-2 flex items-center justify-center rounded-full transition-all duration-200 hover:bg-primary/10 hover:scale-105 active:scale-95 cursor-pointer"
             >
@@ -165,7 +138,6 @@ export function SiteHeader() {
         openSearch={openSearch}
         setOpenSearch={setOpenSearch}
       />
-      {/* <Notification open={open} setOpen={setOpen} /> */}
     </header>
   );
 }

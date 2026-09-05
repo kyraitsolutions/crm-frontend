@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import { useContactStore } from "./Contact/store/contact.store";
 import { useAuthStore } from "@/stores";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
-import ContactPopup from "./Contact/components/ContactPopup";
-import { Pagination } from "@/components/pagination";
 import ContactFilter from "./Contact/components/ContactFilter";
 import DataLoader from "@/components/Loader/data-loader";
 import useDebounce from "@/hooks/useDebounce";
 import SendTemplate from "./Channels/whatsapp/components/popup/SendTemplate";
 import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/pagination";
 
 const Contacts = () => {
   const {
@@ -211,9 +210,6 @@ const Contacts = () => {
       />
 
       {openTemplatePopup && <SendTemplate open={openTemplatePopup} setOpen={setOpenTemplatePopup} />}
-
-
-      <ContactPopup />
     </div>
   )
 }

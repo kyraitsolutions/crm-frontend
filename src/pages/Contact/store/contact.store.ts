@@ -129,19 +129,22 @@ export const useContactStore = create<TContactStore>((set, get) => ({
     createContact: async (payload: TCreateContact) => {
         try {
             const response = await contactService.createContact(payload);
-            const newContact = response?.data?.docs;
+            const newContact = response?.data?.doc || response?.data?.docs;
 
             set((state) => ({
                 contacts: [
-                    ...(Array.isArray(newContact) ? newContact : [newContact]),
+                    ...(Array.isArray(newContact)
+                        ? newContact
+                        : newContact
+                          ? [newContact]
+                          : []),
                     ...state.contacts,
                 ],
                 open: false
             }));
         } catch (error) {
             console.error("Create contact error", error);
-        } finally {
-            set({ loadingContacts: false });
+            throw error;
         }
     },
 

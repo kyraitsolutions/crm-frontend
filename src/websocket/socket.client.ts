@@ -1,17 +1,25 @@
-// websocket/socket.client.ts
 type Listener = (data: any) => void;
 
 class SocketManager {
   private socket: WebSocket | null = null;
-
   private listeners: Map<string, Set<Listener>> = new Map();
+  private url = "";
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private intentionallyClosed = false;
 
   connect(url: string) {
+    this.url = url;
+    this.intentionallyClosed = false;
+
     if (
       this.socket &&
       (this.socket.readyState === WebSocket.OPEN ||
         this.socket.readyState === WebSocket.CONNECTING)
     ) {
+      const currentUrl = (this.socket as WebSocket).url;
+      if (currentUrl === url || currentUrl.startsWith(url)) {
+        return;
+      }
       this.socket.close();
       this.socket = null;
     }
@@ -23,25 +31,24 @@ class SocketManager {
     };
 
     this.socket.onmessage = (event) => {
-      const parsed = JSON.parse(event.data);
-
-      const eventListeners = this.listeners.get(parsed.event);
-
-      if (!eventListeners) return;
-
-      eventListeners.forEach((callback) => {
-        callback(parsed.data);
-      });
+      try {
+        const parsed = JSON.parse(event.data);
+        const eventListeners = this.listeners.get(parsed.event);
+        if (!eventListeners) return;
+        eventListeners.forEach((callback) => {
+          callback(parsed.data);
+        });
+      } catch {
+        console.error("Invalid WS message");
+      }
     };
 
     this.socket.onclose = () => {
-      console.log("❌ WS Closed");
-
       this.socket = null;
-      // reconnect
-      //   setTimeout(() => {
-      //     this.connect(url);
-      //   }, 3000);
+      if (this.intentionallyClosed || !this.url) return;
+      this.reconnectTimer = setTimeout(() => {
+        this.connect(this.url);
+      }, 3000);
     };
   }
 
@@ -67,6 +74,11 @@ class SocketManager {
   }
 
   disconnect() {
+    this.intentionallyClosed = true;
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
     this.socket?.close();
     this.socket = null;
   }
