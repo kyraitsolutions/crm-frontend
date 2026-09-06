@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { MdInsights, MdOutlineCampaign, MdWbAuto, MdOutlineUnsubscribe } from "react-icons/md";
+import { MdInsights, MdOutlineCampaign } from "react-icons/md";
 import { FileText, Users } from "lucide-react";
 
 interface NavItem {

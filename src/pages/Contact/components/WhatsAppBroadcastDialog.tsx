@@ -27,7 +27,8 @@ import { useWhatsAppMarketingStore } from "@/pages/WhatsappMarketing/store/whats
 import { Send } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getCountryCallingCode, type CountryCode } from "react-phone-number-input";
+import type { CountryCode } from "libphonenumber-js/core";
+import { getCountryCallingCode } from "react-phone-number-input";
 
 type WhatsAppBroadcastDialogProps = {
   open: boolean;

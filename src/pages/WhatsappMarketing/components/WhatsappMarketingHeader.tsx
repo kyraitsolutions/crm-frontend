@@ -1,8 +1,5 @@
 import { NavLink } from "react-router-dom";
 import { MdInsights, MdOutlineCampaign } from "react-icons/md";
-import { FileText } from "lucide-react";
-import { WHATSAPP_PATHS } from "@/constants/routes/whatsapp.path";
-import { useAuthStore } from "@/stores";
 
 interface NavItem {
   label: string;
@@ -12,7 +9,6 @@ interface NavItem {
 }
 
 const WhatsappMarketingHeader = () => {
-  const { accountId } = useAuthStore();
   const NAV_ITEMS: NavItem[] = [
     { label: "Overview", path: ".", icon: MdInsights, end: true },
     { label: "Campaigns", path: "campaigns", icon: MdOutlineCampaign },
