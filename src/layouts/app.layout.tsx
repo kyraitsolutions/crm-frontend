@@ -90,7 +90,7 @@ export function AppLayout() {
           <ExpirationPrompt />
           <SiteHeader />
 
-          <div className="flex-1 h-[calc(100vh-124px)] w-full overflow-y-scroll">
+          <div className="flex-1 max-h-[calc(100vh-64px)] w-full overflow-y-scroll hide-scrollbar">
             <Outlet />
           </div>
         </main>

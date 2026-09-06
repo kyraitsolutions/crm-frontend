@@ -5,17 +5,41 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 const subscriptionService = new SubscriptionService();
 
+let cachedSubscription: OrganizationSubscriptionSnapshot | null = null;
+let inflight: Promise<OrganizationSubscriptionSnapshot | null> | null = null;
+
+const loadSubscription = async (force = false) => {
+  if (!force && cachedSubscription) {
+    return cachedSubscription;
+  }
+  if (!force && inflight) {
+    return inflight;
+  }
+
+  inflight = subscriptionService
+    .getCurrent()
+    .then((response) => {
+      cachedSubscription = response.data?.doc || null;
+      return cachedSubscription;
+    })
+    .finally(() => {
+      inflight = null;
+    });
+
+  return inflight;
+};
+
 export function useSubscription() {
   const [subscription, setSubscription] =
-    useState<OrganizationSubscriptionSnapshot | null>(null);
-  const [loading, setLoading] = useState(true);
+    useState<OrganizationSubscriptionSnapshot | null>(cachedSubscription);
+  const [loading, setLoading] = useState(!cachedSubscription);
   const [error, setError] = useState<string | null>(null);
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (force = true) => {
     try {
-      setLoading(true);
-      const response = await subscriptionService.getCurrent();
-      setSubscription(response.data?.doc || null);
+      if (!cachedSubscription) setLoading(true);
+      const next = await loadSubscription(force);
+      setSubscription(next);
       setError(null);
     } catch (err: any) {
       setError(err?.message || "Failed to load subscription");
@@ -25,7 +49,7 @@ export function useSubscription() {
   }, []);
 
   useEffect(() => {
-    void refresh();
+    void refresh(false);
   }, [refresh]);
 
   const canAccessFeature = useCallback(
@@ -52,7 +76,7 @@ export function useSubscription() {
       usage: subscription?.usage,
       loading,
       error,
-      refresh,
+      refresh: () => refresh(true),
       canAccessFeature,
       FEATURE,
     };

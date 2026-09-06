@@ -156,7 +156,7 @@ export const useContactStore = create<TContactStore>((set, get) => ({
         const { contacts, selectedContactId } = get();
 
         return contacts.find(
-            (contact) => contact._id === selectedContactId
+            (contact) => String(contact.id || contact._id) === selectedContactId
         );
     },
 })

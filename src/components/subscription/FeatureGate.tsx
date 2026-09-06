@@ -3,17 +3,26 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
+import DataLoader from "@/components/Loader/data-loader";
 
 interface FeatureGateProps {
   feature: FeatureKey | string;
   children: ReactNode;
   fallback?: ReactNode;
+  loaderClassName?: string;
 }
 
-export function FeatureGate({ feature, children, fallback }: FeatureGateProps) {
+export function FeatureGate({
+  feature,
+  children,
+  fallback,
+  loaderClassName = "h-[calc(100vh-180px)]",
+}: FeatureGateProps) {
   const { canAccessFeature, loading } = useSubscription();
 
-  if (loading) return null;
+  if (loading) {
+    return <DataLoader className={loaderClassName} />;
+  }
 
   if (canAccessFeature(feature)) {
     return <>{children}</>;

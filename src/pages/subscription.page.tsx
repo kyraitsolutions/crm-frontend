@@ -8,6 +8,7 @@ import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ToastMessageService } from "@/services";
 import { useNavigate } from "react-router-dom";
+import DataLoader from "@/components/Loader/data-loader";
 
 declare global {
   interface Window {
@@ -24,6 +25,7 @@ export const SubscriptionPage = () => {
   const { user } = useAuthStore((state) => state);
   const { subscription, refresh } = useSubscription();
   const [plans, setPlans] = useState<SubscriptionPlanView[]>([]);
+  const [plansLoading, setPlansLoading] = useState(true);
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
     "monthly",
   );
@@ -31,11 +33,14 @@ export const SubscriptionPage = () => {
   const canBill = BILLING_ROLES.includes(String(user?.role?.name || "").toUpperCase());
 
   const loadPlans = async () => {
+    setPlansLoading(true);
     try {
       const response = await subscriptionService.getPlans();
       setPlans(response.data?.docs || []);
     } catch (error: any) {
       toastService.error(error?.message || "Failed to load plans");
+    } finally {
+      setPlansLoading(false);
     }
   };
 
@@ -167,7 +172,12 @@ export const SubscriptionPage = () => {
         </div>
 
         <div className="max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
-          {plans.map((plan) => {
+          {plansLoading ? (
+            <div className="md:col-span-3">
+              <DataLoader className="h-64" />
+            </div>
+          ) : (
+          plans.map((plan) => {
             const price =
               billingPeriod === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
             const isCurrent = subscription?.plan?.id === plan.id;
@@ -217,7 +227,8 @@ export const SubscriptionPage = () => {
                 </ul>
               </div>
             );
-          })}
+          })
+          )}
         </div>
       </div>
     </div>

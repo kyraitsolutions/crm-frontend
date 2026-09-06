@@ -2,10 +2,8 @@ import { Outlet } from "react-router-dom";
 
 const LeadLayout = () => {
     return (
-        <div className="flex h-screen">
-
-            <main className="w-full h-[calc(100vh-64px)] overflow-y-scroll  hide-scrollbar">
-                {/* <SiteHeader /> */}
+        <div className="flex">
+            <main className="w-full overflow-y-scroll  hide-scrollbar">
                 <Outlet />
             </main>
         </div>

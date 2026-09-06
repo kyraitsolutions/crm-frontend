@@ -9,6 +9,7 @@ import { leadRoutes } from "./lead.route";
 // import About from "@/pages/about.page";
 
 import { broadcastRoutes } from "./broadcast.routes";
+import { emailMarketingRoutes } from "./email-marketing.routes";
 import { contactRoutes } from "./contact.routes";
 import { settingRoutes } from "./setting.routes";
 import { PublicOnly } from "./route-access/PublicOnly";
@@ -58,6 +59,7 @@ export const appRoutes = createBrowserRouter([
               ...leadRoutes,
               ...formRoutes,
               ...broadcastRoutes,
+              ...emailMarketingRoutes,
               ...contactRoutes,
               ...settingRoutes,
               ...dealsRoutes,

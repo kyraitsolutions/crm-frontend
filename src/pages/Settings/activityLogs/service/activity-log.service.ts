@@ -2,9 +2,10 @@ import { API_ENDPOINT_PATH } from "@/constants/api's-path";
 import { ApiService } from "@/services";
 
 export class ActivityLogService extends ApiService {
-  async getLogs(id: string) {
+  async getLogs(id: string, params?: { limit?: number; page?: number }) {
     return await this.get(
       `${API_ENDPOINT_PATH.ACTIVITY_LOGS.getActivityLogsPath(id)}`,
+      params,
     );
   }
 

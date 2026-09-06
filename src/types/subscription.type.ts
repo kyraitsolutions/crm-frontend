@@ -30,6 +30,9 @@ export interface SubscriptionLimits {
   leadsPerMonth: number;
   whatsappMessagesPerMonth: number;
   aiConversationsPerMonth: number;
+  emailsPerMonth?: number;
+  emailCampaignsPerMonth?: number;
+  emailRecipientsPerCampaign?: number;
 }
 
 export interface SubscriptionUsage {
@@ -40,6 +43,8 @@ export interface SubscriptionUsage {
   leads: number;
   whatsappMessages: number;
   aiConversations: number;
+  emails?: number;
+  emailCampaigns?: number;
 }
 
 export interface OrganizationSubscriptionSnapshot {

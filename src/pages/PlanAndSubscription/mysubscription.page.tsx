@@ -11,6 +11,7 @@ import type {
 import { CalendarDays, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ToastMessageService } from "@/services";
+import DataLoader from "@/components/Loader/data-loader";
 import { useEffect, useState } from "react";
 
 const MySubscriptionPage = () => {
@@ -47,7 +48,7 @@ const MySubscriptionPage = () => {
   };
 
   if (loading) {
-    return <div className="p-6 text-sm text-slate-500">Loading subscription…</div>;
+    return <DataLoader className="h-[calc(100vh-180px)]" />;
   }
 
   if (!subscription) {

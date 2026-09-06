@@ -9,7 +9,7 @@ import {
   IconChevronRight,
   IconUsers,
 } from "@tabler/icons-react";
-import { Gauge, MessagesSquare } from "lucide-react";
+import { Gauge, MessagesSquare, Mail, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import {
   // MdWhatsapp ,  MdEmail, MdOutlineCampaign,
@@ -99,6 +99,18 @@ export function AppSidebar() {
         title: "Contacts",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/contacts`,
         icon: MdOutlineContacts,
+        active: true,
+      },
+      {
+        title: "Email Marketing",
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/email-marketing`,
+        icon: Mail,
+        active: true,
+      },
+      {
+        title: "WhatsApp Marketing",
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
+        icon: MessageCircle,
         active: true,
       },
     ],

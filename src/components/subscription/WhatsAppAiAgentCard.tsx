@@ -43,6 +43,7 @@ export function WhatsAppAiAgentCard() {
 
       <FeatureGate
         feature={FEATURE.WHATSAPP_AI_AGENT}
+        loaderClassName="h-16"
         fallback={
           <Button asChild>
             <Link to="/dashboard/settings/subscription">Upgrade to Enable</Link>

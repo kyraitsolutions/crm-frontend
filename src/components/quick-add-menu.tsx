@@ -1,13 +1,14 @@
 import {
   Bot,
   FileInput,
+  Mail,
   MessageSquare,
   Plus,
   UserPlus,
   Users,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { CHATBOT_PATHS, LEAD_FORM_PATHS } from "@/constants/routes";
+import { CHATBOT_PATHS, EMAIL_MARKETING_PATHS, LEAD_FORM_PATHS } from "@/constants/routes";
 import { LEADS_PATHS } from "@/constants/routes/leads.path";
 import { LIVE_CHAT_PATHS } from "@/constants/routes/livechat.path";
 import { useAuthStore } from "@/stores";
@@ -139,6 +140,20 @@ export function QuickAddMenu() {
               <span>Lead form</span>
               <span className="text-xs text-muted-foreground">
                 Capture leads from your website
+              </span>
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              go(EMAIL_MARKETING_PATHS.createCampaign(id))
+            }
+            className="cursor-pointer"
+          >
+            <Mail />
+            <div className="flex flex-col">
+              <span>Email campaign</span>
+              <span className="text-xs text-muted-foreground">
+                Reach contacts with a tracked campaign
               </span>
             </div>
           </DropdownMenuItem>

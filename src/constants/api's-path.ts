@@ -112,6 +112,16 @@ export const API_ENDPOINT_PATH = {
         `/whatsapp/account/${id}/templates`,
       getTemplateListPath: (id: string) => `/whatsapp/account/${id}/templates`,
     },
+    BROADCAST: {
+      context: (accountId: string) =>
+        `/whatsapp/account/${accountId}/broadcast/context`,
+      overview: (accountId: string) =>
+        `/whatsapp/account/${accountId}/broadcast/overview`,
+      campaigns: (accountId: string) =>
+        `/whatsapp/account/${accountId}/broadcast/campaigns`,
+      optin: (accountId: string) =>
+        `/whatsapp/account/${accountId}/broadcast/optin`,
+    },
   },
 
   ACTIVITY_LOGS: {
