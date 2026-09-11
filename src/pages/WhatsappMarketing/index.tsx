@@ -27,7 +27,7 @@ const WhatsappMarketingOverview = () => {
       ) : (
         <div className="p-6 space-y-6">
           <div>
-            <h1 className="text-2xl font-bold">WhatsApp Marketing</h1>
+            <h1 className="text-xl font-bold">WhatsApp Marketing</h1>
             <p className="text-sm text-muted-foreground">
               Campaign delivery, reads, replies, and opt-outs across opted-in contacts.
             </p>
@@ -44,42 +44,145 @@ const WhatsappMarketingOverview = () => {
 
           <WhatsAppTrendsChart data={overview?.trends} />
 
-          <div className="rounded-lg border">
-            <div className="p-4 font-medium">Top campaigns</div>
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-t text-left text-muted-foreground">
-                  <th className="p-3">Campaign</th>
-                  <th className="p-3">Read</th>
-                  <th className="p-3">Reply</th>
-                  <th className="p-3">Delivery</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(overview?.comparison || []).map((row: any) => (
-                  <tr key={row.id} className="border-t">
-                    <td className="p-3">
-                      <Link
-                        className="text-primary"
-                        to={WHATSAPP_MARKETING_PATHS.campaign(String(accountId), row.id)}
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900">
+                  Top campaigns
+                </h3>
+
+                <p className="mt-0.5 text-xs text-slate-500">
+                  Campaigns with the best engagement and delivery performance.
+                </p>
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="flex h-48 items-center justify-center">
+                <DataLoader className="h-32" />
+              </div>
+            ) : (overview?.comparison || []).length ? (
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[650px] text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 bg-slate-50/70">
+                      <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Campaign
+                      </th>
+
+                      <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Read
+                      </th>
+
+                      <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Reply
+                      </th>
+
+                      <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Delivery
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="divide-y divide-slate-100">
+                    {(overview?.comparison || []).map((row: any) => (
+                      <tr
+                        key={row.id}
+                        className="group transition-colors hover:bg-slate-50/70"
                       >
-                        {row.name}
-                      </Link>
-                    </td>
-                    <td className="p-3">{row.readRate}%</td>
-                    <td className="p-3">{row.replyRate}%</td>
-                    <td className="p-3">{row.deliveryRate}%</td>
-                  </tr>
-                ))}
-                {!loading && !(overview?.comparison || []).length && (
-                  <tr>
-                    <td className="p-3 text-muted-foreground" colSpan={4}>
-                      No campaigns yet. Select contacts and broadcast on WhatsApp to see performance here.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                        {/* Campaign */}
+                        <td className="px-5 py-3.5">
+                          <Link
+                            to={WHATSAPP_MARKETING_PATHS.campaign(
+                              String(accountId),
+                              row.id,
+                            )}
+                            className="flex items-center gap-3"
+                          >
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#fff0ea] text-primary">
+                              <MessageCircle className="h-4 w-4" />
+                            </div>
+
+                            <div className="min-w-0">
+                              <p className="truncate font-medium text-slate-800 transition-colors group-hover:text-primary">
+                                {row.name}
+                              </p>
+
+                              <p className="mt-0.5 text-[11px] text-slate-400">
+                                WhatsApp campaign
+                              </p>
+                            </div>
+                          </Link>
+                        </td>
+
+                        {/* Read */}
+                        <td className="px-4 py-3.5 text-right">
+                          <div className="inline-flex flex-col items-end">
+                            <span className="font-semibold text-slate-800">
+                              {row.readRate}%
+                            </span>
+
+                            <span className="mt-0.5 text-[10px] text-slate-400">
+                              read rate
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* Reply */}
+                        <td className="px-4 py-3.5 text-right">
+                          <div className="inline-flex flex-col items-end">
+                            <span className="font-semibold text-slate-800">
+                              {row.replyRate}%
+                            </span>
+
+                            <span className="mt-0.5 text-[10px] text-slate-400">
+                              reply rate
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* Delivery */}
+                        <td className="px-5 py-3.5 text-right">
+                          <div className="inline-flex items-center gap-2">
+                            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100">
+                              <div
+                                className="h-full rounded-full bg-emerald-500"
+                                style={{
+                                  width: `${Math.min(
+                                    Number(row.deliveryRate) || 0,
+                                    100,
+                                  )}%`,
+                                }}
+                              />
+                            </div>
+
+                            <span className="min-w-[42px] font-semibold text-slate-800">
+                              {row.deliveryRate}%
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex min-h-[220px] flex-col items-center justify-center px-6 text-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                  <MessageCircle className="h-5 w-5" />
+                </div>
+
+                <h4 className="mt-3 text-sm font-semibold text-slate-800">
+                  No campaigns yet
+                </h4>
+
+                <p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">
+                  Create a WhatsApp campaign to start tracking delivery,
+                  read and reply performance.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}
