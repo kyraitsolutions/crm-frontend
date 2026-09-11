@@ -12,7 +12,6 @@ import {
   Eye,
   MessageCircle,
   RefreshCw,
-  Send,
   UserMinus,
   Users,
 } from "lucide-react";

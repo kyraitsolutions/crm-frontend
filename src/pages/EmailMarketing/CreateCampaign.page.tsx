@@ -25,7 +25,6 @@ import DataLoader from "@/components/Loader/data-loader";
 import {
   ArrowLeft,
   CalendarClock,
-  CheckCircle2,
   FileText,
   Mail,
   Send,

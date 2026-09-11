@@ -24,7 +24,6 @@ import {
   Copy,
   FileText,
   Mail,
-  MoreHorizontal,
   Plus,
   Trash2,
   Eye,
