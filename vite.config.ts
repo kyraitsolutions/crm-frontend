@@ -21,7 +21,6 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
-    allowedHosts: [""],
+    allowedHosts: ["design-venture-bids-approve.trycloudflare.com"],
   },
-
 });

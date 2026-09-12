@@ -1,5 +1,6 @@
 export const buildFormData = (payload: any) => {
   const formData = new FormData();
+  console.log("payload", payload);
   formData.append("to", payload.to);
   formData.append("type", payload.type);
 
@@ -30,6 +31,7 @@ export const buildFormData = (payload: any) => {
 
     case "template":
       formData.append("template", JSON.stringify(payload.template));
+      formData.append("parameter_format", payload.template.parameter_format);
       break;
   }
 

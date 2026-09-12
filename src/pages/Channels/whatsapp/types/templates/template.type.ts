@@ -21,6 +21,7 @@ export interface TemplateVariable {
   id: string;
   name: string;
   exampleValue: string;
+  component: "HEADER" | "BODY";
 }
 
 export interface TemplateTypeOption {

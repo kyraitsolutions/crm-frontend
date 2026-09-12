@@ -67,6 +67,7 @@ const ChatProfile = () => {
           </div>
           <h1 className="text-sm font-bold">
             {selectedConversation?.contact?.name ||
+              selectedConversation?.contact?.phoneNumber ||
               buildAndGetVisitorDisplayNameByVisitorId(
                 String(selectedConversation?.visitorId),
               )}

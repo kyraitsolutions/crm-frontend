@@ -3,6 +3,11 @@ import { useTemplateListStore } from "../../store/template-list.store";
 import { getTemplateType } from "../../utils/template/template.utils";
 import { timeAgo } from "@/utils/date.utils";
 import { TbStarFilled } from "react-icons/tb";
+import { Button } from "@/components/ui/button";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import type { TTemplate } from "../../types/templates";
+import { useState } from "react";
+import GlobalTemplatePreview from "../GlobalTemplatePreview";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -20,7 +25,9 @@ const getStatusColor = (status: string) => {
 const TemplateTable = ({ type }: { type: string }) => {
   const templates = useTemplateListStore((state) => state.templates);
 
-  console.log("templates", templates);
+  const [previewTemplate, setPreviewTemplate] = useState<TTemplate | null>(
+    null,
+  );
 
   return (
     <div className="mt-6 overflow-hidden ">
@@ -67,7 +74,9 @@ const TemplateTable = ({ type }: { type: string }) => {
                       {item.status}
                     </td>
 
-                    <td className="px-6 py-5 uppercase">{getTemplateType(item.components)}</td>
+                    <td className="px-6 py-5 uppercase">
+                      {getTemplateType(item.components)}
+                    </td>
 
                     <td className="px-6 py-5">
                       <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-white">
@@ -77,24 +86,46 @@ const TemplateTable = ({ type }: { type: string }) => {
                     </td>
 
                     <td className="px-6 py-5">{timeAgo(item.createdAt)}</td>
-                    <td className="px-6 py-5">{item.lastUsedAt && timeAgo(item.lastUsedAt)}</td>
+                    <td className="px-6 py-5 text-center">
+                      {(item.lastUsedAt && timeAgo(item.lastUsedAt)) || "-"}
+                    </td>
 
                     <td className="px-6 py-5 rounded-r-xl">
                       <div className="flex items-center justify-end gap-3 text-gray-500">
-                        {item.status === "APPROVED" && (item.isFavourite ?
-                          <TbStarFilled size={18} className="cursor-pointer text-amber-300" />
-                          :
-                          <Star size={18} className="cursor-pointer" />
-                        )}
-                        <Copy
-                          size={18}
-                          className="cursor-pointer hover:text-black"
-                        />
+                        {item.status === "APPROVED" &&
+                          (item.isFavourite ? (
+                            <TbStarFilled
+                              size={18}
+                              className="cursor-pointer text-amber-300"
+                            />
+                          ) : (
+                            <Star size={18} className="cursor-pointer" />
+                          ))}
 
-                        <Trash2
-                          size={18}
-                          className="cursor-pointer hover:text-red-500"
-                        />
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPreviewTemplate(item);
+                          }}
+                          className="actions-btn"
+                          title="Preview template"
+                        >
+                          <MdOutlineRemoveRedEye size={16} />
+                        </Button>
+
+                        <Button className="actions-btn">
+                          <Copy
+                            size={18}
+                            className="cursor-pointer hover:text-black"
+                          />
+                        </Button>
+
+                        <Button className="actions-btn">
+                          <Trash2
+                            size={18}
+                            className="cursor-pointer hover:text-red-500"
+                          />
+                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -110,6 +141,12 @@ const TemplateTable = ({ type }: { type: string }) => {
           </tbody>
         </table>
       </div>
+
+      <GlobalTemplatePreview
+        open={!!previewTemplate}
+        onClose={() => setPreviewTemplate(null)}
+        template={previewTemplate}
+      />
     </div>
   );
 };

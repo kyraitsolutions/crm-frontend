@@ -1,5 +1,11 @@
 import type { AttachmentType } from "../hooks/useWhatsappComposer";
 
+export type TTemplateOutgoingComponent = {
+  type: "HEADER" | "BODY";
+  text?: string;
+  parameters?: string[];
+};
+
 export type TOutgoingMessage =
   | {
       type: "text";
@@ -24,10 +30,10 @@ export type TOutgoingMessage =
   | {
       type: "template";
       payload: {
-        templateId: string;
-        templateName: string;
+        name: string;
         language: string;
-        parameters?: string[];
+        category: string;
+        components: any[];
       };
     };
 
@@ -51,20 +57,6 @@ interface ComposerState {
 export const buildOutgoingMessage = (
   composer: ComposerState,
 ): TOutgoingMessage | null => {
-  // Template
-
-  if (composer.selectedTemplate) {
-    return {
-      type: "template",
-      payload: {
-        templateId: composer.selectedTemplate.id,
-        templateName: composer.selectedTemplate.name,
-        language: composer.selectedTemplate.language,
-        parameters: composer.selectedTemplate.parameters,
-      },
-    };
-  }
-
   // Audio
   if (composer.recordedAudio) {
     return {

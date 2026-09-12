@@ -82,7 +82,9 @@ const ChatWindow = () => {
         name={String(
           buildAndGetVisitorDisplayNameByVisitorId(
             selectedConversation?.visitorId || "",
-          ) || selectedConversation?.contact?.name,
+          ) ||
+            selectedConversation?.contact?.name ||
+            selectedConversation?.contact?.phoneNumber,
         )}
         platform={selectedConversation?.platform || "chatbot"}
       />

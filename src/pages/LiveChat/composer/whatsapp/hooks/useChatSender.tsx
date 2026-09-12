@@ -33,7 +33,6 @@ export const useChatSender = () => {
     try {
       const response = await whatsappService.sendMessage(accountId, formData);
       const realMessageId = response?.data?.doc?.messages?.[0]?.id;
-
       if (realMessageId) {
         replaceMessageId(clientMessageId, String(realMessageId));
       }

@@ -5,9 +5,14 @@ import VoiceRecorder from "./composerContent/VoiceRecorder";
 interface ComposerContentProps {
   onSend: () => void;
   composer: any; // replace with your hook type
+  disabled?: boolean;
 }
 
-const ComposerContent = ({ composer, onSend }: ComposerContentProps) => {
+const ComposerContent = ({
+  composer,
+  onSend,
+  disabled = false,
+}: ComposerContentProps) => {
   const handleSend = async () => {
     composer.setMessage("");
     composer.removeAttachment();
@@ -53,7 +58,14 @@ const ComposerContent = ({ composer, onSend }: ComposerContentProps) => {
       value={composer.message}
       onChange={composer.setMessage}
       inputRef={composer.inputRef}
-      disabled={composer.sending || composer.selectedAttachmentType}
+      disabled={
+        disabled || composer.sending || !!composer.selectedAttachmentType
+      }
+      placeholder={
+        disabled
+          ? "⏰ The 24-hour messaging window has ended. You can continue the conversation using an approved template."
+          : "Type your message here..."
+      }
       onSend={handleSend}
     />
   );

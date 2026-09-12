@@ -1,5 +1,8 @@
 import { useRef, useState } from "react";
 import { getAttachmentType } from "../utils/getAttachmentType";
+import type { TemplateVariable } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import { extractTemplateVariables } from "@/pages/Channels/whatsapp/utils/template/template.utils";
+import type { TTemplate } from "@/pages/Channels/whatsapp/types/templates";
 
 export type AttachmentType = "image" | "document" | "video" | "audio";
 
@@ -8,7 +11,18 @@ export const useWhatsappComposer = () => {
   const [message, setMessage] = useState("");
 
   // Template
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<TTemplate | null>(
+    null,
+  );
+  const [showVariableMapping, setShowVariableMapping] = useState(false);
+
+  const [templateVariables, setTemplateVariables] = useState<
+    TemplateVariable[]
+  >([]);
+
+  const [templateVariableValues, setTemplateVariableValues] = useState<
+    Record<string, string>
+  >({});
 
   // Attachment
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -33,9 +47,37 @@ export const useWhatsappComposer = () => {
   // Refs
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleTemplate = (template: any) => {
+  const handleVariableChange = (variableId: string, value: string) => {
+    setTemplateVariableValues((prev) => ({
+      ...prev,
+      [variableId]: value,
+    }));
+  };
+
+  const handleTemplate = (template: TTemplate) => {
     setSelectedTemplate(template);
+
+    const variables = extractTemplateVariables(template);
+
+    setTemplateVariables(variables);
+
+    if (variables.length === 0) {
+      setTemplateVariableValues({});
+      setShowVariableMapping(false);
+      setShowTemplateMenu(false);
+      return;
+    }
+
+    const initialValues: Record<string, string> = {};
+
+    variables.forEach((variable) => {
+      initialValues[variable.id] = variable.exampleValue;
+    });
+
+    setTemplateVariableValues(initialValues);
+
     setShowTemplateMenu(false);
+    setShowVariableMapping(true);
   };
 
   const removeAttachment = () => {
@@ -58,38 +100,98 @@ export const useWhatsappComposer = () => {
   };
 
   return {
+    // message
     message,
+    setMessage,
+
+    // template
     selectedTemplate,
+    templateVariables,
+    templateVariableValues,
+
+    setTemplateVariableValues,
+    handleVariableChange,
+
+    showVariableMapping,
+    setShowVariableMapping,
+
+    handleTemplate,
+    // clearTemplate,
+
+    // attachment
     selectedFile,
     previewUrl,
     caption,
-
     selectedAttachmentType,
+
+    setCaption,
+    removeAttachment,
+    handleAttachment,
+
+    // popups
     showEmojiPicker,
     showAttachmentMenu,
     showTemplateMenu,
-
-    isRecording,
-    recordedAudio,
-    recordedAudioUrl,
-    sending,
-
-    inputRef,
-
-    setMessage,
-    setCaption,
 
     setShowEmojiPicker,
     setShowAttachmentMenu,
     setShowTemplateMenu,
 
+    // voice
+    isRecording,
+    recordedAudio,
+    recordedAudioUrl,
+
     setIsRecording,
     setRecordedAudio,
     setRecordedAudioUrl,
+
+    // loading
+    sending,
     setSending,
 
-    removeAttachment,
-    handleAttachment,
-    handleTemplate,
+    // ref
+    inputRef,
+
+    // message,
+    // selectedTemplate,
+    // templateVariables,
+    // templateVariableValues,
+
+    // setTemplateVariableValues,
+
+    // showVariableMapping,
+    // setShowVariableMapping,
+    // selectedFile,
+    // previewUrl,
+    // caption,
+
+    // selectedAttachmentType,
+    // showEmojiPicker,
+    // showAttachmentMenu,
+    // showTemplateMenu,
+
+    // isRecording,
+    // recordedAudio,
+    // recordedAudioUrl,
+    // sending,
+
+    // inputRef,
+
+    // setMessage,
+    // setCaption,
+
+    // setShowEmojiPicker,
+    // setShowAttachmentMenu,
+    // setShowTemplateMenu,
+
+    // setIsRecording,
+    // setRecordedAudio,
+    // setRecordedAudioUrl,
+    // setSending,
+
+    // removeAttachment,
+    // handleAttachment,
+    // handleTemplate,
   };
 };

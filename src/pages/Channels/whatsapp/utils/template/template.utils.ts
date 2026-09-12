@@ -1,7 +1,11 @@
 import { generateId } from "@/utils/generateId.utils";
 import { BUTTON_TYPE_CONFIG } from "../../constants/template.constants";
-import type { TemplateButton } from "../../types/templates/template.type";
-import type { ButtonKind } from "../../types/templates";
+import type {
+  TemplateButton,
+  TemplateComponent,
+  TemplateVariable,
+} from "../../types/templates/template.type";
+import type { ButtonKind, TTemplate } from "../../types/templates";
 
 export interface ButtonValidationError {
   buttonId?: string;
@@ -140,14 +144,98 @@ export function groupButtons(buttons: TemplateButton[]) {
   };
 }
 
-
-
-export function getTemplateType(components:any){
-  if(components[0].type==="HEADER" && components[0]?.format){
+export function getTemplateType(components: any) {
+  if (components[0].type === "HEADER" && components[0]?.format) {
     return components[0]?.format;
-  }
-  else{
+  } else {
     return "text";
   }
-  
 }
+
+export const getComponentText = (
+  components: TemplateComponent[],
+  type: TemplateComponent["type"],
+) => components?.find((c) => c.type === type)?.text ?? "";
+
+export const extractTemplateVariables = (
+  template: TTemplate,
+): TemplateVariable[] => {
+  const variables: TemplateVariable[] = [];
+
+  const variableRegex =
+    template.parameterFormat === "Number" ? /{{(\d+)}}/g : /{{([^{}]+)}}/g;
+
+  const header = template.components.find(
+    (component) => component.type.toUpperCase() === "HEADER",
+  );
+
+  const body = template.components.find(
+    (component) => component.type.toUpperCase() === "BODY",
+  );
+
+  // HEADER variables
+  if (header?.text) {
+    const matches = header.text.match(variableRegex) ?? [];
+
+    matches.forEach((match) => {
+      const id = match.replace(/[{}]/g, "");
+
+      variables.push({
+        id: `HEADER:${id}`,
+        name: `Header variable ${id}`,
+        exampleValue: "",
+        component: "HEADER",
+      });
+    });
+  }
+
+  // BODY variables
+  if (body?.text) {
+    const matches = body.text.match(variableRegex) ?? [];
+
+    matches.forEach((match) => {
+      const id =
+        template.parameterFormat === "Number"
+          ? match.replace(/[{}]/g, "")
+          : match.replace(/[{}]/g, "").trim();
+
+      let exampleValue = "";
+
+      if (template.parameterFormat === "Number") {
+        const bodyExampleValues = body.example?.body_text?.[0] ?? [];
+
+        exampleValue = bodyExampleValues[Number(id) - 1] ?? "";
+      } else {
+        const bodyExampleValues = body.example?.body_text_named_params ?? [];
+
+        exampleValue =
+          bodyExampleValues.find((item) => item.param_name === id)?.example ??
+          "";
+      }
+
+      variables.push({
+        id: `BODY:${id}`,
+        name: `Body variable ${id}`,
+        exampleValue,
+        component: "BODY",
+      });
+    });
+  }
+
+  return variables;
+};
+
+export const extractVariableIds = (
+  text?: string,
+  parameterFormat?: "NUMBER" | "NAMED",
+): string[] => {
+  if (!text) return [];
+
+  const regex = parameterFormat === "NAMED" ? /{{([^{}]+)}}/g : /{{(\d+)}}/g;
+
+  const matches = text.match(regex);
+
+  if (!matches) return [];
+
+  return matches.map((match) => match.replace(/[{}]/g, "").trim());
+};

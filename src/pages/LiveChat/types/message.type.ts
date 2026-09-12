@@ -127,49 +127,15 @@ export type TDocumentMessage = TBaseMessage & {
   };
 };
 
-// export const TextMessageSchema = BaseMessageSchema.extend({
-//   type: z.literal("text"),
-//   body: z.object({
-//     text: z.string(),
-//   }),
-// });
-
-// export const ImageMessageSchema = BaseMessageSchema.extend({
-//   type: z.literal("image"),
-
-//   media: z.object({
-//     type: "image",
-//     image: z.object({
-//       link: z.string().optional(),
-//       id: z.string().optional(),
-//       caption: z.string().optional(),
-//     }),
-//   }),
-// });
-
-// export const VideoMessageSchema = BaseMessageSchema.extend({
-//   type: z.literal("video"),
-//   media: z.object({
-//     type: "video",
-//     video: z.object({
-//       link: z.string().optional(),
-//       id: z.string().optional(),
-//       caption: z.string().optional(),
-//     }),
-//   }),
-// });
-
-// export const DocumentMessageSchema = BaseMessageSchema.extend({
-//   type: z.literal("document"),
-//   media: z.object({
-//     type: "document",
-//     document: z.object({
-//       link: z.string().optional(),
-//       id: z.string().optional(),
-//       caption: z.string().optional(),
-//     }),
-//   }),
-// });
+export type TTemplateMessage = TBaseMessage & {
+  type: "template";
+  template: {
+    name: string;
+    language: string;
+    category: string;
+    components: any[];
+  };
+};
 
 export type TInteractiveButtonMessage = TBaseMessage & TButtonNodeDataPayload;
 export type TInteractiveListMessage = TBaseMessage & TListNodeDataPayload;
@@ -177,33 +143,6 @@ export type TInteractiveCarouselMessage = TBaseMessage &
   TCarouselNodeDataPayload;
 export type TQuestionMessage = TBaseMessage & TQuestionNodeDataPayload;
 export type TCarouselMessage = TBaseMessage & TCarouselNodeDataPayload;
-
-// export const InteractiveButtonMessageSchema = BaseMessageSchema.extend({
-//   type: z.literal("interactive"),
-//   interactive: TButtonNodeData,
-// });
-
-// export const InteractiveListMessageSchema = BaseMessageSchema.extend({
-//   type: z.literal("interactive"),
-//   interactive: ListNodeDataPayloadSchema.shape.interactive,
-// });
-
-// export const QuestionMessageSchema = BaseMessageSchema.extend({
-//   type: z.literal("question"),
-//   question: QuestionNodeDataPayloadSchema.shape.question,
-// });
-
-// export const MessageSchema = z.union([
-//   TextMessageSchema,
-//   ImageMessageSchema,
-//   VideoMessageSchema,
-//   DocumentMessageSchema,
-//   InteractiveButtonMessageSchema,
-//   InteractiveListMessageSchema,
-//   QuestionMessageSchema,
-// ]);
-
-// export type TMessage = z.infer<typeof MessageSchema>;
 
 export type TMessage =
   | TTextMessage
@@ -215,4 +154,5 @@ export type TMessage =
   | TInteractiveListMessage
   | TInteractiveCarouselMessage
   | TQuestionMessage
-  | TCarouselMessage;
+  | TCarouselMessage
+  | TTemplateMessage;

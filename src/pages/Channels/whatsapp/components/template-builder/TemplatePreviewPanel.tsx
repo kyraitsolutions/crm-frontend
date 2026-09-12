@@ -73,6 +73,7 @@ export const TemplatePreviewPanel: React.FC = () => {
     followsGuidelines,
     hasContent,
   ].filter(Boolean).length;
+
   const approvalChance =
     validationScore >= 4 ? "High" : validationScore >= 2 ? "Medium" : "Low";
   const barColor =
@@ -135,6 +136,7 @@ export const TemplatePreviewPanel: React.FC = () => {
             </button>
           ))}
         </div>
+
         <div className="px-3">
           {/* Phone mockup */}
           <div

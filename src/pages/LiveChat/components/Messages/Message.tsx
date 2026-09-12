@@ -5,6 +5,7 @@ import ImageMessage from "./ImageMessage";
 import InteractiveMessage from "./InteractiveMessage";
 import MessageWrapper from "./MessageWraper";
 import QuestionMessage from "./QuestionMessage";
+import TemplateMessage from "./TemplateMessage";
 import TextMessage from "./TextMessage";
 import VideoMessage from "./VideoMessage";
 
@@ -15,6 +16,9 @@ const Message = ({ message }: { message: TMessage }) => {
     switch (message.type) {
       case "text":
         return <TextMessage message={message} />;
+
+      case "template":
+        return <TemplateMessage message={message} />;
 
       case "interactive":
         return <InteractiveMessage message={message} />;

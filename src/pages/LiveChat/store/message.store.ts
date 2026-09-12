@@ -58,7 +58,7 @@ export const useMessageStore = create<TMessageState>((set, get) => ({
 
       const params = { conversationId };
       const response = await messageService.getMessages(params);
-      const messages = response?.data?.doc || [];
+      const messages = response?.data?.docs || [];
 
       set((state) => ({
         messages: messages,

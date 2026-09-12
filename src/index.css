@@ -37,7 +37,7 @@ body {
 
 @custom-variant dark (&:is(.dark));
 :root {
-    --node-coral: #FF6B6B;
+  --node-coral: #FF6B6B;
   --node-orange: #F59E0B;
   --node-green: #10B981;
   --node-blue: #3B82F6;
@@ -67,6 +67,7 @@ body {
   /* --ternary:#0f172a; */
   /* --ternary:#161d2d; */
   --ternary:#FF4081;
+  --whatsapp-background: #ECE5DD;
 
   --muted: oklch(0.9846 0.0017 247.8389);
   --muted-foreground: oklch(0.551 0.0234 264.3637);
@@ -111,6 +112,7 @@ body {
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
+ 
 }
 
 .dark {
@@ -179,6 +181,7 @@ body {
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-ternary: var(--ternary);
+  --color-whatsapp-background: var(--whatsapp-background);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);

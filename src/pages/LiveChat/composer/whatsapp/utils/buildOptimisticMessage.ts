@@ -44,6 +44,14 @@ export const buildOptimisticMessage = ({
         },
       };
 
+    case "template":
+      return {
+        ...base,
+        template: {
+          ...outgoing.payload,
+        },
+      };
+
     case "media":
       switch (outgoing.payload.attachmentType) {
         case "image":

@@ -28,6 +28,7 @@ export const ConversationSchema = z.object({
   identifiers: IdentifiersSchema,
   status: ConversationStatusSchema.default("open"),
   lastMessage: LastMessageSchema.optional(),
+  customerWindowExpiresAt: z.date().optional(),
   searchPreview: z.string().nullable().optional(),
   matchedMessageId: z.string().nullable().optional(),
   contact: z

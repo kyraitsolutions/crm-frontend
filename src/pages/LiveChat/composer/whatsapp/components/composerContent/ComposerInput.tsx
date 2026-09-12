@@ -36,13 +36,13 @@ const ComposerInput = ({
         }}
         placeholder={placeholder}
         disabled={disabled}
-        className="input-field resize-none"
+        className={`input-field resize-none ${disabled && "placeholder:text-red-600"}`}
       />
 
       <Button
         type="button"
         onClick={onSend}
-        // disabled={!canSend}
+        disabled={disabled}
         className="rounded-full bg-primary p-3 text-white
                    disabled:opacity-50 disabled:cursor-not-allowed"
       >
