@@ -12,4 +12,14 @@ export class NotificationService extends ApiService {
       `${API_ENDPOINT_PATH?.NOTIFICATIONS?.GET_NOTIFICATIONS}/${organizationId}`,
     );
   }
+
+  async markAsRead(notificationId: string) {
+    return this.patch(
+      `${API_ENDPOINT_PATH.NOTIFICATIONS.GET_NOTIFICATIONS}/${notificationId}/read`,
+    );
+  }
+
+  async markAllAsRead() {
+    return this.post(API_ENDPOINT_PATH.NOTIFICATIONS.MARK_ALL_READ);
+  }
 }

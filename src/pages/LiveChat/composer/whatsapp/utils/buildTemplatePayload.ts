@@ -15,11 +15,11 @@ export const buildTemplatePayload = ({
   variables,
 }: BuildTemplatePayloadParams) => {
   const header = template.components.find(
-    (component) => component.type.toUpperCase() === "HEADER",
+    (component) => component.type === "HEADER",
   );
 
   const body = template.components.find(
-    (component) => component.type?.toUpperCase() === "BODY",
+    (component) => component.type === "BODY",
   );
 
   const components = [];

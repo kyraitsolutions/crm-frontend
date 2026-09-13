@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import type { TemplateForm } from "../../../validations/template.schema";
 import { VariableAccordion } from "../shared/VariableAccordion";
+import { Button } from "@/components/ui/button";
 
 export const BodyEditor = () => {
   const {
@@ -156,14 +157,14 @@ export const BodyEditor = () => {
       {/* Title row */}
       <div className="flex items-center justify-between">
         <span className="text-sm font-semibold text-gray-800">Body</span>
-        <button
+        <Button
           type="button"
           onClick={handleAddBlankVariable}
-          className="flex items-center gap-1.5 text-xs text-green-700 font-medium border border-green-300 rounded-2xl px-2.5 h-7 hover:bg-green-50 transition-colors"
+          className="flex bg-transparent! items-center gap-1.5 text-xs text-green-700 font-medium border border-green-300 h-7! hover:bg-green-50 transition-colors rounded-2xl"
         >
           <Pencil size={12} />
           Add Variable
-        </button>
+        </Button>
       </div>
 
       {/* Textarea — tracks cursor on every interaction */}

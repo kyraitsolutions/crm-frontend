@@ -4,27 +4,84 @@ import {
   TEMPLATE_STATUS,
   VARIABLE_TYPES,
 } from "./template.enums";
+import {
+  // ButtonSchema,
+  MetaTemplateButtonSchema,
+} from "./template-button.schema";
 
 export const TemplateVariableMappingSchema = z.object({
   variable: z.string(),
   value: z.string(),
 });
 
-export const TemplateComponentSchema = z.object({
-  type: z.enum(["header", "body", "footer", "buttons"]),
-  text: z.string().optional(),
+const TemplateExampleSchema = z.object({
+  header_text: z.array(z.string()).optional(),
+  body_text: z.array(z.array(z.string())).optional(),
+  body_text_named_params: z
+    .array(
+      z.object({
+        param_name: z.string(),
+        example: z.string(),
+      }),
+    )
+    .optional(),
+
+  header_text_named_params: z
+    .array(
+      z.object({
+        param_name: z.string(),
+        example: z.string(),
+      }),
+    )
+    .optional(),
+});
+
+const HeaderComponentSchema = z.object({
+  type: z.literal("HEADER"),
   format: z.string().optional(),
-  example: z
+  text: z.string().optional(),
+  example: TemplateExampleSchema.optional(),
+  media: z
     .object({
-      header_text: z.array(z.string()).optional(),
-      body_text: z.array(z.array(z.string())).optional(),
-      body_text_named_params: z
-        .array(z.object({ param_name: z.string(), example: z.string() }))
-        .optional(),
+      link: z.string().optional(),
+      name: z.string().optional(),
+      mimeType: z.string().optional(),
+      size: z.number().optional(),
     })
     .optional(),
+  variableMappings: z
+    .array(TemplateVariableMappingSchema)
+    .default([])
+    .optional(),
+});
+
+const BodyComponentSchema = z.object({
+  type: z.literal("BODY"),
+
+  text: z.string(),
+
+  example: TemplateExampleSchema.optional(),
+
   variableMappings: z.array(TemplateVariableMappingSchema).default([]),
 });
+
+const FooterComponentSchema = z.object({
+  type: z.literal("FOOTER"),
+  text: z.string(),
+});
+
+const ButtonsComponentSchema = z.object({
+  type: z.literal("BUTTONS"),
+  buttons: z.array(MetaTemplateButtonSchema).default([]),
+  variableMappings: z.array(TemplateVariableMappingSchema).default([]),
+});
+
+export const TemplateComponentSchema = z.discriminatedUnion("type", [
+  HeaderComponentSchema,
+  BodyComponentSchema,
+  FooterComponentSchema,
+  ButtonsComponentSchema,
+]);
 
 export const TemplateListItemSchema = z.object({
   id: z.string(),
@@ -52,3 +109,4 @@ export const TemplateListItemSchema = z.object({
 });
 
 export type TTemplate = z.infer<typeof TemplateListItemSchema>;
+export type TTemplateComponent = z.infer<typeof TemplateComponentSchema>;

@@ -17,4 +17,10 @@ export const PERMISSIONS = {
     UPDATE: "leadForms.edit",
     DELETE: "leadForms.delete",
   },
+  EMAIL_MARKETING: {
+    VIEW: "emailMarketing.view",
+    CREATE: "emailMarketing.create",
+    SEND: "emailMarketing.send",
+    DELETE: "emailMarketing.delete",
+  },
 } as const;

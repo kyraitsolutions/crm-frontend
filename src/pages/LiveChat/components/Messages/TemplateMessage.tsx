@@ -1,4 +1,5 @@
-import { Link2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Phone, Reply, SquareArrowOutUpRight } from "lucide-react";
 import type { TMessage } from "../../types/message.type";
 
 type TemplateComponent = {
@@ -30,7 +31,7 @@ const TemplateMessage = ({ message }: TemplateMessageProps) => {
   const buttons = components.find((c) => c.type.toUpperCase() === "BUTTONS");
 
   return (
-    <div className="bg-whatsapp-background rounded-xl p-1.5 rounded-xl">
+    <div className="bg-whatsapp-background rounded-xl p-1.5">
       <div className="overflow-hidden bg-white rounded-xl">
         {/* HEADER */}
         {header?.text && (
@@ -62,15 +63,23 @@ const TemplateMessage = ({ message }: TemplateMessageProps) => {
           <div className="border-t border-gray-100">
             {buttons.buttons.map((button, index) => {
               const isLink = button.type?.toUpperCase() === "URL";
+              const isPhone = button.type?.toUpperCase() === "PHONE_NUMBER";
+              // const call = button.type?.toUpperCase() === ""
+
+              const Icon = isLink
+                ? SquareArrowOutUpRight
+                : isPhone
+                  ? Phone
+                  : Reply;
               return (
-                <button
+                <Button
                   key={`${button.text}-${index}`}
                   type="button"
-                  className="w-full border-b last:border-b-0 border-gray-100 px-3 py-2.5 text-[14px] font-medium text-blue-600 hover:bg-gray-50 active:bg-gray-100 transition-colors flex items-center justify-center gap-1.5"
+                  className="actions-btn w-full text-green-600! border-none flex items-center justify-center gap-1.5 py-2 text-xs font-medium hover:bg-whatsapp-background/60! transition-colors p-3! rounded-none!"
                 >
-                  {isLink && <Link2 className="w-3.5 h-3.5" />}
+                  {Icon && <Icon size={16} />}
                   {button.text}
-                </button>
+                </Button>
               );
             })}
           </div>

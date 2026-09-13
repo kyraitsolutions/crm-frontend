@@ -37,7 +37,9 @@ const DashboardSummaryCard = ({ card, filters }: DashboardSummaryCardProps) => {
                   {card.percentage}%
                 </span>
                 {filters?.range !== "today" &&
-                  `vs last ${filters?.range || "7days"}`}
+                  (filters?.range === "custom"
+                    ? "vs previous period"
+                    : `vs last ${filters?.range || "7days"}`)}
               </p>
 
               {/* <span className="text-sm text-[#9ca3af]">{card.description}</span> */}

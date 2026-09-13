@@ -1,810 +1,563 @@
+import { FeatureGate } from "@/components/subscription/FeatureGate";
+import { FEATURE } from "@/constants/subscription.constant";
+import { EMAIL_MARKETING_PATHS } from "@/constants/routes";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useAuthStore } from "@/stores";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useEmailMarketingStore } from "./store/email-marketing.store";
 import {
-  ArrowLeft,
-  ArrowRight,
-  CalendarIcon,
-  Check,
-  Clock,
-  DollarSign,
-  Eye,
-  FileText,
+  CheckCircle2,
+  ChevronRight,
+  Clock3,
   Mail,
+  MousePointerClick,
   Plus,
   Send,
+  UserMinus,
   Users,
+  XCircle,
 } from "lucide-react";
-import type { CampaignRecord } from "@/types/broadcast.type";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { cn } from "@/lib/utils";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import DataLoader from "@/components/Loader/data-loader";
 
-// ── Sample data ──
-const sampleCampaigns: CampaignRecord[] = [
-  {
-    id: "1",
-    name: "Spring Product Launch",
-    subject: "You're invited — exclusive early access",
-    status: "sent",
-    contacts: 4_312,
-    cost: "$12.94",
-    date: "Mar 14, 2026",
-    openRate: "38.2%",
-    clickRate: "6.7%",
-  },
-  {
-    id: "2",
-    name: "Weekly Newsletter #47",
-    subject: "This week in CRM: top features you missed",
-    status: "sent",
-    contacts: 8_923,
-    cost: "$26.77",
-    date: "Mar 11, 2026",
-    openRate: "42.1%",
-    clickRate: "8.3%",
-  },
-  {
-    id: "3",
-    name: "VIP Customer Appreciation",
-    subject: "A special thank you — 20% off inside",
-    status: "scheduled",
-    contacts: 687,
-    cost: "$2.06",
-    date: "Mar 25, 2026",
-  },
-  {
-    id: "4",
-    name: "Re-engagement Flow",
-    subject: "We miss you — here's what's new",
-    status: "scheduled",
-    contacts: 3_241,
-    cost: "$9.72",
-    date: "Mar 28, 2026",
-  },
-  {
-    id: "5",
-    name: "Q2 Feature Announcement",
-    subject: "Big updates coming your way",
-    status: "draft",
-    contacts: 0,
-    cost: "$0.00",
-    date: "—",
-  },
+const filters = [
+  { value: "ALL", label: "All campaigns" },
+  { value: "DRAFT", label: "Draft" },
+  { value: "SCHEDULED", label: "Scheduled" },
+  { value: "SENDING", label: "Sending" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "FAILED", label: "Failed" },
 ];
-const statusConfig: Record<
-  CampaignRecord["status"],
-  { label: string; className: string }
+
+const statusStyles: Record<
+  string,
+  {
+    label: string;
+    className: string;
+    dot: string;
+  }
 > = {
-  sent: {
-    label: "Sent",
-    className: "bg-primary/10 text-primary border-primary/20",
-  },
-  scheduled: {
-    label: "Scheduled",
-    className: "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20",
-  },
-  draft: {
+  DRAFT: {
     label: "Draft",
-    className: "bg-muted text-muted-foreground border-border",
+    className: "bg-slate-100 text-slate-700 border-slate-200",
+    dot: "bg-slate-400",
+  },
+  SCHEDULED: {
+    label: "Scheduled",
+    className: "bg-violet-50 text-violet-700 border-violet-100",
+    dot: "bg-violet-500",
+  },
+  SENDING: {
+    label: "Sending",
+    className: "bg-blue-50 text-blue-700 border-blue-100",
+    dot: "bg-blue-500",
+  },
+  COMPLETED: {
+    label: "Completed",
+    className: "bg-emerald-50 text-emerald-700 border-emerald-100",
+    dot: "bg-emerald-500",
+  },
+  FAILED: {
+    label: "Failed",
+    className: "bg-red-50 text-red-700 border-red-100",
+    dot: "bg-red-500",
   },
 };
 
-// ── Wizard constants ──
-const steps = [
-  { id: 1, label: "Compose", icon: FileText },
-  { id: 2, label: "Audience", icon: Users },
-  { id: 3, label: "Schedule", icon: Clock },
-  { id: 4, label: "Review", icon: Eye },
-];
+const CampaignsPage = () => {
+  const { accountId } = useAuthStore();
 
-const audienceSegments = [
-  { id: "all", label: "All Contacts", count: 12_847 },
-  { id: "active", label: "Active Customers", count: 4_312 },
-  { id: "leads", label: "New Leads (Last 30 days)", count: 1_876 },
-  { id: "inactive", label: "Inactive (90+ days)", count: 3_241 },
-  { id: "vip", label: "VIP / High Value", count: 687 },
-  { id: "newsletter", label: "Newsletter Subscribers", count: 8_923 },
-];
+  const {
+    campaigns,
+    fetchCampaigns,
+    loading,
+  } = useEmailMarketingStore();
 
-const Campaign = () => {
-  //   const [open, setOpen] = useState(false);
-  const [view, setView] = useState<"list" | "create">("list");
-  const [campaigns, setCampaigns] = useState<CampaignRecord[]>(sampleCampaigns);
-  console.log("campaigns", campaigns);
+  const [status, setStatus] = useState("ALL");
 
-  // create campaign view
-  // ── Create wizard state ──
-  const [step, setStep] = useState(1);
-  const [campaignName, setCampaignName] = useState("");
-  const [subject, setSubject] = useState("");
-  const [previewText, setPreviewText] = useState("");
-  const [body, setBody] = useState("");
-  const [senderName, setSenderName] = useState("CRMflow");
-  const [senderEmail, setSenderEmail] = useState("campaigns@crmflow.io");
-  const [selectedSegments, setSelectedSegments] = useState<string[]>([]);
-  const [scheduleType, setScheduleType] = useState<"now" | "later">("now");
-  const [scheduleDate, setScheduleDate] = useState<Date | undefined>();
-  const [scheduleTime, setScheduleTime] = useState("09:00");
-  const [timezone, setTimezone] = useState("UTC");
+  const base = EMAIL_MARKETING_PATHS.base(String(accountId));
 
-  //   const statusColor = {
-  //     sent: "bg-green-100 text-green-700",
-  //     inprogress: "bg-yellow-100 text-yellow-600",
-  //     draft: "bg-red-100 text-red-700",
-  //     scheduled: "bg-blue-100 text-blue-700",
-  //   } as const;
+  useEffect(() => {
+    if (accountId) {
+      void fetchCampaigns(String(accountId), status);
+    }
+  }, [accountId, status, fetchCampaigns]);
 
-  const canNext = () => {
-    if (step === 1) return campaignName.trim() && subject.trim() && body.trim();
-    if (step === 2) return selectedSegments.length > 0;
-    if (step === 3) return scheduleType === "now" || scheduleDate !== undefined;
-    return true;
-  };
-  const resetForm = () => {
-    setStep(1);
-    setCampaignName("");
-    setSubject("");
-    setPreviewText("");
-    setBody("");
-    setSenderName("Kyra CRM");
-    setSenderEmail("kyraitsolutions@gmail.com");
-    setSelectedSegments([]);
-    setScheduleType("now");
-    setScheduleDate(undefined);
-    setScheduleTime("09:00");
-    setTimezone("UTC");
-  };
-
-  const totalContacts = audienceSegments
-    .filter((s) => selectedSegments.includes(s.id))
-    .reduce((sum, s) => sum + s.count, 0);
-  const COST_PER_EMAIL = 10;
-  const estimatedCost = (totalContacts * COST_PER_EMAIL).toFixed(2);
-  const toggleSegment = (id: string) =>
-    setSelectedSegments((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
+  const getStatusConfig = (campaignStatus: string) => {
+    return (
+      statusStyles[campaignStatus] || {
+        label: campaignStatus,
+        className: "bg-slate-100 text-slate-700 border-slate-200",
+        dot: "bg-slate-400",
+      }
     );
-
-  const handleSend = () => {
-    const newCampaign: CampaignRecord = {
-      id: crypto.randomUUID(),
-      name: campaignName,
-      subject,
-      status: scheduleType === "now" ? "sent" : "scheduled",
-      contacts: totalContacts,
-      cost: `$${estimatedCost}`,
-      date:
-        scheduleType === "later" && scheduleDate
-          ? format(scheduleDate, "MMM d, yyyy")
-          : format(new Date(), "MMM d, yyyy"),
-      openRate: scheduleType === "now" ? "0%" : undefined,
-      clickRate: scheduleType === "now" ? "0%" : undefined,
-    };
-
-    setCampaigns((prev) => [newCampaign, ...prev]);
-
-    if (scheduleType === "later" && scheduleDate) {
-      // toast.success(
-      //     `Campaign "${campaignName}" scheduled for ${format(scheduleDate, "PPP")} at ${scheduleTime} ${timezone}`
-      // );
-    } else {
-      // toast.success(`Campaign "${campaignName}" sent to ${totalContacts.toLocaleString()} contacts!`);
-    }
-
-    resetForm();
-    setView("list");
   };
 
-  const handleSaveDraft = () => {
-    if (campaignName.trim()) {
-      const draft: CampaignRecord = {
-        id: crypto.randomUUID(),
-        name: campaignName || "Untitled",
-        subject: subject || "—",
-        status: "draft",
-        contacts: totalContacts,
-        cost: `$${estimatedCost}`,
-        date: "—",
-      };
-      setCampaigns((prev) => [draft, ...prev]);
-    }
-    // toast.info(`Draft "${campaignName || "Untitled"}" saved.`);
-    resetForm();
-    setView("list");
-  };
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div className=" animate-fade-up">
-          <h1 className="text-2xl font-bold text-foreground">
-            {view === "list" ? "Campaigns" : "Create Campaign"}
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {view === "list"
-              ? "Manage all your email campaigns"
-              : "Build and send an email campaign to your audience"}
-          </p>
-        </div>
-        <div
-          className="flex gap-2  animate-fade-up"
-          style={{ animationDelay: "80ms" }}
-        >
-          {view === "list" ? (
-            <Button
-              size="sm"
-              onClick={() => {
-                resetForm();
-                setView("create");
-              }}
-              className="gap-1.5"
-            >
-              <Plus className="h-4 w-4" />
-              New Campaign
-            </Button>
-          ) : (
-            <>
-              <Button variant="outline" size="sm" onClick={handleSaveDraft}>
-                Save Draft
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  resetForm();
-                  setView("list");
-                }}
-              >
-                Cancel
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
+    <FeatureGate feature={FEATURE.EMAIL_MARKETING}>
+      <div className="min-h-full bg-[#f8fafc]">
+        <div className="mx-auto max-w-[1600px] space-y-5 p-5 lg:p-6">
 
-      {view === "list" && (
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-[280px]">Campaign</TableHead>
-              <TableHead className="text-center">Status</TableHead>
-              <TableHead className="text-right">Contacts</TableHead>
-              <TableHead className="text-right">Cost</TableHead>
-              <TableHead className="text-right hidden md:table-cell">
-                Open Rate
-              </TableHead>
-              <TableHead className="text-right hidden md:table-cell">
-                Click Rate
-              </TableHead>
-              <TableHead className="text-right">Date</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sampleCampaigns.map((c) => {
-              const sc = statusConfig[c.status];
-              return (
-                <TableRow key={c.id} className="group">
-                  <TableCell>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-foreground truncate">
-                        {c.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {c.subject}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Badge
-                      variant="outline"
-                      className={cn("text-xs capitalize", sc.className)}
-                    >
-                      {sc.label}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right tabular-nums text-sm">
-                    {c.contacts.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="text-right tabular-nums text-sm">
-                    {c.cost}
-                  </TableCell>
-                  <TableCell className="text-right tabular-nums text-sm hidden md:table-cell">
-                    {c.openRate ?? "—"}
-                  </TableCell>
-                  <TableCell className="text-right tabular-nums text-sm hidden md:table-cell">
-                    {c.clickRate ?? "—"}
-                  </TableCell>
-                  <TableCell className="text-right text-sm text-muted-foreground">
-                    {c.date}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-            {sampleCampaigns.length === 0 && (
-              <TableRow>
-                <TableCell
-                  colSpan={7}
-                  className="text-center py-12 text-muted-foreground"
-                >
-                  No campaigns found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      )}
-      {/* ════════════════════════════════════════════ */}
-      {/* CREATE VIEW (wizard)                         */}
-      {/* ════════════════════════════════════════════ */}
+          {/* Header */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+                <Mail className="h-3.5 w-3.5" />
+                Email Marketing
+                <ChevronRight className="h-3.5 w-3.5" />
+                Campaigns
+              </div>
 
-      <div className="">
-        {view === "create" && (
-          <>
-            {/* Stepper */}
-            <div
-              className="flex items-center justify-between mb-8   animate-fade-up"
-              style={{ animationDelay: "100ms" }}
-            >
-              {steps.map((s, i) => {
-                const done = step > s.id;
-                const active = step === s.id;
-                return (
-                  <div
-                    key={s.id}
-                    className="flex items-center flex-1 last:flex-none"
-                  >
-                    <button
-                      onClick={() => s.id < step && setStep(s.id)}
-                      className={cn(
-                        "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                        active && "bg-primary/10 text-primary",
-                        done && "text-primary cursor-pointer",
-                        !active && !done && "text-muted-foreground",
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-colors",
-                          active && "bg-primary text-primary-foreground",
-                          done && "bg-primary/15 text-primary",
-                          !active && !done && "bg-muted text-muted-foreground",
-                        )}
-                      >
-                        {done ? <Check className="h-3.5 w-3.5" /> : s.id}
-                      </span>
-                      <span className="hidden sm:inline">{s.label}</span>
-                    </button>
-                    {i < steps.length - 1 && (
-                      <div
-                        className={cn(
-                          "flex-1 h-px mx-2",
-                          step > s.id ? "bg-primary/30" : "bg-border",
-                        )}
-                      />
-                    )}
-                  </div>
-                );
-              })}
+              <h1 className="text-xl font-semibold tracking-tight text-slate-950">
+                Campaigns
+              </h1>
+
+              <p className="mt-1 text-sm text-slate-500">
+                Create, schedule, and measure email campaigns.
+              </p>
             </div>
 
-            {/* Step Content */}
-            <div
-              className="rounded-2xl border bg-card shadow-sm p-6 lg:p-8  animate-fade-up"
-              style={{ animationDelay: "160ms" }}
+            <Button
+              asChild
+              className="rounded-xl"
             >
-              {/* STEP 1: COMPOSE */}
-              {step === 1 && (
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-lg font-semibold text-foreground mb-1">
-                      Compose your email
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Set up the content and sender details
-                    </p>
-                  </div>
-                  <div className="grid gap-5">
-                    <div className="space-y-2">
-                      <Label htmlFor="campaign-name">Campaign Name</Label>
-                      <Input
-                        id="campaign-name"
-                        placeholder="e.g. Spring Product Launch"
-                        value={campaignName}
-                        onChange={(e) => setCampaignName(e.target.value)}
-                      />
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="sender-name">Sender Name</Label>
-                        <Input
-                          id="sender-name"
-                          value={senderName}
-                          onChange={(e) => setSenderName(e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="sender-email">Sender Email</Label>
-                        <Input
-                          id="sender-email"
-                          type="email"
-                          value={senderEmail}
-                          onChange={(e) => setSenderEmail(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="subject">Subject Line</Label>
-                      <Input
-                        id="subject"
-                        placeholder="e.g. You're invited — exclusive early access"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="preview-text">
-                        Preview Text (optional)
-                      </Label>
-                      <Input
-                        id="preview-text"
-                        placeholder="Shown next to the subject in inbox"
-                        value={previewText}
-                        onChange={(e) => setPreviewText(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="body">Email Body</Label>
-                      <Textarea
-                        id="body"
-                        rows={8}
-                        placeholder="Write your email content here..."
-                        value={body}
-                        onChange={(e) => setBody(e.target.value)}
-                        className="resize-y"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
+              <Link
+                to={EMAIL_MARKETING_PATHS.createCampaign(
+                  String(accountId),
+                )}
+              >
+                <Plus className="h-4 w-4" />
+                New campaign
+              </Link>
+            </Button>
+          </div>
 
-              {/* STEP 2: AUDIENCE */}
-              {step === 2 && (
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-lg font-semibold text-foreground mb-1">
-                      Select Audience
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Choose one or more segments to target
-                    </p>
-                  </div>
-                  <div className="grid gap-3">
-                    {audienceSegments.map((seg) => {
-                      const checked = selectedSegments.includes(seg.id);
+          {/* Campaign summary */}
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <SummaryCard
+              title="Campaigns"
+              value={campaigns.length}
+              subtitle="In this view"
+              icon={Mail}
+              iconClassName="bg-violet-50 text-violet-600"
+            />
+
+            <SummaryCard
+              title="Recipients"
+              value={campaigns.reduce(
+                (sum, campaign) =>
+                  sum +
+                  (campaign.totalRecipients ||
+                    campaign.eligibleCount ||
+                    0),
+                0,
+              )}
+              subtitle="Total audience"
+              icon={Users}
+              iconClassName="bg-blue-50 text-blue-600"
+            />
+
+            <SummaryCard
+              title="Sent"
+              value={campaigns.reduce(
+                (sum, campaign) =>
+                  sum + (campaign.sentCount || 0),
+                0,
+              )}
+              subtitle="Emails sent"
+              icon={Send}
+              iconClassName="bg-emerald-50 text-emerald-600"
+            />
+
+            <SummaryCard
+              title="Opened"
+              value={`${getAverageRate(
+                campaigns,
+                "openRate",
+              )}%`}
+              subtitle="Average open rate"
+              icon={MousePointerClick}
+              iconClassName="bg-amber-50 text-amber-600"
+            />
+          </div>
+
+          {/* Campaign table */}
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+
+            {/* Toolbar */}
+            <div className="border-b border-slate-200 px-5 py-4">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+                <div>
+                  <h2 className="text-sm font-semibold text-slate-900">
+                    Email campaigns
+                  </h2>
+
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    Track delivery, engagement, and subscriber activity.
+                  </p>
+                </div>
+
+                {/* Filters */}
+                <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg bg-slate-100 p-1">
+                  {filters.map((item) => {
+                    const active = status === item.value;
+
+                    return (
+                      <button
+                        key={item.value}
+                        type="button"
+                        onClick={() => setStatus(item.value)}
+                        className={[
+                          "whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                          active
+                            ? "bg-white text-slate-900 shadow-sm"
+                            : "text-slate-500 hover:text-slate-900",
+                        ].join(" ")}
+                      >
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Loading */}
+            {loading ? (
+              <div className="flex h-80 items-center justify-center">
+                <DataLoader className="h-64" />
+              </div>
+            ) : campaigns.length === 0 ? (
+              <EmptyState status={status} />
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[1050px] text-sm">
+
+                  <thead>
+                    <tr className="border-b border-slate-200 bg-slate-50/70">
+                      <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Campaign
+                      </th>
+
+                      <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Status
+                      </th>
+
+                      <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Audience
+                      </th>
+
+                      <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Sent
+                      </th>
+
+                      <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Delivered
+                      </th>
+
+                      <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Opened
+                      </th>
+
+                      <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Clicked
+                      </th>
+
+                      <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        Unsubscribed
+                      </th>
+
+                      <th className="w-8 px-2" />
+                    </tr>
+                  </thead>
+
+                  <tbody className="divide-y divide-slate-100">
+                    {campaigns.map((campaign) => {
+                      const config = getStatusConfig(
+                        campaign.status,
+                      );
+
+                      const audience =
+                        campaign.totalRecipients ||
+                        campaign.eligibleCount ||
+                        0;
+
+                      const sent = campaign.sentCount || 0;
+                      const delivered =
+                        campaign.deliveredCount || 0;
+
+                      const openRate =
+                        campaign.rates?.openRate ?? 0;
+
+                      const clickRate =
+                        campaign.rates?.clickRate ?? 0;
+
+                      const unsubscribed =
+                        campaign.unsubscribedCount || 0;
+
                       return (
-                        <label
-                          key={seg.id}
-                          className={cn(
-                            "flex items-center gap-4 rounded-lg border px-4 py-3.5 cursor-pointer transition-all",
-                            checked
-                              ? "border-primary/40 bg-primary/5 shadow-sm"
-                              : "border-border hover:border-primary/20 hover:shadow-sm",
-                          )}
+                        <tr
+                          key={campaign.id}
+                          className="group transition-colors hover:bg-slate-50/70"
                         >
-                          <Checkbox
-                            checked={checked}
-                            onCheckedChange={() => toggleSegment(seg.id)}
-                          />
-                          <div className="flex-1">
-                            <span className="text-sm font-medium text-foreground">
-                              {seg.label}
+                          {/* Campaign */}
+                          <td className="px-5 py-4">
+                            <Link
+                              to={`${base}/campaigns/${campaign.id}`}
+                              className="flex items-center gap-3"
+                            >
+                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#fff0ea] text-primary">
+                                <Mail className="h-4 w-4" />
+                              </div>
+
+                              <div className="min-w-0">
+                                <p className="truncate font-medium text-slate-900 transition-colors group-hover:text-primary">
+                                  {campaign.name}
+                                </p>
+
+                                <p className="mt-0.5 max-w-[300px] truncate text-xs text-slate-500">
+                                  {campaign.subject || "No subject"}
+                                </p>
+                              </div>
+                            </Link>
+                          </td>
+
+                          {/* Status */}
+                          <td className="px-4 py-4">
+                            <span
+                              className={[
+                                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium",
+                                config.className,
+                              ].join(" ")}
+                            >
+                              <span
+                                className={[
+                                  "h-1.5 w-1.5 rounded-full",
+                                  config.dot,
+                                ].join(" ")}
+                              />
+
+                              {config.label}
                             </span>
-                          </div>
-                          <Badge variant="secondary" className="tabular-nums">
-                            {seg.count.toLocaleString()} contacts
-                          </Badge>
-                        </label>
+                          </td>
+
+                          {/* Audience */}
+                          <td className="px-4 py-4 text-right font-medium text-slate-700">
+                            {Number(audience).toLocaleString()}
+                          </td>
+
+                          {/* Sent */}
+                          <td className="px-4 py-4 text-right">
+                            <MetricValue
+                              value={sent}
+                              icon={Send}
+                            />
+                          </td>
+
+                          {/* Delivered */}
+                          <td className="px-4 py-4 text-right">
+                            <MetricValue
+                              value={delivered}
+                              icon={CheckCircle2}
+                            />
+                          </td>
+
+                          {/* Opened */}
+                          <td className="px-4 py-4 text-right">
+                            <div className="inline-flex flex-col items-end">
+                              <span className="font-semibold text-slate-800">
+                                {openRate}%
+                              </span>
+
+                              <span className="mt-0.5 text-[10px] text-slate-400">
+                                open rate
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Clicked */}
+                          <td className="px-4 py-4 text-right">
+                            <div className="inline-flex flex-col items-end">
+                              <span className="font-semibold text-slate-800">
+                                {clickRate}%
+                              </span>
+
+                              <span className="mt-0.5 text-[10px] text-slate-400">
+                                click rate
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Unsubscribed */}
+                          <td className="px-5 py-4 text-right">
+                            <span
+                              className={
+                                unsubscribed > 0
+                                  ? "font-medium text-amber-600"
+                                  : "text-slate-500"
+                              }
+                            >
+                              {unsubscribed.toLocaleString()}
+                            </span>
+                          </td>
+
+                          {/* Arrow */}
+                          <td className="px-2 py-4">
+                            <Link
+                              to={`${base}/campaigns/${campaign.id}`}
+                              className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 opacity-0 transition-all hover:bg-slate-100 hover:text-slate-700 group-hover:opacity-100"
+                            >
+                              <ChevronRight className="h-4 w-4" />
+                            </Link>
+                          </td>
+                        </tr>
                       );
                     })}
-                  </div>
-                  {selectedSegments.length > 0 && (
-                    <div className="rounded-lg bg-muted/60 p-4 flex flex-wrap items-center gap-x-6 gap-y-2">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Users className="h-4 w-4 text-primary" />
-                        <span className="font-medium text-foreground">
-                          {totalContacts.toLocaleString()}
-                        </span>
-                        <span className="text-muted-foreground">
-                          estimated contacts
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <DollarSign className="h-4 w-4 text-primary" />
-                        <span className="font-medium text-foreground">
-                          ${estimatedCost}
-                        </span>
-                        <span className="text-muted-foreground">
-                          estimated cost
-                        </span>
-                      </div>
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Footer */}
+            {!loading && campaigns.length > 0 && (
+              <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50/50 px-5 py-3">
+                <p className="text-xs text-slate-500">
+                  Showing {campaigns.length} campaign
+                  {campaigns.length !== 1 ? "s" : ""}
+                </p>
+
+                {campaigns.some(
+                  (campaign) =>
+                    (campaign.unsubscribedCount || 0) > 0,
+                ) && (
+                    <div className="flex items-center gap-1.5 text-xs text-amber-600">
+                      <UserMinus className="h-3.5 w-3.5" />
+                      Subscriber opt-outs are included in the
+                      metrics.
                     </div>
                   )}
-                </div>
-              )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </FeatureGate>
+  );
+};
 
-              {/* STEP 3: SCHEDULE */}
-              {step === 3 && (
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-lg font-semibold text-foreground mb-1">
-                      Schedule Delivery
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Send immediately or pick a date and time
-                    </p>
-                  </div>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => setScheduleType("now")}
-                      className={cn(
-                        "flex-1 rounded-lg border p-4 text-left transition-all",
-                        scheduleType === "now"
-                          ? "border-primary/40 bg-primary/5 shadow-sm"
-                          : "border-border hover:border-primary/20",
-                      )}
-                    >
-                      <Send className="h-5 w-5 text-primary mb-2" />
-                      <p className="text-sm font-medium text-foreground">
-                        Send Now
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Deliver immediately after review
-                      </p>
-                    </button>
-                    <button
-                      onClick={() => setScheduleType("later")}
-                      className={cn(
-                        "flex-1 rounded-lg border p-4 text-left transition-all",
-                        scheduleType === "later"
-                          ? "border-primary/40 bg-primary/5 shadow-sm"
-                          : "border-border hover:border-primary/20",
-                      )}
-                    >
-                      <Clock className="h-5 w-5 text-primary mb-2" />
-                      <p className="text-sm font-medium text-foreground">
-                        Schedule
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Pick a specific date & time
-                      </p>
-                    </button>
-                  </div>
-                  {scheduleType === "later" && (
-                    <div className="grid sm:grid-cols-3 gap-4">
-                      <div className="space-y-2 sm:col-span-1">
-                        <Label>Date</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !scheduleDate && "text-muted-foreground",
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {scheduleDate
-                                ? format(scheduleDate, "PPP")
-                                : "Pick a date"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={scheduleDate}
-                              onSelect={setScheduleDate}
-                              disabled={(date) => date < new Date()}
-                              initialFocus
-                              className="p-3 pointer-events-auto"
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="time">Time</Label>
-                        <Input
-                          id="time"
-                          type="time"
-                          value={scheduleTime}
-                          onChange={(e) => setScheduleTime(e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Timezone</Label>
-                        <Select value={timezone} onValueChange={setTimezone}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="UTC">UTC</SelectItem>
-                            <SelectItem value="EST">EST (UTC−5)</SelectItem>
-                            <SelectItem value="CST">CST (UTC−6)</SelectItem>
-                            <SelectItem value="PST">PST (UTC−8)</SelectItem>
-                            <SelectItem value="IST">IST (UTC+5:30)</SelectItem>
-                            <SelectItem value="CET">CET (UTC+1)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
+/* ================================================================
+   SUMMARY CARD
+================================================================ */
 
-              {/* STEP 4: REVIEW */}
-              {step === 4 && (
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-lg font-semibold text-foreground mb-1">
-                      Review & Send
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Double-check everything before sending
-                    </p>
-                  </div>
-                  <div className="divide-y rounded-lg border overflow-hidden">
-                    <div className="p-4 flex items-start gap-3">
-                      <Mail className="h-4 w-4 text-primary mt-0.5" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs text-muted-foreground">
-                          Campaign
-                        </p>
-                        <p className="text-sm font-medium text-foreground truncate">
-                          {campaignName}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="p-4 flex items-start gap-3">
-                      <FileText className="h-4 w-4 text-primary mt-0.5" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs text-muted-foreground">Subject</p>
-                        <p className="text-sm font-medium text-foreground truncate">
-                          {subject}
-                        </p>
-                        {previewText && (
-                          <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                            {previewText}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="p-4 flex items-start gap-3">
-                      <Send className="h-4 w-4 text-primary mt-0.5" />
-                      <div>
-                        <p className="text-xs text-muted-foreground">From</p>
-                        <p className="text-sm font-medium text-foreground">
-                          {senderName} &lt;{senderEmail}&gt;
-                        </p>
-                      </div>
-                    </div>
-                    <div className="p-4 flex items-start gap-3">
-                      <Users className="h-4 w-4 text-primary mt-0.5" />
-                      <div>
-                        <p className="text-xs text-muted-foreground">
-                          Audience
-                        </p>
-                        <p className="text-sm font-medium text-foreground">
-                          {totalContacts.toLocaleString()} contacts
-                        </p>
-                        <div className="flex flex-wrap gap-1.5 mt-1.5">
-                          {audienceSegments
-                            .filter((s) => selectedSegments.includes(s.id))
-                            .map((s) => (
-                              <Badge
-                                key={s.id}
-                                variant="secondary"
-                                className="text-xs"
-                              >
-                                {s.label}
-                              </Badge>
-                            ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-4 flex items-start gap-3">
-                      <Clock className="h-4 w-4 text-primary mt-0.5" />
-                      <div>
-                        <p className="text-xs text-muted-foreground">
-                          Delivery
-                        </p>
-                        <p className="text-sm font-medium text-foreground">
-                          {scheduleType === "now"
-                            ? "Immediately after confirmation"
-                            : scheduleDate
-                              ? `${format(scheduleDate, "PPP")} at ${scheduleTime} ${timezone}`
-                              : "—"}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="p-4 flex items-start gap-3">
-                      <DollarSign className="h-4 w-4 text-primary mt-0.5" />
-                      <div>
-                        <p className="text-xs text-muted-foreground">
-                          Estimated Cost
-                        </p>
-                        <p className="text-sm font-medium text-foreground">
-                          ${estimatedCost}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+const SummaryCard = ({
+  title,
+  value,
+  subtitle,
+  icon: Icon,
+  iconClassName,
+}: {
+  title: string;
+  value: number | string;
+  subtitle: string;
+  icon: React.ElementType;
+  iconClassName: string;
+}) => {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div
+        className={`flex h-9 w-9 items-center justify-center rounded-full ${iconClassName}`}
+      >
+        <Icon className="h-4 w-4" />
+      </div>
 
-            {/* Navigation */}
-            <div
-              className="flex items-center justify-between mt-6   animate-fade-up"
-              style={{ animationDelay: "220ms" }}
-            >
-              <Button
-                variant="outline"
-                onClick={() => setStep((s) => s - 1)}
-                disabled={step === 1}
-                className="gap-1.5"
-              >
-                <ArrowLeft className="h-4 w-4" /> Back
-              </Button>
-              {step < 4 ? (
-                <Button
-                  onClick={() => setStep((s) => s + 1)}
-                  disabled={!canNext()}
-                  className="gap-1.5"
-                >
-                  Next <ArrowRight className="h-4 w-4" />
-                </Button>
-              ) : (
-                <Button onClick={handleSend} className="gap-1.5">
-                  {scheduleType === "now" ? (
-                    <>
-                      <Send className="h-4 w-4" /> Send Campaign
-                    </>
-                  ) : (
-                    <>
-                      <Clock className="h-4 w-4" /> Schedule Campaign
-                    </>
-                  )}
-                </Button>
-              )}
-            </div>
-          </>
-        )}
+      <div className="mt-3">
+        <p className="text-xl font-semibold tracking-tight text-slate-950">
+          {typeof value === "number"
+            ? value.toLocaleString()
+            : value}
+        </p>
+
+        <p className="mt-0.5 text-sm font-medium text-slate-800">
+          {title}
+        </p>
+
+        <p className="mt-1 text-[11px] text-slate-400">
+          {subtitle}
+        </p>
       </div>
     </div>
   );
 };
 
-export default Campaign;
+/* ================================================================
+   METRIC VALUE
+================================================================ */
+
+const MetricValue = ({
+  value,
+  icon: Icon,
+}: {
+  value: number;
+  icon: React.ElementType;
+}) => {
+  return (
+    <span className="inline-flex items-center justify-end gap-1.5 font-medium text-slate-700">
+      <Icon className="h-3.5 w-3.5 text-slate-400" />
+      {Number(value || 0).toLocaleString()}
+    </span>
+  );
+};
+
+/* ================================================================
+   EMPTY STATE
+================================================================ */
+
+const EmptyState = ({ status }: { status: string }) => {
+  return (
+    <div className="flex min-h-[300px] flex-col items-center justify-center px-6 text-center">
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
+        {status === "FAILED" ? (
+          <XCircle className="h-5 w-5" />
+        ) : status === "SCHEDULED" ? (
+          <Clock3 className="h-5 w-5" />
+        ) : (
+          <Mail className="h-5 w-5" />
+        )}
+      </div>
+
+      <h3 className="mt-3 text-sm font-semibold text-slate-900">
+        {status === "ALL"
+          ? "No campaigns yet"
+          : `No ${status.toLowerCase()} campaigns`}
+      </h3>
+
+      <p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">
+        {status === "ALL"
+          ? "Create your first email campaign to start reaching and engaging your contacts."
+          : "There are no campaigns matching this status right now."}
+      </p>
+    </div>
+  );
+};
+
+/* ================================================================
+   HELPERS
+================================================================ */
+
+const getAverageRate = (
+  campaigns: any[],
+  rateKey: string,
+) => {
+  if (!campaigns.length) return 0;
+
+  const total = campaigns.reduce(
+    (sum, campaign) =>
+      sum + Number(campaign.rates?.[rateKey] ?? 0),
+    0,
+  );
+
+  return Math.round((total / campaigns.length) * 10) / 10;
+};
+
+export default CampaignsPage;

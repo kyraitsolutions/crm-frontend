@@ -1,35 +1,25 @@
 import { BROADCAST_PATHS } from "@/constants/routes/broadcast.path";
-import { EmailMarketingLayout } from "@/layouts/emailMarketing.layout";
-import { TemplateLayout } from "@/layouts/templates.layout";
 import { WhatsappMarketingLayout } from "@/layouts/whatsappMarketing.layout";
-import EmailMarketing from "@/pages/EmailMarketing";
-import Automations from "@/pages/EmailMarketing/automations.page";
-import Campaign from "@/pages/EmailMarketing/campaign.page";
-import Templates from "@/pages/MessageTemplates";
+import { TemplateLayout } from "@/layouts/templates.layout";
 import WhatsappMarketing from "@/pages/WhatsappMarketing";
+import WhatsAppCampaignsPage from "@/pages/WhatsappMarketing/campaigns.page";
+import CreateWhatsAppCampaignPage from "@/pages/WhatsappMarketing/CreateCampaign.page";
+import WhatsAppCampaignDetailPage from "@/pages/WhatsappMarketing/CampaignDetail.page";
+import Templates from "@/pages/MessageTemplates";
 import { type RouteObject } from "react-router-dom";
+
 export const broadcastRoutes: RouteObject[] = [
   {
     path: BROADCAST_PATHS.ROOT,
-    // element: <BroadcastLayout />,
     children: [
-      {
-        path: "email",
-        element: <EmailMarketingLayout />,
-        children: [
-          { index: true, element: <EmailMarketing /> },
-          { path: "campaigns", element: <Campaign /> },
-          { path: "automations", element: <Automations /> },
-        ],
-      },
-
       {
         path: "whatsapp",
         element: <WhatsappMarketingLayout />,
         children: [
           { index: true, element: <WhatsappMarketing /> },
-          { path: "campaigns", element: <Campaign /> },
-          { path: "automations", element: <Automations /> },
+          { path: "campaigns", element: <WhatsAppCampaignsPage /> },
+          { path: "campaigns/create", element: <CreateWhatsAppCampaignPage /> },
+          { path: "campaigns/:campaignId", element: <WhatsAppCampaignDetailPage /> },
         ],
       },
       {
@@ -41,31 +31,5 @@ export const broadcastRoutes: RouteObject[] = [
         ],
       },
     ],
-    // children: [
-    //     {
-    //         element: <EmailMarketing />,
-    //         index: true,
-    //     },
-    //     {
-    //         element: <WhatsappMarketing />,
-    //         path:"whatsapp-broadcast" ,
-    //     },
-    //     {
-    //         element: <Subscribers />,
-    //         path: "subscribers",
-    //     },
-    //     {
-    //         element: <Campaign />,
-    //         path: "campaigns",
-    //     },
-    //     {
-    //         element: <Templates />,
-    //         path: "templates",
-    //     },
-    //     {
-    //         element: <Automations />,
-    //         path: "automations",
-    //     },
-    // ]
   },
 ];

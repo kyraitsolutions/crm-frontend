@@ -66,7 +66,7 @@ export default function Index() {
     try {
       const response = await emailService.getTemplates(String(accountId));
       console.log("Template created:", response);
-      setTemplates(response?.data?.data);
+      setTemplates(response?.data?.docs ?? response?.data?.data ?? []);
     } catch (error) {
       console.log("Error creating template:", error);
     }
@@ -246,15 +246,13 @@ function CreateTemplate({
         String(accountId),
         aiPrompt,
       );
-      console.log("Result", result);
-      // setTemplateData(() => ({
-      //   name: result.data.data.name,
-      //   subject: result.data.data.subject,
-      //   html: result.data.data.html,
-      //   variables: result.data.data.variables,
-      //   generatedBy: Method.AI,
-      //   // aiPrompt: aiPrompt
-      // }));
+      const generated = result.data?.doc;
+      if (generated) {
+        setTemplateData((prev: any) => ({
+          ...prev,
+          ...generated,
+        }));
+      }
       createTemplate();
     } catch (error: any) {
       console.log("Error creating template", error.message);

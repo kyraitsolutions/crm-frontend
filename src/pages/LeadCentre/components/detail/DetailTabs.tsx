@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 
 interface DetailTabsProps {
-  activeTab: "overview" | "timeline" | "aiSummary";
-  onChange: (tab: "overview" | "timeline" | "aiSummary") => void;
+  activeTab: "overview" | "timeline" | "followUps" | "aiSummary";
+  onChange: (tab: "overview" | "timeline" | "followUps" | "aiSummary") => void;
 }
 
 const DetailTabs = ({ activeTab, onChange }: DetailTabsProps) => {
@@ -10,6 +10,11 @@ const DetailTabs = ({ activeTab, onChange }: DetailTabsProps) => {
     {
       label: "Overview",
       value: "overview",
+    },
+
+    {
+      label: "Follow Ups",
+      value: "followUps",
     },
     {
       label: "Timeline",
@@ -27,11 +32,10 @@ const DetailTabs = ({ activeTab, onChange }: DetailTabsProps) => {
         <Button
           key={tab.value}
           onClick={() => onChange(tab.value)}
-          className={` px-4 py-1 rounded-full text-sm font-medium transition bg-transparent! ${
-            activeTab === tab.value
-              ? "bg-primary/10 text-primary border border-primary font-semibold"
-              : "text-[#64748b]"
-          }`}
+          className={` px-4 py-1 rounded-full text-sm font-medium transition bg-transparent! ${activeTab === tab.value
+            ? "bg-primary/10 text-primary border border-primary font-semibold"
+            : "text-[#64748b]"
+            }`}
         >
           {tab.label}
         </Button>

@@ -23,7 +23,7 @@ class ApiService {
     const API_URL = import.meta.env.VITE_API_URL + "/api";
     this.instance = axios.create({
       baseURL: API_URL,
-      timeout: 10000,
+      timeout: 30000,
       headers: {
         "Content-Type": "application/json",
       },
@@ -79,9 +79,10 @@ class ApiService {
 
       const apiError: ApiError = {
         message:
-          data?.error?.responseMessage || // ✅ your backend format
+          data?.responseMessage ||
+          data?.error?.responseMessage ||
           data?.error?.message ||
-          data?.responseMessage || // fallback
+          data?.message ||
           "Something went wrong",
 
         status: error.response.status,

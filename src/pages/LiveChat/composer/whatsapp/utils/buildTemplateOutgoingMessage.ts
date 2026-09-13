@@ -1,6 +1,8 @@
-import type { TTemplate } from "@/pages/Channels/whatsapp/types/templates";
+import type {
+  TTemplate,
+  TTemplateComponent,
+} from "@/pages/Channels/whatsapp/types/templates";
 import type { TOutgoingMessage } from "./buildOutgoingMessage";
-import type { TemplateComponent } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import { extractVariableIds } from "@/pages/Channels/whatsapp/utils/template/template.utils";
 
 export const buildTemplateOutgoingMessage = (
@@ -10,21 +12,20 @@ export const buildTemplateOutgoingMessage = (
   const components = [];
 
   const header = template.components.find(
-    (component) => component.type.toUpperCase() === "HEADER",
+    (component) => component?.type === "HEADER",
   );
 
   const body = template.components.find(
-    (component) => component.type.toUpperCase() === "BODY",
+    (component) => component.type === "BODY",
   );
 
   const footer = template.components.find(
-    (component) => component.type.toUpperCase() === "FOOTER",
+    (component) => component.type === "FOOTER",
   );
 
   const buttons = template.components.find(
-    (component) => component.type.toUpperCase() === "BUTTONS",
+    (component) => component.type === "BUTTONS",
   );
-  console.log(buttons);
 
   // HEADER
   if (header && header?.text) {
@@ -99,7 +100,7 @@ export const buildTemplateOutgoingMessage = (
 export const replaceTemplateVariables = (
   text: string,
   variables: Record<string, string>,
-  component: TemplateComponent["type"],
+  component: TTemplateComponent["type"],
   parameterFormat: TTemplate["parameterFormat"],
 ) => {
   const regex = parameterFormat === "Name" ? /{{([^{}]+)}}/g : /{{(\d+)}}/g;

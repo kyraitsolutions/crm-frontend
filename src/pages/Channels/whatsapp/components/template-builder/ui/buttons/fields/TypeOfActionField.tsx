@@ -5,12 +5,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ButtonKind } from "@/pages/Channels/whatsapp/types/templates";
+import type {
+  ButtonKind,
+  TTemplateButton,
+} from "@/pages/Channels/whatsapp/types/templates";
 // import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 
 interface Props {
-  button: TemplateButton;
+  button: TTemplateButton;
 }
 
 const CTA_OPTIONS: {

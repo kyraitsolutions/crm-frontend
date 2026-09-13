@@ -1,13 +1,13 @@
 import { CountryCodeSelect } from "@/components/common/CountryCodeSelect";
 import { Input } from "@/components/ui/input";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import type { CountryCode } from "libphonenumber-js/core";
 import { useFormContext } from "react-hook-form";
 import { getCountryCallingCode } from "react-phone-number-input";
 
 interface IPhoneFieldsProps {
-  button: TemplateButton;
+  button: TTemplateButton;
 }
 
 export function PhoneFields({ button }: IPhoneFieldsProps) {

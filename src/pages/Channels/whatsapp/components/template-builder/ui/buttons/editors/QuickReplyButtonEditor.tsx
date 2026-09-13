@@ -7,13 +7,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import { useFormContext } from "react-hook-form";
 import { ButtonCard } from "../ButtonCard";
+import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 
 interface IQuickReplyButtonProps {
-  button: TemplateButton;
+  button: TTemplateButton;
 }
 
 export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {

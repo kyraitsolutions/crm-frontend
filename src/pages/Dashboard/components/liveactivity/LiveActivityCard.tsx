@@ -1,72 +1,50 @@
-import {
-  Bot,
-  CheckCircle2,
-  Facebook,
-  FileText,
-  Megaphone,
-  MessageCircle,
-  UserPlus,
-} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuthStore } from "@/stores";
+import { activityLogService } from "@/pages/Settings/activityLogs/service/activity-log.service";
+import type { ActivityLog } from "@/pages/Settings/activityLogs/types/activity-log.type";
+import { getActionConfig, parseAction } from "@/pages/Settings/activityLogs/utils/action.utils";
+import { getEntityConfig } from "@/pages/Settings/activityLogs/utils/entity.utils";
+import { getEntityName } from "@/pages/Settings/activityLogs/utils/activity-logs.utils";
 
-const activities = [
-  {
-    id: 1,
-    title: "New lead received from Facebook Ads",
-    time: "2 min ago",
-    icon: <Facebook size={15} className="text-blue-600" />,
-    iconBg: "bg-blue-100",
-  },
+const activityVerb = (action: string) => {
+  if (action.includes(".")) {
+    return parseAction(action).verb;
+  }
+  const normalized = action.toLowerCase();
+  if (normalized.includes("created")) return "created";
+  if (normalized.includes("updated")) return "updated";
+  if (normalized.includes("deleted")) return "deleted";
+  return action;
+};
 
-  {
-    id: 2,
-    title: "John Smith replied on WhatsApp",
-    time: "5 min ago",
-    icon: <MessageCircle size={15} className="text-green-600" />,
-    iconBg: "bg-green-100",
-  },
-
-  {
-    id: 3,
-    title: 'Broadcast "May Offer" sent successfully',
-    time: "15 min ago",
-    icon: <Megaphone size={15} className="text-orange-600" />,
-    iconBg: "bg-orange-100",
-  },
-
-  {
-    id: 4,
-    title: "New contact added: Michael Brown",
-    time: "18 min ago",
-    icon: <UserPlus size={15} className="text-sky-600" />,
-    iconBg: "bg-sky-100",
-  },
-
-  {
-    id: 5,
-    title: "Lead moved to Qualified by Sarah",
-    time: "25 min ago",
-    icon: <CheckCircle2 size={15} className="text-emerald-600" />,
-    iconBg: "bg-emerald-100",
-  },
-
-  {
-    id: 6,
-    title: 'Chatbot flow "Support Bot" triggered',
-    time: "30 min ago",
-    icon: <Bot size={15} className="text-red-500" />,
-    iconBg: "bg-red-100",
-  },
-
-  {
-    id: 7,
-    title: "Form submitted on Contact Us page",
-    time: "35 min ago",
-    icon: <FileText size={15} className="text-violet-600" />,
-    iconBg: "bg-violet-100",
-  },
-];
+const activityTitle = (log: ActivityLog) => {
+  const action = getActionConfig(activityVerb(log.action));
+  const entity = getEntityConfig(log.entityType);
+  const name = getEntityName(log);
+  if (name && name !== log.entityType) {
+    return `${action.label} ${entity.label.toLowerCase()}: ${name}`;
+  }
+  return `${action.label} ${entity.label.toLowerCase()}`;
+};
 
 const ActivityCard = () => {
+  const { accountId } = useAuthStore((state) => state);
+  const [logs, setLogs] = useState<ActivityLog[]>([]);
+
+  useEffect(() => {
+    if (!accountId) return;
+    void activityLogService
+      .getLogs(String(accountId), { limit: 8, page: 1 })
+      .then((response) => {
+        setLogs(response.data?.docs || []);
+      })
+      .catch(() => {
+        setLogs([]);
+      });
+  }, [accountId]);
+
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-5 h-full">
       <div className="flex items-center justify-between mb-5">
@@ -74,33 +52,45 @@ const ActivityCard = () => {
       </div>
 
       <div className="space-y-4">
-        {activities.map((activity) => (
-          <div
-            key={activity.id}
-            className="flex items-start justify-between gap-3"
-          >
-            <div className="flex items-start gap-3">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${activity.iconBg}`}
-              >
-                {activity.icon}
+        {logs.length === 0 && (
+          <p className="text-sm text-gray-500">No recent activity</p>
+        )}
+        {logs.map((log) => {
+          const entity = getEntityConfig(log.entityType);
+          const Icon = entity.icon;
+          return (
+            <div
+              key={log.id}
+              className="flex items-start justify-between gap-3"
+            >
+              <div className="flex items-start gap-3">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${entity.badge.bg}`}
+                >
+                  <Icon size={15} className={entity.badge.text} />
+                </div>
+
+                <p className="text-sm text-gray-700 leading-5">
+                  {activityTitle(log)}
+                </p>
               </div>
 
-              <p className="text-sm text-gray-700 leading-5">
-                {activity.title}
-              </p>
+              <span className="text-xs text-gray-400 whitespace-nowrap">
+                {log.createdAt
+                  ? formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })
+                  : ""}
+              </span>
             </div>
-
-            <span className="text-xs text-gray-400 whitespace-nowrap">
-              {activity.time}
-            </span>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      <button className="mt-6 text-sm font-medium text-blue-600 hover:text-blue-700">
+      <Link
+        to="/dashboard/settings/activity-logs"
+        className="mt-6 inline-block text-sm font-medium text-blue-600 hover:text-blue-700"
+      >
         View All Activities
-      </button>
+      </Link>
     </div>
   );
 };

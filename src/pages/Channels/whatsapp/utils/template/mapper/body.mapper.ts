@@ -1,4 +1,4 @@
-import type { TemplateComponent } from "../../../types/templates/template.type";
+import type { TTemplateComponent } from "../../../types/templates";
 import type { TemplateForm } from "../../../validations/template.schema";
 
 type BodyData = Pick<
@@ -6,10 +6,11 @@ type BodyData = Pick<
   "bodyText" | "bodyVariables" | "variableType"
 >;
 
-export function mapBody(body: BodyData): TemplateComponent {
-  const component: TemplateComponent = {
+export function mapBody(body: BodyData): TTemplateComponent {
+  const component: TTemplateComponent = {
     type: "BODY",
     text: body.bodyText,
+    variableMappings: [],
   };
 
   if (!body.bodyVariables.length) {
@@ -22,10 +23,14 @@ export function mapBody(body: BodyData): TemplateComponent {
     };
   } else {
     component.example = {
-      body_text_named_params: body.bodyVariables.map((variable) => ({
-        param_name: variable.name,
-        example: variable.exampleValue,
-      })),
+      body_text_named_params: body.bodyVariables
+        .filter((variable): variable is typeof variable & { name: string } =>
+          Boolean(variable.name),
+        )
+        .map((variable) => ({
+          param_name: variable.name,
+          example: variable.exampleValue,
+        })),
     };
   }
 

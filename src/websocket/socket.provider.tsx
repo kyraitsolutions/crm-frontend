@@ -1,8 +1,8 @@
-// websocket/socket.provider.tsx
-
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { socketManager } from "./socket.client";
-import { WS_BASE_URL } from "@/constants";
+import { WS_BASE_URL, WEBSOCKET_EVENTS } from "@/constants";
+import { useLeadsStore } from "@/pages/LeadCentre/store/lead.store";
+import { useSocketEvent } from "./socket.hook";
 
 interface Props {
   children: React.ReactNode;
@@ -10,18 +10,27 @@ interface Props {
 }
 
 export const SocketProvider = ({ children, accountId }: Props) => {
-  useEffect(() => {
-    if (!accountId) return;
-    socketManager.disconnect();
+  const prependLead = useLeadsStore((state) => state.prependLead);
 
-    setTimeout(() => {
-      socketManager.connect(`${WS_BASE_URL}?accountId=${accountId}`);
-    }, 1000);
+  useEffect(() => {
+    if (!accountId || accountId === "undefined") return;
+
+    socketManager.connect(`${WS_BASE_URL}?accountId=${accountId}`);
 
     return () => {
       socketManager.disconnect();
     };
   }, [accountId]);
+
+  useSocketEvent(
+    WEBSOCKET_EVENTS["Chatbot Lead Created"],
+    useCallback(
+      (data) => {
+        prependLead(data?.lead || data);
+      },
+      [prependLead],
+    ),
+  );
 
   return children;
 };

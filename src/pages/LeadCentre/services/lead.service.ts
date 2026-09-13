@@ -44,9 +44,11 @@ export class LeadService extends ApiService {
   }
   createBulkLead(
     accountId: string,
-    payload: ICreateLead | ICreateLead[],
+    payload: { leads: ICreateLead[]; uniqueKey?: string; mode?: string },
   ): Promise<ApiResponse<ILead>> {
-    return this.post(`/account/${accountId}/lead/bulk-write`, payload);
+    return this.post(`/account/${accountId}/lead/bulk-write`, payload, {
+      timeout: 120000,
+    });
   }
 
   updateLead(
@@ -57,7 +59,9 @@ export class LeadService extends ApiService {
   }
 
   getLeadSummary(accountId: string, leadId: string): Promise<ApiResponse<any>> {
-    return this.get(`/account/${accountId}/lead/${leadId}/ai-summary`);
+    return this.get(`/account/${accountId}/lead/${leadId}/ai-summary`, undefined, {
+      timeout: 60000,
+    });
   }
 
   buildLeadPayload(

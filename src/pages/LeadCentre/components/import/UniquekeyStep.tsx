@@ -1,18 +1,24 @@
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
 import Navhandle from "./Navhandle";
 
 const UniquekeyStep = ({
   step,
-  //   setStep,
   handleStep,
+  uniqueKey,
+  setUniqueKey,
+  mode,
+  setMode,
 }: {
   step: number;
   setStep: any;
   handleStep: any;
+  uniqueKey: string;
+  setUniqueKey: (value: string) => void;
+  mode: "upsert" | "insert" | "skip";
+  setMode: (value: "upsert" | "insert" | "skip") => void;
 }) => {
-  const [actionType, setActionType] = useState("new");
-  const [uniqueKey, setUniqueKey] = useState("");
+  const actionType =
+    mode === "insert" ? "new" : mode === "skip" ? "update" : "both";
 
   return (
     <div className="flex flex-col gap-20 w-fit">
@@ -22,14 +28,13 @@ const UniquekeyStep = ({
         </h2>
 
         <div className="bg-white flex flex-col gap-4">
-          {/* Radio Options */}
           <div className="flex flex-wrap items-center gap-4">
             <label className="flex cursor-pointer items-center gap-2">
               <input
                 type="radio"
                 name="recordType"
                 checked={actionType === "new"}
-                onChange={() => setActionType("new")}
+                onChange={() => setMode("insert")}
                 className="h-4 w-4"
               />
               <span className="text-sm text-[#1f2937]">Add as new Leads</span>
@@ -40,7 +45,7 @@ const UniquekeyStep = ({
                 type="radio"
                 name="recordType"
                 checked={actionType === "update"}
-                onChange={() => setActionType("update")}
+                onChange={() => setMode("skip")}
                 className="h-4 w-4"
               />
               <span className="text-sm text-[#1f2937]">
@@ -53,14 +58,13 @@ const UniquekeyStep = ({
                 type="radio"
                 name="recordType"
                 checked={actionType === "both"}
-                onChange={() => setActionType("both")}
+                onChange={() => setMode("upsert")}
                 className="h-4 w-4"
               />
               <span className="text-sm text-[#1f2937]">Both</span>
             </label>
           </div>
 
-          {/* Unique Key Selection */}
           <div className="inline-flex items-center  justify-between rounded-md  border-[#d8deeb]  py-2">
             <p className="mr-4 text-[16px] text-[#374151]">Select unique key</p>
 
@@ -83,7 +87,6 @@ const UniquekeyStep = ({
             </div>
           </div>
 
-          {/* Info Text */}
           {uniqueKey && (
             <p className="mt-4 text-xs text-[#5c6b82]">
               Duplicate leads will be checked using{" "}
@@ -93,7 +96,11 @@ const UniquekeyStep = ({
         </div>
       </div>
 
-      <Navhandle step={step} isSelected={uniqueKey} handleStep={handleStep} />
+      <Navhandle
+        step={step}
+        isSelected={mode === "insert" || Boolean(uniqueKey)}
+        handleStep={handleStep}
+      />
     </div>
   );
 };

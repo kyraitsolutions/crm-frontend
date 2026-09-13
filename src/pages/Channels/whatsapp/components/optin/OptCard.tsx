@@ -17,6 +17,7 @@ interface OptCardProps {
   onAddKeyword: () => void;
   onConfigure: () => void;
   onSave: () => void;
+  onKeywordChange?: (index: number, value: string) => void;
 }
 
 const OptCard = ({
@@ -31,6 +32,7 @@ const OptCard = ({
   onAddKeyword,
   onConfigure,
   onSave,
+  onKeywordChange,
 }: OptCardProps) => {
   return (
     <div className="rounded-xl bg-white p-10">
@@ -46,7 +48,8 @@ const OptCard = ({
               <input
                 key={index}
                 value={keyword}
-                readOnly
+                readOnly={!onKeywordChange}
+                onChange={(event) => onKeywordChange?.(index, event.target.value)}
                 className="w-56 rounded-xl text-sm bg-gray-100 px-4 py-3 outline-none"
               />
             ))}

@@ -1,5 +1,5 @@
 import { AuthService } from "@/services";
-import { LocalStorageUtils } from "@/utils";
+import { AccountService } from "@/services/account.service";
 import { IconCirclePlusFilled, IconMail } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
@@ -20,6 +20,7 @@ import { SidebarMenu, SidebarMenuItem } from "./ui/sidebar";
 const AddAccountPopup = () => {
   // const authManager = new AuthStoreManager();
   const authService = new AuthService();
+  const accountService = new AccountService();
   const [open, setOpen] = useState<boolean>(false);
   const [accountName, setAccountName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,33 +33,16 @@ const AddAccountPopup = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://crm-backend-7lf9.onrender.com/api/account", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${LocalStorageUtils.getItem("token")}`, // 👈 replace dynamically if needed
-        },
-        body: JSON.stringify({
-          accountName,
-          email,
-        }),
+      await accountService.createAccount({
+        accountName,
+        email,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to create account");
-      }
-
-      const data = await response.json();
-      console.log("✅ Account created:", data);
-
-      // Close dialog after success
       setOpen(false);
-
-      // Optional: reset form fields
       setAccountName("");
       setEmail("");
     } catch (error) {
-      console.error("❌ Error creating account:", error);
+      console.error("Error creating account:", error);
     } finally {
       setLoading(false);
     }
@@ -69,11 +53,9 @@ const AddAccountPopup = () => {
       const response: any = await authService.getProfile();
       // authManager.setUser(response.data?.docs);
       //   console.log(response);
-      if (response?.data?.docs?.userprofile?.accountType === "organization") {
+      const user = response?.data?.doc ?? response?.data?.docs;
+      if (user?.userprofile?.accountType === "organization" || user?.userProfile?.accountType === "organization" || user?.organization) {
         setShowAddAccountButton(true);
-      }
-      if (!response.data?.docs?.onboarding) {
-        // navigate("/on-boarding");
       }
 
       //   setIsLoading(false);

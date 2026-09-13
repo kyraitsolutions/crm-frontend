@@ -12,13 +12,12 @@ import {
 } from "@/components/ui/select";
 
 import { ButtonCard } from "../ButtonCard";
-
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import { useFormContext } from "react-hook-form";
+import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 
 interface Props {
-  button: TemplateButton;
+  button: TTemplateButton;
 }
 
 export function UrlButtonEditor({ button }: Props) {

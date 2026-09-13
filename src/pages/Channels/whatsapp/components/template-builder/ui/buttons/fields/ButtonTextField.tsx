@@ -1,11 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { BUTTON_TYPE_CONFIG } from "@/pages/Channels/whatsapp/constants/template.constants";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import { useFormContext } from "react-hook-form";
 
 interface IButtonTextFieldProps {
-  button: TemplateButton;
+  button: TTemplateButton;
 }
 
 export function ButtonTextField({ button }: IButtonTextFieldProps) {

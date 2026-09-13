@@ -8,6 +8,8 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import type { TTemplate } from "../../types/templates";
 import { useState } from "react";
 import GlobalTemplatePreview from "../GlobalTemplatePreview";
+import type { TemplateJourney } from "../../types/templates/template.type";
+// import { TemplatePreviewPanel } from "./TemplatePreviewPanel";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -22,7 +24,15 @@ const getStatusColor = (status: string) => {
   }
 };
 
-const TemplateTable = ({ type }: { type: string }) => {
+const TemplateTable = ({
+  selectedTemplate: _selectedTemplate,
+  setSelectedTemplate,
+  type,
+}: {
+  selectedTemplate: TemplateJourney | null;
+  setSelectedTemplate: (template: TemplateJourney | null) => void;
+  type: string;
+}) => {
   const templates = useTemplateListStore((state) => state.templates);
 
   const [previewTemplate, setPreviewTemplate] = useState<TTemplate | null>(
@@ -58,6 +68,7 @@ const TemplateTable = ({ type }: { type: string }) => {
                 return (
                   <tr
                     key={item.id}
+                    onClick={() => setSelectedTemplate(item)}
                     className="hover:bg-gray-50 mt-1 rounded-2xl text-sm bg-white"
                   >
                     <td className="max-w-[220px] rounded-l-xl truncate px-6 py-5">
@@ -147,6 +158,7 @@ const TemplateTable = ({ type }: { type: string }) => {
         onClose={() => setPreviewTemplate(null)}
         template={previewTemplate}
       />
+      {/* <TemplatePreviewPanel /> */}
     </div>
   );
 };

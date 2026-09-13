@@ -1,4 +1,3 @@
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import { useFormContext } from "react-hook-form";
 import { ButtonCard } from "../ButtonCard";
@@ -8,9 +7,10 @@ import { PhoneFields } from "../fields/PhoneFields";
 import { TypeOfActionField } from "../fields/TypeOfActionField";
 import { UrlFields } from "../fields/UrlFields";
 import { WhatsAppFields } from "../fields/WhatsAppFields";
+import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 
 interface ICallToActionProps {
-  button: TemplateButton;
+  button: TTemplateButton;
 }
 
 export function CallToActionButtonEditor({ button }: ICallToActionProps) {

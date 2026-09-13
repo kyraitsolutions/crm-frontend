@@ -1,14 +1,14 @@
 // // Template Types
 
+import type { TTemplateButton } from "./template-button.schema";
 import type {
   ButtonKind,
   HeaderType,
   TemplateCategory,
   TemplateType,
-  UrlType,
   VariableType,
-  WhatsAppActiveFor,
 } from "./template.enums";
+import type { TTemplateComponent } from "./template.list.type";
 
 export type TemplateHeaderMedia = {
   file: File;
@@ -37,32 +37,32 @@ export interface ButtonErrors {
   countryCode?: string;
   offerCode?: string;
 }
-export interface TemplateButton {
-  id: string;
-  // Button type
-  kind: ButtonKind;
-  // Common
-  label: string;
+// export interface TemplateButton {
+//   id: string;
+//   // Button type
+//   kind: ButtonKind;
+//   // Common
+//   label: string;
 
-  // URL Button
-  url?: string;
-  urlType?: UrlType;
-  trackConversions?: boolean;
+//   // URL Button
+//   url?: string;
+//   urlType?: UrlType;
+//   trackConversions?: boolean;
 
-  // Phone Button
-  country?: string;
-  countryCode?: string;
-  phoneNumber?: string;
+//   // Phone Button
+//   country?: string;
+//   countryCode?: string;
+//   phoneNumber?: string;
 
-  // Call on WhatsApp
-  activeFor?: WhatsAppActiveFor;
+//   // Call on WhatsApp
+//   activeFor?: WhatsAppActiveFor;
 
-  // Copy Code
-  offerCode?: string;
+//   // Copy Code
+//   offerCode?: string;
 
-  // Validation
-  errors?: ButtonErrors;
-}
+//   // Validation
+//   errors?: ButtonErrors;
+// }
 
 export interface ButtonTypeConfig {
   kind: ButtonKind;
@@ -97,7 +97,7 @@ export interface TemplateState {
   variableType: VariableType;
 
   // Buttons
-  buttons: TemplateButton[];
+  buttons: TTemplateButton[];
 
   // Template
   setTemplateName: (name: string) => void;
@@ -143,21 +143,31 @@ export interface TemplateState {
   // Buttons
   addButton: (kind: ButtonKind) => void;
 
-  updateButton: (id: string, data: Partial<TemplateButton>) => void;
+  updateButton: (id: string, data: Partial<TTemplateButton>) => void;
 
   removeButton: (id: string) => void;
 }
 
-export interface TemplateComponent {
-  type: string;
-  [key: string]: any;
-}
+// export interface TemplateComponent {
+//   type: string;
+//   [key: string]: any;
+// }
 
 export interface TemplatePayload {
   name: string;
   language: string;
   category: string;
-  components: TemplateComponent[];
+  components: TTemplateComponent[];
 }
 
 // Store State for Template Lists
+
+export interface TemplateJourney {
+  name: string;
+  status: "APPROVED" | "PENDING" | "REJECTED";
+  createdAt: string;
+  updatedAt?: string;
+  components: TTemplateComponent[];
+  message: string;
+  // buttons: TemplateButton[] | null;
+}

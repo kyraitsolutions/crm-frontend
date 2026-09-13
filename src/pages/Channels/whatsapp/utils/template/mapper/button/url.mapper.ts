@@ -1,6 +1,9 @@
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type {
+  TMetaTemplateButton,
+  TTemplateButton,
+} from "@/pages/Channels/whatsapp/types/templates";
 
-export function mapUrlButton(button: TemplateButton) {
+export function mapUrlButton(button: TTemplateButton): TMetaTemplateButton {
   return {
     type: "URL",
     text: button.label,

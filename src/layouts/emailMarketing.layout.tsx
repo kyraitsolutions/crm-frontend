@@ -5,15 +5,11 @@ import { Outlet } from "react-router-dom";
 
 const EmailMarketingLayout = () => {
   return (
-    <div className="flex h-screen">
-      {/* <AppSidebar /> */}
-
-      <main className="w-full h-screen overflow-y-scroll">
-        {/* <SiteHeader /> */}
-        <Header />
-
+    <div className="flex flex-col min-h-0 h-full">
+      <Header />
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <Outlet />
-      </main>
+      </div>
     </div>
   );
 };

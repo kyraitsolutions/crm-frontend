@@ -1,18 +1,19 @@
 import { generateId } from "@/utils/generateId.utils";
 import { BUTTON_TYPE_CONFIG } from "../../constants/template.constants";
 import type {
-  TemplateButton,
-  TemplateComponent,
-  TemplateVariable,
-} from "../../types/templates/template.type";
-import type { ButtonKind, TTemplate } from "../../types/templates";
+  ButtonKind,
+  TTemplate,
+  TTemplateButton,
+  TTemplateComponent,
+} from "../../types/templates";
+import type { TemplateVariable } from "../../types/templates/template.type";
 
 export interface ButtonValidationError {
   buttonId?: string;
   message: string;
 }
 export function validateButtons(
-  buttons: TemplateButton[],
+  buttons: TTemplateButton[],
 ): ButtonValidationError[] {
   const errors: ButtonValidationError[] = [];
 
@@ -61,7 +62,7 @@ export function validateButtons(
 
   return errors;
 }
-export function createButton(kind: ButtonKind): TemplateButton {
+export function createButton(kind: ButtonKind): TTemplateButton {
   switch (kind) {
     case "QUICK_REPLY":
       return {
@@ -132,7 +133,7 @@ export const CALL_TO_ACTION_BUTTONS: ButtonKind[] = [
 
 export const QUICK_REPLY_BUTTONS: ButtonKind[] = ["QUICK_REPLY"];
 
-export function groupButtons(buttons: TemplateButton[]) {
+export function groupButtons(buttons: TTemplateButton[]) {
   return {
     callToAction: buttons.filter((button) =>
       CALL_TO_ACTION_BUTTONS.includes(button.kind),
@@ -153,10 +154,21 @@ export function getTemplateType(components: any) {
 }
 
 export const getComponentText = (
-  components: TemplateComponent[],
-  type: TemplateComponent["type"],
-) => components?.find((c) => c.type === type)?.text ?? "";
+  components: TTemplateComponent[],
+  type: TTemplateComponent["type"],
+) => {
+  const component = components.find((c) => c.type === type);
 
+  if (
+    component?.type === "HEADER" ||
+    component?.type === "BODY" ||
+    component?.type === "FOOTER"
+  ) {
+    return component.text ?? "";
+  }
+
+  return "";
+};
 export const extractTemplateVariables = (
   template: TTemplate,
 ): TemplateVariable[] => {
@@ -166,11 +178,11 @@ export const extractTemplateVariables = (
     template.parameterFormat === "Number" ? /{{(\d+)}}/g : /{{([^{}]+)}}/g;
 
   const header = template.components.find(
-    (component) => component.type.toUpperCase() === "HEADER",
+    (component) => component.type === "HEADER",
   );
 
   const body = template.components.find(
-    (component) => component.type.toUpperCase() === "BODY",
+    (component) => component.type === "BODY",
   );
 
   // HEADER variables

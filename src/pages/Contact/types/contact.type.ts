@@ -23,7 +23,8 @@ export const CreateContactSchema=z.object({
     .optional(),
 })
 export const ContactSchema=z.object({
-    _id:z.string(),
+    _id:z.string().optional(),
+    id:z.string().optional(),
     accountId: z.string(),
     name:z.string(),
     email:z.string().nullable().optional(),

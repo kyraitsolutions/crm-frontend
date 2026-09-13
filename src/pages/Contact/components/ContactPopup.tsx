@@ -1,5 +1,5 @@
 import { sourceOptions } from "@/constants";
-import { X, ChevronDown } from "lucide-react";
+import { X, ChevronDown, CircleAlert } from "lucide-react";
 import { useContactStore } from "../store/contact.store";
 import {
     CreateContactSchema,
@@ -9,6 +9,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
 import { useAuthStore } from "@/stores";
+import { useEffect, useState } from "react";
+import { ToastMessageService } from "@/services";
+import type { ApiError } from "@/types";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 
 const ContactPopup = () => {
@@ -16,6 +20,8 @@ const ContactPopup = () => {
         createContact
     } = useContactStore((state) => state);
     const { accountId } = useAuthStore((state) => state)
+    const toastService = new ToastMessageService();
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     const {
         register,
@@ -44,9 +50,37 @@ const ContactPopup = () => {
     });
 
     const nameValue = watch("name") || "";
+    const emailValue = watch("email");
+    const phoneValue = watch("phone");
+
+    useEffect(() => {
+        if (open) {
+            setSubmitError(null);
+        }
+    }, [open]);
+
+    useEffect(() => {
+        setSubmitError(null);
+    }, [emailValue, phoneValue]);
 
     const onSubmit = async (data: z.input<typeof CreateContactSchema>) => {
-        await createContact(data as TCreateContact);
+        setSubmitError(null);
+        try {
+            await createContact({
+                ...(data as TCreateContact),
+                accountId: String(accountId || data.accountId || ""),
+            });
+            toastService.success("Contact added successfully");
+        } catch (error) {
+            const err = error as ApiError;
+            const message =
+                err?.status === 409 || /already exists/i.test(err?.message || "")
+                    ? err.message ||
+                      "A contact with this email or phone number already exists."
+                    : err?.message || "Failed to add contact";
+            setSubmitError(message);
+            toastService.error(message);
+        }
     };
 
     if (!open) return null;
@@ -84,6 +118,17 @@ const ContactPopup = () => {
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                 >
+                    {submitError && (
+                        <Alert variant="destructive" className="mb-6">
+                            <CircleAlert />
+                            <AlertTitle>
+                                {/already exists/i.test(submitError)
+                                    ? "Contact already exists"
+                                    : "Could not add contact"}
+                            </AlertTitle>
+                            <AlertDescription>{submitError}</AlertDescription>
+                        </Alert>
+                    )}
                     <div className="grid grid-cols-[200px_1fr] gap-y-4">
                         {/* Name */}
                         <label className="text-gray-700 font-medium">

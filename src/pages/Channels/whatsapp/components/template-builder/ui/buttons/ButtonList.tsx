@@ -1,8 +1,8 @@
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
 import { groupButtons } from "@/pages/Channels/whatsapp/utils/template/template.utils";
 import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import { useFormContext, useWatch } from "react-hook-form";
 import { ButtonRow } from "./ButtonRow";
+import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 
 export const ButtonsList = () => {
   // const { buttons } = useTemplateStore();
@@ -28,7 +28,7 @@ export const ButtonsList = () => {
 
 interface IButtonSectionProps {
   title: string;
-  buttons: TemplateButton[];
+  buttons: TTemplateButton[];
 }
 
 export function ButtonSection({ title, buttons }: IButtonSectionProps) {

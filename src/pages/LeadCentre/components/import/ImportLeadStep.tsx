@@ -26,8 +26,8 @@ const ImportLeadStep = () => {
   const [progress, setProgress] = useState(0);
 
   // captured from UniquekeyStep — was never being stored before
-  const [uniqueKey] = useState<string>("");
-  const [mode] = useState<"upsert" | "insert" | "skip">("skip");
+  const [uniqueKey, setUniqueKey] = useState<string>("");
+  const [mode, setMode] = useState<"upsert" | "insert" | "skip">("insert");
 
   const [uploadStats, setUploadStats] = useState({
     total: 0,
@@ -139,7 +139,7 @@ const ImportLeadStep = () => {
             mode,
           } as any);
 
-          const data = (res as any)?.data ?? {};
+          const data = (res as any)?.data?.doc ?? (res as any)?.data ?? {};
           uploaded += data.inserted || 0;
           duplicates += data.duplicates?.length || 0;
           failed += data.failed || 0;
@@ -179,8 +179,8 @@ const ImportLeadStep = () => {
   }
 
   return (
-    <div className="pb-10">
-      <div className="min-h-[70vh] h-full">
+    <div className="pb-10" >
+      <div className="min-h-[70vh] h-full ">
         {step === 0 && (
           <div>
             <UploadStep
@@ -199,11 +199,10 @@ const ImportLeadStep = () => {
               step={step}
               setStep={setStep}
               handleStep={handleStep}
-              // csvHeaders={csvHeaders}
-              // uniqueKey={uniqueKey}
-              // setUniqueKey={setUniqueKey}
-              // mode={mode}
-              // setMode={setMode}
+              uniqueKey={uniqueKey}
+              setUniqueKey={setUniqueKey}
+              mode={mode}
+              setMode={setMode}
             />
           </div>
         )}

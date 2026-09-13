@@ -11,10 +11,14 @@ import Explore from "../components/template-builder/Explore";
 import TemplateTable from "../components/template-builder/TemplateTable";
 import { useTemplateListStore } from "../store/template-list.store";
 import { Input } from "@/components/ui/input";
+import TemplateJourneyModal from "../components/template-builder/ui/TemplateViewer";
+import type { TemplateJourney } from "../types/templates/template.type";
 
 const TemplatesPage = () => {
   const navigate = useNavigate();
   const { accountId } = useAuthStore((state) => state);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<TemplateJourney | null>(null);
   const [active, setActive] = useState<
     "explore" | "all" | "draft" | "pending" | "approved" | "action-required"
   >("explore");
@@ -67,20 +71,25 @@ const TemplatesPage = () => {
     switch (status) {
       case "explore":
         return <Explore />;
-      case "all":
-        return <TemplateTable type={status} />;
-      case "draft":
-        return <TemplateTable type={status} />;
-      case "pending":
-        return <TemplateTable type={status} />;
-      case "approved":
-        return <TemplateTable type={status} />;
       case "action-required":
-        return <TemplateTable type={"rejected"} />;
+        return (
+          <TemplateTable
+            selectedTemplate={selectedTemplate}
+            setSelectedTemplate={setSelectedTemplate}
+            type={"rejected"}
+          />
+        );
       default:
-        setStatus(undefined);
+        return (
+          <TemplateTable
+            selectedTemplate={selectedTemplate}
+            setSelectedTemplate={setSelectedTemplate}
+            type={status}
+          />
+        );
+      // setStatus(undefined);
     }
-  }
+  };
 
   useEffect(() => {
     setSearch(debounceSearch);
@@ -118,21 +127,18 @@ const TemplatesPage = () => {
       </div>
       <Topbar active={active} onChange={handleTabChange} />
 
-
+      {selectedTemplate && (
+        <TemplateJourneyModal
+          template={selectedTemplate}
+          onClose={() => setSelectedTemplate(null)}
+        />
+      )}
       {loading ? (
         <div className="flex justify-center mt-12">
           <Loader size={25} color="#162238" />
         </div>
       ) : (
-        <div className="overflow-y-scroll pb-5">
-          {renderStep(active)}
-          {/* {active === "explore" && <Explore />}
-          {active === "all" && <TemplateTable type={"all"} />}
-          {active === "draft" && <TemplateTable type={"draft"} />}
-          {active === "pending" && <TemplateTable type={"pending"} />}
-          {active === "approved" && <TemplateTable type={"approved"} />}
-          {active === "action-required" && <TemplateTable type={"rejected"} />} */}
-        </div>
+        <div className="overflow-y-scroll pb-5">{renderStep(active)}</div>
       )}
     </div>
   );

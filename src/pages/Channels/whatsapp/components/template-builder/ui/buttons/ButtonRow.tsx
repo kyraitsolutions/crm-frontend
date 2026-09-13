@@ -1,10 +1,10 @@
-import type { TemplateButton } from "../../../../types/templates/template.type";
+import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 import { CallToActionButtonEditor } from "./editors/CallToActionButtonEditor";
 import { QuickReplyButtonEditor } from "./editors/QuickReplyButtonEditor";
 // import { UrlButtonEditor } from "./editors/UrlButtonEditor";
 
 interface IButtonRowProps {
-  button: TemplateButton;
+  button: TTemplateButton;
 }
 
 export function ButtonRow({ button }: IButtonRowProps) {

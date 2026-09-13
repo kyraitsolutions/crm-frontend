@@ -1,11 +1,11 @@
 import { Input } from "@/components/ui/input";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
 interface ICopyCodeFieldsProps {
-  button: TemplateButton;
+  button: TTemplateButton;
 }
 
 export function CopyCodeFields({ button }: ICopyCodeFieldsProps) {

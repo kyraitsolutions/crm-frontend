@@ -1,4 +1,5 @@
 import { sourceOptions, statusOptions } from "@/constants";
+import { ACCOUNT_PATHS } from "@/constants/routes";
 import { ChevronLeft, Info, MessageSquareMore, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MdInfo, MdLocationOn } from "react-icons/md";
@@ -158,10 +159,8 @@ const AddLead = () => {
 
     try {
       const payload = generatePayload();
-      const result = await addLead(String(accountId), payload);
-      console.log(result);
-
-      alert("Lead Created Successfully");
+      await addLead(String(accountId), payload);
+      navigate(`${ACCOUNT_PATHS.byId(String(accountId))}/leads`);
     } catch (err) {
       console.error(err);
       alert("Error creating lead");

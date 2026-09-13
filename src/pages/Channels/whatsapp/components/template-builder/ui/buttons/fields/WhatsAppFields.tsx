@@ -8,12 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { TemplateButton } from "@/pages/Channels/whatsapp/types/templates/template.type";
+import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
 import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import { useFormContext } from "react-hook-form";
 
 interface IWhatsAppFieldsProps {
-  button: TemplateButton;
+  button: TTemplateButton;
 }
 
 const ACTIVE_FOR_OPTIONS = [
@@ -61,7 +61,7 @@ export function WhatsAppFields({ button }: IWhatsAppFieldsProps) {
           value={button.activeFor}
           onValueChange={(value) =>
             updateButton(button.id, {
-              activeFor: value as TemplateButton["activeFor"],
+              activeFor: value as TTemplateButton["activeFor"],
             })
           }
         >

@@ -4,7 +4,7 @@ import { dashboardService } from "../services/dashboardService";
 interface DashboardStore {
   loading: boolean;
   dashboardOverview: any;
-  filters?: {
+  filters: {
     module?: string;
     range?: string;
     startDate?: string;
@@ -18,6 +18,10 @@ interface DashboardStore {
 export const useDashboardStore = create<DashboardStore>((set, get) => ({
   loading: false,
   dashboardOverview: null,
+  filters: {
+    module: "overview",
+    range: "7days",
+  },
 
   setFilters: (filters) => {
     set({

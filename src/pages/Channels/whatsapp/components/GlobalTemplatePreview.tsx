@@ -1,18 +1,26 @@
 import { useState, useMemo } from "react";
-import { Smartphone, Monitor, X } from "lucide-react";
-import type { TemplateComponent } from "../types/templates/template.type";
+import {
+  Smartphone,
+  Monitor,
+  X,
+  SquareArrowOutUpRightIcon,
+  Reply,
+  Phone,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import type {
+  TMetaTemplateButton,
+  TTemplateComponent,
+} from "../types/templates";
+
+type HeaderComponent = Extract<TTemplateComponent, { type: "HEADER" }>;
+type BodyComponent = Extract<TTemplateComponent, { type: "BODY" }>;
+type FooterComponent = Extract<TTemplateComponent, { type: "FOOTER" }>;
+type ButtonsComponent = Extract<TTemplateComponent, { type: "BUTTONS" }>;
 
 interface VariableMapping {
   position: string; // "1", "2", ...
   sampleValue?: string;
-}
-
-interface TemplateButton {
-  type: "URL" | "PHONE_NUMBER" | "QUICK_REPLY" | "COPY_CODE";
-  text: string;
-  url?: string;
-  phone_number?: string;
 }
 
 interface TemplateData {
@@ -21,7 +29,7 @@ interface TemplateData {
   category: string;
   status: string;
   language: string;
-  components: TemplateComponent[];
+  components: TTemplateComponent[];
   variableMappings?: VariableMapping[];
 }
 
@@ -30,12 +38,6 @@ interface GlobalTemplatePreviewProps {
   onClose: () => void;
   template: TemplateData | null;
 }
-
-// ---- Helpers: pull pieces out of the fixed components[] shape ----
-const getComponent = (
-  components: TemplateComponent[],
-  type: TemplateComponent["type"],
-) => components?.find((c) => c.type === type);
 
 // Replaces {{1}}, {{2}}... with sample values (or a readable placeholder)
 const resolveVariables = (
@@ -58,22 +60,23 @@ const GlobalTemplatePreview = ({
     "Mobile View",
   );
 
-  const headerComponent = useMemo(
-    () => (template ? getComponent(template.components, "HEADER") : undefined),
-    [template],
+  const headerComponent = template?.components.find(
+    (component): component is HeaderComponent => component.type === "HEADER",
   );
-  const bodyComponent = useMemo(
-    () => (template ? getComponent(template.components, "BODY") : undefined),
-    [template],
+
+  const bodyComponent = template?.components.find(
+    (component): component is BodyComponent => component.type === "BODY",
   );
-  const footerComponent = useMemo(
-    () => (template ? getComponent(template.components, "FOOTER") : undefined),
-    [template],
+
+  const footerComponent = template?.components.find(
+    (component): component is FooterComponent => component.type === "FOOTER",
   );
-  const buttonsComponent = useMemo(
-    () => (template ? getComponent(template.components, "BUTTONS") : undefined),
-    [template],
+
+  const buttonsComponent = template?.components.find(
+    (component): component is ButtonsComponent => component.type === "BUTTONS",
   );
+
+  console.log(buttonsComponent);
 
   const resolvedHeader = useMemo(() => {
     if (!headerComponent?.text) return "";
@@ -91,15 +94,16 @@ const GlobalTemplatePreview = ({
 
   if (!open || !template) return null;
 
-  const renderButtonPreview = (button: TemplateButton, index: number) => (
-    <button
+  const renderButtonPreview = (button: TMetaTemplateButton, index: number) => (
+    <Button
       key={index}
-      className="w-full border-t border-gray-100 py-2.5 text-center text-xs font-medium text-blue-600 first:border-t-0 hover:bg-gray-50"
+      className="actions-btn w-full text-green-600! border-none flex items-center justify-center gap-1.5 py-2 text-xs! font-medium hover:bg-whatsapp-background/60! transition-colors p-3! rounded-none!"
     >
-      {button.type === "URL" && "🔗 "}
-      {button.type === "PHONE_NUMBER" && "📞 "}
+      {button.type === "URL" && <SquareArrowOutUpRightIcon size={5} />}
+      {button.type === "QUICK_REPLY" && <Reply />}
+      {button.type === "PHONE_NUMBER" && <Phone />}
       {button.text}
-    </button>
+    </Button>
   );
 
   return (
@@ -190,14 +194,18 @@ const GlobalTemplatePreview = ({
                     {footerText && (
                       <p className="mt-2 text-xs text-gray-400">{footerText}</p>
                     )}
-                    <p className="mt-1 text-right text-[10px] text-gray-400">
-                      11:30 AM
-                    </p>
                   </div>
                   {/* Buttons */}
                   {buttons.length > 0 && (
                     <div className="border-t border-gray-100">
-                      {buttons.map(renderButtonPreview)}
+                      {buttons.map((button, index) => (
+                        <div
+                          key={`${button.type}-${index}`}
+                          className="border-b border-gray-100"
+                        >
+                          {renderButtonPreview(button, buttons.indexOf(button))}
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
