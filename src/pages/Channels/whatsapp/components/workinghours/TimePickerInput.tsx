@@ -1,21 +1,19 @@
-import { Clock3 } from "lucide-react";
-
 interface Props {
-    value: string;
-    onClick: () => void;
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
-const TimePickerInput = ({ value, onClick }: Props) => {
-    return (
-        <button
-            onClick={onClick}
-            className="flex h-10 items-center justify-between rounded-xl bg-gray-100 px-4"
-        >
-            <span className="text-sm">{value}</span>
-
-            <Clock3 size={16} className="text-gray-500" />
-        </button>
-    );
+const TimePickerInput = ({ value, onChange, disabled }: Props) => {
+  return (
+    <input
+      type="time"
+      value={value || "09:00"}
+      disabled={disabled}
+      onChange={(event) => onChange(event.target.value)}
+      className="flex h-10 w-full items-center rounded-xl bg-gray-100 px-4 text-sm outline-none disabled:opacity-50"
+    />
+  );
 };
 
 export default TimePickerInput;

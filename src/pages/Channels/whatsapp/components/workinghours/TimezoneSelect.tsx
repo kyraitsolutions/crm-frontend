@@ -1,42 +1,45 @@
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
+import { TIMEZONE_OPTIONS } from "../../utils/defaultSchedule";
 
 interface Props {
-    value: string;
-    onChange: (value: string) => void;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 const TimezoneSelect = ({ value, onChange }: Props) => {
-    return (
-        <div className="w-full flex items-center gap-6">
-            <label className="text-sm">Timezone</label>
+  const options = TIMEZONE_OPTIONS.some((item) => item.value === value)
+    ? TIMEZONE_OPTIONS
+    : [{ value, label: value }, ...TIMEZONE_OPTIONS];
 
-            <Select value={value} onValueChange={onChange} >
-                <SelectTrigger className="w-full rounded-xl shadow-none max-w-lg">
-                    <SelectValue />
-                </SelectTrigger>
+  return (
+    <div className="w-full flex items-center gap-6">
+      <label className="text-sm">Timezone</label>
 
-                <SelectContent className="shadow-none rounded-xl">
-                    <SelectItem className="rounded-xl" value="Asia/Kolkata (+05:30)">
-                        Asia/Kolkata (+05:30)
-                    </SelectItem>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="w-full rounded-xl shadow-none max-w-lg">
+          <SelectValue />
+        </SelectTrigger>
 
-                    <SelectItem className="rounded-xl" value="Europe/London">
-                        Europe/London
-                    </SelectItem>
-
-                    <SelectItem className="rounded-xl" value="America/New_York">
-                        America/New York
-                    </SelectItem>
-                </SelectContent>
-            </Select>
-        </div>
-    );
+        <SelectContent className="shadow-none rounded-xl">
+          {options.map((option) => (
+            <SelectItem
+              className="rounded-xl"
+              key={option.value}
+              value={option.value}
+            >
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
 };
 
 export default TimezoneSelect;

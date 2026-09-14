@@ -122,6 +122,12 @@ export const API_ENDPOINT_PATH = {
       optin: (accountId: string) =>
         `/whatsapp/account/${accountId}/broadcast/optin`,
     },
+    LIVE_CHAT: {
+      context: (accountId: string) =>
+        `/whatsapp/account/${accountId}/live-chat/context`,
+      settings: (accountId: string) =>
+        `/whatsapp/account/${accountId}/live-chat/settings`,
+    },
   },
 
   ACTIVITY_LOGS: {
