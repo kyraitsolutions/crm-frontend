@@ -16,7 +16,11 @@ export type TOutgoingMessage =
   | {
       type: "media";
       payload: {
-        file: File | Blob;
+        file?: File | Blob;
+        link?: string;
+        fileName?: string;
+        mimeType?: string;
+        size?: number;
         attachmentType: AttachmentType;
         caption?: string;
       };
@@ -43,6 +47,13 @@ interface ComposerState {
   selectedFile: File | null;
   selectedAttachmentType?: AttachmentType | null;
   caption: string;
+  cannedMedia?: {
+    url: string;
+    fileName?: string;
+    mimeType?: string;
+    size?: number;
+    type: AttachmentType;
+  } | null;
 
   recordedAudio: Blob | null;
 
@@ -69,12 +80,19 @@ export const buildOutgoingMessage = (
   }
 
   // Media
-  if (composer.selectedFile) {
+  if (composer.selectedFile || composer.cannedMedia) {
     return {
       type: "media",
       payload: {
-        file: composer.selectedFile,
-        attachmentType: composer.selectedAttachmentType ?? "document",
+        file: composer.selectedFile || undefined,
+        link: composer.cannedMedia?.url,
+        fileName: composer.cannedMedia?.fileName || composer.selectedFile?.name,
+        mimeType: composer.cannedMedia?.mimeType || composer.selectedFile?.type,
+        size: composer.cannedMedia?.size || composer.selectedFile?.size,
+        attachmentType:
+          composer.selectedAttachmentType ??
+          composer.cannedMedia?.type ??
+          "document",
         caption: composer.caption,
       },
     };

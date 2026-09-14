@@ -10,43 +10,47 @@ export const buildWhatsappPayload = (to: string, outgoing: any) => {
       };
 
     case "media": {
+      const mediaBody = outgoing.payload.link
+        ? {
+            link: outgoing.payload.link,
+            caption: outgoing.payload.caption,
+            filename: outgoing.payload.fileName,
+            mimeType: outgoing.payload.mimeType,
+            size: outgoing.payload.size,
+          }
+        : {
+            file: outgoing.payload.file,
+            caption: outgoing.payload.caption,
+            filename: outgoing.payload.fileName,
+          };
+
       switch (outgoing.payload.attachmentType) {
         case "image":
           return {
             to,
             type: "image",
-            image: {
-              file: outgoing.payload.file,
-              caption: outgoing.payload.caption,
-            },
+            image: mediaBody,
           };
 
         case "video":
           return {
             to,
             type: "video",
-            video: {
-              file: outgoing.payload.file,
-              caption: outgoing.payload.caption,
-            },
+            video: mediaBody,
           };
 
         case "document":
           return {
             to,
             type: "document",
-            document: {
-              file: outgoing.payload.file,
-            },
+            document: mediaBody,
           };
 
         case "audio":
           return {
             to,
             type: "audio",
-            audio: {
-              file: outgoing.payload.file,
-            },
+            audio: mediaBody,
           };
       }
       break;

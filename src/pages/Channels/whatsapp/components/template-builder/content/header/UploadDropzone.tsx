@@ -3,7 +3,7 @@ import { UploadCloud } from "lucide-react";
 
 interface IUploadDropzoneProps {
   accept: string;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement>;
   onFileSelect: (file: File) => void;
 }
 

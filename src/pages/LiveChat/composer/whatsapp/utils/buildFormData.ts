@@ -1,8 +1,29 @@
 export const buildFormData = (payload: any) => {
   const formData = new FormData();
-  console.log("payload", payload);
   formData.append("to", payload.to);
   formData.append("type", payload.type);
+
+  const appendMedia = (field: "image" | "video" | "document" | "audio") => {
+    const media = payload[field] || {};
+    if (media.link) {
+      formData.append(
+        field,
+        JSON.stringify({
+          link: media.link,
+          caption: media.caption,
+          filename: media.filename,
+          mimeType: media.mimeType,
+          size: media.size,
+        }),
+      );
+      if (media.caption) formData.append("caption", media.caption);
+      if (media.filename) formData.append("filename", media.filename);
+      return;
+    }
+
+    if (media.caption) formData.append("caption", media.caption);
+    if (media.file) formData.append("file", media.file);
+  };
 
   switch (payload.type) {
     case "text":
@@ -10,23 +31,19 @@ export const buildFormData = (payload: any) => {
       break;
 
     case "image":
-      formData.append("caption", payload.image.caption);
-      formData.append("file", payload.image.file);
+      appendMedia("image");
       break;
 
     case "video":
-      formData.append("caption", payload.video?.caption);
-      formData.append("file", payload.video.file);
+      appendMedia("video");
       break;
 
     case "document":
-      formData.append("caption", payload.document.caption);
-      formData.append("file", payload.document.file);
+      appendMedia("document");
       break;
 
     case "audio":
-      // formData.append("audio",);
-      formData.append("file", payload.audio.file);
+      appendMedia("audio");
       break;
 
     case "template":

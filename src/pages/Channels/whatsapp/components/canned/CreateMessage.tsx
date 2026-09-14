@@ -7,15 +7,60 @@ import { formatWhatsappMessage } from "@/utils/textFormat"
 import { Button } from "@/components/ui/button"
 import { handleHistoryBack } from "@/utils/back.utils"
 import { ArrowLeft } from "lucide-react"
+import CannedMediaUploader from "./CannedMediaUploader"
+import { useAuthStore } from "@/stores"
+import { ToastMessageService } from "@/services"
+import type { ApiError } from "@/types"
+import { whatsappCannedMessageService } from "../../services/whatsapp-canned.service"
+import { useCannedMessageStore } from "../../store/canned-message.store"
+import type { CannedMessageMedia, CannedMessageType } from "../../types/canned-message.type"
 
 const CreateMessage = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [templateName,
-    // setTemplateName
-  ] = useState<string>("abhi");
+  const accountId = useAuthStore((state) => state.accountId);
+  const upsertMessage = useCannedMessageStore((state) => state.upsertMessage);
+  const toastService = new ToastMessageService();
+  const [templateName, setTemplateName] = useState<string>("");
   const [messageType, setMessageType] = useState<"text" | "image" | "video" | "document">("text")
   const [messageText, setMessageText] = useState<string>("")
-  // const [media, setMedia] = useState<string>("");
+  const [media, setMedia] = useState<CannedMessageMedia>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!accountId) return;
+    if (!templateName.trim()) {
+      toastService.error("Enter a canned message name");
+      return;
+    }
+    if (messageType === "text" && !messageText.trim()) {
+      toastService.error("Enter a message");
+      return;
+    }
+    if (messageType !== "text" && !media?.url) {
+      toastService.error("Upload media for this canned message");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const response = await whatsappCannedMessageService.create(String(accountId), {
+        name: templateName.trim(),
+        type: messageType as CannedMessageType,
+        text: messageText,
+        media: messageType === "text" ? null : media,
+      });
+      if (response.data?.doc) {
+        upsertMessage(response.data.doc);
+      }
+      toastService.success("Canned message created");
+      handleHistoryBack();
+    } catch (error) {
+      const err = error as ApiError;
+      toastService.apiError(err.message || "Failed to create canned message");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto py-10 h-[calc(100vh-64px)] overflow-y-scroll hide-scrollbar">
@@ -43,7 +88,7 @@ const CreateMessage = () => {
                 className="input-field pr-14 rounded-xl! bg-gray-200/30 border-none"
                 type="text"
                 value={templateName}
-                //   onChange={handleNameChange}
+                onChange={(e) => setTemplateName(e.target.value)}
                 maxLength={60}
                 placeholder="e.g. order_confirmation"
               />
@@ -64,9 +109,10 @@ const CreateMessage = () => {
             </p>
             <Select
               value={messageType}
-              onValueChange={(value) =>
-                setMessageType(value as "text" | "image" | "video" | "document")
-              }
+              onValueChange={(value) => {
+                setMessageType(value as "text" | "image" | "video" | "document");
+                setMedia(null);
+              }}
             >
               <SelectTrigger className="input-field rounded-xl! w-full capitalize  bg-gray-200/30 border-none">
                 <SelectValue />
@@ -106,9 +152,7 @@ const CreateMessage = () => {
                     value={messageText}
                     onChange={(e) => {
                       setMessageText(e.target.value);
-                      // saveCursor();
                     }}
-                    // onMouseUp={saveCursor}
                     maxLength={1024}
                     rows={5}
                     placeholder="Enter your message body"
@@ -124,11 +168,24 @@ const CreateMessage = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
                   {messageType}
                 </label>
-                <p className="h-50 border flex justify-center items-center text-sm">
-                  Here put a media upload re use template head or create another
-                  one
-                </p>
-                {/* <HeaderMediaUploader /> */}
+                <CannedMediaUploader
+                  type={messageType}
+                  media={media}
+                  onChange={setMedia}
+                />
+                <div className="relative mt-4">
+                  <Textarea
+                    value={messageText}
+                    onChange={(e) => setMessageText(e.target.value)}
+                    maxLength={1024}
+                    rows={4}
+                    placeholder="Optional caption"
+                    className="input-field rounded-xl! bg-gray-200/30 border-none resize-none pb-6 text-sm min-h-20"
+                  />
+                  <span className="absolute bottom-2 right-2 text-xs text-gray-400 pointer-events-none">
+                    {messageText.length}/1024
+                  </span>
+                </div>
               </>
             )}
           </div>
@@ -138,9 +195,9 @@ const CreateMessage = () => {
               Message Preview
             </p>
             <div>
-              {messageType !== "text" && (
+              {messageType !== "text" && media?.url && messageType === "image" && (
                 <img
-                  src=""
+                  src={media.url}
                   alt="media"
                   className="w-full rounded-2xl border border-dashed h-50 object-cover"
                 />
@@ -155,7 +212,11 @@ const CreateMessage = () => {
           </div>
 
           <div className="flex justify-end">
-            <Button className="rounded-xl py-1.5! text-sm bg-teal-900 hover:bg-teal-900/80">
+            <Button
+              className="rounded-xl py-1.5! text-sm bg-teal-900 hover:bg-teal-900/80"
+              onClick={handleSubmit}
+              disabled={submitting}
+            >
               Submit
             </Button>
           </div>

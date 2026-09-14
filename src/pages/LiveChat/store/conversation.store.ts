@@ -62,6 +62,7 @@ type TConversationStore = {
 
   resetConversationQuery: () => Promise<void>;
   loadMoreConversations: () => Promise<void>;
+  removeConversations: (conversationIds: string[]) => void;
 };
 
 const initialConversationQuery: TConversationQuery = {
@@ -362,5 +363,15 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
         isLoadingMore: false,
       });
     }
+  },
+
+  removeConversations: (conversationIds) => {
+    const ids = new Set(conversationIds);
+    set((state) => ({
+      conversations: state.conversations.filter((item) => !ids.has(item.id)),
+      selectedConversationId: ids.has(state.selectedConversationId || "")
+        ? null
+        : state.selectedConversationId,
+    }));
   },
 }));

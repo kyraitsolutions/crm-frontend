@@ -19,8 +19,8 @@ export const WHATSAPP_PATHS = {
     `${ACCOUNT_PATHS.byId(accountId)}/${WHATSAPP_ROUTES.WHATSAPP}/${WHATSAPP_ROUTES.TEMPLATE}`,
   createTemplates: () =>
     `${ROUTES.DASHBOARD}/settings/whatsapp/template-messages/create`,
-  createCannedMessage: (accountId: string) =>
-    `${ACCOUNT_PATHS.byId(accountId)}/${WHATSAPP_ROUTES.WHATSAPP}/${WHATSAPP_ROUTES.CANNED}/${WHATSAPP_ROUTES.CREATE}`,
+  createCannedMessage: () =>
+    `${ROUTES.DASHBOARD}/settings/whatsapp/canned-messages/create`,
   //   getPurchaseNumberList: (accountId: string) =>
   //       `${ACCOUNT_PATHS.byId(accountId)}/${CALL_ROUTES.CALLS}/${CALL_ROUTES.BUYNUMBER}`,
   //   getMyNumberList: (accountId: string) =>
