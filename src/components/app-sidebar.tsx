@@ -42,7 +42,9 @@ export function AppSidebar() {
     navMain: [
       {
         title: "Dashboard",
-        url: ACCOUNT_PATHS.byId(String(accountId)),
+        url: accountId
+          ? ACCOUNT_PATHS.byId(String(accountId))
+          : "/dashboard",
         active: true,
         icon: Gauge,
       },
@@ -154,7 +156,7 @@ export function AppSidebar() {
       <div>
         <AccountSwitcher
           accounts={accounts}
-          selectedAccountId={accountId || accounts[0]?.id}
+          selectedAccountId={accountId || undefined}
           collapsed={collapsed}
           onSwitch={(accountId, accountName) => {
             handleAccountSwitch(accountId, accountName);
