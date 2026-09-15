@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
-import { EllipsisVertical, Phone, Trash2 } from "lucide-react";
+import { EllipsisVertical, Phone, Trash2, Bot } from "lucide-react";
 import { MdOutlinePeopleOutline } from "react-icons/md";
 import ChatTags from "./Tags";
 import {
@@ -15,6 +15,7 @@ import { conversationService } from "../services/conversation.service";
 import { useAuthStore } from "@/stores";
 import { ToastMessageService } from "@/services";
 import { useConversationStore } from "../store/conversation.store";
+import { whatsappAiAgentService } from "@/pages/Channels/whatsapp/services/whatsapp-ai-agent.service";
 
 type ChatHeaderProps = {
   name: string;
@@ -27,16 +28,38 @@ type ChatHeaderProps = {
     | "messenger"
     | "telegram"
     | "email";
+  aiPaused?: boolean;
 };
 
-const ChatHeader = ({ name, img, conversationId }: ChatHeaderProps) => {
+const ChatHeader = ({ name, img, conversationId, platform, aiPaused }: ChatHeaderProps) => {
   const { accountId } = useAuthStore();
   const toast = new ToastMessageService();
   const removeConversations = useConversationStore(
     (state) => state.removeConversations,
   );
+  const clearLiveChatIntervention = useConversationStore(
+    (state) => state.clearLiveChatIntervention,
+  );
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [resuming, setResuming] = useState(false);
+
+  const handleResumeAi = async () => {
+    if (!accountId || !conversationId) return;
+    setResuming(true);
+    try {
+      await whatsappAiAgentService.resumeConversation(
+        String(accountId),
+        conversationId,
+      );
+      clearLiveChatIntervention(conversationId);
+      toast.success("AI agent will reply to this chat again");
+    } catch (error: any) {
+      toast.error(error?.message || "Could not hand this chat back to AI");
+    } finally {
+      setResuming(false);
+    }
+  };
 
   const handleDelete = async (deleteContact: boolean) => {
     if (!accountId || !conversationId) return;
@@ -88,6 +111,12 @@ const ChatHeader = ({ name, img, conversationId }: ChatHeaderProps) => {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="rounded-xl">
+            {platform === "whatsapp" && aiPaused && (
+              <DropdownMenuItem disabled={resuming} onClick={() => void handleResumeAi()}>
+                <Bot size={16} />
+                {resuming ? "Handing back..." : "Hand back to AI"}
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
               className="text-red-600"
               onClick={() => setOpen(true)}

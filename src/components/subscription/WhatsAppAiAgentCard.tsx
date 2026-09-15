@@ -51,8 +51,8 @@ export function WhatsAppAiAgentCard() {
         }
       >
         <Button asChild variant="outline">
-          <Link to="/dashboard/settings/subscription">
-            {isTrial ? "Continue Using AI" : "Manage AI Agent"}
+          <Link to="/dashboard/settings/whatsapp/ai-agent">
+            {isTrial ? "Continue Using AI" : "Configure AI Agent"}
           </Link>
         </Button>
       </FeatureGate>

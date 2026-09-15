@@ -5,6 +5,7 @@ import {
   MessageCircleMore,
   Settings,
   SquareCheckBig,
+  Bot,
   Layers,
   SquareUserRound,
   AtSign,
@@ -49,6 +50,12 @@ const Sidebar = () => {
       active: path === "chat-setting" ? true : false,
     },
     {
+      url: "ai-agent",
+      label: "AI Sales Agent",
+      icon: <Bot size={16} />,
+      active: path === "ai-agent" ? true : false,
+    },
+    {
       url: "canned-messages",
       label: "Canned Message",
       icon: <AtSign size={16} />,
@@ -83,7 +90,7 @@ const Sidebar = () => {
         {items.map((item, index) => (
           <div key={index}>
             <Link
-              to={item.url}
+              to={`/dashboard/settings/whatsapp/${item.url}`}
               key={item.label}
               className={`flex w-full items-center gap-4 rounded-xl text-sm transition px-4 py-3 ${
                 item.active

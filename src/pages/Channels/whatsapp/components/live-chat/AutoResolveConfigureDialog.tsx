@@ -137,12 +137,20 @@ const AutoResolveConfigureDialog = ({
           )}
 
           {draft.mode === "ai_agent" && (
-            <div className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600">
+            <div className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600 space-y-2">
               {aiAvailable ? (
-                <p>
-                  WhatsApp AI agent is available on this plan
-                  {aiAgent.id ? " and is already configured." : "."}
-                </p>
+                <>
+                  <p>
+                    WhatsApp AI agent is available on this plan
+                    {aiAgent.id ? " and is already configured." : "."}
+                  </p>
+                  <Link
+                    className="text-teal-800 underline"
+                    to="/dashboard/settings/whatsapp/ai-agent"
+                  >
+                    Configure AI sales agent
+                  </Link>
+                </>
               ) : (
                 <p>
                   Upgrade your plan to enable the WhatsApp AI agent.{" "}
@@ -167,20 +175,39 @@ const AutoResolveConfigureDialog = ({
                   scheduleMode: scheduleMode as AutoResolveSchedule,
                 }))
               }
+              className="grid gap-3"
             >
-              <label className="flex items-center gap-3 text-sm">
-                <RadioGroupItem value="working_hours" />
-                During working hours
+              <label className="flex items-start gap-3 text-sm">
+                <RadioGroupItem value="working_hours" className="mt-0.5" />
+                <span>
+                  <span className="font-medium">During working hours</span>
+                  <span className="block text-xs text-gray-500">
+                    Welcome message stays off. Off-hours quick response can still run.
+                  </span>
+                </span>
               </label>
-              <label className="flex items-center gap-3 text-sm">
-                <RadioGroupItem value="off_hours" />
-                Outside working hours
+              <label className="flex items-start gap-3 text-sm">
+                <RadioGroupItem value="off_hours" className="mt-0.5" />
+                <span>
+                  <span className="font-medium">Outside working hours</span>
+                  <span className="block text-xs text-gray-500">
+                    Off-hours message stays off. Working-hours welcome can still run.
+                  </span>
+                </span>
               </label>
-              <label className="flex items-center gap-3 text-sm">
-                <RadioGroupItem value="always" />
-                Always
+              <label className="flex items-start gap-3 text-sm">
+                <RadioGroupItem value="always" className="mt-0.5" />
+                <span>
+                  <span className="font-medium">Always</span>
+                  <span className="block text-xs text-gray-500">
+                    Welcome and off-hours messages stay off because this resolver replies instead.
+                  </span>
+                </span>
               </label>
             </RadioGroup>
+            <p className="text-xs text-gray-500">
+              Chatflow and AI agent cannot run in the same window. Only one resolver is active at a time.
+            </p>
           </div>
         </div>
 

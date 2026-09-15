@@ -8,6 +8,8 @@ interface OptCardProps {
     responseDescription: string;
     message: string;
     autoResponseEnabled: boolean;
+    locked?: boolean;
+    lockReason?: string;
     onToggle: (value: boolean) => void;
     onConfigure: () => void;
 }
@@ -17,12 +19,13 @@ const MessageConfig = ({
     responseDescription,
     message,
     autoResponseEnabled,
+    locked = false,
+    lockReason,
     onToggle,
     onConfigure,
 }: OptCardProps) => {
     return (
-        <div className="rounded-xl bg-white">
-            {/* Right */}
+        <div className={`rounded-xl bg-white ${locked ? "opacity-70" : ""}`}>
             <div className="">
                 <div className="flex items-start justify-between">
                     <div>
@@ -34,11 +37,16 @@ const MessageConfig = ({
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <Switch checked={autoResponseEnabled} onCheckedChange={onToggle} />
+                        <Switch
+                            checked={autoResponseEnabled && !locked}
+                            disabled={locked}
+                            onCheckedChange={onToggle}
+                        />
 
                         <button
                             onClick={onConfigure}
-                            className="flex items-center gap-2 rounded-xl border border-teal-800 px-2 py-1.5 text-xs text-teal-800"
+                            disabled={locked}
+                            className="flex items-center gap-2 rounded-xl border border-teal-800 px-2 py-1.5 text-xs text-teal-800 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             <Pencil size={16} />
                             Configure
@@ -57,10 +65,16 @@ const MessageConfig = ({
                 </div>
 
                 <p className="mt-2 text-center text-gray-500 text-sm">
-                    Auto response is{" "}
-                    <span className="font-medium">
-                        {autoResponseEnabled ? "enabled" : "disabled"}
-                    </span>
+                    {locked ? (
+                        lockReason
+                    ) : (
+                        <>
+                            Auto response is{" "}
+                            <span className="font-medium">
+                                {autoResponseEnabled ? "enabled" : "disabled"}
+                            </span>
+                        </>
+                    )}
                 </p>
             </div>
         </div>
