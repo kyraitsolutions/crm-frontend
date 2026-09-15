@@ -1,13 +1,20 @@
 import { z } from "zod";
 import { IdentifiersSchema, PlatformSchema } from "./share.type";
 
-export const ConversationStatusSchema = z.enum([
-  "open",
-  "pending",
-  "resolved",
-  "closed",
-  "archived",
-]);
+export const ConversationTagSchema = z.object({
+  label: z.string(),
+  color: z.string().optional(),
+});
+
+export const ConversationFollowUpSchema = z.object({
+  id: z.string().optional(),
+  note: z.string().optional(),
+  dueAt: z.any().nullable().optional(),
+  completedAt: z.any().nullable().optional(),
+  createdAt: z.any().optional(),
+});
+
+export const ConversationStatusSchema = z.string().min(1);
 
 export const MessageFromSchema = z.enum(["me", "bot", "user", "system"]);
 
@@ -40,7 +47,12 @@ export const ConversationSchema = z.object({
     })
     .optional(),
   unreadCount: z.number().default(0),
-  tags: z.string().nullable().optional(),
+  tags: z.array(ConversationTagSchema).default([]),
+  score: z.number().default(0),
+  scoreLevel: z.string().optional(),
+  inboundCount: z.number().default(0),
+  outboundCount: z.number().default(0),
+  followUps: z.array(ConversationFollowUpSchema).default([]),
   totalMessages: z.number().default(0),
   isBlocked: z.boolean().default(false),
   isDeleted: z.boolean().default(false),
@@ -50,6 +62,8 @@ export const ConversationSchema = z.object({
 });
 
 export type TConversationStatus = z.infer<typeof ConversationStatusSchema>;
+export type TConversationTag = z.infer<typeof ConversationTagSchema>;
+export type TConversationFollowUp = z.infer<typeof ConversationFollowUpSchema>;
 
 export type TMessageFrom = z.infer<typeof MessageFromSchema>;
 

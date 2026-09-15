@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
 import { EllipsisVertical, Phone, Trash2, Bot } from "lucide-react";
 import { MdOutlinePeopleOutline } from "react-icons/md";
-import ChatTags from "./Tags";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -100,7 +99,6 @@ const ChatHeader = ({ name, img, conversationId, platform, aiPaused }: ChatHeade
 
         <div className="relative">
           <h1 className="text-sm font-semibold">{name}</h1>
-          <ChatTags />
         </div>
 
         <Phone size={18} className="text-gray-500 ml-auto" />

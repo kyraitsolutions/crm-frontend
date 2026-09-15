@@ -53,6 +53,8 @@ export const API_ENDPOINT_PATH = {
     getConversationByIdPath: (id: string) => `/conversation/${id}`,
     deleteConversations: (accountId: string) =>
       `/conversation/${accountId}/delete`,
+    updateConversation: (accountId: string, conversationId: string) =>
+      `/conversation/${accountId}/${conversationId}`,
   },
 
   CONVERSATION_MESSAGES: {

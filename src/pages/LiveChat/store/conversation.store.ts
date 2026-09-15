@@ -64,6 +64,10 @@ type TConversationStore = {
   loadMoreConversations: () => Promise<void>;
   removeConversations: (conversationIds: string[]) => void;
   clearLiveChatIntervention: (conversationId: string) => void;
+  patchConversation: (
+    conversationId: string,
+    payload: Partial<TConversation>,
+  ) => void;
 };
 
 const initialConversationQuery: TConversationQuery = {
@@ -392,6 +396,13 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
           },
         };
       }),
+    }));
+  },
+  patchConversation: (conversationId, payload) => {
+    set((state) => ({
+      conversations: state.conversations.map((item) =>
+        item.id === conversationId ? { ...item, ...payload } : item,
+      ),
     }));
   },
 }));
