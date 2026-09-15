@@ -1,9 +1,13 @@
 import { MdClose, MdInsertDriveFile } from "react-icons/md";
+import type { AttachmentType } from "../hooks/useWhatsappComposer";
 
 interface IComposerPreviewProps {
   file: File | null;
   previewUrl?: string;
   caption: string;
+  attachmentType?: AttachmentType | null;
+  fileName?: string;
+  mimeType?: string;
   onCaptionChange: (value: string) => void;
   onRemove: () => void;
 }
@@ -12,17 +16,21 @@ const ComposerPreview = ({
   file,
   previewUrl,
   caption,
+  attachmentType,
+  fileName,
+  mimeType,
   onCaptionChange,
   onRemove,
 }: IComposerPreviewProps) => {
-  console.log(file);
-  console.log(previewUrl);
+  if (!file && !previewUrl) return null;
 
-  if (!file) return null;
-
-  const isImage = file.type.startsWith("image/");
-  const isVideo = file.type.startsWith("video/");
-  const isAudio = file.type.startsWith("audio/");
+  const type = mimeType || file?.type || "";
+  const isImage = attachmentType === "image" || type.startsWith("image/");
+  const isVideo = attachmentType === "video" || type.startsWith("video/");
+  const isAudio = attachmentType === "audio" || type.startsWith("audio/");
+  const displayName = file?.name || fileName || "Attachment";
+  const displaySize = file?.size;
+  const allowCaption = isImage || isVideo || attachmentType === "document";
 
   return (
     <div className="rounded-xl border bg-gray-50 p-2">
@@ -59,15 +67,17 @@ const ComposerPreview = ({
           <MdInsertDriveFile size={42} className="text-primary" />
 
           <div>
-            <p className="font-medium">{file.name}</p>
-            <p className="text-xs text-gray-500">
-              {(file.size / 1024 / 1024).toFixed(2)} MB
-            </p>
+            <p className="font-medium">{displayName}</p>
+            {displaySize ? (
+              <p className="text-xs text-gray-500">
+                {(displaySize / 1024 / 1024).toFixed(2)} MB
+              </p>
+            ) : null}
           </div>
         </div>
       )}
 
-      {(isImage || isVideo) && (
+      {allowCaption && (
         <input
           value={caption}
           onChange={(e) => onCaptionChange(e.target.value)}

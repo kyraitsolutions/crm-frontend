@@ -1,34 +1,36 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { WHATSAPP_PATHS } from '@/constants/routes/whatsapp.path';
+import { ToastMessageService } from '@/services';
 import { useAuthStore } from '@/stores';
+import type { ApiError } from '@/types';
 import { Copy, Plus, Trash2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { TbStarFilled } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
+import { whatsappCannedMessageService } from '../../services/whatsapp-canned.service';
+import { useCannedMessageStore } from '../../store/canned-message.store';
+import { filterCannedMessages } from '../../utils/canned-message.utils';
 
-const data = [
-    {
-        id: 1,
-        name: "welcome",
-        text: "Hi Welcome to kyra it solutions",
-        status: "PUBLISHED",
-        type: "TEXT",
-        createdBy: "Abhijeet",
-        createdAt: "July 24, 2026",
-        favourite: false
-    },
-    {
-        id: 2,
-        name: "1 BHK",
-        text: "Hi Welcome to kyra it solutions",
-        status: "DRAFT",
-        type: "TEXT",
-        createdAt: "March 21, 2026",
-        favourite: true,
-    },]
 const MessageTable = ({ type }: { type: string }) => {
     const { accountId } = useAuthStore((state) => state);
     const navigate = useNavigate()
+    const { messages, loading, fetchMessages, removeMessage, upsertMessage } =
+        useCannedMessageStore((state) => state);
+    const [search, setSearch] = useState("");
+    const toastService = new ToastMessageService();
+
+    useEffect(() => {
+        if (!accountId) return;
+        void fetchMessages(String(accountId), { force: true });
+    }, [accountId, fetchMessages]);
+
+    const rows = useMemo(() => {
+        return filterCannedMessages(messages, search).filter((item) => {
+            if (type === "all") return true;
+            return item.status.toLowerCase() === type.toLowerCase();
+        });
+    }, [messages, search, type]);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -40,6 +42,42 @@ const MessageTable = ({ type }: { type: string }) => {
                 return "text-gray-500";
         }
     };
+
+    const handleCopy = async (shortcut: string) => {
+        try {
+            await navigator.clipboard.writeText(`/${shortcut}`);
+            toastService.success("Shortcut copied");
+        } catch {
+            toastService.error("Unable to copy shortcut");
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!accountId) return;
+        try {
+            await whatsappCannedMessageService.remove(String(accountId), id);
+            removeMessage(id);
+            toastService.success("Canned message deleted");
+        } catch (error) {
+            const err = error as ApiError;
+            toastService.apiError(err.message || "Failed to delete canned message");
+        }
+    };
+
+    const handleFavourite = async (id: string) => {
+        if (!accountId) return;
+        try {
+            const response = await whatsappCannedMessageService.toggleFavourite(
+                String(accountId),
+                id,
+            );
+            if (response.data?.doc) upsertMessage(response.data.doc);
+        } catch (error) {
+            const err = error as ApiError;
+            toastService.apiError(err.message || "Failed to update favourite");
+        }
+    };
+
     return (
         <div className="mt-6 overflow-hidden ">
             <div className="flex justify-between items-center py-6">
@@ -47,8 +85,8 @@ const MessageTable = ({ type }: { type: string }) => {
                     <Input
                         type="text"
                         placeholder="Search templates (status, name etc.)"
-                        value={""}
-                        // onChange={(e) => setContactQuery({ search: e.target.value, })}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                         className="input-field bg-white!"
                     />
 
@@ -57,17 +95,12 @@ const MessageTable = ({ type }: { type: string }) => {
                 <div className="flex items-center gap-2">
 
                     <Button
-                        onClick={() => navigate(WHATSAPP_PATHS.createCannedMessage(String(accountId)))}
+                        onClick={() => navigate(WHATSAPP_PATHS.createCannedMessage())}
                         className="rounded py-1.5!">
                         <Plus />Create
                     </Button>
-                    {/* <Button className="rounded action-btn! bg-teal-900 hover:bg-teal-900/80 text-white  hover:text-white transition-all duration-300">
-                                    <RefreshCcw />
-                                    Sync Status
-                                </Button> */}
                 </div>
             </div>
-            {/* {type} */}
             <div className="overflow-x-auto">
                 <table className="w-full table-auto border-separate border-spacing-y-4 ">
                     <thead className="overflow-hidden ">
@@ -85,20 +118,27 @@ const MessageTable = ({ type }: { type: string }) => {
                     </thead>
 
                     <tbody className=" space-y-1 ">
-                        {data.map((item) => {
-
-                            if (type !== "all" && type !== item.status.toLowerCase()) {
-                                return null;
-                            }
-                            return (
+                        {loading && messages.length === 0 ? (
+                            <tr className="bg-white text-sm">
+                                <td colSpan={8} className="px-6 py-8 text-center text-gray-400">
+                                    Loading canned messages...
+                                </td>
+                            </tr>
+                        ) : rows.length === 0 ? (
+                            <tr className="bg-white text-sm">
+                                <td colSpan={8} className="px-6 py-8 text-center text-gray-400">
+                                    {search ? "No canned messages found" : "No canned messages yet"}
+                                </td>
+                            </tr>
+                        ) : rows.map((item) => (
                                 <tr key={item.id} className="hover:bg-gray-50 mt-1 rounded-2xl text-sm bg-white">
                                     <td className="max-w-55 rounded-l-xl truncate px-6 py-5">
                                         {item.name}
                                     </td>
 
-                                    <td className="px-6 py-5">{item.type}</td>
+                                    <td className="px-6 py-5 uppercase">{item.type}</td>
 
-                                    <td className="px-6 py-5">{item.text}</td>
+                                    <td className="px-6 py-5 max-w-xs truncate">{item.text}</td>
 
                                     <td className={`px-6 py-5 text-sm font-medium ${getStatusColor(
                                         item.status
@@ -106,38 +146,45 @@ const MessageTable = ({ type }: { type: string }) => {
                                     >
                                         {item.status}
                                     </td>
-                                    {/* <td className="px-6 py-5">
-                                        <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-white">
-                                            {item.health}
-                                        </span>
-                                    </td> */}
 
-                                    <td className="px-6 py-5">{item.createdBy}</td>
-                                    <td className="px-6 py-5">{item.createdAt}</td>
+                                    <td className="px-6 py-5">{item.createdByName}</td>
+                                    <td className="px-6 py-5">
+                                        {item.createdAt
+                                            ? new Date(item.createdAt).toLocaleDateString("en-US", {
+                                                month: "long",
+                                                day: "numeric",
+                                                year: "numeric",
+                                            })
+                                            : ""}
+                                    </td>
 
                                     <td className="px-6 py-5 rounded-r-xl">
                                         <div className="flex items-center justify-end gap-3 text-gray-500">
                                             <Copy
                                                 size={18}
                                                 className="cursor-pointer hover:text-black"
+                                                onClick={() => handleCopy(item.shortcut)}
                                             />
 
                                             <Trash2
                                                 size={18}
                                                 className="cursor-pointer hover:text-red-500"
+                                                onClick={() => handleDelete(item.id)}
                                             />
                                         </div>
                                     </td>
                                     <td className="px-6 py-5 rounded-r-xl">
                                         <div className="flex items-center justify-end gap-3 text-gray-500">
-                                            {item.favourite && (
-                                                <TbStarFilled size={18} className="cursor-pointer text-amber-300" />
-                                            )}
+                                            <TbStarFilled
+                                                size={18}
+                                                className={`cursor-pointer ${item.favourite ? "text-amber-300" : "text-gray-300"}`}
+                                                onClick={() => handleFavourite(item.id)}
+                                            />
                                         </div>
                                     </td>
                                 </tr>
                             )
-                        })}
+                        )}
                     </tbody>
                 </table>
             </div>

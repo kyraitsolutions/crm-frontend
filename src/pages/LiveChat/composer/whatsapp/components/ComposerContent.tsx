@@ -1,17 +1,22 @@
 import AudioPreview from "./composerContent/AudioPreview";
 import ComposerInput from "./composerContent/ComposerInput";
 import VoiceRecorder from "./composerContent/VoiceRecorder";
+import type { KeyboardEvent } from "react";
 
 interface ComposerContentProps {
   onSend: () => void;
-  composer: any; // replace with your hook type
+  composer: any;
   disabled?: boolean;
+  onComposerKeyDown?: (event: KeyboardEvent<HTMLTextAreaElement>) => boolean | void;
+  onCursorChange?: (cursor: number) => void;
 }
 
 const ComposerContent = ({
   composer,
   onSend,
   disabled = false,
+  onComposerKeyDown,
+  onCursorChange,
 }: ComposerContentProps) => {
   const handleSend = async () => {
     composer.setMessage("");
@@ -53,13 +58,21 @@ const ComposerContent = ({
     );
   }
 
+  const hasAttachment = Boolean(
+    composer.selectedAttachmentType || composer.cannedMedia,
+  );
+
   return (
     <ComposerInput
       value={composer.message}
       onChange={composer.setMessage}
       inputRef={composer.inputRef}
-      disabled={
-        disabled || composer.sending || !!composer.selectedAttachmentType
+      disabled={disabled || composer.sending}
+      inputDisabled={disabled || composer.sending || hasAttachment}
+      canSend={
+        !disabled &&
+        !composer.sending &&
+        (Boolean(composer.message.trim()) || hasAttachment)
       }
       placeholder={
         disabled
@@ -67,6 +80,8 @@ const ComposerContent = ({
           : "Type your message here..."
       }
       onSend={handleSend}
+      onKeyDown={onComposerKeyDown}
+      onCursorChange={onCursorChange}
     />
   );
 };

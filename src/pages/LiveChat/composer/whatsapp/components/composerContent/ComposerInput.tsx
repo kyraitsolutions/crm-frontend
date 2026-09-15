@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import type { KeyboardEvent } from "react";
 import { MdSend } from "react-icons/md";
 
 interface IComposerInputProps {
@@ -7,8 +8,12 @@ interface IComposerInputProps {
   placeholder?: string;
   onChange: (value: string) => void;
   onSend: () => void;
-  inputRef?: React.RefObject<HTMLInputElement | null>;
+  inputRef?: React.RefObject<HTMLTextAreaElement | null>;
   disabled?: boolean;
+  inputDisabled?: boolean;
+  canSend?: boolean;
+  onKeyDown?: (event: KeyboardEvent<HTMLTextAreaElement>) => boolean | void;
+  onCursorChange?: (cursor: number) => void;
 }
 
 const ComposerInput = ({
@@ -16,33 +21,51 @@ const ComposerInput = ({
   placeholder = "Type your message here...",
   onChange,
   onSend,
-  // inputRef,
+  inputRef,
   disabled,
+  inputDisabled,
+  canSend,
+  onKeyDown,
+  onCursorChange,
 }: IComposerInputProps) => {
-  const canSend = value.trim().length > 0 && !disabled;
+  const textareaDisabled = inputDisabled ?? disabled;
+  const sendEnabled = canSend ?? (value.trim().length > 0 && !disabled);
+
+  const emitCursor = (el: HTMLTextAreaElement) => {
+    onCursorChange?.(el.selectionStart ?? el.value.length);
+  };
 
   return (
     <div className="flex items-center gap-3 flex-1">
       <Textarea
-        // ref={inputRef}
+        ref={inputRef}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          onChange(e.target.value);
+          emitCursor(e.target);
+        }}
+        onClick={(e) => emitCursor(e.currentTarget)}
+        onKeyUp={(e) => emitCursor(e.currentTarget)}
+        onSelect={(e) => emitCursor(e.currentTarget)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && canSend && !e.shiftKey) {
+          const handled = onKeyDown?.(e);
+          if (handled || e.defaultPrevented) return;
+
+          if (e.key === "Enter" && sendEnabled && !e.shiftKey) {
             onSend();
             onChange("");
             e.preventDefault();
           }
         }}
         placeholder={placeholder}
-        disabled={disabled}
-        className={`input-field resize-none ${disabled && "placeholder:text-red-600"}`}
+        disabled={textareaDisabled}
+        className={`input-field resize-none ${textareaDisabled && "placeholder:text-red-600"}`}
       />
 
       <Button
         type="button"
         onClick={onSend}
-        disabled={disabled}
+        disabled={!sendEnabled}
         className="rounded-full bg-primary p-3 text-white
                    disabled:opacity-50 disabled:cursor-not-allowed"
       >

@@ -6,6 +6,14 @@ import type { TTemplate } from "@/pages/Channels/whatsapp/types/templates";
 
 export type AttachmentType = "image" | "document" | "video" | "audio";
 
+export type CannedComposerMedia = {
+  url: string;
+  fileName?: string;
+  mimeType?: string;
+  size?: number;
+  type: AttachmentType;
+};
+
 export const useWhatsappComposer = () => {
   // Message
   const [message, setMessage] = useState("");
@@ -30,6 +38,9 @@ export const useWhatsappComposer = () => {
     useState<AttachmentType | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [caption, setCaption] = useState("");
+  const [cannedMedia, setCannedMedia] = useState<CannedComposerMedia | null>(
+    null,
+  );
 
   // Popups
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -45,7 +56,7 @@ export const useWhatsappComposer = () => {
   const [sending, setSending] = useState(false);
 
   // Refs
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleVariableChange = (variableId: string, value: string) => {
     setTemplateVariableValues((prev) => ({
@@ -81,7 +92,7 @@ export const useWhatsappComposer = () => {
   };
 
   const removeAttachment = () => {
-    if (previewUrl) {
+    if (previewUrl && previewUrl.startsWith("blob:")) {
       URL.revokeObjectURL(previewUrl);
     }
 
@@ -89,13 +100,26 @@ export const useWhatsappComposer = () => {
     setPreviewUrl("");
     setCaption("");
     setSelectedAttachmentType(null);
+    setCannedMedia(null);
   };
 
   const handleAttachment = (file: File) => {
+    setCannedMedia(null);
     setSelectedFile(file);
-    // Only preview images/videos
     setPreviewUrl(URL.createObjectURL(file));
     setSelectedAttachmentType(getAttachmentType(file));
+    setShowAttachmentMenu(false);
+  };
+
+  const handleCannedMedia = (media: CannedComposerMedia, nextCaption = "") => {
+    if (previewUrl && previewUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setSelectedFile(null);
+    setCannedMedia(media);
+    setPreviewUrl(media.url);
+    setSelectedAttachmentType(media.type);
+    setCaption(nextCaption);
     setShowAttachmentMenu(false);
   };
 
@@ -123,10 +147,12 @@ export const useWhatsappComposer = () => {
     previewUrl,
     caption,
     selectedAttachmentType,
+    cannedMedia,
 
     setCaption,
     removeAttachment,
     handleAttachment,
+    handleCannedMedia,
 
     // popups
     showEmojiPicker,

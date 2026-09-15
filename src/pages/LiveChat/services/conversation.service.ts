@@ -16,6 +16,16 @@ export class ConversationService extends ApiService {
       `${API_ENDPOINT_PATH.CONVERSATION.getConversationByIdPath(params.accountId)}?${queryParams.toString()}`,
     );
   }
+
+  async deleteConversations(
+    accountId: string,
+    payload: { conversationIds: string[]; deleteContact?: boolean },
+  ): Promise<ApiResponse<any>> {
+    return await this.post(
+      API_ENDPOINT_PATH.CONVERSATION.deleteConversations(accountId),
+      payload,
+    );
+  }
 }
 
 export const conversationService = new ConversationService();

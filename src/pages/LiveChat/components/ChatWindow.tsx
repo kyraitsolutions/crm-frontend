@@ -79,6 +79,7 @@ const ChatWindow = () => {
   return (
     <div className="flex h-full min-h-0 flex-col bg-gray-50">
       <ChatHeader
+        conversationId={selectedConversation.id}
         name={String(
           buildAndGetVisitorDisplayNameByVisitorId(
             selectedConversation?.visitorId || "",

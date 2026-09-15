@@ -51,6 +51,8 @@ export const API_ENDPOINT_PATH = {
 
   CONVERSATION: {
     getConversationByIdPath: (id: string) => `/conversation/${id}`,
+    deleteConversations: (accountId: string) =>
+      `/conversation/${accountId}/delete`,
   },
 
   CONVERSATION_MESSAGES: {
@@ -126,10 +128,22 @@ export const API_ENDPOINT_PATH = {
       optin: (accountId: string) =>
         `/whatsapp/account/${accountId}/broadcast/optin`,
     },
+    LIVE_CHAT: {
+      context: (accountId: string) =>
+        `/whatsapp/account/${accountId}/live-chat/context`,
+      settings: (accountId: string) =>
+        `/whatsapp/account/${accountId}/live-chat/settings`,
+    },
   },
 
   ACTIVITY_LOGS: {
     getActivityLogsPath: (id: string) => `/activity-logs/${id}`,
+  },
+  RECYCLEBIN: {
+    list: (accountId: string) => `/account/${accountId}/recyclebin`,
+    restore: (accountId: string) => `/account/${accountId}/recyclebin/restore`,
+    remove: (accountId: string) => `/account/${accountId}/recyclebin/delete`,
+    empty: (accountId: string) => `/account/${accountId}/recyclebin/empty`,
   },
   CALLS: {
     GET_NUMBERS: "/twilio/voice/get-available-numbers",

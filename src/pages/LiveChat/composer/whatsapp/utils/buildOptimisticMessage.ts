@@ -62,10 +62,15 @@ export const buildOptimisticMessage = ({
               type: "image",
 
               image: {
-                link: URL.createObjectURL(outgoing.payload.file),
+                link:
+                  outgoing.payload.link ||
+                  (outgoing.payload.file
+                    ? URL.createObjectURL(outgoing.payload.file)
+                    : ""),
                 caption: outgoing.payload.caption,
-                mimetype: outgoing.payload.file.type,
-                size: outgoing.payload.file.size,
+                mimetype:
+                  outgoing.payload.mimeType || outgoing.payload.file?.type,
+                size: outgoing.payload.size || outgoing.payload.file?.size,
               },
             },
           };
@@ -78,9 +83,15 @@ export const buildOptimisticMessage = ({
               type: "video",
 
               video: {
-                link: URL.createObjectURL(outgoing.payload.file),
-                mimetype: outgoing.payload.file.type,
-                size: outgoing.payload.file.size,
+                link:
+                  outgoing.payload.link ||
+                  (outgoing.payload.file
+                    ? URL.createObjectURL(outgoing.payload.file)
+                    : ""),
+                caption: outgoing.payload.caption,
+                mimetype:
+                  outgoing.payload.mimeType || outgoing.payload.file?.type,
+                size: outgoing.payload.size || outgoing.payload.file?.size,
               },
             },
           };
@@ -92,9 +103,14 @@ export const buildOptimisticMessage = ({
             media: {
               type: "audio",
               audio: {
-                link: URL.createObjectURL(outgoing.payload.file),
-                mimetype: outgoing.payload.file.type,
-                size: outgoing.payload.file.size,
+                link:
+                  outgoing.payload.link ||
+                  (outgoing.payload.file
+                    ? URL.createObjectURL(outgoing.payload.file)
+                    : ""),
+                mimetype:
+                  outgoing.payload.mimeType || outgoing.payload.file?.type,
+                size: outgoing.payload.size || outgoing.payload.file?.size,
               },
             },
           };
@@ -105,10 +121,16 @@ export const buildOptimisticMessage = ({
             media: {
               type: "document",
               document: {
-                link: URL.createObjectURL(outgoing.payload.file),
-                mimetype: outgoing.payload.file.type,
-                size: outgoing.payload.file.size,
-                // filename: outgoing.payload.file.ty,
+                link:
+                  outgoing.payload.link ||
+                  (outgoing.payload.file
+                    ? URL.createObjectURL(outgoing.payload.file)
+                    : ""),
+                caption: outgoing.payload.caption,
+                mimetype:
+                  outgoing.payload.mimeType || outgoing.payload.file?.type,
+                size: outgoing.payload.size || outgoing.payload.file?.size,
+                filename: outgoing.payload.fileName,
               },
             },
           };
