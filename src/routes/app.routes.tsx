@@ -23,6 +23,7 @@ import { Register } from "@/pages/Auth/Register/register.page";
 import ForgotPasswordPage from "@/pages/Auth/ForgotPassword/forgotPassword.page";
 // import { callRoutes } from "./call.routes";
 import { whatsappRoutes } from "./whatspp.routes";
+import { facebookRoutes } from "./facebook.routes";
 // import { dealsRoutes } from "./deal.routes";
 
 export const appRoutes = createBrowserRouter([
@@ -65,6 +66,7 @@ export const appRoutes = createBrowserRouter([
               ...dealsRoutes,
               // ...callRoutes,
               ...whatsappRoutes,
+              ...facebookRoutes,
 
               {
                 path: "/teams",

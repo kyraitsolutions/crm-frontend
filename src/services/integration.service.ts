@@ -23,9 +23,28 @@ export class IntegrationService extends ApiService {
     return response.data;
   }
 
+  async connectMeta(payload: { accountId: string }) {
+    const response = await this.post(
+      `${API_ENDPOINT_PATH.INTEGRATION.META.CONNECT}`,
+      payload,
+    );
+    return response.data;
+  }
+
   async disconnectWhatsApp(accountId: string, integrationId: string) {
     const response = await this.post(
       `${API_ENDPOINT_PATH.INTEGRATION.WHATSAPP.DISCONNECT_WHATSAPP}`,
+      {
+        accountId,
+        integrationId,
+      },
+    );
+    return response.data;
+  }
+
+  async disconnectMeta(accountId: string, integrationId: string) {
+    const response = await this.post(
+      `${API_ENDPOINT_PATH.INTEGRATION.META.DISCONNECT}`,
       {
         accountId,
         integrationId,

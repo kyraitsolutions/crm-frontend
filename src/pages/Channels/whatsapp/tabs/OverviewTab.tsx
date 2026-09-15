@@ -10,10 +10,10 @@ interface OverviewTabProps {
 
 export const OverviewTab = ({ data }: OverviewTabProps) => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <QuickStats data={data} />
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-3">
         <ConnectionStatusCard
           connected={data?.isConnected}
           onboardingCompleted={data?.onboardingCompleted}
@@ -30,7 +30,7 @@ export const OverviewTab = ({ data }: OverviewTabProps) => {
         />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-xl border border-slate-200 bg-white p-6 space-y-2">
           <h3 className="font-semibold text-slate-800">WhatsApp Messaging</h3>
           <p className="text-sm text-slate-600">

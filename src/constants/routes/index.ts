@@ -5,3 +5,4 @@ export * from "./chatbot.path";
 export * from "./lead-form.path";
 export * from "./email-marketing.path";
 export * from "./whatsapp-marketing.path";
+export * from "./facebook.path";
