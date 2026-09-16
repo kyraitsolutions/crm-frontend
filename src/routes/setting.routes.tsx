@@ -16,7 +16,6 @@ import Role from "@/pages/UsersAndControl/role.page";
 import Teams from "@/pages/UsersAndControl/teams2.page";
 // import { Teams } from "@/pages/UsersAndControl/teams.page";
 import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
-import Facebook from "@/pages/Channels/facebook.page";
 import Webhook from "@/pages/Developer/Webhook/Webhook";
 import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page";
 import ProfilePage from "@/pages/Profile/UserProfile/pages/Profile";
@@ -57,7 +56,6 @@ export const settingRoutes: RouteObject[] = [
           // { path: "whatsapp", element: <Whatsapp /> },
           { path: "instagram", element: <Instagram /> },
           { path: "telegram", element: <Telegram /> },
-          { path: "facebook", element: <Facebook /> },
 
           // Developer
           { path: "webhook", element: <Webhook /> },

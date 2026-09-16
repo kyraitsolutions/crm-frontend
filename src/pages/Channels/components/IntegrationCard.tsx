@@ -1,23 +1,59 @@
 import { Button } from "@/components/ui/button";
-import { WhatsappService } from "@/services/whatsapp.service";
-// import { useAuthStore } from "@/stores";
+import { COOKIES_STORAGE } from "@/constants";
+import { useAuthStore } from "@/stores";
+import { CookieUtils } from "@/utils/cookie-storage.utils";
+import axios from "axios";
 import { Link } from "react-router-dom";
 const IntegrationCard = ({ data }: any) => {
-  // const { accountId } = useAuthStore((state) => state);
-  const whatsappService = new WhatsappService();
+  const accountId = useAuthStore((state) => state.accountId);
+  // const whatsappService = new WhatsappService();
   const Icon = data.icon;
 
-  const handleWhatsapp = async () => {
+  const handleMeta = async () => {
     try {
-      const response = await whatsappService.connectWhatsapp();
-      console.log(response);
+      if (!accountId) return;
 
-      // window.open(response?.data?.docs?.signupUrl);
-      // console.log(response?.data?.docs?.signupUrl);
+      const { data } = await axios.post(
+        "http://localhost:3000/api/integration/meta/auth/connect",
+        {
+          accountId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${CookieUtils.getItem(COOKIES_STORAGE.auth_token)}`,
+          },
+        },
+      );
+
+      console.log("Meta response:", data);
+
+      const signupUrl = data?.result;
+      console.log("Signup URL:", signupUrl);
+
+      if (signupUrl) {
+        window.open(
+          signupUrl,
+          "meta-login",
+          "width=600,height=700,left=200,top=100",
+        );
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Meta integration error:", error);
     }
   };
+
+  // const handleWhatsapp = async () => {
+  //   try {
+  //     const response = await whatsappService.connectWhatsapp();
+  //     console.log(response);
+
+  //     // window.open(response?.data?.docs?.signupUrl);
+  //     // console.log(response?.data?.docs?.signupUrl);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className=" mt-5 bg-gray-100 min-h-screen">
@@ -32,7 +68,7 @@ const IntegrationCard = ({ data }: any) => {
             </div>
 
             <Button
-              onClick={handleWhatsapp}
+              onClick={handleMeta}
               className={`${data.buttonColor} text-white`}
             >
               Integrate

@@ -35,7 +35,7 @@ export const StatCard = ({
           <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400">
             {title}
           </p>
-          <h3 className="mt-1.5 truncate text-[15px] font-bold text-gray-600">
+          <h3 className="mt-1.5 truncate text-[14px] whitespace-break-spaces font-bold text-gray-600">
             {value}
           </h3>
           {badge && (
