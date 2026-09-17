@@ -25,13 +25,16 @@ type TContactStore = {
     totalPages: number;
     totalItems: number;
     selectedContactId: string | null;
+    editingContact: TContact | null;
     contactQuery: TContactQuery;
     open: boolean;
     setOpen: (open: boolean) => void;
+    editContact: (contact: TContact) => void;
     setContactQuery: (query: Partial<TContactQuery>) => void;
     setCurrentPage: (page: number) => void;
     fetchContacts: (accountId: string) => Promise<void>;
     createContact: (data: TCreateContact) => Promise<void>;
+    updateContact: (contactId: string, data: TCreateContact) => Promise<void>;
     setSelectedContactId: (contactId: string | null) => void;
     getSelectedContact: () => TContact | undefined;
 };
@@ -58,11 +61,15 @@ export const useContactStore = create<TContactStore>((set, get) => ({
     totalItems: 0,
 
     selectedContactId: null,
+    editingContact: null,
     open: false,
     contactQuery: initialContactQuery,
 
     setOpen: (open: boolean) => {
-        set({open: open})
+        set({ open, editingContact: null });
+    },
+    editContact: (contact) => {
+        set({ open: true, editingContact: contact });
     },
     setContactQuery: (query) => {
         console.log("Query", query)
@@ -140,12 +147,30 @@ export const useContactStore = create<TContactStore>((set, get) => ({
                           : []),
                     ...state.contacts,
                 ],
-                open: false
+                open: false,
+                editingContact: null,
             }));
         } catch (error) {
             console.error("Create contact error", error);
             throw error;
         }
+    },
+
+    updateContact: async (contactId: string, payload: TCreateContact) => {
+        const response = await contactService.updateContact({
+            ...payload,
+            contactId,
+        });
+        const updated = response?.data?.doc || response?.data?.docs;
+        set((state) => ({
+            contacts: state.contacts.map((contact) =>
+                String(contact.id || contact._id) === contactId
+                    ? { ...contact, ...(updated || payload) }
+                    : contact
+            ),
+            open: false,
+            editingContact: null,
+        }));
     },
 
     setSelectedContactId: (contactId) => {
