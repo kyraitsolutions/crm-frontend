@@ -30,18 +30,22 @@ const toast = new ToastMessageService();
 
 const normalizeTags = (tags: unknown): TConversationTag[] => {
   if (!Array.isArray(tags)) return [];
-  return tags
-    .map((tag) => {
-      if (typeof tag === "string") return { label: tag, color: "#84cc16" };
-      if (tag && typeof tag === "object" && "label" in tag) {
-        return {
-          label: String((tag as TConversationTag).label || ""),
+  return tags.flatMap((tag) => {
+    if (typeof tag === "string" && tag.trim()) {
+      return [{ label: tag, color: "#84cc16" }];
+    }
+    if (tag && typeof tag === "object" && "label" in tag) {
+      const label = String((tag as TConversationTag).label || "").trim();
+      if (!label) return [];
+      return [
+        {
+          label,
           color: String((tag as TConversationTag).color || "#84cc16"),
-        };
-      }
-      return null;
-    })
-    .filter((tag): tag is TConversationTag => Boolean(tag?.label));
+        },
+      ];
+    }
+    return [];
+  });
 };
 
 const MESSAGE_STATUSES = new Set([

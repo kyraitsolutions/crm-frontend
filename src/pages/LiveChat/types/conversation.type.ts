@@ -3,7 +3,7 @@ import { IdentifiersSchema, PlatformSchema } from "./share.type";
 
 export const ConversationTagSchema = z.object({
   label: z.string(),
-  color: z.string().optional(),
+  color: z.string(),
 });
 
 export const ConversationFollowUpSchema = z.object({

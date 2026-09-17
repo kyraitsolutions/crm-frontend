@@ -34,11 +34,11 @@ export const useMetaStore = create<MetaStore>((set) => ({
   connect: async (payload) => {
     try {
       set({ connecting: true });
-      const response = await metaService.connect(payload);
-      const signupUrl =
-        response?.signupUrl ||
-        response?.doc?.signupUrl ||
-        "";
+      const response = (await metaService.connect(payload)) as {
+        signupUrl?: string;
+        doc?: { signupUrl?: string };
+      };
+      const signupUrl = response?.signupUrl || response?.doc?.signupUrl || "";
       return { signupUrl };
     } catch (error) {
       set({ connecting: false });
