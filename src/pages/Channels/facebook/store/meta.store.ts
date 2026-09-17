@@ -35,7 +35,11 @@ export const useMetaStore = create<MetaStore>((set) => ({
     try {
       set({ connecting: true });
       const response = await metaService.connect(payload);
-      return response?.doc;
+      const signupUrl =
+        response?.signupUrl ||
+        response?.doc?.signupUrl ||
+        "";
+      return { signupUrl };
     } catch (error) {
       set({ connecting: false });
       throw error;

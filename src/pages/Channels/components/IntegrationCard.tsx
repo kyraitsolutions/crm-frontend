@@ -28,7 +28,8 @@ const IntegrationCard = ({ data }: any) => {
 
       console.log("Meta response:", data);
 
-      const signupUrl = data?.result;
+      const signupUrl =
+        data?.result?.signupUrl || data?.result?.doc?.signupUrl || "";
       console.log("Signup URL:", signupUrl);
 
       if (signupUrl) {
