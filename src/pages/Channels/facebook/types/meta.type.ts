@@ -1,6 +1,21 @@
 import { z } from "zod";
 
-export type MetaTab = "overview" | "settings";
+export type MetaTab =
+  | "overview"
+  | "posts"
+  | "lead-forms"
+  | "leads"
+  | "insights"
+  | "settings";
+
+export const InstagramAccountSchema = z
+  .object({
+    id: z.string(),
+    username: z.string().nullable().optional(),
+    name: z.string().nullable().optional(),
+    profilePictureUrl: z.string().nullable().optional(),
+  })
+  .nullable();
 
 export const FacebookPageSchema = z.object({
   id: z.string(),
@@ -12,22 +27,17 @@ export const FacebookPageSchema = z.object({
   about: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   tasks: z.array(z.string()).optional(),
+  webhookSubscribed: z.boolean().optional(),
+  instagram: InstagramAccountSchema.optional(),
 });
-
-export const InstagramAccountSchema = z
-  .object({
-    id: z.string(),
-    username: z.string().nullable().optional(),
-    name: z.string().nullable().optional(),
-    profilePictureUrl: z.string().nullable().optional(),
-  })
-  .nullable();
 
 export const MetaAccountSchema = z.object({
   id: z.string().optional(),
   _id: z.string().optional(),
   integrationId: z.string(),
-  facebookPage: FacebookPageSchema,
+  facebookPages: z.array(FacebookPageSchema).optional(),
+  activePageId: z.string().nullable().optional(),
+  facebookPage: FacebookPageSchema.nullable().optional(),
   instagram: InstagramAccountSchema.optional(),
   isConnected: z.boolean(),
   connectedAt: z.string().optional(),

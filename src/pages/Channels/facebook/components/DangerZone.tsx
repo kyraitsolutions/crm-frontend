@@ -6,6 +6,7 @@ import { ToastMessageService } from "@/services";
 import { useMetaStore } from "../store/meta.store";
 import { useAuthStore } from "@/stores";
 import { useIntegrationStore } from "@/stores/integration.store";
+import { alertManager } from "@/stores/alert.store";
 import type { ApiError } from "@/types";
 import { useState } from "react";
 import Loader from "@/components/Loader";
@@ -30,6 +31,20 @@ export const DangerZone = () => {
     }
   };
 
+  const handleDisconnectClick = () => {
+    alertManager.show({
+      type: "warning",
+      title: "Disconnect Facebook",
+      message:
+        "Are you sure you want to disconnect this Facebook Page? Lead capture and Page data will stop.",
+      confirmText: "Disconnect",
+      cancelText: "Cancel",
+      onConfirm: () => {
+        handleDisconnect();
+      },
+    });
+  };
+
   return (
     <Card className="border">
       <CardHeader>
@@ -52,7 +67,7 @@ export const DangerZone = () => {
 
         <Button
           disabled={loadingDisconnect}
-          onClick={handleDisconnect}
+          onClick={handleDisconnectClick}
           className="actions-btn py-2! px-4! bg-red-100! text-red-400! border-red-300! font-semibold!"
         >
           <CloudOff />{" "}

@@ -95,6 +95,13 @@ export const API_ENDPOINT_PATH = {
     META: {
       CONNECT: "/integration/meta/auth/connect",
       DISCONNECT: "/integration/meta/auth/disconnect",
+      ACTIVE_PAGE: (accountId: string) =>
+        `/integration/meta/${accountId}/active-page`,
+      POSTS: (accountId: string) => `/integration/meta/${accountId}/posts`,
+      LEAD_FORMS: (accountId: string) =>
+        `/integration/meta/${accountId}/lead-forms`,
+      LEADS: (accountId: string) => `/integration/meta/${accountId}/leads`,
+      INSIGHTS: (accountId: string) => `/integration/meta/${accountId}/insights`,
     },
   },
 

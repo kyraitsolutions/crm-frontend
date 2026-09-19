@@ -1,6 +1,14 @@
 import { FaFacebook } from "react-icons/fa";
-import { LayoutDashboard, Settings } from "lucide-react";
+import {
+  ClipboardList,
+  LayoutDashboard,
+  LineChart,
+  Newspaper,
+  Settings,
+  Users,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { PageSwitcher } from "../PageSwitcher";
 
 type Items = {
   url: string;
@@ -19,6 +27,30 @@ const Sidebar = () => {
       label: "Business Profile",
       icon: <LayoutDashboard size={16} />,
       active: path === "overview",
+    },
+    {
+      url: "posts",
+      label: "Posts",
+      icon: <Newspaper size={16} />,
+      active: path === "posts",
+    },
+    {
+      url: "lead-forms",
+      label: "Lead Forms",
+      icon: <ClipboardList size={16} />,
+      active: path === "lead-forms",
+    },
+    {
+      url: "leads",
+      label: "Leads",
+      icon: <Users size={16} />,
+      active: path === "leads",
+    },
+    {
+      url: "insights",
+      label: "Insights",
+      icon: <LineChart size={16} />,
+      active: path === "insights",
     },
     {
       url: "setting",
@@ -40,6 +72,9 @@ const Sidebar = () => {
             <h2 className="font-semibold text-sm uppercase">Facebook</h2>
             <p className="text-sm">Page & Instagram</p>
           </div>
+        </div>
+        <div className="mt-3">
+          <PageSwitcher />
         </div>
       </div>
 

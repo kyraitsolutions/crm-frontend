@@ -1,7 +1,11 @@
 import { ROUTES } from "@/constants";
 import { FacebookLayout } from "@/layouts/facebook.layout";
 import Facebook from "@/pages/Channels/facebook/pages/FacebookPage";
+import InsightsPage from "@/pages/Channels/facebook/pages/InsightsPage";
+import LeadFormsPage from "@/pages/Channels/facebook/pages/LeadFormsPage";
+import LeadsPage from "@/pages/Channels/facebook/pages/LeadsPage";
 import MetaCallbackPage from "@/pages/Channels/facebook/pages/MetaCallbackPage";
+import PostsPage from "@/pages/Channels/facebook/pages/PostsPage";
 import Setting from "@/pages/Channels/facebook/pages/Setting";
 import { MetaRouteGuard } from "@/pages/Channels/facebook/routes/MetaRouteGuard";
 import MetaWorkspace from "@/pages/Channels/facebook/sections/MetaWorkspace";
@@ -32,6 +36,22 @@ export const facebookRoutes: RouteObject[] = [
                   {
                     path: "overview",
                     element: <MetaWorkspace />,
+                  },
+                  {
+                    path: "posts",
+                    element: <PostsPage />,
+                  },
+                  {
+                    path: "lead-forms",
+                    element: <LeadFormsPage />,
+                  },
+                  {
+                    path: "leads",
+                    element: <LeadsPage />,
+                  },
+                  {
+                    path: "insights",
+                    element: <InsightsPage />,
                   },
                   {
                     path: "setting",
