@@ -3,32 +3,41 @@ import DataLoader from "@/components/Loader/data-loader";
 import { ToastMessageService } from "@/services";
 import { useAuthStore } from "@/stores";
 import type { ApiError } from "@/types";
-import { ExternalLink, Heart, MessageCircle, RefreshCcw, Share2 } from "lucide-react";
-import { Newspaper } from "lucide-react";
+import {
+  ExternalLink,
+  Heart,
+  MessageCircle,
+  Newspaper,
+  RefreshCcw,
+  Share2,
+} from "lucide-react";
 import { useEffect } from "react";
 import { EmptyState } from "../components/EmptyState";
 import { FacebookPageShell } from "../components/FacebookPageShell";
+import { PaginationBar } from "../components/PaginationBar";
 import { PermissionWarning } from "../components/PermissionWarning";
 import { GlassCard } from "@/pages/Channels/whatsapp/components/cards/GlassCard";
 import { useMetaPageStore } from "../store/meta-page.store";
 import { formatFacebookDate, formatFacebookNumber } from "../utils/format";
+import { useActiveFacebookPage } from "../utils/pages";
 
 const PostsPage = () => {
   const accountId = useAuthStore((state) => state.accountId);
   const toastService = new ToastMessageService();
   const {
     posts,
-    postsPaging,
     postsWarning,
     postsLoading,
-    postsLoadingMore,
+    postsPage,
+    postsTotalPages,
     fetchPosts,
   } = useMetaPageStore((state) => state);
+  const { activePageId } = useActiveFacebookPage();
 
-  const loadPosts = async (after?: string) => {
+  const loadPosts = async (page = 1) => {
     if (!accountId) return;
     try {
-      await fetchPosts(String(accountId), after);
+      await fetchPosts(String(accountId), page);
     } catch (error) {
       const err = error as ApiError;
       toastService.error(err.message || "Failed to load Facebook posts");
@@ -36,8 +45,8 @@ const PostsPage = () => {
   };
 
   useEffect(() => {
-    loadPosts();
-  }, [accountId]);
+    loadPosts(1);
+  }, [accountId, activePageId]);
 
   return (
     <FacebookPageShell>
@@ -50,7 +59,7 @@ const PostsPage = () => {
         </div>
         <Button
           variant="outline"
-          onClick={() => loadPosts()}
+          onClick={() => loadPosts(postsPage)}
           disabled={postsLoading}
         >
           <RefreshCcw className="size-4" />
@@ -127,17 +136,12 @@ const PostsPage = () => {
         </div>
       )}
 
-      {postsPaging?.after ? (
-        <div className="flex justify-center">
-          <Button
-            variant="outline"
-            disabled={postsLoadingMore}
-            onClick={() => loadPosts(postsPaging.after ?? undefined)}
-          >
-            {postsLoadingMore ? "Loading..." : "Load more"}
-          </Button>
-        </div>
-      ) : null}
+      <PaginationBar
+        page={postsPage}
+        totalPages={postsTotalPages}
+        loading={postsLoading}
+        onPageChange={loadPosts}
+      />
     </FacebookPageShell>
   );
 };

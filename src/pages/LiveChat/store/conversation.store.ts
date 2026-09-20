@@ -63,6 +63,7 @@ type TConversationStore = {
   resetConversationQuery: () => Promise<void>;
   loadMoreConversations: () => Promise<void>;
   removeConversations: (conversationIds: string[]) => void;
+  markLiveChatIntervention: (conversationId: string) => void;
   clearLiveChatIntervention: (conversationId: string) => void;
   patchConversation: (
     conversationId: string,
@@ -264,12 +265,31 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
         (item) => item.id !== conversation.id,
       );
 
+      const existingLiveChat =
+        ((existingConversation?.metadata as any)?.liveChat || {}) as Record<
+          string,
+          unknown
+        >;
+      const incomingLiveChat =
+        ((updatedConversation.metadata as any)?.liveChat || {}) as Record<
+          string,
+          unknown
+        >;
+
       // prepend updated/new conversation
       return {
         conversations: [
           {
             ...(existingConversation || {}),
             ...updatedConversation,
+            metadata: {
+              ...((existingConversation?.metadata as any) || {}),
+              ...((updatedConversation.metadata as any) || {}),
+              liveChat: {
+                ...existingLiveChat,
+                ...incomingLiveChat,
+              },
+            },
           },
           ...filteredConversations,
         ],
@@ -377,6 +397,24 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
       selectedConversationId: ids.has(state.selectedConversationId || "")
         ? null
         : state.selectedConversationId,
+    }));
+  },
+  markLiveChatIntervention: (conversationId) => {
+    set((state) => ({
+      conversations: state.conversations.map((item) => {
+        if (item.id !== conversationId) return item;
+        return {
+          ...item,
+          metadata: {
+            ...(item.metadata || {}),
+            liveChat: {
+              ...((item.metadata as any)?.liveChat || {}),
+              humanIntervened: true,
+              autoResolveActive: false,
+            },
+          },
+        };
+      }),
     }));
   },
   clearLiveChatIntervention: (conversationId) => {

@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { metaService } from "../services/meta.service";
 import type {
-  TFacebookInsightMetric,
   TFacebookInsights,
   TFacebookLead,
   TFacebookLeadForm,
@@ -41,14 +40,14 @@ interface MetaPageStore {
 }
 
 const readPaginated = <T>(
-  response: TMetaPaginatedResponse<T> | undefined,
+  response: TMetaPaginatedResponse<T>,
   fallbackPage = 1,
 ) => ({
-  docs: (response?.docs ?? []) as T[],
-  warning: response?.warning ?? null,
-  page: response?.pagination?.page ?? fallbackPage,
-  totalPages: response?.pagination?.totalPages ?? 1,
-  totalDocs: response?.pagination?.totalDocs ?? 0,
+  docs: response.docs,
+  warning: response.warning ?? null,
+  page: response.pagination?.page ?? fallbackPage,
+  totalPages: response.pagination?.totalPages ?? 1,
+  totalDocs: response.pagination?.totalDocs ?? 0,
 });
 
 export const useMetaPageStore = create<MetaPageStore>((set) => ({
@@ -78,11 +77,10 @@ export const useMetaPageStore = create<MetaPageStore>((set) => ({
     set({ postsLoading: true });
 
     try {
-      const response = await metaService.getPosts(accountId, {
+      const result = readPaginated(
+        await metaService.getPosts(accountId, { page, limit: 12 }),
         page,
-        limit: 12,
-      });
-      const result = readPaginated<TFacebookPost>(response, page);
+      );
 
       set({
         posts: result.docs,
@@ -101,11 +99,10 @@ export const useMetaPageStore = create<MetaPageStore>((set) => ({
     set({ formsLoading: true });
 
     try {
-      const response = await metaService.getLeadForms(accountId, {
+      const result = readPaginated(
+        await metaService.getLeadForms(accountId, { page, limit: 25 }),
         page,
-        limit: 25,
-      });
-      const result = readPaginated<TFacebookLeadForm>(response, page);
+      );
 
       set({
         forms: result.docs,
@@ -124,12 +121,15 @@ export const useMetaPageStore = create<MetaPageStore>((set) => ({
     set({ leadsLoading: true });
 
     try {
-      const response = await metaService.getLeads(accountId, {
-        page: params?.page ?? 1,
-        limit: 20,
-        search: params?.search,
-      });
-      const result = readPaginated<TFacebookLead>(response, params?.page ?? 1);
+      const page = params?.page ?? 1;
+      const result = readPaginated(
+        await metaService.getLeads(accountId, {
+          page,
+          limit: 20,
+          search: params?.search,
+        }),
+        page,
+      );
 
       set({
         leads: result.docs,
@@ -149,14 +149,13 @@ export const useMetaPageStore = create<MetaPageStore>((set) => ({
     set({ insightsLoading: true });
 
     try {
-      const response = await metaService.getInsights(accountId);
-      const doc = response?.doc as TFacebookInsights | undefined;
+      const { doc } = await metaService.getInsights(accountId);
 
       set({
         insights: doc
           ? {
               ...doc,
-              metrics: (doc.metrics ?? []) as TFacebookInsightMetric[],
+              metrics: doc.metrics ?? [],
             }
           : null,
         insightsLoading: false,

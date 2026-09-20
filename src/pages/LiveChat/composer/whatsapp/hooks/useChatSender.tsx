@@ -1,4 +1,5 @@
 import { whatsappService } from "@/pages/Channels/whatsapp/services/whatsapp.service";
+import { useConversationStore } from "@/pages/LiveChat/store/conversation.store";
 import { useMessageStore } from "@/pages/LiveChat/store/message.store";
 import { buildOptimisticMessage } from "../utils/buildOptimisticMessage";
 import type { TOutgoingMessage } from "../utils/buildOutgoingMessage";
@@ -12,6 +13,9 @@ type SendMessageProps = {
 
 export const useChatSender = () => {
   const { appendMessage, replaceMessageId } = useMessageStore();
+  const markLiveChatIntervention = useConversationStore(
+    (state) => state.markLiveChatIntervention,
+  );
 
   const sendMessage = async ({
     accountId,
@@ -36,6 +40,7 @@ export const useChatSender = () => {
       if (realMessageId) {
         replaceMessageId(clientMessageId, String(realMessageId));
       }
+      if (conversationId) markLiveChatIntervention(conversationId);
     } catch (err) {
       console.log(err);
       throw err;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useConversationStore } from "../store/conversation.store";
 import ChatArea from "./ChatArea";
 import ChatHeader from "./ChatHeader";
@@ -10,9 +10,17 @@ import { ChatMessagesSkeleton } from "./skeletons/ChatMessageSkelton";
 import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDisplayName";
 import { useAuthStore } from "@/stores";
 import { whatsappLiveChatService } from "@/pages/Channels/whatsapp/services/whatsapp-live-chat.service";
+import { ToastMessageService } from "@/services";
+import {
+  getAutoResolveMode,
+  getResolverLabel,
+  isAutoResolvePaused,
+} from "../utils/live-chat.utils";
 
 const ChatWindow = () => {
   const { accountId } = useAuthStore();
+  const toast = new ToastMessageService();
+  const [resuming, setResuming] = useState(false);
   const {
     selectedConversationId,
     conversations,
@@ -59,29 +67,28 @@ const ChatWindow = () => {
   const selectedConversation = conversations.find(
     (conversation) => conversation.id === selectedConversationId,
   );
-  const liveChat = (selectedConversation?.metadata as any)?.liveChat || {};
-  const autoResolveMode = liveChat.mode as "flow" | "ai_agent" | undefined;
-  const autoResolvePaused = Boolean(
-    selectedConversation?.platform === "whatsapp" &&
-      (liveChat.humanIntervened || liveChat.escalationReason),
-  );
-  const resolverLabel = autoResolveMode === "flow" ? "Chatflow" : "AI";
+  const autoResolveMode = getAutoResolveMode(selectedConversation);
+  const autoResolvePaused = isAutoResolvePaused(selectedConversation);
+  const resolverLabel = getResolverLabel(autoResolveMode);
 
-  useEffect(() => {
-    const previousId = selectedConversationId;
-    const previousPlatform = selectedConversation?.platform;
-    return () => {
-      if (!accountId || !previousId || previousPlatform !== "whatsapp") return;
-      void whatsappLiveChatService
-        .resumeConversation(String(accountId), previousId)
-        .then((response) => {
-          if (response.data?.doc?.resumed) {
-            clearLiveChatIntervention(previousId);
-          }
-        })
-        .catch(() => null);
-    };
-  }, [selectedConversationId]);
+  const handleResumeAutoResolve = async () => {
+    if (!accountId || !selectedConversation?.id || resuming) return;
+    setResuming(true);
+    try {
+      await whatsappLiveChatService.resumeConversation(
+        String(accountId),
+        selectedConversation.id,
+      );
+      clearLiveChatIntervention(selectedConversation.id);
+      toast.success(`${resolverLabel} will reply to this chat again`);
+    } catch (error: any) {
+      toast.error(
+        error?.message || `Could not hand this chat back to ${resolverLabel}`,
+      );
+    } finally {
+      setResuming(false);
+    }
+  };
 
   if (!selectedConversation) {
     return (
@@ -128,15 +135,11 @@ const ChatWindow = () => {
           </p>
           <button
             type="button"
-            className="font-medium underline"
-            onClick={() =>
-              void whatsappLiveChatService
-                .resumeConversation(String(accountId), selectedConversation.id)
-                .then(() => clearLiveChatIntervention(selectedConversation.id))
-                .catch(() => null)
-            }
+            className="font-medium underline disabled:opacity-60"
+            disabled={resuming}
+            onClick={() => void handleResumeAutoResolve()}
           >
-            Hand back to {resolverLabel}
+            {resuming ? "Handing back..." : `Hand back to ${resolverLabel}`}
           </button>
         </div>
       )}

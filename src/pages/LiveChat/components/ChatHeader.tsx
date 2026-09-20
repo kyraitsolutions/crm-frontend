@@ -110,6 +110,7 @@ const ChatHeader = ({
         </div>
 
         <Phone size={18} className="text-gray-500 ml-auto" />
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button type="button" className="text-gray-500">
@@ -118,13 +119,13 @@ const ChatHeader = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="rounded-xl">
             {platform === "whatsapp" && autoResolvePaused && (
-              <DropdownMenuItem disabled={resuming} onClick={() => void handleResumeAutoResolve()}>
+              <DropdownMenuItem className="cursor-pointer"  disabled={resuming} onClick={() => void handleResumeAutoResolve()}>
                 <Bot size={16} />
                 {resuming ? "Handing back..." : `Hand back to ${resolverLabel}`}
               </DropdownMenuItem>
             )}
             <DropdownMenuItem
-              className="text-red-600"
+              className="text-red-600 cursor-pointer"
               onClick={() => setOpen(true)}
             >
               <Trash2 size={16} />

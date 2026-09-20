@@ -70,15 +70,18 @@ export type TFacebookInsights = {
   warning: string | null;
 };
 
+export type TMetaPagination = {
+  page: number;
+  limit: number;
+  totalDocs: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+};
+
 export type TMetaPaginatedResponse<T> = {
   docs: T[];
-  pagination?: {
-    page: number;
-    limit: number;
-    totalDocs: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-  };
-  warning: string | null;
+  pagination?: TMetaPagination;
+  warning?: string | null;
 };
+
