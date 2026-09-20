@@ -66,7 +66,7 @@ export const AlertDialog: React.FC = () => {
 
       {/* Modal */}
       <div
-        className={`relative rounded-md bg-white rounded-2xl shadow-2xl w-[90%] max-w-md p-6 transform transition-all duration-300 ${isOpen ? "scale-100 opacity-100" : "scale-90 opacity-0"
+        className={`relative bg-white rounded-xl shadow-2xl max-w-md p-6 transform transition-all duration-300 ${isOpen ? "scale-100 opacity-100" : "scale-90 opacity-0"
           }`}
       >
         {/* Icon */}
@@ -82,7 +82,7 @@ export const AlertDialog: React.FC = () => {
 
         <div className="flex justify-end gap-3">
           <Button
-            className="actions-btn px-4!"
+            className="actions-btn px-4! rounded-xl!"
             onClick={() => {
               onCancel?.();
               closeAlert();
@@ -92,7 +92,7 @@ export const AlertDialog: React.FC = () => {
           </Button>
 
           <Button
-            className="px-6 rounded-2xl"
+            className="rounded-xl"
             onClick={() => {
               onConfirm?.();
               closeAlert();

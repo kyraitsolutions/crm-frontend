@@ -14,7 +14,7 @@ import { conversationService } from "../services/conversation.service";
 import { useAuthStore } from "@/stores";
 import { ToastMessageService } from "@/services";
 import { useConversationStore } from "../store/conversation.store";
-import { whatsappAiAgentService } from "@/pages/Channels/whatsapp/services/whatsapp-ai-agent.service";
+import { whatsappLiveChatService } from "@/pages/Channels/whatsapp/services/whatsapp-live-chat.service";
 
 type ChatHeaderProps = {
   name: string;
@@ -27,10 +27,18 @@ type ChatHeaderProps = {
     | "messenger"
     | "telegram"
     | "email";
-  aiPaused?: boolean;
+  autoResolvePaused?: boolean;
+  resolverLabel?: string;
 };
 
-const ChatHeader = ({ name, img, conversationId, platform, aiPaused }: ChatHeaderProps) => {
+const ChatHeader = ({
+  name,
+  img,
+  conversationId,
+  platform,
+  autoResolvePaused,
+  resolverLabel = "AI",
+}: ChatHeaderProps) => {
   const { accountId } = useAuthStore();
   const toast = new ToastMessageService();
   const removeConversations = useConversationStore(
@@ -43,18 +51,18 @@ const ChatHeader = ({ name, img, conversationId, platform, aiPaused }: ChatHeade
   const [saving, setSaving] = useState(false);
   const [resuming, setResuming] = useState(false);
 
-  const handleResumeAi = async () => {
+  const handleResumeAutoResolve = async () => {
     if (!accountId || !conversationId) return;
     setResuming(true);
     try {
-      await whatsappAiAgentService.resumeConversation(
+      await whatsappLiveChatService.resumeConversation(
         String(accountId),
         conversationId,
       );
       clearLiveChatIntervention(conversationId);
-      toast.success("AI agent will reply to this chat again");
+      toast.success(`${resolverLabel} will reply to this chat again`);
     } catch (error: any) {
-      toast.error(error?.message || "Could not hand this chat back to AI");
+      toast.error(error?.message || `Could not hand this chat back to ${resolverLabel}`);
     } finally {
       setResuming(false);
     }
@@ -102,6 +110,7 @@ const ChatHeader = ({ name, img, conversationId, platform, aiPaused }: ChatHeade
         </div>
 
         <Phone size={18} className="text-gray-500 ml-auto" />
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button type="button" className="text-gray-500">
@@ -109,14 +118,14 @@ const ChatHeader = ({ name, img, conversationId, platform, aiPaused }: ChatHeade
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="rounded-xl">
-            {platform === "whatsapp" && aiPaused && (
-              <DropdownMenuItem disabled={resuming} onClick={() => void handleResumeAi()}>
+            {platform === "whatsapp" && autoResolvePaused && (
+              <DropdownMenuItem className="cursor-pointer"  disabled={resuming} onClick={() => void handleResumeAutoResolve()}>
                 <Bot size={16} />
-                {resuming ? "Handing back..." : "Hand back to AI"}
+                {resuming ? "Handing back..." : `Hand back to ${resolverLabel}`}
               </DropdownMenuItem>
             )}
             <DropdownMenuItem
-              className="text-red-600"
+              className="text-red-600 cursor-pointer"
               onClick={() => setOpen(true)}
             >
               <Trash2 size={16} />

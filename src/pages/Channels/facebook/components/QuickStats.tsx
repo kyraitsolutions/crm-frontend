@@ -1,14 +1,16 @@
 import { Building2, CheckCircle, Instagram, LayoutGrid } from "lucide-react";
 import { StatCard } from "@/pages/Channels/whatsapp/components/cards/StatCard";
 import type { TMetaAccount } from "../types/meta.type";
+import { getActiveFacebookPage, getFacebookPages } from "../utils/pages";
 
 interface Props {
   data: TMetaAccount;
 }
 
 export function QuickStats({ data }: Props) {
-  const page = data?.facebookPage;
-  const instagram = data?.instagram;
+  const pages = getFacebookPages(data);
+  const page = getActiveFacebookPage(data);
+  const instagram = page?.instagram || data?.instagram;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -18,7 +20,10 @@ export function QuickStats({ data }: Props) {
         icon={Building2}
         iconBg="bg-blue-500/20"
         iconColor="text-blue-400"
-        badge={{ label: "Connected", color: "bg-blue-100 text-blue-600" }}
+        badge={{
+          label: pages.length > 1 ? `${pages.length} pages` : "Connected",
+          color: "bg-blue-100 text-blue-600",
+        }}
       />
 
       <StatCard

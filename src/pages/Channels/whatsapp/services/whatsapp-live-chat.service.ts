@@ -17,6 +17,13 @@ export class WhatsAppLiveChatService extends ApiService {
   ): Promise<ApiResponse<WhatsAppLiveChatSettings>> {
     return this.put(`/whatsapp/account/${accountId}/live-chat/settings`, payload);
   }
+
+  resumeConversation(accountId: string, conversationId: string) {
+    return this.post(
+      `/whatsapp/account/${accountId}/live-chat/conversations/${conversationId}/resume`,
+      {},
+    );
+  }
 }
 
 export const whatsappLiveChatService = new WhatsAppLiveChatService();
