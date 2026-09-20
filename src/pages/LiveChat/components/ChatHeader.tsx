@@ -1,8 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getFirstWordOfSentence } from "@/utils/typography.utils";
-import { EllipsisVertical, Phone, Trash2 } from "lucide-react";
+import { EllipsisVertical, Phone, Trash2, Bot } from "lucide-react";
 import { MdOutlinePeopleOutline } from "react-icons/md";
-import ChatTags from "./Tags";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +14,7 @@ import { conversationService } from "../services/conversation.service";
 import { useAuthStore } from "@/stores";
 import { ToastMessageService } from "@/services";
 import { useConversationStore } from "../store/conversation.store";
+import { whatsappLiveChatService } from "@/pages/Channels/whatsapp/services/whatsapp-live-chat.service";
 
 type ChatHeaderProps = {
   name: string;
@@ -27,16 +27,46 @@ type ChatHeaderProps = {
     | "messenger"
     | "telegram"
     | "email";
+  autoResolvePaused?: boolean;
+  resolverLabel?: string;
 };
 
-const ChatHeader = ({ name, img, conversationId }: ChatHeaderProps) => {
+const ChatHeader = ({
+  name,
+  img,
+  conversationId,
+  platform,
+  autoResolvePaused,
+  resolverLabel = "AI",
+}: ChatHeaderProps) => {
   const { accountId } = useAuthStore();
   const toast = new ToastMessageService();
   const removeConversations = useConversationStore(
     (state) => state.removeConversations,
   );
+  const clearLiveChatIntervention = useConversationStore(
+    (state) => state.clearLiveChatIntervention,
+  );
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [resuming, setResuming] = useState(false);
+
+  const handleResumeAutoResolve = async () => {
+    if (!accountId || !conversationId) return;
+    setResuming(true);
+    try {
+      await whatsappLiveChatService.resumeConversation(
+        String(accountId),
+        conversationId,
+      );
+      clearLiveChatIntervention(conversationId);
+      toast.success(`${resolverLabel} will reply to this chat again`);
+    } catch (error: any) {
+      toast.error(error?.message || `Could not hand this chat back to ${resolverLabel}`);
+    } finally {
+      setResuming(false);
+    }
+  };
 
   const handleDelete = async (deleteContact: boolean) => {
     if (!accountId || !conversationId) return;
@@ -77,7 +107,6 @@ const ChatHeader = ({ name, img, conversationId }: ChatHeaderProps) => {
 
         <div className="relative">
           <h1 className="text-sm font-semibold">{name}</h1>
-          <ChatTags />
         </div>
 
         <Phone size={18} className="text-gray-500 ml-auto" />
@@ -88,6 +117,12 @@ const ChatHeader = ({ name, img, conversationId }: ChatHeaderProps) => {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="rounded-xl">
+            {platform === "whatsapp" && autoResolvePaused && (
+              <DropdownMenuItem disabled={resuming} onClick={() => void handleResumeAutoResolve()}>
+                <Bot size={16} />
+                {resuming ? "Handing back..." : `Hand back to ${resolverLabel}`}
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
               className="text-red-600"
               onClick={() => setOpen(true)}

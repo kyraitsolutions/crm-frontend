@@ -8,10 +8,17 @@ import { useSocketEvent } from "@/websocket/socket.hook";
 import { LIVE_CHAT_SOCKET_EVENTS } from "@/constants/socketEvent.constatn";
 import { ChatMessagesSkeleton } from "./skeletons/ChatMessageSkelton";
 import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDisplayName";
+import { useAuthStore } from "@/stores";
+import { whatsappLiveChatService } from "@/pages/Channels/whatsapp/services/whatsapp-live-chat.service";
 
 const ChatWindow = () => {
-  const { selectedConversationId, conversations, selectedMessageId } =
-    useConversationStore((state) => state);
+  const { accountId } = useAuthStore();
+  const {
+    selectedConversationId,
+    conversations,
+    selectedMessageId,
+    clearLiveChatIntervention,
+  } = useConversationStore((state) => state);
   const {
     fetchMessages,
     messages,
@@ -52,6 +59,29 @@ const ChatWindow = () => {
   const selectedConversation = conversations.find(
     (conversation) => conversation.id === selectedConversationId,
   );
+  const liveChat = (selectedConversation?.metadata as any)?.liveChat || {};
+  const autoResolveMode = liveChat.mode as "flow" | "ai_agent" | undefined;
+  const autoResolvePaused = Boolean(
+    selectedConversation?.platform === "whatsapp" &&
+      (liveChat.humanIntervened || liveChat.escalationReason),
+  );
+  const resolverLabel = autoResolveMode === "flow" ? "Chatflow" : "AI";
+
+  useEffect(() => {
+    const previousId = selectedConversationId;
+    const previousPlatform = selectedConversation?.platform;
+    return () => {
+      if (!accountId || !previousId || previousPlatform !== "whatsapp") return;
+      void whatsappLiveChatService
+        .resumeConversation(String(accountId), previousId)
+        .then((response) => {
+          if (response.data?.doc?.resumed) {
+            clearLiveChatIntervention(previousId);
+          }
+        })
+        .catch(() => null);
+    };
+  }, [selectedConversationId]);
 
   if (!selectedConversation) {
     return (
@@ -88,7 +118,28 @@ const ChatWindow = () => {
             selectedConversation?.contact?.phoneNumber,
         )}
         platform={selectedConversation?.platform || "chatbot"}
+        autoResolvePaused={autoResolvePaused}
+        resolverLabel={resolverLabel}
       />
+      {autoResolvePaused && (
+        <div className="flex items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-900">
+          <p>
+            {resolverLabel} is paused because a teammate took over this chat.
+          </p>
+          <button
+            type="button"
+            className="font-medium underline"
+            onClick={() =>
+              void whatsappLiveChatService
+                .resumeConversation(String(accountId), selectedConversation.id)
+                .then(() => clearLiveChatIntervention(selectedConversation.id))
+                .catch(() => null)
+            }
+          >
+            Hand back to {resolverLabel}
+          </button>
+        </div>
+      )}
       <div className="flex-1 min-h-0 pb-2">
         {loadingMessages ? (
           <ChatMessagesSkeleton />

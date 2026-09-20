@@ -55,7 +55,10 @@ export const Facebook = () => {
       if (!accountId) return;
 
       const response = await connect({ accountId: String(accountId) });
-      const signupUrl = response?.signupUrl;
+      const signupUrl =
+        typeof response === "string"
+          ? response
+          : response?.signupUrl || (response as any)?.doc?.signupUrl || "";
 
       if (!signupUrl) {
         setConnecting(false);

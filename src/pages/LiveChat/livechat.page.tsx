@@ -103,7 +103,7 @@ const LiveChat = () => {
       <ChatWindow />
 
       {selectedConversationId && (
-        <div className="bg-white p-4 border-l ">
+        <div className="bg-white p-4 border-l overflow-y-auto hide-scrollbar">
           <ChatProfile />
         </div>
       )}

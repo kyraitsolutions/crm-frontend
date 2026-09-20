@@ -16,6 +16,15 @@ import type {
   WhatsAppLiveChatSettings,
 } from "../types/live-chat.type";
 import DataLoader from "@/components/Loader/data-loader";
+import { Link } from "react-router-dom";
+import { Bot } from "lucide-react";
+import {
+  autoResolveCoversOffHours,
+  autoResolveCoversWelcome,
+  autoResolveScheduleCopy,
+  offHoursLockReason,
+  welcomeLockReason,
+} from "../utils/autoResolveWindows";
 
 const defaultAutoResolve: AutoResolveConfig = {
   enabled: false,
@@ -131,9 +140,35 @@ const LiveChatSetting = () => {
       setResolveOpen(true);
       return;
     }
-    setAutoResolve((prev) => ({ ...prev, enabled }));
-    void persist({ autoResolve: { ...autoResolve, enabled } });
+    const next = { ...autoResolve, enabled };
+    setAutoResolve(next);
+    if (autoResolveCoversWelcome(next)) {
+      setWelcomeMessage((prev) => ({ ...prev, enabled: false }));
+    }
+    if (autoResolveCoversOffHours(next)) {
+      setOffHoursMessage((prev) => ({ ...prev, enabled: false }));
+    }
+    void persist(buildAutoResolvePayload(next));
   };
+
+  const buildAutoResolvePayload = (next: AutoResolveConfig): Partial<WhatsAppLiveChatSettings> => {
+    const payload: Partial<WhatsAppLiveChatSettings> = { autoResolve: next };
+    if (autoResolveCoversWelcome(next)) {
+      payload.welcomeMessage = { ...welcomeMessage, enabled: false };
+    }
+    if (autoResolveCoversOffHours(next)) {
+      payload.offHoursMessage = { ...offHoursMessage, enabled: false };
+    }
+    return payload;
+  };
+
+  const welcomeLocked = autoResolveCoversWelcome(autoResolve);
+  const offHoursLocked = autoResolveCoversOffHours(autoResolve);
+
+  useEffect(() => {
+    if (welcomeLocked) setWelcomeOpen(false);
+    if (offHoursLocked) setOffHoursOpen(false);
+  }, [welcomeLocked, offHoursLocked]);
 
   if (loading) return <DataLoader className="h-[calc(100vh-180px)]" />;
 
@@ -146,36 +181,65 @@ const LiveChatSetting = () => {
         onChange={handleAutoResolveToggle}
       />
 
-      <div className="flex items-center justify-between rounded-2xl bg-white px-10 py-4 -mt-4">
-        <p className="text-sm text-gray-500">
-          {autoResolve.mode === "flow"
-            ? "Resolver: Chatflow"
-            : autoResolve.mode === "ai_agent"
-              ? "Resolver: AI agent"
-              : "No resolver configured yet"}
-          {autoResolve.scheduleMode === "working_hours"
-            ? " · Runs during working hours"
-            : autoResolve.scheduleMode === "off_hours"
-              ? " · Runs outside working hours"
-              : autoResolve.scheduleMode === "always"
-                ? " · Runs always"
-                : ""}
-        </p>
-        <button
-          onClick={() => setResolveOpen(true)}
-          className="text-sm text-teal-800 underline"
-        >
-          Configure
-        </button>
+      <div className="rounded-2xl bg-white px-10 py-4 -mt-4 space-y-1">
+        <div className="flex items-center justify-between gap-4">
+          <p className="text-sm text-gray-500">
+            {autoResolve.mode === "flow"
+              ? "Resolver: Chatflow"
+              : autoResolve.mode === "ai_agent"
+                ? "Resolver: AI agent"
+                : "No resolver configured yet"}
+            {autoResolve.scheduleMode === "working_hours"
+              ? " · Runs during working hours"
+              : autoResolve.scheduleMode === "off_hours"
+                ? " · Runs outside working hours"
+                : autoResolve.scheduleMode === "always"
+                  ? " · Runs always"
+                  : ""}
+          </p>
+          <button
+            onClick={() => setResolveOpen(true)}
+            className="text-sm text-teal-800 underline shrink-0"
+          >
+            Configure
+          </button>
+        </div>
+        {autoResolve.enabled ? (
+          <p className="text-xs text-gray-400">{autoResolveScheduleCopy(autoResolve.scheduleMode)}</p>
+        ) : null}
       </div>
+
+      <Link
+        to="/dashboard/settings/whatsapp/ai-agent"
+        className="flex items-center justify-between rounded-2xl bg-white p-10"
+      >
+        <div className="flex items-start gap-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Bot size={18} />
+          </div>
+          <div>
+            <h2 className="text-md font-medium text-gray-900">AI Sales Agent</h2>
+            <p className="mt-2 text-sm text-gray-500">
+              Configure instructions, knowledge base, qualification fields, scoring
+              and escalation for WhatsApp conversations.
+            </p>
+          </div>
+        </div>
+        <span className="rounded-xl border border-teal-800 px-3 py-1.5 text-xs text-teal-800">
+          Open
+        </span>
+      </Link>
 
       <div className="flex gap-10 bg-white p-10 rounded-2xl">
         <MessageConfig
           responseTitle="Welcome Message"
-          responseDescription="Sent on the first query during working hours when auto resolve is not active"
+          responseDescription="Sent on the first query during working hours when the AI agent or chatflow is not covering that window"
           message={previewText(welcomeMessage)}
-          autoResponseEnabled={welcomeMessage.enabled}
+          autoResponseEnabled={welcomeMessage.enabled && !welcomeLocked}
+          locked={welcomeLocked}
+          lockReason={welcomeLockReason(autoResolve)}
           onToggle={(enabled) => {
+            if (welcomeLocked) return;
             const next = { ...welcomeMessage, enabled };
             setWelcomeMessage(next);
             if (enabled && next.type === "text" && !next.text) {
@@ -184,15 +248,21 @@ const LiveChatSetting = () => {
             }
             void persist({ welcomeMessage: next });
           }}
-          onConfigure={() => setWelcomeOpen(true)}
+          onConfigure={() => {
+            if (welcomeLocked) return;
+            setWelcomeOpen(true);
+          }}
         />
         <div className="h-auto w-px bg-gray-200" />
         <MessageConfig
           responseTitle="Off Hours Message"
-          responseDescription="Sent on the first query outside working hours when auto resolve is not active"
+          responseDescription="Sent on the first query outside working hours when the AI agent or chatflow is not covering that window"
           message={previewText(offHoursMessage)}
-          autoResponseEnabled={offHoursMessage.enabled}
+          autoResponseEnabled={offHoursMessage.enabled && !offHoursLocked}
+          locked={offHoursLocked}
+          lockReason={offHoursLockReason(autoResolve)}
           onToggle={(enabled) => {
+            if (offHoursLocked) return;
             const next = { ...offHoursMessage, enabled };
             setOffHoursMessage(next);
             if (enabled && next.type === "text" && !next.text) {
@@ -201,7 +271,10 @@ const LiveChatSetting = () => {
             }
             void persist({ offHoursMessage: next });
           }}
-          onConfigure={() => setOffHoursOpen(true)}
+          onConfigure={() => {
+            if (offHoursLocked) return;
+            setOffHoursOpen(true);
+          }}
         />
       </div>
 
@@ -227,7 +300,13 @@ const LiveChatSetting = () => {
         onClose={() => setResolveOpen(false)}
         onSave={(next) => {
           setAutoResolve(next);
-          void persist({ autoResolve: next }).then((ok) => {
+          if (autoResolveCoversWelcome(next)) {
+            setWelcomeMessage((prev) => ({ ...prev, enabled: false }));
+          }
+          if (autoResolveCoversOffHours(next)) {
+            setOffHoursMessage((prev) => ({ ...prev, enabled: false }));
+          }
+          void persist(buildAutoResolvePayload(next)).then((ok) => {
             if (ok) setResolveOpen(false);
           });
         }}

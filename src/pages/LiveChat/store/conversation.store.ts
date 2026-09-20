@@ -63,6 +63,11 @@ type TConversationStore = {
   resetConversationQuery: () => Promise<void>;
   loadMoreConversations: () => Promise<void>;
   removeConversations: (conversationIds: string[]) => void;
+  clearLiveChatIntervention: (conversationId: string) => void;
+  patchConversation: (
+    conversationId: string,
+    payload: Partial<TConversation>,
+  ) => void;
 };
 
 const initialConversationQuery: TConversationQuery = {
@@ -372,6 +377,32 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
       selectedConversationId: ids.has(state.selectedConversationId || "")
         ? null
         : state.selectedConversationId,
+    }));
+  },
+  clearLiveChatIntervention: (conversationId) => {
+    set((state) => ({
+      conversations: state.conversations.map((item) => {
+        if (item.id !== conversationId) return item;
+        return {
+          ...item,
+          metadata: {
+            ...(item.metadata || {}),
+            liveChat: {
+              ...((item.metadata as any)?.liveChat || {}),
+              humanIntervened: false,
+              escalationReason: undefined,
+              autoResolveActive: true,
+            },
+          },
+        };
+      }),
+    }));
+  },
+  patchConversation: (conversationId, payload) => {
+    set((state) => ({
+      conversations: state.conversations.map((item) =>
+        item.id === conversationId ? { ...item, ...payload } : item,
+      ),
     }));
   },
 }));

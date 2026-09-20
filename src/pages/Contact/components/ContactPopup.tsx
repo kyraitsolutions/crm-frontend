@@ -2,7 +2,8 @@ import { sourceOptions } from "@/constants";
 import { X, ChevronDown, CircleAlert } from "lucide-react";
 import { useContactStore } from "../store/contact.store";
 import {
-    CreateContactSchema,
+    ContactFormSchema,
+    ContactSourcesSchema,
     type TCreateContact,
 } from "../types/contact.type";
 import { useForm } from "react-hook-form";
@@ -14,28 +15,48 @@ import { ToastMessageService } from "@/services";
 import type { ApiError } from "@/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+const splitContactPhone = (phone?: string | null) => {
+    const digits = String(phone || "").replace(/\D/g, "");
+    if (!digits) return { countryCode: "91", national: "" };
+    if (digits.length <= 10) return { countryCode: "91", national: digits };
+    return {
+        countryCode: digits.slice(0, -10),
+        national: digits.slice(-10),
+    };
+};
+
+const firstTag = (tags?: string | string[] | null) => {
+    if (Array.isArray(tags)) return tags[0] || "";
+    return tags || "";
+};
 
 const ContactPopup = () => {
-    const { open, setOpen,
-        createContact
+    const {
+        open,
+        setOpen,
+        createContact,
+        updateContact,
+        editingContact,
     } = useContactStore((state) => state);
-    const { accountId } = useAuthStore((state) => state)
+    const { accountId } = useAuthStore((state) => state);
     const toastService = new ToastMessageService();
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [countryCode, setCountryCode] = useState("91");
+    const isEditing = Boolean(editingContact);
 
     const {
         register,
         handleSubmit,
         watch,
-        // reset,
+        reset,
         formState: {
             errors,
             isSubmitting,
             isValid,
         },
-    } = useForm<z.input<typeof CreateContactSchema>>({
+    } = useForm<z.infer<typeof ContactFormSchema>>({
         resolver: zodResolver(
-            CreateContactSchema
+            ContactFormSchema
         ),
         mode: "onChange",
         defaultValues: {
@@ -43,7 +64,7 @@ const ContactPopup = () => {
             name: "",
             email: "",
             phone: "",
-            tags: [],
+            tags: "",
             source: "manual",
             status: "subscribed",
         },
@@ -54,30 +75,54 @@ const ContactPopup = () => {
     const phoneValue = watch("phone");
 
     useEffect(() => {
-        if (open) {
-            setSubmitError(null);
-        }
-    }, [open]);
+        if (!open) return;
+        setSubmitError(null);
+        const parsed = splitContactPhone(editingContact?.phone);
+        setCountryCode(parsed.countryCode || "91");
+        const parsedSource = ContactSourcesSchema.safeParse(editingContact?.source);
+        reset({
+            accountId: String(accountId || editingContact?.accountId || ""),
+            name: editingContact?.name || "",
+            email: editingContact?.email || "",
+            phone: parsed.national,
+            tags: firstTag(editingContact?.tags as string[] | string | null),
+            source: parsedSource.success ? parsedSource.data : "manual",
+            status: editingContact?.status || "subscribed",
+        });
+    }, [open, editingContact, accountId, reset]);
 
     useEffect(() => {
         setSubmitError(null);
     }, [emailValue, phoneValue]);
 
-    const onSubmit = async (data: z.input<typeof CreateContactSchema>) => {
+    const onSubmit = async (data: z.infer<typeof ContactFormSchema>) => {
         setSubmitError(null);
+        const national = String(data.phone || "").replace(/\D/g, "").slice(-10);
+        const payload: TCreateContact = {
+            accountId: String(accountId || data.accountId || ""),
+            name: data.name,
+            email: String(data.email || "").trim() || undefined,
+            phone: `+${countryCode || "91"}${national}`,
+            status: data.status,
+            source: data.source,
+            tags: data.tags ? [data.tags] : [],
+        };
         try {
-            await createContact({
-                ...(data as TCreateContact),
-                accountId: String(accountId || data.accountId || ""),
-            });
-            toastService.success("Contact added successfully");
+            if (isEditing) {
+                const contactId = String(editingContact?.id || editingContact?._id || "");
+                await updateContact(contactId, payload);
+                toastService.success("Contact updated successfully");
+            } else {
+                await createContact(payload);
+                toastService.success("Contact added successfully");
+            }
         } catch (error) {
             const err = error as ApiError;
             const message =
                 err?.status === 409 || /already exists/i.test(err?.message || "")
                     ? err.message ||
                       "A contact with this email or phone number already exists."
-                    : err?.message || "Failed to add contact";
+                    : err?.message || (isEditing ? "Failed to update contact" : "Failed to add contact");
             setSubmitError(message);
             toastService.error(message);
         }
@@ -101,7 +146,7 @@ const ContactPopup = () => {
             >
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-medium text-gray-800">
-                        Create Contact
+                        {isEditing ? "Edit Contact" : "Create Contact"}
                     </h2>
 
                     <button
@@ -124,7 +169,9 @@ const ContactPopup = () => {
                             <AlertTitle>
                                 {/already exists/i.test(submitError)
                                     ? "Contact already exists"
-                                    : "Could not add contact"}
+                                    : isEditing
+                                      ? "Could not update contact"
+                                      : "Could not add contact"}
                             </AlertTitle>
                             <AlertDescription>{submitError}</AlertDescription>
                         </Alert>
@@ -194,7 +241,7 @@ const ContactPopup = () => {
 
                                 <div className="flex flex-1 overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
                                     <div className="flex items-center px-5 border-r border-gray-300 text-gray-600">
-                                        +91
+                                        +{countryCode || "91"}
                                     </div>
 
                                     <input
@@ -227,7 +274,6 @@ const ContactPopup = () => {
                         <div>
                             <input
                                 type="email"
-                                required
                                 {...register(
                                     "email"
                                 )}
@@ -255,7 +301,6 @@ const ContactPopup = () => {
                                 {...register(
                                     "tags"
                                 )}
-                                required
                                 className="w-full h-14 rounded-lg border border-gray-200 bg-gray-100 px-4 appearance-none outline-none"
                             >
                                 <option value="">
@@ -329,8 +374,12 @@ const ContactPopup = () => {
                             }
                             className={`${!isValid || isSubmitting ? "border border-gray-300 bg-gray-300 text-gray-500" : "border border-primary bg-primary hover:bg-primary/90 text-white"}  text-sm px-3 py-1.5 rounded font-medium transition`}>
                             {isSubmitting
-                                ? "Adding..."
-                                : "Add Contact"}
+                                ? isEditing
+                                    ? "Saving..."
+                                    : "Adding..."
+                                : isEditing
+                                  ? "Save Changes"
+                                  : "Add Contact"}
                         </button>
 
                     </div>

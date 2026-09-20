@@ -102,7 +102,7 @@ const Tags = ({ tags, onChange, onSave }: TagsProps) => {
 
                         <div
                             className="pl-2  pr-4 rounded-tr-2xl rounded-br-2xl py-0.5 capitalize text-white"
-                            style={{ background: tagColors[12] }}
+                            style={{ background: tag.color || tagColors[12] }}
                         >
                             {tag.label}
                         </div>

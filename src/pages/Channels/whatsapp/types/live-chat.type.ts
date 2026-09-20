@@ -62,5 +62,6 @@ export type WhatsAppLiveChatContext = {
     configured: boolean;
     id: string | null;
     available: boolean;
+    enabled?: boolean;
   };
 };

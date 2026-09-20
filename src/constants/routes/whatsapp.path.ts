@@ -9,6 +9,7 @@ export const WHATSAPP_ROUTES = {
   PROFILE: "profile",
   TEMPLATE: "template-messages",
   CANNED: "canned-messages",
+  AI_AGENT: "ai-agent",
   CREATE: "create",
   //   UPDATE: ":formId/update",
 };
@@ -21,6 +22,7 @@ export const WHATSAPP_PATHS = {
     `${ROUTES.DASHBOARD}/settings/whatsapp/template-messages/create`,
   createCannedMessage: () =>
     `${ROUTES.DASHBOARD}/settings/whatsapp/canned-messages/create`,
+  aiAgent: () => `${ROUTES.DASHBOARD}/settings/whatsapp/ai-agent`,
   //   getPurchaseNumberList: (accountId: string) =>
   //       `${ACCOUNT_PATHS.byId(accountId)}/${CALL_ROUTES.CALLS}/${CALL_ROUTES.BUYNUMBER}`,
   //   getMyNumberList: (accountId: string) =>

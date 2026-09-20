@@ -1,5 +1,5 @@
 import { formatDateTime } from "@/utils/date-utils";
-import { Funnel, Plus, Search, X } from "lucide-react";
+import { Funnel, Pencil, Plus, Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useContactStore } from "./Contact/store/contact.store";
 import { useAuthStore } from "@/stores";
@@ -24,6 +24,7 @@ const Contacts = () => {
     contacts,
     fetchContacts,
     setOpen,
+    editContact,
     currentPage,
     totalPages,
     totalItems,
@@ -190,6 +191,7 @@ const Contacts = () => {
                 <th className="p-3 text-left font-medium">Source</th>
                 <th className="p-3 text-left font-medium">Added</th>
                 <th className="p-3 text-left font-medium">Last Activity</th>
+                <th className="p-3 text-left font-medium">Actions</th>
               </tr>
             </thead>
 
@@ -230,6 +232,16 @@ const Contacts = () => {
                     </td>
                     <td className="p-3 text-muted-foreground whitespace-nowrap">
                       {formatDateTime(String(contact.lastActivity))}
+                    </td>
+                    <td className="p-3">
+                      <button
+                        type="button"
+                        title="Edit contact"
+                        onClick={() => editContact(contact)}
+                        className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-primary transition"
+                      >
+                        <Pencil size={16} />
+                      </button>
                     </td>
                   </tr>
                 );

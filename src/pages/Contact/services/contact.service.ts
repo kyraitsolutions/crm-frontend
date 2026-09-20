@@ -7,6 +7,10 @@ export class ContactService extends ApiService {
         return await this.post(`/contacts/create`, payload);
     }
 
+    async updateContact(payload: TCreateContact & { contactId: string }): Promise<ApiResponse<any>> {
+        return await this.put(`/contacts/update`, payload);
+    }
+
 
     async getContacts(payload: any,): Promise<ApiResponse<any>> {
         return await this.post(`/contacts`,payload);

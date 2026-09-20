@@ -3,10 +3,10 @@ import { ApiService } from "@/services";
 
 export class MetaService extends ApiService {
   async connect(payload: { accountId: string }) {
-    const response = await this.post(
-      API_ENDPOINT_PATH.INTEGRATION.META.CONNECT,
-      payload,
-    );
+    const response = await this.post<{
+      signupUrl?: string;
+      doc?: { signupUrl?: string };
+    }>(API_ENDPOINT_PATH.INTEGRATION.META.CONNECT, payload);
 
     return response.data;
   }

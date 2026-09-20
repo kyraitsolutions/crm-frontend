@@ -26,6 +26,26 @@ export class ConversationService extends ApiService {
       payload,
     );
   }
+
+  async updateConversation(
+    accountId: string,
+    conversationId: string,
+    payload: {
+      status?: string;
+      tags?: { label: string; color?: string }[];
+      followUps?: {
+        note?: string;
+        dueAt?: string | Date | null;
+        completedAt?: string | Date | null;
+        createdAt?: string | Date | null;
+      }[];
+    },
+  ): Promise<ApiResponse<any>> {
+    return await this.patch(
+      API_ENDPOINT_PATH.CONVERSATION.updateConversation(accountId, conversationId),
+      payload,
+    );
+  }
 }
 
 export const conversationService = new ConversationService();

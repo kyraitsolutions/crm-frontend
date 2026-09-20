@@ -2,33 +2,24 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { ExpirationPrompt } from "@/components/subscription/ExpirationPrompt";
 import { TrialBanner } from "@/components/subscription/TrialBanner";
 import { SiteHeader } from "@/components/site-header";
-import { COOKIES_STORAGE } from "@/constants";
-import { ACCOUNT_PATHS } from "@/constants/routes";
 import { ToastMessageService } from "@/services";
 import { AccountService } from "@/services/account.service";
-import { AuthStoreManager, useAuthStore } from "@/stores";
+import { useAuthStore } from "@/stores";
 import { AccountAccessManager } from "@/stores/account-access.store";
 import { AccountsStoreManager } from "@/stores/accounts.store";
 import type { ApiError } from "@/types";
-// 👈 NEW
-import { CookieUtils } from "@/utils/cookie-storage.utils";
 import { SocketProvider } from "@/websocket/socket.provider";
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import ContactPopup from "@/pages/Contact/components/ContactPopup";
 
 export function AppLayout() {
-  // store managers
-  const authManager = new AuthStoreManager();
   const accountStoreManager = new AccountsStoreManager();
   const accountAccessManager = new AccountAccessManager();
 
-  // services
   const accountService = new AccountService();
   const toastService = new ToastMessageService();
-  const navigate = useNavigate();
 
-  // 👇 IMPORTANT: reactive accountId
   const { accountId } = useAuthStore((state) => state);
 
   // fetch accounts list
@@ -37,17 +28,7 @@ export function AppLayout() {
       const response = await accountService.getAccounts();
 
       if (response.status === 200) {
-        const accounts = response?.data?.docs;
-        accountStoreManager.setAccounts(accounts);
-
-        const storedAccountId = CookieUtils.getItem(COOKIES_STORAGE.accountId);
-
-        // 👉 If no account selected → pick first
-        if (!storedAccountId && accounts?.length > 0) {
-          const firstAccountId = accounts[0].id;
-          authManager.setAccountId(firstAccountId);
-          navigate(ACCOUNT_PATHS.byId(firstAccountId));
-        }
+        accountStoreManager.setAccounts(response?.data?.docs);
       }
     } catch (error) {
       console.error("Error fetching accounts:", error);
