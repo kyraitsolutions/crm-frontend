@@ -2,6 +2,7 @@ import type { TMessage } from "../../types/message.type";
 import InteractiveButtonMessage from "./InteractiveButtonMessage";
 import InteractiveCarouselMessage from "./InteractiveCarouselMessage";
 import InteractiveListMessage from "./InteractiveListMessage";
+import InteractiveReplyMessage from "./InteractiveReplyMessage";
 
 type TInteractiveMessage = {
   message: TMessage;
@@ -42,8 +43,13 @@ const InteractiveMessage = ({
     case "carousel":
       return <InteractiveCarouselMessage message={message} />;
 
+    case "button_reply":
+    case "list_reply":
+    case "nfm_reply":
+      return <InteractiveReplyMessage message={message} />;
+
     default:
-      return null;
+      return <InteractiveReplyMessage message={message} />;
   }
 };
 

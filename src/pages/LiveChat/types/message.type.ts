@@ -137,10 +137,39 @@ export type TTemplateMessage = TBaseMessage & {
   };
 };
 
+export type TInteractiveReply = {
+  id: string;
+  title: string;
+  description?: string;
+};
+
 export type TInteractiveButtonMessage = TBaseMessage & TButtonNodeDataPayload;
 export type TInteractiveListMessage = TBaseMessage & TListNodeDataPayload;
 export type TInteractiveCarouselMessage = TBaseMessage &
   TCarouselNodeDataPayload;
+export type TInteractiveReplyMessage = TBaseMessage & {
+  type: "interactive";
+  body?: {
+    text?: string;
+  };
+  interactive:
+    | {
+        type: "button_reply";
+        button_reply: TInteractiveReply;
+      }
+    | {
+        type: "list_reply";
+        list_reply: TInteractiveReply;
+      }
+    | {
+        type: "nfm_reply";
+        nfm_reply: {
+          name?: string;
+          body?: string;
+          response_json?: string;
+        };
+      };
+};
 export type TQuestionMessage = TBaseMessage & TQuestionNodeDataPayload;
 export type TCarouselMessage = TBaseMessage & TCarouselNodeDataPayload;
 
@@ -153,6 +182,7 @@ export type TMessage =
   | TInteractiveButtonMessage
   | TInteractiveListMessage
   | TInteractiveCarouselMessage
+  | TInteractiveReplyMessage
   | TQuestionMessage
   | TCarouselMessage
   | TTemplateMessage;
