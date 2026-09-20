@@ -17,6 +17,11 @@ export const PERMISSIONS = {
     UPDATE: "leadForms.edit",
     DELETE: "leadForms.delete",
   },
+  CONTACTS: {
+    VIEW: "contacts.view",
+    CREATE: "contacts.create",
+    IMPORT: "contacts.import",
+  },
   EMAIL_MARKETING: {
     VIEW: "emailMarketing.view",
     CREATE: "emailMarketing.create",

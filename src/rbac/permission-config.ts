@@ -40,6 +40,16 @@ export const PERMISSION_CONFIG = [
     ],
   },
   {
+    title: "CONTACTS",
+    modules: [
+      {
+        key: "contacts",
+        label: "Contacts",
+        actions: ["create", "view", "import"],
+      },
+    ],
+  },
+  {
     title: "LEAD FORM",
     modules: [
       {
