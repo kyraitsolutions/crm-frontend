@@ -20,6 +20,7 @@ import Webhook from "@/pages/Developer/Webhook/Webhook";
 import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page";
 import ProfilePage from "@/pages/Profile/UserProfile/pages/Profile";
 import ActivityLogsPage from "@/pages/Settings/activityLogs/ActivityLogsPage";
+import AiAgentPage from "@/pages/Settings/ai-agent/AiAgentPage";
 import ConfigurationPage from "@/pages/Settings/configuration/ConfigurationPage";
 import { PERMISSIONS } from "@/rbac";
 import { type RouteObject } from "react-router-dom";
@@ -63,6 +64,7 @@ export const settingRoutes: RouteObject[] = [
           // Bot
           { path: "chatbot", element: <ChatBotPage /> },
           { path: "chatflows", element: <ChatFlows /> },
+          { path: "ai-agent", element: <AiAgentPage /> },
           {
             path: "chatflows/flow-builder",
             element: (

@@ -138,6 +138,17 @@ class ApiService {
 
     if (method === "GET" || method === "DELETE") {
       axiosConfig.params = data;
+    } else if (typeof FormData !== "undefined" && data instanceof FormData) {
+      axiosConfig.data = data;
+      axiosConfig.transformRequest = [
+        (body, headers) => {
+          if (headers) {
+            delete headers["Content-Type"];
+            delete headers["content-type"];
+          }
+          return body;
+        },
+      ];
     } else {
       axiosConfig.data = data;
     }

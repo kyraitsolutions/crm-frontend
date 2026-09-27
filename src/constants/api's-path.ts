@@ -148,6 +148,31 @@ export const API_ENDPOINT_PATH = {
   ACTIVITY_LOGS: {
     getActivityLogsPath: (id: string) => `/activity-logs/${id}`,
   },
+  AI_AGENT: {
+    getAgentPath: (accountId: string) => `/ai-agent/account/${accountId}`,
+    createAgentPath: (accountId: string) => `/ai-agent/account/${accountId}`,
+    updateDraftPath: (accountId: string) =>
+      `/ai-agent/account/${accountId}/draft`,
+    publishPath: (accountId: string) => `/ai-agent/account/${accountId}/publish`,
+    rollbackPath: (accountId: string) =>
+      `/ai-agent/account/${accountId}/rollback`,
+    versionsPath: (accountId: string) =>
+      `/ai-agent/account/${accountId}/versions`,
+    knowledgePath: (accountId: string) =>
+      `/ai-agent/account/${accountId}/knowledge`,
+    knowledgeItemPath: (accountId: string, id: string) =>
+      `/ai-agent/account/${accountId}/knowledge/${id}`,
+    knowledgeReindexPath: (accountId: string, id: string) =>
+      `/ai-agent/account/${accountId}/knowledge/${id}/reindex`,
+    runtimeTestPath: (accountId: string) =>
+      `/ai-agent/account/${accountId}/runtime/test`,
+    toolsPath: (accountId: string) => `/ai-agent/account/${accountId}/tools`,
+    testToolPath: (accountId: string) => `/ai-agent/account/${accountId}/tools/test`,
+    skillsCatalogPath: (accountId: string) =>
+      `/ai-agent/account/${accountId}/skills/catalog`,
+    skillsDraftPath: (accountId: string) =>
+      `/ai-agent/account/${accountId}/skills/draft`,
+  },
   RECYCLEBIN: {
     list: (accountId: string) => `/account/${accountId}/recyclebin`,
     restore: (accountId: string) => `/account/${accountId}/recyclebin/restore`,

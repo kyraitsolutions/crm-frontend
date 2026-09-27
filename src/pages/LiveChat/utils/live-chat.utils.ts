@@ -29,21 +29,19 @@ export function getAutoResolveMode(
     aiAgentId?: string | null;
   };
 
+  if (liveChat.mode === "ai_agent") return "ai_agent";
+  if (liveChat.mode === "flow") return "flow";
+
+  if (liveChat.aiAgentId || identifiers.aiAgentId) {
+    return "ai_agent";
+  }
+
   if (
-    liveChat.mode === "flow" ||
     liveChat.chatFlowId ||
     liveChat.flow?.chatFlowId ||
     identifiers.chatFlowId
   ) {
     return "flow";
-  }
-
-  if (
-    liveChat.mode === "ai_agent" ||
-    liveChat.aiAgentId ||
-    identifiers.aiAgentId
-  ) {
-    return "ai_agent";
   }
 
   return null;
@@ -57,5 +55,5 @@ export function isAutoResolvePaused(conversation?: TConversation | null) {
   if (conversation?.platform !== "whatsapp") return false;
   const liveChat = liveChatMeta(conversation);
   if (!getAutoResolveMode(conversation)) return false;
-  return Boolean(liveChat.humanIntervened || liveChat.escalationReason);
+  return Boolean(liveChat.humanIntervened && !liveChat.escalationReason);
 }

@@ -73,7 +73,7 @@ export const settingSections = [
     items: [
       { label: "Chat Bot", link: "/chatbot" },
       { label: "Chat Flows", link: "/chatflows" },
-      // { label: "AI Chatbot", link: "/ai-chatbot" },
+      { label: "AI Agent", link: "/ai-agent" },
     ],
   },
   {
