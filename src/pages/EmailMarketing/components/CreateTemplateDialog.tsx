@@ -6,57 +6,112 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  RichTextEmailEditor,
+  type EmailVariable,
+  type RichTextEmailValue,
+} from "@/components/email/RichTextEmailEditor";
 import { AIService } from "@/services/ai.service";
 import { ToastMessageService } from "@/services";
 import {
   Method,
   TemplateCategory,
   type EmailTemplateData,
+  type EmailTemplateDesign,
 } from "@/types/email.type";
+import {
+  extractTemplateVariables,
+  isRichTextEmpty,
+  looksLikeHtml,
+  plainTextToEmailHtml,
+  quillHtmlToEmailHtml,
+  toDisplayEmailHtml,
+} from "@/utils/email-html.utils";
 import { Edit3, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { Delta, type Op } from "quill";
+import { useEffect, useMemo, useState } from "react";
 import { emailMarketingService } from "../services/email-marketing.service";
+import type { EmailTemplate } from "../types";
 
 type CreateTemplateDialogProps = {
   open: boolean;
   onClose: () => void;
   accountId: string;
   onCreated: () => void;
+  template?: EmailTemplate | null;
 };
+
+const TEMPLATE_VARIABLES: EmailVariable[] = [
+  { key: "firstName", label: "First name" },
+  { key: "lastName", label: "Last name" },
+  { key: "name", label: "Full name" },
+  { key: "email", label: "Email" },
+  { key: "organizationName", label: "Organization" },
+];
+
+const isQuillDesign = (design: EmailTemplate["design"]): design is EmailTemplateDesign =>
+  design?.editor === "quill" && Array.isArray(design.delta?.ops);
 
 export function CreateTemplateDialog({
   open,
   onClose,
   accountId,
   onCreated,
+  template,
 }: CreateTemplateDialogProps) {
   const aiService = new AIService();
   const toast = new ToastMessageService();
-  const [mode, setMode] = useState<Method | null>(null);
+  const isEditing = Boolean(template);
+  const [chosenMode, setMode] = useState<Method | null>(null);
+  const mode = isEditing ? Method.USER : chosenMode;
   const [aiPrompt, setAiPrompt] = useState("");
   const [saving, setSaving] = useState(false);
-  const [templateData, setTemplateData] = useState<EmailTemplateData>({
-    name: "New Template",
-    subject: "Welcome to our service",
-    html: "<h1>Hello {{firstName}}</h1>",
-    variables: ["firstName"],
-    category: TemplateCategory.NOTIFICATION,
-  });
+  const [name, setName] = useState("");
+  const [subject, setSubject] = useState("");
+  const [category, setCategory] = useState<TemplateCategory>(TemplateCategory.MARKETING);
+  const [content, setContent] = useState<RichTextEmailValue | null>(null);
 
-  const reset = () => {
+  useEffect(() => {
+    if (!open) return;
     setMode(null);
     setAiPrompt("");
     setSaving(false);
+    setName(template?.name ?? "");
+    setSubject(template?.subject ?? "");
+    setCategory((template?.category as TemplateCategory) || TemplateCategory.MARKETING);
+    setContent(null);
+  }, [open, template]);
+
+  const editorDefaultValue = useMemo(() => {
+    if (!template) return "";
+    if (isQuillDesign(template.design)) return new Delta(template.design.delta.ops as Op[]);
+    const html = String(template.html || "");
+    return looksLikeHtml(html) ? html : plainTextToEmailHtml(html);
+  }, [template]);
+
+  const isExternalHtml =
+    Boolean(template) &&
+    !isQuillDesign(template?.design) &&
+    looksLikeHtml(String(template?.html || ""));
+
+  const close = () => {
+    setMode(null);
+    onClose();
   };
 
-  const save = async (payload: EmailTemplateData) => {
+  const persist = async (payload: EmailTemplateData) => {
     setSaving(true);
     try {
-      await emailMarketingService.createTemplate(accountId, payload);
-      toast.success("Template saved");
+      const templateId = String(template?.id || template?._id || "");
+      if (templateId) {
+        await emailMarketingService.updateTemplate(accountId, templateId, payload);
+        toast.success("Template updated");
+      } else {
+        await emailMarketingService.createTemplate(accountId, payload);
+        toast.success("Template saved");
+      }
       onCreated();
-      reset();
-      onClose();
+      close();
     } catch (error: any) {
       toast.error(error?.message || "Could not save template");
     } finally {
@@ -64,20 +119,17 @@ export function CreateTemplateDialog({
     }
   };
 
-  const handleManualChange = (field: string, value: string) => {
-    setTemplateData((prev) => ({ ...prev, [field]: value }));
-  };
-
   const handleGenerate = async () => {
     try {
       setSaving(true);
       const result = await aiService.createTemplateWithAI(accountId, aiPrompt);
       const generated = result.data?.doc || result.data || {};
-      await save({
+      const html = toDisplayEmailHtml(generated.html || generated.body) || "<p></p>";
+      await persist({
         name: generated.name || "AI template",
         subject: generated.subject || "New campaign",
-        html: generated.html || generated.body || "<p></p>",
-        variables: generated.variables || ["firstName"],
+        html,
+        variables: generated.variables || extractTemplateVariables(html),
         category: generated.category || TemplateCategory.MARKETING,
         generatedBy: Method.AI,
       });
@@ -88,21 +140,54 @@ export function CreateTemplateDialog({
   };
 
   const handleSaveManual = () => {
-    void save({ ...templateData, generatedBy: Method.USER });
+    if (!name.trim()) {
+      toast.error("Template name is required");
+      return;
+    }
+    if (!subject.trim()) {
+      toast.error("Email subject is required");
+      return;
+    }
+
+    const html = content ? quillHtmlToEmailHtml(content.html) : String(template?.html || "");
+    if (content ? isRichTextEmpty(content.html) : !html.trim()) {
+      toast.error("Write the email content");
+      return;
+    }
+
+    const existingDesign = template?.design;
+    const design: EmailTemplateDesign | undefined = content
+      ? { editor: "quill", version: 1, delta: { ops: content.delta.ops } }
+      : isQuillDesign(existingDesign)
+        ? existingDesign
+        : undefined;
+
+    void persist({
+      name: name.trim(),
+      subject: subject.trim(),
+      html,
+      variables: extractTemplateVariables(`${subject} ${html}`),
+      category,
+      generatedBy: isEditing ? (template?.generatedBy as Method) || Method.USER : Method.USER,
+      ...(design ? { design } : {}),
+    });
   };
 
   return (
     <Dialog
       open={open}
-      onOpenChange={() => {
-        reset();
-        onClose();
+      onOpenChange={(next) => {
+        if (!next) close();
       }}
     >
-      <DialogContent className="max-w-xl rounded-md">
+      <DialogContent
+        className={`max-h-[92vh] overflow-y-auto rounded-md ${
+          mode === Method.USER ? "sm:max-w-3xl" : "sm:max-w-xl"
+        }`}
+      >
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Create Email Template
+            {isEditing ? "Edit Email Template" : "Create Email Template"}
           </DialogTitle>
         </DialogHeader>
 
@@ -157,40 +242,57 @@ export function CreateTemplateDialog({
         )}
 
         {mode === Method.USER && (
-          <div className="mt-6 space-y-4">
-            <h3 className="font-medium">Manual Template</h3>
+          <div className="mt-2 space-y-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <input
+                value={name}
+                placeholder="Template name"
+                className="w-full rounded-md border p-2 text-sm"
+                onChange={(e) => setName(e.target.value)}
+              />
+              <select
+                value={category}
+                className="w-full rounded-md border p-2 text-sm capitalize"
+                onChange={(e) => setCategory(e.target.value as TemplateCategory)}
+              >
+                {Object.values(TemplateCategory).map((cat) => (
+                  <option key={cat} value={cat} className="capitalize">
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
             <input
-              placeholder="Template name"
-              className="w-full rounded-md border p-2 text-sm"
-              onChange={(e) => handleManualChange("name", e.target.value)}
-            />
-            <input
+              value={subject}
               placeholder="Email subject"
               className="w-full rounded-md border p-2 text-sm"
-              onChange={(e) => handleManualChange("subject", e.target.value)}
+              onChange={(e) => setSubject(e.target.value)}
             />
-            <textarea
-              placeholder="Write your email content here"
-              className="w-full h-32 rounded-md border p-3 text-sm"
-              onChange={(e) => handleManualChange("html", e.target.value)}
+
+            {isExternalHtml && (
+              <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                This template was built outside the editor. Editing the content
+                here can simplify its layout (tables, columns, custom styles).
+              </p>
+            )}
+
+            <RichTextEmailEditor
+              key={String(template?.id || template?._id || "new")}
+              defaultValue={editorDefaultValue}
+              onChange={setContent}
+              variables={TEMPLATE_VARIABLES}
+              placeholder="Write your email content here..."
             />
-            <select
-              className="w-full rounded-md border p-2 text-sm"
-              onChange={(e) => handleManualChange("category", e.target.value)}
-            >
-              <option value="">Select Category</option>
-              {Object.values(TemplateCategory).map((cat) => (
-                <option key={cat} value={cat} className="capitalize">
-                  {cat}
-                </option>
-              ))}
-            </select>
+
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setMode(null)}>
-                Back
+              <Button
+                variant="outline"
+                onClick={() => (isEditing ? close() : setMode(null))}
+              >
+                {isEditing ? "Cancel" : "Back"}
               </Button>
               <Button disabled={saving} onClick={handleSaveManual}>
-                Save Template
+                {saving ? "Saving..." : isEditing ? "Update Template" : "Save Template"}
               </Button>
             </div>
           </div>

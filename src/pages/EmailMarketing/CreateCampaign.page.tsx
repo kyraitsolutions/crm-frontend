@@ -22,6 +22,7 @@ import { emailMarketingService } from "./services/email-marketing.service";
 import { useEmailMarketingStore } from "./store/email-marketing.store";
 import { ToastMessageService } from "@/services";
 import DataLoader from "@/components/Loader/data-loader";
+import { toDisplayEmailHtml } from "@/utils/email-html.utils";
 import {
   ArrowLeft,
   CalendarClock,
@@ -853,11 +854,11 @@ const CreateCampaignPage = () => {
                         {/* Email body */}
                         <div className="max-h-[420px] overflow-auto p-4">
                           <div
-                            className="text-sm"
+                            className="email-html text-sm"
                             dangerouslySetInnerHTML={{
-                              __html:
-                                selectedTemplate.html ||
-                                "",
+                              __html: toDisplayEmailHtml(
+                                selectedTemplate.html,
+                              ),
                             }}
                           />
                         </div>

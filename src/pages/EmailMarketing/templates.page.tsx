@@ -24,11 +24,13 @@ import {
   Copy,
   FileText,
   Mail,
+  Pencil,
   Plus,
   Trash2,
   Eye,
 } from "lucide-react";
 import type { EmailTemplate } from "./types";
+import { toDisplayEmailHtml } from "@/utils/email-html.utils";
 
 const TemplatesPage = () => {
   const { accountId } = useAuthStore();
@@ -41,6 +43,7 @@ const TemplatesPage = () => {
   const toast = new ToastMessageService();
 
   const [createOpen, setCreateOpen] = useState(false);
+  const [editing, setEditing] = useState<EmailTemplate | null>(null);
   const [viewing, setViewing] = useState<EmailTemplate | null>(null);
 
   const id = String(accountId || "");
@@ -121,7 +124,10 @@ const TemplatesPage = () => {
               </div>
 
               <Button
-                onClick={() => setCreateOpen(true)}
+                onClick={() => {
+                  setEditing(null);
+                  setCreateOpen(true);
+                }}
                 className="h-9 gap-2 px-4"
               >
                 <Plus className="h-4 w-4" />
@@ -166,6 +172,10 @@ const TemplatesPage = () => {
                       key={templateId}
                       template={template}
                       onView={() => setViewing(template)}
+                      onEdit={() => {
+                        setEditing(template);
+                        setCreateOpen(true);
+                      }}
                       onDuplicate={() =>
                         void handleDuplicate(template)
                       }
@@ -178,7 +188,10 @@ const TemplatesPage = () => {
               </div>
             ) : (
               <EmptyState
-                onCreate={() => setCreateOpen(true)}
+                onCreate={() => {
+                  setEditing(null);
+                  setCreateOpen(true);
+                }}
               />
             )}
           </div>
@@ -189,7 +202,11 @@ const TemplatesPage = () => {
       <CreateTemplateDialog
         open={createOpen}
         accountId={id}
-        onClose={() => setCreateOpen(false)}
+        template={editing}
+        onClose={() => {
+          setCreateOpen(false);
+          setEditing(null);
+        }}
         onCreated={() => void fetchTemplates(id)}
       />
 
@@ -202,7 +219,7 @@ const TemplatesPage = () => {
           }
         }}
       >
-        <DialogContent className="max-w-4xl overflow-hidden p-0">
+        <DialogContent className="overflow-hidden p-0 sm:max-w-4xl">
 
           <DialogHeader className="border-b border-slate-200 px-5 py-4">
             <div className="flex items-center gap-3">
@@ -225,9 +242,9 @@ const TemplatesPage = () => {
           <div className="bg-slate-50 p-5">
             <div className="mx-auto max-h-[70vh] max-w-[720px] overflow-auto rounded-lg border border-slate-200 bg-white shadow-sm">
               <div
-                className="p-5"
+                className="email-html p-5"
                 dangerouslySetInnerHTML={{
-                  __html: viewing?.html || "",
+                  __html: toDisplayEmailHtml(viewing?.html),
                 }}
               />
             </div>
@@ -245,11 +262,13 @@ const TemplatesPage = () => {
 const TemplateCard = ({
   template,
   onView,
+  onEdit,
   onDuplicate,
   onDelete,
 }: {
   template: EmailTemplate;
   onView: () => void;
+  onEdit: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
 }) => {
@@ -270,9 +289,9 @@ const TemplateCard = ({
 
           <div className="h-[150px] overflow-hidden px-3 py-3">
             <div
-              className="pointer-events-none origin-top scale-[0.82] text-xs"
+              className="email-html pointer-events-none origin-top scale-[0.82] text-xs"
               dangerouslySetInnerHTML={{
-                __html: template.html || "",
+                __html: toDisplayEmailHtml(template.html),
               }}
             />
           </div>
@@ -335,6 +354,16 @@ const TemplateCard = ({
           >
             <Eye className="h-3.5 w-3.5" />
             View
+          </Button>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onEdit}
+            className="h-8 gap-1.5 border-slate-200 bg-white px-3 text-xs"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            Edit
           </Button>
 
           <Button

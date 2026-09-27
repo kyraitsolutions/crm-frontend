@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { Delta, type Op } from "quill";
 import Select from "react-select";
+import { Link } from "react-router-dom";
 import {
   Maximize2,
   Minimize2,
@@ -16,7 +18,23 @@ import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import type { ILead } from "../../types/lead.type";
 import { useAuthStore } from "@/stores";
 import { EmailService } from "@/services/email.service";
+import { ToastMessageService } from "@/services";
 import { useAccountsStore } from "@/stores/accounts.store";
+import {
+  fillTemplateVariables,
+  isRichTextEmpty,
+  quillHtmlToEmailHtml,
+  toDisplayEmailHtml,
+} from "@/utils/email-html.utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { emailMarketingService } from "@/pages/EmailMarketing/services/email-marketing.service";
+import type { EmailTemplate } from "@/pages/EmailMarketing/types";
+import { EMAIL_MARKETING_PATHS } from "@/constants/routes/email-marketing.path";
 
 interface Recipient {
   label: string;
@@ -31,6 +49,7 @@ interface EmailEditorProps {
 
 const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
   const emailService = new EmailService();
+  const toast = new ToastMessageService();
 
   const { user, accountId } = useAuthStore((state) => state);
   const { accounts } = useAccountsStore((state) => state);
@@ -43,6 +62,68 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
   const [aiPrompt, setAiPrompt] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [showAiBox, setShowAiBox] = useState(false);
+  const quillRef = useRef<ReactQuill>(null);
+  const [templates, setTemplates] = useState<EmailTemplate[]>([]);
+  const [templatesStatus, setTemplatesStatus] = useState<
+    "idle" | "loading" | "loaded" | "error"
+  >("idle");
+
+  const templateValues = useMemo(() => {
+    const fullName = String(lead?.name || "").trim();
+    const [first = "", ...rest] = fullName.split(/\s+/);
+    return {
+      firstName: first || "there",
+      lastName: rest.join(" "),
+      name: fullName || "there",
+      email: lead?.email || "",
+      companyName: lead?.company || "your team",
+      organizationName: user?.organization?.name || "us",
+    };
+  }, [lead, user]);
+
+  const loadTemplates = async () => {
+    if (!accountId) return;
+    setTemplatesStatus("loading");
+    try {
+      const response = await emailMarketingService.templates(String(accountId));
+      const docs: EmailTemplate[] = response.data?.docs || [];
+      setTemplates(docs.filter((template) => template.status !== "archived"));
+      setTemplatesStatus("loaded");
+    } catch {
+      setTemplatesStatus("error");
+    }
+  };
+
+  const applyTemplate = (template: EmailTemplate) => {
+    const quill = quillRef.current?.getEditor();
+    if (!quill) return;
+
+    const hasDraft = subject.trim() || !isRichTextEmpty(body);
+    if (
+      hasDraft &&
+      !window.confirm("Replace the current subject and message with this template?")
+    ) {
+      return;
+    }
+
+    const ops = template.design?.editor === "quill" ? template.design.delta?.ops : undefined;
+    const contents = Array.isArray(ops)
+      ? new Delta(
+          (ops as Op[]).map((op) =>
+            typeof op.insert === "string"
+              ? { ...op, insert: fillTemplateVariables(op.insert, templateValues) }
+              : op,
+          ),
+        )
+      : quill.clipboard.convert({
+          html: fillTemplateVariables(toDisplayEmailHtml(template.html), templateValues, {
+            escape: true,
+          }),
+        });
+
+    setSubject(fillTemplateVariables(template.subject || "", templateValues));
+    quill.setContents(contents, "user");
+  };
 
   const [to, setTo] = useState<Recipient[]>([
     {
@@ -93,55 +174,47 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
     }
   };
   const handleSendEmail = async () => {
+    const recipients = to.map((recipient) => recipient.value).filter(Boolean);
+
+    if (!recipients.length) {
+      toast.error("Please add a recipient");
+      return;
+    }
+
+    if (!subject.trim()) {
+      toast.error("Subject is required");
+      return;
+    }
+
+    if (isRichTextEmpty(body)) {
+      toast.error("Email body is required");
+      return;
+    }
+
     try {
-      if (!to.length) {
-        alert("Please add recipient");
-        return;
-      }
-
-      if (!subject.trim()) {
-        alert("Subject is required");
-        return;
-      }
-
-      if (!body.trim()) {
-        alert("Email body is required");
-        return;
-      }
-
       setSending(true);
 
-      const payload = {
-        leadId: lead.id || null, // optional
-        contactId: null, // optional
-
-        emails: to.map((recipient) => recipient.value),
-        name: "abhijeet",
+      await emailService.sendEmail(String(accountId), {
+        leadId: lead.id || null,
+        contactId: null,
+        emails: recipients,
+        name: lead?.name || "",
         subject,
+        html: quillHtmlToEmailHtml(body),
+      });
 
-        html: body, // ReactQuill HTML
-      };
+      toast.success(
+        recipients.length > 1
+          ? `Email sent to ${recipients.length} recipients`
+          : `Email sent to ${recipients[0]}`,
+      );
 
-      const response = await emailService.sendEmail(String(accountId), payload);
-      console.log(response);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to send email");
-      }
-
-      alert("Email queued successfully");
-
-      // reset form
       setSubject("");
       setBody("");
       setTo([]);
-
       onClose();
     } catch (error: any) {
-      console.log(error);
-
-      alert(error.message || "Failed to send email");
+      toast.error(error?.message || "Failed to send email. Please try again.");
     } finally {
       setSending(false);
     }
@@ -208,10 +281,58 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
               AI Write
             </button>
 
-            <button className="border border-[#5468ff] text-xs whitespace-nowrap text-[#5468ff] px-2 py-1 rounded-2xl flex items-center gap-2 hover:bg-[#eef1ff]">
-              Insert Template
-              <ChevronDown size={16} />
-            </button>
+            <DropdownMenu
+              onOpenChange={(open) => {
+                if (open) void loadTemplates();
+              }}
+            >
+              <DropdownMenuTrigger asChild>
+                <button className="border border-[#5468ff] text-xs whitespace-nowrap text-[#5468ff] px-2 py-1 rounded-2xl flex items-center gap-2 hover:bg-[#eef1ff]">
+                  Insert Template
+                  <ChevronDown size={16} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="z-[60] w-72 max-h-80 overflow-y-auto rounded-lg p-1"
+              >
+                {templatesStatus === "loading" && !templates.length ? (
+                  <div className="flex items-center gap-2 px-3 py-3 text-xs text-gray-500">
+                    <Loader2 size={14} className="animate-spin" />
+                    Loading templates...
+                  </div>
+                ) : templatesStatus === "error" ? (
+                  <div className="px-3 py-3 text-xs text-red-600">
+                    Could not load templates. Close and try again.
+                  </div>
+                ) : !templates.length ? (
+                  <div className="px-3 py-3 text-xs text-gray-500">
+                    No email templates yet.{" "}
+                    <Link
+                      to={EMAIL_MARKETING_PATHS.templates(String(accountId))}
+                      className="text-[#5468ff] underline"
+                    >
+                      Create one
+                    </Link>
+                  </div>
+                ) : (
+                  templates.map((template) => (
+                    <DropdownMenuItem
+                      key={String(template.id || template._id)}
+                      onSelect={() => applyTemplate(template)}
+                      className="cursor-pointer flex-col items-start gap-0.5"
+                    >
+                      <span className="w-full truncate text-sm font-medium text-gray-800">
+                        {template.name}
+                      </span>
+                      <span className="w-full truncate text-xs text-gray-500">
+                        {template.subject || "No subject"}
+                      </span>
+                    </DropdownMenuItem>
+                  ))
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -291,12 +412,14 @@ const EmailEditor = ({ lead, isOpen, onClose }: EmailEditorProps) => {
         {/* Editor */}
         <div className="flex-1 overflow-hidden">
           <ReactQuill
+            ref={quillRef}
             theme="snow"
             value={body}
             onChange={setBody}
             modules={{
               toolbar: toolbarOptions,
             }}
+            useSemanticHTML={false}
             placeholder="Write your email..."
             className="email-editor h-full border-none! w-full!"
           />

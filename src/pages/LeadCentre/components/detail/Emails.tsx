@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Mail, Calendar, User } from "lucide-react";
+import { toDisplayEmailHtml } from "@/utils/email-html.utils";
 
 interface Email {
     id: string;
@@ -185,8 +186,8 @@ const Emails = ({ lead, onCompose }: EmailsProps) => {
 
                                                 {/* Email Body */}
                                                 <div
-                                                    className="p-5 prose prose-sm max-w-none bg-white"
-                                                    dangerouslySetInnerHTML={{ __html: email.html }}
+                                                    className="email-html p-5 max-w-none bg-white"
+                                                    dangerouslySetInnerHTML={{ __html: toDisplayEmailHtml(email.html) }}
                                                 />
                                             </div>
                                         </div>

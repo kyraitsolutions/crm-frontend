@@ -83,6 +83,14 @@ export class EmailMarketingService extends ApiService {
     return this.post(`/email-marketing/${accountId}/templates`, payload);
   }
 
+  updateTemplate(
+    accountId: string,
+    id: string,
+    payload: unknown,
+  ): Promise<ApiResponse<any>> {
+    return this.patch(`/email-marketing/${accountId}/templates/${id}`, payload);
+  }
+
   duplicateTemplate(accountId: string, id: string): Promise<ApiResponse<any>> {
     return this.post(
       `/email-marketing/${accountId}/templates/${id}/duplicate`,

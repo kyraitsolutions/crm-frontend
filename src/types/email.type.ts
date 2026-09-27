@@ -17,6 +17,12 @@ export enum Method{
   AI="ai"
 }
 
+export interface EmailTemplateDesign {
+  editor: "quill";
+  version: 1;
+  delta: { ops: unknown[] };
+}
+
 export interface EmailTemplateData{
   name: string;
   subject: string;
@@ -25,4 +31,5 @@ export interface EmailTemplateData{
   variables?: string[];
   category?: TemplateCategory;
   generatedBy?:Method
+  design?: EmailTemplateDesign;
 };

@@ -1,3 +1,5 @@
+import type { EmailTemplateDesign } from "@/types/email.type";
+
 export type EmailCampaignStatus =
   | "DRAFT"
   | "SCHEDULED"
@@ -56,6 +58,9 @@ export type EmailTemplate = {
   preheader?: string;
   category?: string;
   status?: string;
+  variables?: string[];
+  generatedBy?: "ai" | "user";
+  design?: Partial<EmailTemplateDesign> | null;
 };
 
 export type EmailRecipient = {
