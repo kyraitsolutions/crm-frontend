@@ -49,12 +49,12 @@ const Sidebar = () => {
       icon: <MessageCircleMore size={16} />,
       active: path === "chat-setting" ? true : false,
     },
-    {
-      url: "ai-agent",
-      label: "AI Sales Agent",
-      icon: <Bot size={16} />,
-      active: path === "ai-agent" ? true : false,
-    },
+    // {
+    //   url: "ai-agent",
+    //   label: "AI Sales Agent",
+    //   icon: <Bot size={16} />,
+    //   active: path === "ai-agent" ? true : false,
+    // },
     {
       url: "canned-messages",
       label: "Canned Message",
@@ -92,8 +92,7 @@ const Sidebar = () => {
             <Link
               to={`/dashboard/settings/whatsapp/${item.url}`}
               key={item.label}
-              className={`flex w-full items-center gap-4 rounded-xl text-sm transition px-4 py-3 ${
-                item.active
+              className={`flex w-full items-center gap-4 rounded-xl text-sm transition px-4 py-3 ${item.active
                   ? "bg-primary/10 text-primary font-semibold border-r-4 border-primary"
                   : "text-slate-700 transition-discrete duration-300"
                 }`}
