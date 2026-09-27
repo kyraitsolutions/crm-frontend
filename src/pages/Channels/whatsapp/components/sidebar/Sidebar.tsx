@@ -5,7 +5,6 @@ import {
   MessageCircleMore,
   Settings,
   SquareCheckBig,
-  Bot,
   Layers,
   SquareUserRound,
   AtSign,
@@ -93,8 +92,8 @@ const Sidebar = () => {
               to={`/dashboard/settings/whatsapp/${item.url}`}
               key={item.label}
               className={`flex w-full items-center gap-4 rounded-xl text-sm transition px-4 py-3 ${item.active
-                  ? "bg-primary/10 text-primary font-semibold border-r-4 border-primary"
-                  : "text-slate-700 transition-discrete duration-300"
+                ? "bg-primary/10 text-primary font-semibold border-r-4 border-primary"
+                : "text-slate-700 transition-discrete duration-300"
                 }`}
             >
               {item.icon}
