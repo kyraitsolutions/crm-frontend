@@ -119,12 +119,21 @@ export const useContactStore = create<TContactStore>((set, get) => ({
 
             const response = await contactService.getContacts(payload)
             console.log("response", response.data.docs)
-            const contacts = response?.data?.docs || [];
+            const contacts = Array.isArray(response?.data?.docs) ? response.data.docs : [];
+            const totalItems = Number(response.data?.pagination?.totalDocs ?? contacts.length);
+            const pageSize = contactQuery.limit || 14;
+            const reportedPages = Number(response.data?.pagination?.totalPages);
+            const totalPages = Math.max(
+                1,
+                Number.isFinite(reportedPages) && reportedPages > 0
+                    ? reportedPages
+                    : Math.ceil(totalItems / pageSize) || 1,
+            );
 
             set({
                 contacts,
-                totalPages: response.data?.pagination?.totalPages,
-                totalItems: response.data.pagination?.totalDocs
+                totalPages,
+                totalItems,
             })
         } catch (error) {
             console.error("Fetch contacts error", error);

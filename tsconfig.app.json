@@ -28,5 +28,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "../crm-backend/crm-backend/src/types/meta-api.type.ts"]
+  "include": ["src", "../crm-backend/crm-backend/src/types/meta-api.type.ts"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test/**"]
 }

@@ -1,14 +1,32 @@
 import { formatDateTime } from "@/utils/date-utils";
-import { Funnel, Pencil, Plus, Search, X } from "lucide-react";
+import { CONTACT_PATHS } from "@/constants/routes/contact.path";
+import { ChevronDown, Funnel, Pencil, Plus, Search, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ActiveImportBanner } from "./Contact/import/components/ActiveImportBanner";
 import { useEffect, useMemo, useState } from "react";
 import { useContactStore } from "./Contact/store/contact.store";
+import { hasPermission, PERMISSIONS } from "@/rbac";
 import { useAuthStore } from "@/stores";
+import { useAccountAccessStore } from "@/stores/account-access.store";
 import ButtonWithTitle from "@/components/ui/Buttons/ButtonWithTitle";
 import ContactFilter from "./Contact/components/ContactFilter";
 import DataLoader from "@/components/Loader/data-loader";
 import useDebounce from "@/hooks/useDebounce";
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/pagination";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { BroadcastChannelDialog } from "./Contact/components/BroadcastChannelDialog";
 import { EmailBroadcastDialog } from "./Contact/components/EmailBroadcastDialog";
 import { WhatsAppBroadcastDialog } from "./Contact/components/WhatsAppBroadcastDialog";
@@ -36,11 +54,18 @@ const Contacts = () => {
   const [emailOpen, setEmailOpen] = useState(false);
   const [whatsappOpen, setWhatsappOpen] = useState(false);
   const { accountId } = useAuthStore((state) => state);
+  const { permissions } = useAccountAccessStore((state) => state);
+  const navigate = useNavigate();
+  const canImport = hasPermission(permissions, PERMISSIONS.CONTACTS.IMPORT);
+  const accountKey = String(accountId || "");
   const [openFilter, setOpenFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const debouncedSearchQuery = useDebounce(contactQuery.search, 1000);
+  const pageSize = contactQuery.limit || 14;
   const pageIds = useMemo(() => contacts.map(contactId).filter(Boolean), [contacts]);
+  const showingFrom = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const showingTo = Math.min(totalItems, currentPage * pageSize);
   const allOnPageSelected =
     pageIds.length > 0 && pageIds.every((id) => selectedContacts.includes(id));
   const someOnPageSelected = pageIds.some((id) => selectedContacts.includes(id));
@@ -85,6 +110,7 @@ const Contacts = () => {
 
   return (
     <div className="px-6 py-2 ">
+      {accountId && canImport ? <ActiveImportBanner accountId={String(accountId)} /> : null}
       <div className="flex justify-between gap-2 items-center my-5">
         <div className="flex items-center gap-3 w-full">
           <div className="flex gap-2 items-center w-full">
@@ -133,13 +159,38 @@ const Contacts = () => {
               BROADCAST ({selectedCount})
             </ButtonWithTitle>
           )}
-          <ButtonWithTitle
-            title="Add Single Contact"
-            onClick={() => setOpen(true)}
-            className="border flex  items-center  gap-2 border-primary hover:bg-primary/10 text-primary text-sm px-3 py-1.5 rounded font-medium transition"
-          >
-            <Plus size={16} /> Add Contact
-          </ButtonWithTitle>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="border flex items-center gap-2 border-primary hover:bg-primary/10 text-primary text-sm px-3 py-1.5 rounded font-medium transition"
+              >
+                <Plus size={16} /> Add Contact
+                <ChevronDown className="h-4 w-4 opacity-70" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="rounded-lg">
+              <DropdownMenuItem className="cursor-pointer" onClick={() => setOpen(true)}>
+                Add single contact
+              </DropdownMenuItem>
+              {canImport ? (
+                <>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => navigate(CONTACT_PATHS.getNew(accountKey))}
+                  >
+                    Import contact
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => navigate(CONTACT_PATHS.getHistory(accountKey))}
+                  >
+                    Import history
+                  </DropdownMenuItem>
+                </>
+              ) : null}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -252,13 +303,40 @@ const Contacts = () => {
       ) : (
         <DataLoader />
       )}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        goToPage={(page) => {
-          setCurrentPage(page);
-        }}
-      />
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          {totalItems === 0
+            ? "No contacts"
+            : `Showing ${showingFrom.toLocaleString()}–${showingTo.toLocaleString()} of ${totalItems.toLocaleString()}`}
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Rows</span>
+            <Select
+              value={String(pageSize)}
+              onValueChange={(value) => setContactQuery({ limit: Number(value) })}
+            >
+              <SelectTrigger className="h-8 w-[4.5rem]" aria-label="Rows per page">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {[10, 14, 25, 50, 100].map((size) => (
+                  <SelectItem key={size} value={String(size)}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            goToPage={(page) => {
+              setCurrentPage(page);
+            }}
+          />
+        </div>
+      </div>
 
       <BroadcastChannelDialog
         open={channelOpen}
