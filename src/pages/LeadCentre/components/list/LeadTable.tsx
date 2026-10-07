@@ -134,11 +134,12 @@ const LeadTable = () => {
   }
 
   return (
-    <div className=" overlead-hidden mt-5 hide-scrollbar bg-white rounded-2xl px-5">
-      <Table className="border-b rounded-2xl! overflow-hidden">
+    <div className="mt-5 min-w-0 w-full max-w-full overflow-hidden bg-white rounded-2xl px-5">
+      <div className="min-w-0 w-full overflow-x-auto">
+      <Table className="border-b rounded-2xl! min-w-[960px]">
         <TableHeader className="bg-muted/30 ">
           <TableRow className="hover:bg-transparent">
-            <TableHead className="text-xs font-semibold uppercase tracking-wide text-white bg-primary p-3">
+            <TableHead className="text-xs font-semibold uppercase tracking-wide text-white bg-primary p-3 w-12">
               #
             </TableHead>
             {[
@@ -177,25 +178,24 @@ const LeadTable = () => {
               </TableCell>
               {/* Date added */}
               <TableCell>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock3 className="size-4" />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground whitespace-nowrap">
+                  <Clock3 className="size-4 shrink-0" />
 
                   {formatDateTime(lead.createdAt)}
                 </div>
               </TableCell>
               {/* lead Name*/}
 
-              <TableCell className="">
-                <div className="flex items-center gap-4">
-                  <div className="flex size-7 items-center justify-center text-primary rounded-2xl border bg-primary/10">
-                    {/* nb <Worklead className="size-4 text-primary" /> */}
+              <TableCell className="max-w-[180px]">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex size-7 shrink-0 items-center justify-center text-primary rounded-2xl border bg-primary/10">
                     {lead?.name?.charAt(0).toUpperCase()}
                   </div>
 
-                  <div className="space-y-1">
-                    <h3 className="font-semibold">{lead?.name}</h3>
+                  <div className="min-w-0 space-y-1">
+                    <h3 className="font-semibold truncate">{lead?.name}</h3>
 
-                    <p className=" truncate text-xs text-muted-foreground">
+                    <p className="truncate text-xs text-muted-foreground">
                       {lead?.message?.slice(0, 50) || "No message"}
                     </p>
                   </div>
@@ -203,17 +203,17 @@ const LeadTable = () => {
               </TableCell>
               {/* Phone */}
               <TableCell className="">
-                <div className="flex items-center gap-2">
-                  <Phone className="size-4 text-primary" />
-                  <h3 className="font-semibold">{lead?.phone}</h3>
+                <div className="flex items-center gap-2 min-w-0">
+                  <Phone className="size-4 shrink-0 text-primary" />
+                  <h3 className="font-semibold truncate">{lead?.phone}</h3>
                 </div>
               </TableCell>
 
               {/* Email */}
-              <TableCell className="">
-                <div className="flex items-center gap-2">
-                  <Mail className="size-4 text-primary" />
-                  <h3 className="font-medium">{lead?.email}</h3>
+              <TableCell className="max-w-[200px]">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Mail className="size-4 shrink-0 text-primary" />
+                  <h3 className="font-medium truncate">{lead?.email}</h3>
                 </div>
               </TableCell>
 
@@ -225,7 +225,7 @@ const LeadTable = () => {
                     handleStatusChange(lead.id, value)
                   }
                 >
-                  <SelectTrigger className="border-none shadow-none">
+                  <SelectTrigger className="border-none shadow-none max-w-[140px]">
                     <SelectValue />
                   </SelectTrigger>
 
@@ -252,28 +252,26 @@ const LeadTable = () => {
 
               {/* Source */}
               <TableCell>
-                <div className="flex items-center gap-2 capitalize font-medium">
+                <div className="flex items-center gap-2 capitalize font-medium min-w-0">
                   {getIconForSource[lead.source?.name || ""] || (
-                    <Shapes className="size-4 text-muted-foreground" />
+                    <Shapes className="size-4 shrink-0 text-muted-foreground" />
                   )}
 
-                  {lead.source?.name || "Unknown"}
+                  <span className="truncate">{lead.source?.name || "Unknown"}</span>
                 </div>
               </TableCell>
 
               {/* Status */}
               <TableCell>
-                <div className="flex items-center gap-2  capitalize font-medium">
-                  {/* <GitBranch className="size-4 text-muted-foreground" /> */}
-
+                <div className="capitalize font-medium">
                   {lead.status || "Unknown"}
                 </div>
               </TableCell>
 
               {/* Last Activity */}
               <TableCell>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock3 className="size-4" />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground whitespace-nowrap">
+                  <Clock3 className="size-4 shrink-0" />
 
                   {formatDateTime(lead.updatedAt)}
                 </div>
@@ -321,6 +319,7 @@ const LeadTable = () => {
           ))}
         </TableBody>
       </Table>
+      </div>
 
       <div className="px-5">
         <Pagination

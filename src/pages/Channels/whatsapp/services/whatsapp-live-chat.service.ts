@@ -24,6 +24,20 @@ export class WhatsAppLiveChatService extends ApiService {
       {},
     );
   }
+
+  claimIntervention(accountId: string, conversationId: string) {
+    return this.post(
+      `/whatsapp/account/${accountId}/live-chat/conversations/${conversationId}/intervene`,
+      {},
+    );
+  }
+
+  acceptIntervention(accountId: string, conversationId: string) {
+    return this.post(
+      `/whatsapp/account/${accountId}/live-chat/conversations/${conversationId}/intervene/accept`,
+      {},
+    );
+  }
 }
 
 export const whatsappLiveChatService = new WhatsAppLiveChatService();

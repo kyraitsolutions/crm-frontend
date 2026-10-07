@@ -38,7 +38,7 @@ export function AppSidebar() {
     navigate(ACCOUNT_PATHS.byId(accountId));
   };
 
-  const data = {
+  const data = { 
     navMain: [
       {
         title: "Dashboard",
@@ -50,8 +50,8 @@ export function AppSidebar() {
       },
       {
         title: "Live Chat",
-        url: `${ACCOUNT_PATHS.byId(String(accountId))}/live-chat`,
-        active: true,
+        url: `${ACCOUNT_PATHS.byId(String(accountId))}/live-chat`, 
+        active: hasPermission(permissions, PERMISSIONS.LIVE_CHAT.VIEW),
         icon: MessagesSquare,
       },
 
@@ -101,19 +101,22 @@ export function AppSidebar() {
         title: "Contacts",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/contacts`,
         icon: MdOutlineContacts,
-        active: true,
+        active: hasPermission(permissions, PERMISSIONS.CONTACTS.VIEW),
       },
       {
         title: "Email Marketing",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/email-marketing`,
         icon: Mail,
-        active: true,
+        active: hasPermission(permissions, PERMISSIONS.EMAIL_MARKETING.VIEW),
       },
       {
         title: "WhatsApp Marketing",
         url: `${ACCOUNT_PATHS.byId(String(accountId))}/broadcast/whatsapp`,
         icon: MessageCircle,
-        active: true,
+        active: hasPermission(
+          permissions,
+          PERMISSIONS.WHATSAPP_MARKETING.VIEW,
+        ),
       },
     ],
   };

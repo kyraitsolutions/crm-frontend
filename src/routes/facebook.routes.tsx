@@ -9,7 +9,9 @@ import PostsPage from "@/pages/Channels/facebook/pages/PostsPage";
 import Setting from "@/pages/Channels/facebook/pages/Setting";
 import { MetaRouteGuard } from "@/pages/Channels/facebook/routes/MetaRouteGuard";
 import MetaWorkspace from "@/pages/Channels/facebook/sections/MetaWorkspace";
+import { PERMISSIONS } from "@/rbac";
 import type { RouteObject } from "react-router-dom";
+import { RequirePermission } from "./route-access/RequirePermission";
 
 export const facebookRoutes: RouteObject[] = [
   {
@@ -20,7 +22,11 @@ export const facebookRoutes: RouteObject[] = [
         children: [
           {
             path: "settings/facebook",
-            element: <MetaRouteGuard />,
+            element: (
+              <RequirePermission permission={PERMISSIONS.FACEBOOK.VIEW}>
+                <MetaRouteGuard />
+              </RequirePermission>
+            ),
             children: [
               {
                 index: true,

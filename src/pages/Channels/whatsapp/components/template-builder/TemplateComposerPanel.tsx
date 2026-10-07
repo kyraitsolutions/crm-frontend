@@ -378,8 +378,11 @@
 
 import { useFormContext } from "react-hook-form";
 import type { TemplateForm } from "../../validations/template.schema";
+import { isAuthenticationTemplate } from "../../utils/template/auth.utils";
+import { AuthenticationEditor } from "./content/authentication/AuthenticationEditor";
 import { BodyEditor } from "./content/BodyEditor";
 import { ButtonsEditor } from "./content/ButtonEditor";
+import { CarouselEditor } from "./content/carousel/CarouselEditor";
 import { FooterEditor } from "./content/FooterEditor";
 import { HeaderEditor } from "./content/header/HeaderEditor";
 import { VariableTypeSelector } from "./content/VariableTypeSelector";
@@ -399,7 +402,11 @@ export const TemplateComposerPanel = ({
   isSubmitting,
   onDiscard,
 }: ITemplateComposerPanelProps) => {
-  const { handleSubmit } = useFormContext<TemplateForm>();
+  const { handleSubmit, watch } = useFormContext<TemplateForm>();
+  const templateType = watch("templateType");
+  const category = watch("category");
+  const isCarousel = templateType === "CAROUSEL";
+  const isAuth = isAuthenticationTemplate({ category, templateType });
 
   return (
     <form
@@ -410,11 +417,23 @@ export const TemplateComposerPanel = ({
       className="space-y-4"
     >
       <TemplateDetailsPanel />
-      <VariableTypeSelector />
-      <HeaderEditor />
-      <BodyEditor />
-      <FooterEditor />
-      <ButtonsEditor />
+      {isAuth ? (
+        <AuthenticationEditor />
+      ) : (
+        <>
+          <VariableTypeSelector />
+          {!isCarousel && <HeaderEditor />}
+          <BodyEditor />
+          {isCarousel ? (
+            <CarouselEditor />
+          ) : (
+            <>
+              <FooterEditor />
+              <ButtonsEditor />
+            </>
+          )}
+        </>
+      )}
 
       <FooterActions
         onDiscard={onDiscard}

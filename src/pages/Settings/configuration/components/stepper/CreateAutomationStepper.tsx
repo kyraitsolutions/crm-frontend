@@ -20,8 +20,10 @@ const CreateAutomationStepper: React.FC = () => {
     saveAutomation,
     setIsCreating,
     isSaving,
-    setIsSaving,
+    editingId,
   } = useAutomationStore();
+
+  const isEditing = Boolean(editingId);
 
   const handleNext = () => setCurrentStep(currentStep + 1);
   const handleBack = () => setCurrentStep(currentStep - 1);
@@ -34,22 +36,21 @@ const CreateAutomationStepper: React.FC = () => {
     status: "published" | "draft";
   }) => {
     try {
-      const data = { name, status };
-      const response = await saveAutomation(String(accountId), data);
+      const response = await saveAutomation(String(accountId), { name, status });
 
-      if ((response && response?.status === 201) || response?.status === 200) {
+      if (response && (response?.status === 201 || response?.status === 200)) {
         toastService.success(
-          response?.message || "Automation created successfully!",
+          response?.message ||
+            (isEditing
+              ? "Automation updated successfully!"
+              : "Automation created successfully!"),
         );
-        setIsCreating(false);
       }
     } catch (error) {
       const err = error as ApiError;
       if (err) {
         toastService.apiError(err.message);
       }
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -59,7 +60,13 @@ const CreateAutomationStepper: React.FC = () => {
         return (
           <SelectTriggerStep
             selectedTrigger={draft.trigger}
-            onSelect={(trigger) => updateDraft({ trigger })}
+            onSelect={(trigger) =>
+              updateDraft({
+                trigger,
+                // Reset conditions when trigger changes on create; keep on edit if same
+                conditions: [],
+              })
+            }
             onNext={handleNext}
           />
         );
@@ -76,6 +83,7 @@ const CreateAutomationStepper: React.FC = () => {
       case 3:
         return (
           <ChooseActionsStep
+            trigger={draft.trigger}
             actions={draft.actions}
             onChange={(actions) => updateDraft({ actions })}
             onBack={handleBack}
@@ -87,8 +95,9 @@ const CreateAutomationStepper: React.FC = () => {
           <ReviewStep
             draft={draft}
             onBack={handleBack}
-            onSave={(name) => handleSaveAutomation(name)}
+            onSave={handleSaveAutomation}
             loading={isSaving}
+            isEditing={isEditing}
           />
         );
       default:
@@ -99,10 +108,9 @@ const CreateAutomationStepper: React.FC = () => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 max-h-[95vh] overflow-y-auto hide-scrollbar">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
           <h1 className="text-base font-semibold text-gray-800">
-            Create Automation
+            {isEditing ? "Edit Automation" : "Create Automation"}
           </h1>
           <button
             onClick={() => setIsCreating(false)}

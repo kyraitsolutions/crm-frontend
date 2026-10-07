@@ -4,6 +4,8 @@ import {
   templateSchema,
   type TemplateForm,
 } from "../validations/template.schema";
+import { createDefaultAuthentication } from "../utils/template/auth.utils";
+import { createDefaultCarousel } from "../utils/template/carousel.utils";
 
 export const useTemplateForm = () => {
   return useForm<TemplateForm>({
@@ -27,6 +29,8 @@ export const useTemplateForm = () => {
       variableType: "Number",
 
       buttons: [],
+      carousel: createDefaultCarousel(),
+      authentication: createDefaultAuthentication(),
     },
   });
 };

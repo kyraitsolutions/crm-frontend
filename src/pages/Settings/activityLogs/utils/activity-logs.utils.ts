@@ -8,37 +8,100 @@ import type {
   FormattedChangeValue,
 } from "../types/activity-log.type";
 import { getActionConfig, parseAction } from "./action.utils";
+import { getEntityConfig } from "./entity.utils";
 import { getFieldLabel } from "./field.utils";
 
-export function getEntityName(log: ActivityLog): string {
-  const metadata = log.metadata;
+const ENTITY_NAME_KEYS: Record<string, string[]> = {
+  lead: ["leadName", "name"],
+  contact: ["name", "email", "phone"],
+  deal: ["dealName", "name"],
+  automation: ["automationName", "name"],
+  task: ["title", "name"],
+  integration: ["provider"],
+  role: ["roleName", "name"],
+  account: ["accountName", "name"],
+  organization: ["name"],
+  form: ["name"],
+  chatbot: ["name"],
+  chatflow: ["name"],
+  email: ["name", "subject"],
+  email_campaign: ["campaignName", "name"],
+  email_template: ["name"],
+  teammember: ["name", "email"],
+};
 
-  return (
-    (metadata?.leadName as string) ||
-    (metadata?.contactName as string) ||
-    (metadata?.dealName as string) ||
-    (metadata?.automationName as string) ||
-    (metadata?.name as string) ||
-    log.entityType
-  );
+const PROVIDER_LABELS: Record<string, string> = {
+  facebook: "Facebook",
+  whatsapp: "WhatsApp",
+  instagram: "Instagram",
+  google: "Google",
+  gmail: "Gmail",
+};
+
+const FALLBACK_NAME_KEYS = ["name", "title", "leadName", "provider", "email"];
+
+function metadataText(
+  metadata: Record<string, unknown> | undefined,
+  key: string,
+): string {
+  const value = metadata?.[key];
+  return typeof value === "string" && value.trim() ? value.trim() : "";
+}
+
+function formatProvider(value: string): string {
+  const known = PROVIDER_LABELS[value.toLowerCase()];
+  if (known) return known;
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export function getEntityName(log: ActivityLog): string {
+  const keys = ENTITY_NAME_KEYS[log.entityType] ?? FALLBACK_NAME_KEYS;
+
+  for (const key of keys) {
+    const value = metadataText(log.metadata, key);
+    if (!value) continue;
+    return key === "provider" ? formatProvider(value) : value;
+  }
+
+  return getEntityConfig(log.entityType).label;
 }
 
 export function hasDisplayableChanges(log: ActivityLog): boolean {
   return Object.keys(log.changes).some((key) => !SKIP_CHANGE_KEYS.has(key));
 }
 
-export function getActivitySubtitle(log: ActivityLog): string | null {
-  const changes = log.changes;
+function changeSideLabel(value: unknown): string {
+  if (value == null || value === "") return "None";
+  if (typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+    if (typeof obj.label === "string" && obj.label.trim()) return obj.label;
+    if (typeof obj.name === "string" && obj.name.trim()) return obj.name;
+    if (typeof obj.email === "string" && obj.email.trim()) return obj.email;
+  }
+  return String(value);
+}
 
-  if ("stage" in changes) {
-    const change = changes.stage;
-    return `${change.from ?? "None"} → ${change.to ?? "None"}`;
+export function getActivitySubtitle(log: ActivityLog): string | null {
+  const changes = log.changes || {};
+
+  if (changes.assignedTo) {
+    const change = changes.assignedTo;
+    return `${changeSideLabel(change?.from)} → ${changeSideLabel(change?.to)}`;
   }
 
-  if ("status" in changes) {
-    const change = changes.status;
+  if (changes.stage) {
+    const change = changes.stage;
+    return `${changeSideLabel(change?.from)} → ${changeSideLabel(change?.to)}`;
+  }
 
-    return `${change.from ?? "None"} → ${change.to ?? "None"}`;
+  if (changes.status) {
+    const change = changes.status;
+    return `${changeSideLabel(change?.from)} → ${changeSideLabel(change?.to)}`;
+  }
+
+  if (changes.source) {
+    const change = changes.source;
+    return `${changeSideLabel(change?.from)} → ${changeSideLabel(change?.to)}`;
   }
 
   if ("notes" in changes) {
@@ -113,18 +176,23 @@ export function formatChangeValue(value: unknown): FormattedChangeValue {
       items: value.map(getDisplayValue),
     };
   }
-  return { type: "object", value: getDisplayValue(value) };
+  // Prefer label/name for enriched refs like { id, label: "Jane Doe" }
+  const labeled = getDisplayValue(value);
+  if (labeled && !labeled.startsWith("{")) {
+    return { type: "primitive", value: labeled };
+  }
+  return { type: "object", value: labeled };
 }
 export function getDisplayValue(value: unknown): string {
   if (typeof value !== "object" || value === null) {
     return String(value);
   }
   const obj = value as Record<string, unknown>;
-  if (typeof obj.name === "string") return obj.name;
-  if (typeof obj.title === "string") return obj.title;
-  if (typeof obj.label === "string") return obj.label;
-  if (typeof obj.message === "string") return obj.message;
-  if (typeof obj.email === "string") return obj.email;
+  if (typeof obj.label === "string" && obj.label.trim()) return obj.label;
+  if (typeof obj.name === "string" && obj.name.trim()) return obj.name;
+  if (typeof obj.title === "string" && obj.title.trim()) return obj.title;
+  if (typeof obj.message === "string" && obj.message.trim()) return obj.message;
+  if (typeof obj.email === "string" && obj.email.trim()) return obj.email;
   return JSON.stringify(obj);
 }
 export function diffArray(before: unknown[], after: unknown[]) {

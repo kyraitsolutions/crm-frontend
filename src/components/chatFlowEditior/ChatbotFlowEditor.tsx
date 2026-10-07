@@ -7,9 +7,10 @@ import ReactFlow, {
   MiniMap,
   useEdgesState,
   useNodesState,
-} from "reactflow";
+} from "reactflow"; 
 import "reactflow/dist/style.css";
 
+import GenerateFlowModal from "./GenerateFlowModal";
 import FlowModal from "@/pages/ChatFlows/components/FlowModal";
 import { chatflowService } from "@/pages/ChatFlows/services/chatflow.service";
 import { hasPermission, PERMISSIONS } from "@/rbac";
@@ -17,9 +18,9 @@ import { ToastMessageService } from "@/services";
 import { useAuthStore } from "@/stores";
 import { useAccountAccessStore } from "@/stores/account-access.store";
 import type { ApiError } from "@/types";
-import { ArrowLeft, Upload, Workflow } from "lucide-react";
+import { Sparkles, Upload, Workflow } from "lucide-react";
 import { MdAdd, MdOutlineDrafts } from "react-icons/md";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import type { Connection, NodeMouseHandler } from "reactflow";
 import Loader from "../Loader";
 import { Button } from "../ui/button";
@@ -40,8 +41,11 @@ import type {
 import {
   validateButtonNode,
   validateSendMessageNode,
+  validateActionNode,
+  validateQuestionNode,
+  validateTemplateNode,
 } from "./utils/nodesValidation";
-import { createInitialElementsData } from "./utils/utils";
+import { createInitialElementsData, migrateLegacyAskNodes } from "./utils/utils";
 
 export const mandatoryNodes = [
   {
@@ -186,7 +190,7 @@ export const mandatoryEdges = [
 ];
 
 export default function ChatbotFlowEditor() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // const chatbot = new ChatBotService();
   const { chatflowId } = useParams();
   const toastMessageService = new ToastMessageService();
@@ -204,9 +208,12 @@ export default function ChatbotFlowEditor() {
   const [flowId, setFlowId] = useState<string | null>(null);
 
   const [flowModalOpen, setFlowModalOpen] = useState(false);
+  const [generateOpen, setGenerateOpen] = useState(false);
+  const [generateLoading, setGenerateLoading] = useState(false);
   const [fieldOpen, setFieldOpen] = useState(false);
   const [publishLoading, setPublishLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [canvasReady, setCanvasReady] = useState(false);
   const [currentPublishStatus, setCurrentPublishStatus] = useState("");
 
   const handleCloseSidebar = () => {
@@ -253,23 +260,55 @@ export default function ChatbotFlowEditor() {
             value.data.payload as TButtonNodeData["payload"],
           );
           break;
+        case "template":
+          validateObj = validateTemplateNode(value.data.payload);
+          break;
+        case "question":
+          validateObj = validateQuestionNode(value.data.payload);
+          break;
+        case "keyword":
+        case "condition":
+        case "set_attribute":
+        case "add_tag":
+        case "remove_tag":
+        case "delay":
+        case "goto":
+        case "end":
+        case "api_request":
+        case "handoff":
+        case "ask_address":
+        case "ask_location":
+        case "ask_media":
+        case "connect_flow":
+          validateObj = validateActionNode(value.type, value.data.payload);
+          break;
         default:
           validateObj = {
             message: "jhg",
             isValid: true,
           };
       }
-    }
 
-    if (validateObj && !validateObj?.isValid) {
-      toastMessageService.error(validateObj?.message);
-      return false;
+      if (validateObj && !validateObj.isValid) {
+        toastMessageService.error(validateObj.message);
+        return false;
+      }
     }
 
     return true;
   };
 
-  const addNewNode = (type: TNodeType, label: string) => {
+  const addNewNode = (type: TNodeType, label: string, preset?: string) => {
+    const payload = createInitialElementsData(type);
+    if (
+      preset === "media" &&
+      payload &&
+      typeof payload === "object" &&
+      "interactive" in payload &&
+      payload.interactive.type === "button"
+    ) {
+      payload.interactive.header = { type: "image", image: { link: "" } };
+    }
     const newNode = {
       id: crypto.randomUUID(),
       type: type,
@@ -277,7 +316,7 @@ export default function ChatbotFlowEditor() {
       data: {
         label,
         type,
-        payload: createInitialElementsData(type),
+        payload,
       } as TAppNodeData,
     };
     setNodes((nds) => [...nds, newNode]);
@@ -311,12 +350,13 @@ export default function ChatbotFlowEditor() {
 
       if (response?.status === 200 || response?.status === 201) {
         const data = response?.data?.doc;
-        const nodes = data?.nodes || [];
+        const nodes = migrateLegacyAskNodes(data?.nodes || []);
         const edges = data?.edges || [];
         const hydEdges = hydratedEdges(edges);
         setNodes(nodes);
         setEdges(hydEdges);
         setFlowName(data?.name || "");
+        setCanvasReady(true);
       }
     } catch (error) {
       console.log(error);
@@ -354,7 +394,7 @@ export default function ChatbotFlowEditor() {
             response?.message || "Your request was processed successfully",
           );
 
-          setFlowId(response?.data.doc.id);
+          setFlowId(response?.data.doc.id); 
         }
       }
     } catch (error) {
@@ -365,6 +405,33 @@ export default function ChatbotFlowEditor() {
       }
     } finally {
       setPublishLoading(false);
+    }
+  };
+
+  const generateFlow = async (value: { name: string; prompt: string }) => {
+    if (!accountId) return;
+    setGenerateLoading(true);
+    try {
+      const response = await chatflowService.generateChatFlow(String(accountId), value);
+      const generated = response?.data?.doc;
+      const nextNodes = generated?.nodes || [];
+      const nextEdges = generated?.edges || [];
+      if (!nextNodes.length) {
+        toastMessageService.error("The AI could not build a flow. Try a shorter prompt.");
+        return;
+      }
+      setNodes(nextNodes);
+      setEdges(hydratedEdges(nextEdges));
+      if (value.name) setFlowName(value.name);
+      setSelectedNode(null);
+      setNodeSettingOpen(false);
+      setGenerateOpen(false);
+      toastMessageService.success("Flow generated. Review it, then save or publish.");
+    } catch (error) {
+      const err = error as ApiError;
+      toastMessageService.apiError(err?.message || "Could not generate the flow");
+    } finally {
+      setGenerateLoading(false);
     }
   };
 
@@ -379,11 +446,18 @@ export default function ChatbotFlowEditor() {
     getChatbotFlow();
   }, []);
 
+  useEffect(() => {
+    if (!selectedNode) return;
+    if (nodes.some((node) => node.id === selectedNode.id)) return;
+    setSelectedNode(null);
+    setNodeSettingOpen(false);
+  }, [nodes, selectedNode]);
+
   if (loading) {
     return <FlowEditorLoading />;
   }
 
-  if (chatflowId && !nodes.length) {
+  if (chatflowId && !canvasReady) {
     return <EmptyFlowState />;
   }
 
@@ -391,7 +465,7 @@ export default function ChatbotFlowEditor() {
     <div className="w-full relative gap-4 p-4">
       {/*LEFT: REACT FLOW EDITOR */}
       <div className=" h-[90dvh] absolute top-0 left-0 w-full overflow-hidden">
-        <ReactFlow
+        <ReactFlow 
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
@@ -432,13 +506,7 @@ export default function ChatbotFlowEditor() {
 
           <div className="flex z-50 w-full h-16 justify-between! items-center px-5 bg-gray-50 absolute shadow">
             <div className="flex items-center gap-4">
-              <Button
-                onClick={() => navigate(-1)}
-                className=" cursor-pointer bg-gray-100 rounded-full size-8 text-primary hover:bg-primary/40"
-              >
-                <ArrowLeft size={12} />
-                {/* <span className="text-sm text-white">Back</span> */}
-              </Button>
+             
 
               <div className="flex items-center gap-2 px-3 py-2">
                 <div className="flex items-center justify-center size-8 rounded-lg bg-primary/10">
@@ -462,6 +530,15 @@ export default function ChatbotFlowEditor() {
               PERMISSIONS.CHATBOTS.CREATE || PERMISSIONS.CHATBOTS.UPDATE,
             ) && (
                 <div className="flex items-center gap-3.5">
+                  <Button
+                    disabled={generateLoading}
+                    className="actions-btn rounded-xl! px-4! py-2!"
+                    onClick={() => setGenerateOpen(true)}
+                  >
+                    <Sparkles size={16} />
+                    <span>Generate with AI</span>
+                  </Button>
+
                   <Button
                     disabled={!flowName || !nodes?.length}
                     className="actions-btn px-4!  rounded-xl! py-2!"
@@ -518,10 +595,18 @@ export default function ChatbotFlowEditor() {
       {/* RIGHT: NODES SIDEBAR */}
       {fieldOpen && (
         <NodeSidebar
-          onAddNode={(type, label) => addNewNode(type, label)}
+          onAddNode={(type, label, preset) => addNewNode(type, label, preset)}
           onClose={handleCloseSidebar}
         />
       )}
+
+      <GenerateFlowModal
+        open={generateOpen}
+        loading={generateLoading}
+        flowName={flowName}
+        onClose={() => setGenerateOpen(false)}
+        onGenerate={generateFlow}
+      />
 
       <FlowModal
         open={flowModalOpen}

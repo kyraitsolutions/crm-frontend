@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type {
   TMetaTemplateButton,
+  TTemplate,
   TTemplateComponent,
 } from "../types/templates";
 
@@ -18,36 +19,30 @@ type BodyComponent = Extract<TTemplateComponent, { type: "BODY" }>;
 type FooterComponent = Extract<TTemplateComponent, { type: "FOOTER" }>;
 type ButtonsComponent = Extract<TTemplateComponent, { type: "BUTTONS" }>;
 
-interface VariableMapping {
-  position: string; // "1", "2", ...
-  sampleValue?: string;
-}
-
-interface TemplateData {
-  id: string;
-  name: string;
-  category: string;
-  status: string;
-  language: string;
-  components: TTemplateComponent[];
-  variableMappings?: VariableMapping[];
-}
+/** Minimal shape for preview — full TTemplate or a list subset both work. */
+export type TemplatePreviewSource = Pick<
+  TTemplate,
+  "name" | "category" | "language" | "components"
+> & {
+  variableMappings?: TTemplate["variableMappings"];
+};
 
 interface GlobalTemplatePreviewProps {
   open: boolean;
   onClose: () => void;
-  template: TemplateData | null;
+  template: TemplatePreviewSource | null;
+  embedded?: boolean;
 }
 
-// Replaces {{1}}, {{2}}... with sample values (or a readable placeholder)
+// Replaces {{1}}, {{name}}... with fallback/sample values
 const resolveVariables = (
   text: string,
-  variableMappings?: VariableMapping[],
+  variableMappings?: TemplatePreviewSource["variableMappings"],
 ) => {
   if (!text) return text;
-  return text.replace(/{{\s*(\d+)\s*}}/g, (_, index) => {
-    const mapping = variableMappings?.find((v) => v.position === index);
-    return mapping?.sampleValue || `[Sample ${index}]`;
+  return text.replace(/{{\s*([^}]+)\s*}}/g, (_, key: string) => {
+    const mapping = variableMappings?.find((v) => v.variable === key.trim());
+    return mapping?.fallbackValue || `[Sample ${key.trim()}]`;
   });
 };
 
@@ -55,6 +50,7 @@ const GlobalTemplatePreview = ({
   open,
   onClose,
   template,
+  embedded = false,
 }: GlobalTemplatePreviewProps) => {
   const [viewMode, setViewMode] = useState<"Mobile View" | "Desktop View">(
     "Mobile View",
@@ -92,7 +88,7 @@ const GlobalTemplatePreview = ({
   const buttons = buttonsComponent?.buttons || [];
   const isMobile = viewMode === "Mobile View";
 
-  if (!open || !template) return null;
+  if (!template || (!embedded && !open)) return null;
 
   const renderButtonPreview = (button: TMetaTemplateButton, index: number) => (
     <Button
@@ -106,32 +102,8 @@ const GlobalTemplatePreview = ({
     </Button>
   );
 
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs p-4"
-      onClick={onClose}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-2xl bg-white shadow-2xl"
-      >
-        {/* Modal header */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3.5">
-          <div>
-            <h2 className="text-sm font-semibold text-gray-900">
-              {template.name}
-            </h2>
-            <p className="text-xs text-gray-400">
-              {template.category} · {template.language}
-            </p>
-          </div>
-          <Button onClick={onClose} className="actions-btn">
-            <X size={18} />
-          </Button>
-        </div>
-
-        {/* ---- Same preview markup as your create-flow preview ---- */}
-        <div className="overflow-hidden rounded-2xl border border-primary/20 pb-4 pt-4">
+  const preview = (
+        <div className="overflow-hidden rounded-2xl border border-primary/20 bg-white pb-4 pt-4">
           {/* Toggle */}
           <div className="mb-4 flex overflow-hidden rounded-lg px-3">
             {(["Mobile View", "Desktop View"] as const).map((mode) => (
@@ -232,6 +204,33 @@ const GlobalTemplatePreview = ({
             )}
           </div>
         </div>
+  );
+
+  if (embedded) return preview;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs p-4"
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md rounded-2xl bg-white shadow-2xl"
+      >
+        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3.5">
+          <div>
+            <h2 className="text-sm font-semibold text-gray-900">
+              {template.name}
+            </h2>
+            <p className="text-xs text-gray-400">
+              {template.category} · {template.language}
+            </p>
+          </div>
+          <Button onClick={onClose} className="actions-btn">
+            <X size={18} />
+          </Button>
+        </div>
+        {preview}
       </div>
     </div>
   );

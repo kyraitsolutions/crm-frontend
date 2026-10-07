@@ -43,11 +43,18 @@ const NotificationCard = ({ data }: { data: TNotification }) => {
             {data.title}
           </p>
 
-          {!data?.isRead && (
-            <span className="shrink-0 text-[8px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-primary/15 text-primary">
-              New
-            </span>
-          )}
+          <div className="flex items-center gap-1 shrink-0">
+            {(data as any)?.unreadCount > 1 && (
+              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                {(data as any).unreadCount}
+              </span>
+            )}
+            {!data?.isRead && (
+              <span className="text-[8px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+                New
+              </span>
+            )}
+          </div>
         </div>
 
         <p

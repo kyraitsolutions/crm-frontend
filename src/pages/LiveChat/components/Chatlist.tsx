@@ -1,5 +1,5 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MdChatBubble, MdOutlinePeopleOutline } from "react-icons/md";
 import type { TConversation } from "../types/conversation.type";
 import {
@@ -23,6 +23,24 @@ import { useAuthStore } from "@/stores";
 import { Checkbox } from "@/components/ui/checkbox";
 import DeleteChatDialog from "./DeleteChatDialog";
 import { conversationService } from "../services/conversation.service";
+import { useIntegrationStore } from "@/stores/integration.store";
+import type { TWhatsAppAccount } from "@/pages/Channels/whatsapp/types/whatsapp.type";
+
+const CONTACT_SYNC_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+function canShowContactSync(account?: TWhatsAppAccount | null): boolean {
+  if (!account?.phoneNumberInfo?.isOnBizApp) return false;
+
+  // Only show before a sync has been requested
+  const syncStatus = account.contactSync?.status || "NOT_REQUESTED";
+  if (syncStatus !== "NOT_REQUESTED") return false;
+
+  const startedAt = account.contactSyncWindowStartedAt;
+  if (!startedAt) return false;
+  const startedMs = new Date(startedAt).getTime();
+  if (Number.isNaN(startedMs)) return false;
+  return Date.now() - startedMs <= CONTACT_SYNC_WINDOW_MS;
+}
 
 interface ChatListProps {
   activeFilter: string;
@@ -31,6 +49,7 @@ interface ChatListProps {
 
 const Chatlist = ({ conversationList, activeFilter }: ChatListProps) => {
   const accountId = useAuthStore((state) => state.accountId);
+  const { integration, getIntegration } = useIntegrationStore((state) => state);
   const [activeChat, setActiveChat] = useState<string | null>(null);
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -46,6 +65,21 @@ const Chatlist = ({ conversationList, activeFilter }: ChatListProps) => {
 
   const toastMessageService = new ToastMessageService();
   const [isContactSyncing, setIsContactSyncing] = useState(false);
+
+  useEffect(() => {
+    if (!accountId || activeFilter !== "whatsapp") return;
+    void getIntegration("whatsapp", String(accountId));
+  }, [accountId, activeFilter, getIntegration]);
+
+  const whatsappAccount = useMemo(() => {
+    if (integration?.provider !== "whatsapp" || !integration?.connected) {
+      return null;
+    }
+    return integration.data as TWhatsAppAccount;
+  }, [integration]);
+
+  const showContactSync =
+    activeFilter === "whatsapp" && canShowContactSync(whatsappAccount);
 
   const toggleSelected = (id: string) => {
     setSelectedIds((prev) =>
@@ -82,6 +116,10 @@ const Chatlist = ({ conversationList, activeFilter }: ChatListProps) => {
         toastMessageService.success(
           response.message || "Contacts synced successfully",
         );
+        // Refresh so contactSync.status becomes REQUESTED and button hides
+        if (accountId) {
+          await getIntegration("whatsapp", String(accountId));
+        }
       }
     } catch (error) {
       const err = error as ApiError;
@@ -113,11 +151,11 @@ const Chatlist = ({ conversationList, activeFilter }: ChatListProps) => {
           or wait for new incoming chats.
         </p>
 
-        {activeFilter === "whatsapp" && (
+        {showContactSync && (
           <Button
             disabled={isContactSyncing}
             onClick={handleSyncContacts}
-            className="actions-btn mt-2 px-4! py-1.5! flex! items-center!"
+            className="actions-btn mt-2 px-4! py-1.5! flex! items-center! rounded-xl!"
           >
             Sync Contacts{" "}
             <span className={`${isContactSyncing && "animate-spin"}`}>
@@ -138,7 +176,7 @@ const Chatlist = ({ conversationList, activeFilter }: ChatListProps) => {
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
-                className="h-7 rounded-lg px-2 text-xs"
+                className="h-7 rounded-xl! px-2 text-xs"
                 onClick={() => {
                   setSelectMode(false);
                   setSelectedIds([]);
@@ -147,7 +185,7 @@ const Chatlist = ({ conversationList, activeFilter }: ChatListProps) => {
                 Cancel
               </Button>
               <Button
-                className="h-7 rounded-lg px-2 text-xs bg-red-600 hover:bg-red-600/90"
+                className="h-7 rounded-xl! px-2 text-xs bg-red-600 hover:bg-red-600/90"
                 disabled={!selectedIds.length}
                 onClick={() => setDeleteOpen(true)}
               >
@@ -157,13 +195,28 @@ const Chatlist = ({ conversationList, activeFilter }: ChatListProps) => {
             </div>
           </>
         ) : (
-          <button
-            type="button"
-            className="ml-auto text-xs text-teal-800"
-            onClick={() => setSelectMode(true)}
-          >
-            Select
-          </button>
+          <div className="ml-auto flex items-center gap-3">
+            {showContactSync && (
+              <Button
+                type="button"
+                disabled={isContactSyncing}
+                onClick={handleSyncContacts}
+                className="actions-btn h-7 rounded-xl! px-2! py-1! text-xs flex items-center gap-1"
+              >
+                Sync Contacts
+                <span className={`${isContactSyncing && "animate-spin"}`}>
+                  <RefreshCcw className="size-3.5" />
+                </span>
+              </Button>
+            )}
+            <button
+              type="button"
+              className="text-xs text-teal-800"
+              onClick={() => setSelectMode(true)}
+            >
+              Select
+            </button>
+          </div>
         )}
       </div>
       {conversationList.map((conv) => {

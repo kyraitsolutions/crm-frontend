@@ -40,6 +40,7 @@ export const API_ENDPOINT_PATH = {
   ROLES: {
     CREATE_ROLE: "/roles",
     GET_ROLES: "/roles",
+    PERMISSION_CATALOG: "/roles/permissions/catalog",
     updateRolePath: (id: string) => `/roles/${id}`,
     deleteRolePath: (id: string) => `/roles/${id}`,
     getPermissionsByRolePath: (id: string) => `/roles/${id}/permissions`,
@@ -66,6 +67,17 @@ export const API_ENDPOINT_PATH = {
     GET_NOTIFICATIONS: `/notification`,
     MARK_READ: `/notification`,
     MARK_ALL_READ: `/notification/read-all`,
+    CATALOG: `/notification/catalog`,
+    SETTINGS: `/notification/settings`,
+    PREFERENCES: `/notification/preferences`,
+    PRESET: `/notification/preset`,
+    TEST: `/notification/test`,
+    WORKSPACE_POLICY: `/notification/workspace-policy`,
+    DELIVERIES_DEBUG: `/notification/deliveries/debug`,
+    MUTE: `/notification/mute`,
+    MUTES: `/notification/mutes`,
+    MIGRATE_LEGACY: `/notification/migrate-legacy`,
+    STAFF_ALERTS: `/notification/staff-alerts`,
   },
 
   CONFIGURATION: {

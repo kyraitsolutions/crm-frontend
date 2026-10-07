@@ -33,6 +33,13 @@ class ChatflowServie extends ApiService {
   async deleteChatFlow(chatflowId: string): Promise<ApiResponse<any>> {
     return await this.delete(`/chatflow/${chatflowId}`);
   }
+
+  async generateChatFlow(
+    accountId: string,
+    data: { name: string; prompt: string },
+  ): Promise<ApiResponse<ApiResponseChatFlowDto>> {
+    return await this.post(`/chatflow/${accountId}/generate`, data);
+  }
 }
 
 export const chatflowService = new ChatflowServie();

@@ -47,10 +47,9 @@ export function mapButtons(
   return {
     type: "BUTTONS",
     buttons: mappedButtons,
-    variableMappings: [],
+
   };
 }
-
 // export function mapButtons(
 //   buttons: TTemplateButton[],
 // ): TTemplateComponent | null {

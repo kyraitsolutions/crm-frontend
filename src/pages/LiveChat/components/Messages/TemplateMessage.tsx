@@ -19,69 +19,87 @@ type TemplateMessageProps = {
 };
 
 const TemplateMessage = ({ message }: TemplateMessageProps) => {
-  if (message.type !== "template" || !message.template) {
+  if (message.type !== "template") {
     return null;
   }
 
-  const components = (message.template.components as TemplateComponent[]) ?? [];
+  const components = (message.template?.components as TemplateComponent[]) ?? [];
 
-  const header = components.find((c) => c.type.toUpperCase() === "HEADER");
-  const body = components.find((c) => c.type.toUpperCase() === "BODY");
-  const footer = components.find((c) => c.type.toUpperCase() === "FOOTER");
-  const buttons = components.find((c) => c.type.toUpperCase() === "BUTTONS");
+  const header = components.find((c) => c.type?.toUpperCase() === "HEADER");
+  const body = components.find((c) => c.type?.toUpperCase() === "BODY");
+  const footer = components.find((c) => c.type?.toUpperCase() === "FOOTER");
+  const buttons = components.find((c) => c.type?.toUpperCase() === "BUTTONS");
+
+  const fallbackText =
+    body?.text ||
+    (message as any)?.body?.text ||
+    message.template?.name ||
+    "Template message";
+
+  const hasStructuredContent = Boolean(
+    header?.text || body?.text || footer?.text || buttons?.buttons?.length,
+  );
 
   return (
     <div className="bg-whatsapp-background rounded-xl p-1.5">
       <div className="overflow-hidden bg-white rounded-xl">
-        {/* HEADER */}
-        {header?.text && (
-          <div className="px-4 pt-3.5 pb-1">
-            <p className="font-semibold text-[15px] text-gray-900 leading-snug">
-              {header.text}
-            </p>
-          </div>
-        )}
+        {hasStructuredContent ? (
+          <>
+            {header?.text && (
+              <div className="px-4 pt-3.5 pb-1">
+                <p className="font-semibold text-[15px] text-gray-900 leading-snug">
+                  {header.text}
+                </p>
+              </div>
+            )}
 
-        {/* BODY */}
-        {body?.text && (
-          <div className={`px-4 ${header?.text ? "pt-1" : "pt-3.5"} pb-2`}>
+            {body?.text && (
+              <div className={`px-4 ${header?.text ? "pt-1" : "pt-3.5"} pb-2`}>
+                <p className="text-[14px] leading-relaxed whitespace-pre-wrap text-gray-700">
+                  {body.text}
+                </p>
+              </div>
+            )}
+
+            {footer?.text && (
+              <div className="px-4 pb-3">
+                <p className="text-[12px] text-gray-400">{footer.text}</p>
+              </div>
+            )}
+
+            {buttons?.buttons && buttons.buttons.length > 0 && (
+              <div className="border-t border-gray-100">
+                {buttons.buttons.map((button, index) => {
+                  const isLink = button.type?.toUpperCase() === "URL";
+                  const isPhone = button.type?.toUpperCase() === "PHONE_NUMBER";
+
+                  const Icon = isLink
+                    ? SquareArrowOutUpRight
+                    : isPhone
+                      ? Phone
+                      : Reply;
+                  return (
+                    <Button
+                      key={`${button.text}-${index}`}
+                      type="button"
+                      className="actions-btn w-full text-green-600! border-none flex items-center justify-center gap-1.5 py-2 text-xs font-medium hover:bg-whatsapp-background/60! transition-colors p-3! rounded-none!"
+                    >
+                      {Icon && <Icon size={16} />}
+                      {button.text}
+                    </Button>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="px-4 py-3.5">
+            <p className="text-[11px] uppercase tracking-wide text-gray-400 mb-1">
+              Template
+            </p>
             <p className="text-[14px] leading-relaxed whitespace-pre-wrap text-gray-700">
-              {body.text}
+              {fallbackText}
             </p>
-          </div>
-        )}
-
-        {/* FOOTER */}
-        {footer?.text && (
-          <div className="px-4 pb-3">
-            <p className="text-[12px] text-gray-400">{footer.text}</p>
-          </div>
-        )}
-
-        {/* BUTTONS */}
-        {buttons?.buttons && buttons.buttons.length > 0 && (
-          <div className="border-t border-gray-100">
-            {buttons.buttons.map((button, index) => {
-              const isLink = button.type?.toUpperCase() === "URL";
-              const isPhone = button.type?.toUpperCase() === "PHONE_NUMBER";
-              // const call = button.type?.toUpperCase() === ""
-
-              const Icon = isLink
-                ? SquareArrowOutUpRight
-                : isPhone
-                  ? Phone
-                  : Reply;
-              return (
-                <Button
-                  key={`${button.text}-${index}`}
-                  type="button"
-                  className="actions-btn w-full text-green-600! border-none flex items-center justify-center gap-1.5 py-2 text-xs font-medium hover:bg-whatsapp-background/60! transition-colors p-3! rounded-none!"
-                >
-                  {Icon && <Icon size={16} />}
-                  {button.text}
-                </Button>
-              );
-            })}
           </div>
         )}
       </div>

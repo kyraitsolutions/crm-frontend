@@ -8,13 +8,11 @@ import Recyclebin from "@/pages/DataAdministration/recyclebin.page";
 import Storage from "@/pages/DataAdministration/storage.page";
 import Integrations from "@/pages/Integration/Integrations";
 import NotificationSettingPage from "@/pages/Notification/NotificationSettingPage";
-// import Notification from "@/pages/Notification/notification.page";
 import CompanyDetails from "@/pages/Profile/CompanyDetails";
 import SettingPage from "@/pages/setting.page";
 import { SubscriptionPage } from "@/pages/subscription.page";
 import Role from "@/pages/UsersAndControl/role.page";
 import Teams from "@/pages/UsersAndControl/teams2.page";
-// import { Teams } from "@/pages/UsersAndControl/teams.page";
 import ChatbotFlowEditor from "@/components/chatFlowEditior/ChatbotFlowEditor";
 import Webhook from "@/pages/Developer/Webhook/Webhook";
 import MySubscriptionPage from "@/pages/PlanAndSubscription/mysubscription.page";
@@ -23,8 +21,21 @@ import ActivityLogsPage from "@/pages/Settings/activityLogs/ActivityLogsPage";
 import AiAgentPage from "@/pages/Settings/ai-agent/AiAgentPage";
 import ConfigurationPage from "@/pages/Settings/configuration/ConfigurationPage";
 import { PERMISSIONS } from "@/rbac";
+import { type ReactNode } from "react";
 import { type RouteObject } from "react-router-dom";
 import { RequirePermission } from "./route-access/RequirePermission";
+
+function Guard({
+  permission,
+  children,
+}: {
+  permission: string | string[];
+  children: ReactNode;
+}) {
+  return (
+    <RequirePermission permission={permission}>{children}</RequirePermission>
+  );
+}
 
 export const settingRoutes: RouteObject[] = [
   {
@@ -36,66 +47,164 @@ export const settingRoutes: RouteObject[] = [
         children: [
           { index: true, element: <SettingPage /> },
 
-          // General Link
           { path: "profile", element: <ProfilePage /> },
-          { path: "company-details", element: <CompanyDetails /> },
+          {
+            path: "company-details",
+            element: (
+              <Guard permission={PERMISSIONS.ORGANIZATION.VIEW}>
+                <CompanyDetails />
+              </Guard>
+            ),
+          },
           { path: "notifications", element: <NotificationSettingPage /> },
 
-          // User Control
-          { path: "users", element: <Teams /> },
-          { path: "roles", element: <Role /> },
-          { path: "workspace", element: <DashboardPage /> },
+          {
+            path: "users",
+            element: (
+              <Guard permission={PERMISSIONS.TEAMS.VIEW}>
+                <Teams />
+              </Guard>
+            ),
+          },
+          {
+            path: "roles",
+            element: (
+              <Guard permission={PERMISSIONS.ROLE.VIEW}>
+                <Role />
+              </Guard>
+            ),
+          },
+          {
+            path: "workspace",
+            element: (
+              <Guard permission={PERMISSIONS.ACCOUNTS.VIEW}>
+                <DashboardPage />
+              </Guard>
+            ),
+          },
 
-          // Plan and Subscription
           { path: "subscription", element: <SubscriptionPage /> },
           { path: "my-plan", element: <MySubscriptionPage /> },
 
-          // Integrations
-          { path: "integrations", element: <Integrations /> },
+          {
+            path: "integrations",
+            element: (
+              <Guard permission={PERMISSIONS.INTEGRATIONS.VIEW}>
+                <Integrations />
+              </Guard>
+            ),
+          },
 
-          // Channels
-          // { path: "whatsapp", element: <Whatsapp /> },
-          { path: "instagram", element: <Instagram /> },
-          { path: "telegram", element: <Telegram /> },
+          {
+            path: "instagram",
+            element: (
+              <Guard permission={PERMISSIONS.INSTAGRAM.VIEW}>
+                <Instagram />
+              </Guard>
+            ),
+          },
+          {
+            path: "telegram",
+            element: (
+              <Guard permission={PERMISSIONS.TELEGRAM.VIEW}>
+                <Telegram />
+              </Guard>
+            ),
+          },
 
-          // Developer
-          { path: "webhook", element: <Webhook /> },
+          {
+            path: "webhook",
+            element: (
+              <Guard permission={PERMISSIONS.WEBHOOKS.VIEW}>
+                <Webhook />
+              </Guard>
+            ),
+          },
 
-          // Bot
-          { path: "chatbot", element: <ChatBotPage /> },
-          { path: "chatflows", element: <ChatFlows /> },
-          { path: "ai-agent", element: <AiAgentPage /> },
+          {
+            path: "chatbot",
+            element: (
+              <Guard permission={PERMISSIONS.CHATBOTS.VIEW}>
+                <ChatBotPage />
+              </Guard>
+            ),
+          },
+          {
+            path: "chatflows",
+            element: (
+              <Guard permission={PERMISSIONS.CHATBOTS.VIEW}>
+                <ChatFlows />
+              </Guard>
+            ),
+          },
+          {
+            path: "ai-agent",
+            element: (
+              <Guard permission={PERMISSIONS.WHATSAPP.VIEW}>
+                <AiAgentPage />
+              </Guard>
+            ),
+          },
           {
             path: "chatflows/flow-builder",
             element: (
-              <RequirePermission
-                permission={
-                  PERMISSIONS.CHATBOTS.VIEW || PERMISSIONS.CHATBOTS.CREATE
-                }
+              <Guard
+                permission={[
+                  PERMISSIONS.CHATBOTS.VIEW,
+                  PERMISSIONS.CHATBOTS.CREATE,
+                ]}
               >
                 <ChatbotFlowEditor />
-              </RequirePermission>
+              </Guard>
             ),
           },
           {
             path: "chatflows/:chatflowId/flow-builder",
             element: (
-              <RequirePermission
-                permission={
-                  PERMISSIONS.CHATBOTS.VIEW || PERMISSIONS.CHATBOTS.CREATE
-                }
+              <Guard
+                permission={[
+                  PERMISSIONS.CHATBOTS.VIEW,
+                  PERMISSIONS.CHATBOTS.CREATE,
+                ]}
               >
                 <ChatbotFlowEditor />
-              </RequirePermission>
+              </Guard>
             ),
           },
-          // Data Administrator
-          { path: "recyclebin", element: <Recyclebin /> },
-          { path: "storage", element: <Storage /> },
 
-          // configuration
-          { path: "configuration", element: <ConfigurationPage /> },
-          { path: "activity-logs", element: <ActivityLogsPage /> },
+          {
+            path: "recyclebin",
+            element: (
+              <Guard permission={PERMISSIONS.RECYCLE_BIN.VIEW}>
+                <Recyclebin />
+              </Guard>
+            ),
+          },
+          {
+            path: "storage",
+            element: (
+              <Guard permission={PERMISSIONS.STORAGE.VIEW}>
+                <Storage />
+              </Guard>
+            ),
+          },
+
+          {
+            path: "configuration",
+            element: (
+              <Guard permission={PERMISSIONS.CONFIGURATION.VIEW}>
+                <ConfigurationPage />
+              </Guard>
+            ),
+          },
+          {
+            path: "activity-logs",
+            element: (
+              <Guard permission={PERMISSIONS.ACTIVITY_LOGS.VIEW}>
+                <ActivityLogsPage />
+              </Guard>
+            ),
+          },
         ],
       },
     ],

@@ -7,41 +7,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
-import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
-import { useFormContext } from "react-hook-form";
+import { useTemplateButtons } from "../buttons-field.context";
 
 interface IUrlFieldsProps {
   button: TTemplateButton;
 }
 
 export function UrlFields({ button }: IUrlFieldsProps) {
-  // const { updateButton } = useTemplateStore((state) => state);
-
-  const { setValue, getValues } = useFormContext<TemplateForm>();
-
-  const updateButton = (id: string, data: any) => {
-    const buttons = getValues("buttons");
-    const newButtons = buttons?.map((button) =>
-      button.id === id
-        ? {
-            ...button,
-            ...data,
-          }
-        : button,
-    );
-    setValue("buttons", newButtons);
-  };
-
+  const { updateButton } = useTemplateButtons();
   const url = button.url ?? "";
 
   return (
     <>
-      {/* URL Type */}
       <div className="col-span-2 space-y-1.5">
         <label className="text-sm font-medium">URL type</label>
 
         <Select
-          value={button.urlType}
+          value={button.urlType || "STATIC"}
           onValueChange={(value) =>
             updateButton(button.id, {
               urlType: value as "STATIC" | "DYNAMIC",
@@ -54,13 +36,11 @@ export function UrlFields({ button }: IUrlFieldsProps) {
 
           <SelectContent className="rounded-xl!">
             <SelectItem value="STATIC">Static</SelectItem>
-
             <SelectItem value="DYNAMIC">Dynamic</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      {/* Website URL */}
       <div className="col-span-3 space-y-1.5">
         <label className="text-sm font-medium">Website URL</label>
 

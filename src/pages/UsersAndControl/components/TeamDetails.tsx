@@ -1,4 +1,5 @@
 import Loader from "@/components/Loader";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -74,32 +75,57 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
     );
   };
 
-  // CANCEL
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    setSelectedAccounts(user.accounts);
+  const accountsChanged = (
+    next: { accountId: string; roleId: string }[],
+    prev: { accountId: string; roleId: string }[],
+  ) => {
+    const normalize = (rows: { accountId: string; roleId: string }[]) =>
+      [...rows]
+        .map((r) => `${r.accountId}:${r.roleId}`)
+        .sort()
+        .join("|");
+    return normalize(next) !== normalize(prev);
   };
 
-  // 🔥 SAVE
+  // CANCEL
+  const handleCancel = () => {
+    setIsEditing(false);
+    setFormData({
+      firstName: user.userProfile.firstName,
+      lastName: user.userProfile.lastName,
+      phone: user?.userProfile?.phone || "",
+      email: user.email,
+    });
+    setSelectedRole(user?.role?.id || "");
+    setSelectedAccounts(user.accounts || []);
+  };
+
+  // SAVE
   const handleSave = () => {
     const isRoleIdChange = selectedRole !== user.role.id;
-    const isAccountsChange = selectedAccounts.length !== user.accounts.length;
+    const isAccountsChange = accountsChanged(
+      selectedAccounts,
+      (user.accounts || []).map((a) => ({
+        accountId: a.accountId,
+        roleId: a.roleId,
+      })),
+    );
 
     const payload = {
       ...formData,
       userId: user.userId,
       ...(isRoleIdChange && { roleId: selectedRole }),
-      ...(isAccountsChange && { accounts: selectedAccounts }),
+      ...(isAccountsChange && {
+        accounts: selectedAccounts.map((a) => ({
+          accountId: a.accountId,
+          roleId: a.roleId,
+        })),
+      }),
     };
 
     if (onUpdate) {
       onUpdate(payload);
     }
-
-    console.log("FINAL PAYLOAD:", payload);
-
-    // setIsEditing(false);
   };
 
   useEffect(() => {
@@ -293,20 +319,24 @@ const TeamDetails: React.FC<TeamDetailsProps> = ({
       {/* ACTIONS */}
       {isEditing && (
         <div className="flex justify-end gap-3 mt-6">
-          <button
+          <Button
+            type="button"
             disabled={editLoading}
             onClick={handleSave}
-            className="px-4 py-2 bg-primary text-white rounded-md text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="actions-btn rounded-xl! px-4! py-2! flex items-center gap-2"
           >
             Save Changes {editLoading && <Loader />}
-          </button>
+          </Button>
 
-          <button
+          <Button
+            type="button"
+            variant="outline"
+            disabled={editLoading}
             onClick={handleCancel}
-            className="px-4 py-2 border rounded-md text-sm"
+            className="actions-btn rounded-xl! px-4! py-2! bg-white! text-gray-700! border-gray-200!"
           >
             Cancel
-          </button>
+          </Button>
         </div>
       )}
     </div>

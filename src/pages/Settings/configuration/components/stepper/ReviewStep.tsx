@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { AutomationDraft } from "../../store/automation.store";
 import {
   ACTION_OPTIONS,
+  CONDITION_OPERATORS,
   TRIGGER_OPTIONS,
 } from "../../constants/automation.constants";
 import Loader from "@/components/Loader";
@@ -19,6 +20,7 @@ interface ReviewStepProps {
     status: "published" | "draft";
   }) => void;
   loading?: boolean;
+  isEditing?: boolean;
 }
 
 const ReviewStep: React.FC<ReviewStepProps> = ({
@@ -26,11 +28,16 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
   onBack,
   onSave,
   loading,
+  isEditing,
 }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(draft.name || "");
   const [currentButton, setCurrentButton] = useState<
     "draft" | "published" | null
   >(null);
+
+  useEffect(() => {
+    if (draft.name) setName(draft.name);
+  }, [draft.name]);
 
   const triggerLabel =
     TRIGGER_OPTIONS.find((t) => t.value === draft.trigger)?.label || "";
@@ -38,17 +45,21 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
   const getActionLabel = (type: string) =>
     ACTION_OPTIONS.find((a) => a.value === type)?.label || type;
 
+  const operatorLabel = (op: string) =>
+    CONDITION_OPERATORS.find((o) => o.value === op)?.label || op;
+
   return (
     <div>
       <h2 className="text-base font-semibold text-gray-800 mb-1">
         Review Automation
       </h2>
       <p className="text-xs text-gray-500 mb-4">
-        Review your automation settings before saving
+        {isEditing
+          ? "Update and save your automation"
+          : "Review your automation settings before saving"}
       </p>
 
       <div className="space-y-3">
-        {/* Name */}
         <div>
           <label className="text-xs font-medium text-gray-500 block mb-1">
             Automation Name
@@ -62,7 +73,6 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
           />
         </div>
 
-        {/* When */}
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
             When
@@ -73,25 +83,28 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
             </span>
           </div>
 
-          {draft.conditions.length > 0 && (
+          {draft.conditions.length > 0 ? (
             <>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-3 mb-1">
-                Is Equal To
+                And
               </p>
               {draft.conditions.map((c, i) => (
                 <div key={i} className="text-xs text-gray-600">
                   <span className="font-medium">{c.field}</span>{" "}
-                  <span className="text-gray-400">{c.operator}</span>{" "}
+                  <span className="text-gray-400">
+                    {operatorLabel(c.operator)}
+                  </span>{" "}
                   <span className="font-medium text-violet-600">
-                    {c.values}
+                    {Array.isArray(c.values) ? c.values.join(", ") : c.values}
                   </span>
                 </div>
               ))}
             </>
+          ) : (
+            <p className="text-xs text-gray-500 mt-2">No conditions (always)</p>
           )}
         </div>
 
-        {/* Then */}
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
             Then
@@ -106,7 +119,12 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
                   </span>
                   {Object.entries(action.config).length > 0 && (
                     <span className="text-gray-400 ml-1">
-                      → {Object.values(action.config).join(", ")}
+                      →{" "}
+                      {Object.entries(action.config)
+                        .filter(([k]) => k !== "dueDate" || action.config.dueType === "custom")
+                        .map(([, v]) => v)
+                        .filter(Boolean)
+                        .join(", ")}
                     </span>
                   )}
                 </div>
@@ -126,11 +144,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
             onClick={() => {
               if (!name.trim()) return;
               setCurrentButton("draft");
-
-              onSave({
-                name: name.trim(),
-                status: "draft",
-              });
+              onSave({ name: name.trim(), status: "draft" });
             }}
             disabled={!name.trim() || loading}
             className="actions-btn px-4!"
@@ -142,18 +156,13 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
           <Button
             onClick={() => {
               if (!name.trim()) return;
-
               setCurrentButton("published");
-
-              onSave({
-                name: name.trim(),
-                status: "published",
-              });
+              onSave({ name: name.trim(), status: "published" });
             }}
             disabled={!name.trim() || loading}
             className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-2xl hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           >
-            Save Automation{" "}
+            {isEditing ? "Update Automation" : "Save Automation"}
             {loading && currentButton === "published" && <Loader />}
           </Button>
         </div>

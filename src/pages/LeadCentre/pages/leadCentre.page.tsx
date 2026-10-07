@@ -13,18 +13,13 @@ const LeadCenter = () => {
 
   useEffect(() => {
     if (!accountId) return;
-    fetchLeads(String(accountId));
+    fetchLeads(String(accountId)); 
   }, [accountId, leadQuery]);
 
   return (
-    <div className="relative">
-      {/* <h1 className="text-xl font-semibold border-b py-2 px-5 ">Leads</h1> */}
-
-      {/* Lead list header  */}
+    <div className="relative min-w-0 w-full max-w-full overflow-x-hidden pb-4">
       <LeadListHeader />
-      {/* Toolbar */}
       <Toolbar />
-      {/* Lead table */}
       <LeadTable />
     </div>
   );

@@ -20,6 +20,7 @@ const AutomationSection: React.FC = () => {
     fetchAutomations,
     isCreating,
     setIsCreating,
+    startEditing,
     toggleAutomation,
     updateStatus,
     deleteAutomation,
@@ -133,6 +134,7 @@ const AutomationSection: React.FC = () => {
               onStatusChange={(id, status) => {
                 handleUpdateStatus(id, status);
               }}
+              onEdit={(item) => startEditing(item)}
               onDelete={(id) => handleDelete(id)}
             />
           ))

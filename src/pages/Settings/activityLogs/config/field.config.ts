@@ -5,10 +5,15 @@ export const SKIP_CHANGE_KEYS = new Set([
   "createdAt",
   "__v",
   "_id",
+  "id",
+  "accountId",
+  "organizationId",
+  "searchText",
 ]);
 
 export const FIELD_LABELS: Record<string, string> = {
   assignedTo: "Assigned to",
+  assignedBy: "Assigned by",
   stage: "Stage",
   status: "Status",
   notes: "Notes",
@@ -25,4 +30,9 @@ export const FIELD_LABELS: Record<string, string> = {
   tags: "Tags",
   source: "Source",
   description: "Description",
+  ownerId: "Owner",
+  role: "Role",
+  roleId: "Role",
+  accounts: "Assigned accounts",
+  invitedBy: "Invited by",
 };

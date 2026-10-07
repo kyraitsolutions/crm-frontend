@@ -277,6 +277,7 @@ export const HeaderEditor = () => {
       <VariableAccordion
         title="Manage Variables"
         variables={headerVariables}
+        fieldPrefix="headerVariables"
         onUpdate={updateHeaderVariable}
         onRemove={removeHeaderVariable}
       />

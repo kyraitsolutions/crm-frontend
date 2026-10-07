@@ -11,21 +11,30 @@ import { buildAndGetVisitorDisplayNameByVisitorId } from "../utils/getVisitorDis
 import { useAuthStore } from "@/stores";
 import { whatsappLiveChatService } from "@/pages/Channels/whatsapp/services/whatsapp-live-chat.service";
 import { ToastMessageService } from "@/services";
+import { Button } from "@/components/ui/button";
 import {
+  canComposeLiveChat,
+  canHandBackLiveChat,
   getAutoResolveMode,
+  getLiveChatAssignee,
+  getPendingInterventionRequest,
   getResolverLabel,
   isAutoResolvePaused,
+  needsInterventionRequest,
 } from "../utils/live-chat.utils";
 
 const ChatWindow = () => {
-  const { accountId } = useAuthStore();
+  const { accountId, user } = useAuthStore();
   const toast = new ToastMessageService();
   const [resuming, setResuming] = useState(false);
+  const [claiming, setClaiming] = useState(false);
+  const [accepting, setAccepting] = useState(false);
   const {
     selectedConversationId,
     conversations,
     selectedMessageId,
     clearLiveChatIntervention,
+    markLiveChatIntervention,
   } = useConversationStore((state) => state);
   const {
     fetchMessages,
@@ -70,6 +79,28 @@ const ChatWindow = () => {
   const autoResolveMode = getAutoResolveMode(selectedConversation);
   const autoResolvePaused = isAutoResolvePaused(selectedConversation);
   const resolverLabel = getResolverLabel(autoResolveMode);
+  const assignee = getLiveChatAssignee(selectedConversation);
+  const pendingRequest = getPendingInterventionRequest(selectedConversation);
+  const userId = user?.id != null ? String(user.id) : "";
+  const canCompose = canComposeLiveChat(selectedConversation, userId || null);
+  const canHandBack = canHandBackLiveChat(selectedConversation, userId || null);
+  const showRequestIntervention = needsInterventionRequest(
+    selectedConversation,
+    userId || null,
+  );
+  const isAssignee = Boolean(assignee && userId && assignee.id === userId);
+  const isPendingRequester = Boolean(
+    pendingRequest && userId && pendingRequest.id === userId,
+  );
+  const showAcceptRequest = Boolean(
+    isAssignee && pendingRequest && pendingRequest.id !== userId,
+  );
+
+  const displayName =
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
+    user?.userProfile?.firstName ||
+    user?.email ||
+    "You";
 
   const handleResumeAutoResolve = async () => {
     if (!accountId || !selectedConversation?.id || resuming) return;
@@ -87,6 +118,85 @@ const ChatWindow = () => {
       );
     } finally {
       setResuming(false);
+    }
+  };
+
+  const handleRequestIntervention = async () => {
+    if (!accountId || !selectedConversation?.id || claiming) return;
+    setClaiming(true);
+    try {
+      const response = await whatsappLiveChatService.claimIntervention(
+        String(accountId),
+        selectedConversation.id,
+      );
+      const doc = response?.data?.doc as
+        | {
+            status?: string;
+            assigneeId?: string;
+            assigneeName?: string;
+            assigneeEmail?: string;
+            pendingRequest?: {
+              userId?: string;
+              name?: string;
+              email?: string;
+            };
+          }
+        | undefined;
+
+      if (doc?.status === "request_sent") {
+        markLiveChatIntervention(selectedConversation.id, {
+          assigneeId: doc.assigneeId || assignee?.id,
+          assigneeName: doc.assigneeName || assignee?.name,
+          assigneeEmail: doc.assigneeEmail || assignee?.email,
+          pendingRequest: {
+            userId: doc.pendingRequest?.userId || userId,
+            name: doc.pendingRequest?.name || displayName,
+            email: doc.pendingRequest?.email || user?.email || "",
+          },
+        });
+        toast.success("Request sent. Waiting for the teammate to accept.");
+      } else {
+        markLiveChatIntervention(selectedConversation.id, {
+          assigneeId: doc?.assigneeId || userId || null,
+          assigneeName: doc?.assigneeName || displayName,
+          assigneeEmail: doc?.assigneeEmail || user?.email || "",
+          pendingRequest: null,
+        });
+        toast.success("You are now handling this conversation");
+      }
+    } catch (error: any) {
+      toast.error(error?.message || "Could not request intervention");
+    } finally {
+      setClaiming(false);
+    }
+  };
+
+  const handleAcceptIntervention = async () => {
+    if (!accountId || !selectedConversation?.id || accepting) return;
+    setAccepting(true);
+    try {
+      const response = await whatsappLiveChatService.acceptIntervention(
+        String(accountId),
+        selectedConversation.id,
+      );
+      const doc = response?.data?.doc as
+        | {
+            assigneeId?: string;
+            assigneeName?: string;
+            assigneeEmail?: string;
+          }
+        | undefined;
+      markLiveChatIntervention(selectedConversation.id, {
+        assigneeId: doc?.assigneeId || pendingRequest?.id,
+        assigneeName: doc?.assigneeName || pendingRequest?.name,
+        assigneeEmail: doc?.assigneeEmail || pendingRequest?.email,
+        pendingRequest: null,
+      });
+      toast.success("Intervention handed over");
+    } catch (error: any) {
+      toast.error(error?.message || "Could not accept the request");
+    } finally {
+      setAccepting(false);
     }
   };
 
@@ -125,24 +235,45 @@ const ChatWindow = () => {
             selectedConversation?.contact?.phoneNumber,
         )}
         platform={selectedConversation?.platform || "chatbot"}
-        autoResolvePaused={autoResolvePaused}
+        autoResolvePaused={canHandBack}
         resolverLabel={resolverLabel}
       />
       {autoResolvePaused && (
         <div className="flex items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-900">
           <p>
-            {resolverLabel} is paused because a teammate took over this chat.
+            {assignee
+              ? isAssignee
+                ? `${resolverLabel} is paused because you took over this chat.`
+                : `${resolverLabel} is paused. ${assignee.name} is handling this chat.`
+              : `${resolverLabel} is paused because a teammate took over this chat.`}
+          </p>
+          {canHandBack ? (
+            <button
+              type="button"
+              className="cursor-pointer font-medium underline disabled:opacity-60"
+              disabled={resuming}
+              onClick={() => void handleResumeAutoResolve()}
+            >
+              {resuming ? "Handing back..." : `Hand back to ${resolverLabel}`}
+            </button>
+          ) : null}
+        </div>
+      )}
+      {showAcceptRequest && pendingRequest ? (
+        <div className="flex items-center justify-between gap-3 border-b border-sky-200 bg-sky-50 px-4 py-2 text-xs text-sky-900">
+          <p>
+            {pendingRequest.name} requested intervention on this chat.
           </p>
           <button
             type="button"
-            className="font-medium underline disabled:opacity-60"
-            disabled={resuming}
-            onClick={() => void handleResumeAutoResolve()}
+            className="cursor-pointer font-medium underline disabled:opacity-60"
+            disabled={accepting}
+            onClick={() => void handleAcceptIntervention()}
           >
-            {resuming ? "Handing back..." : `Hand back to ${resolverLabel}`}
+            {accepting ? "Accepting..." : "Accept request"}
           </button>
         </div>
-      )}
+      ) : null}
       <div className="flex-1 min-h-0 pb-2">
         {loadingMessages ? (
           <ChatMessagesSkeleton />
@@ -152,7 +283,31 @@ const ChatWindow = () => {
       </div>
 
       <div className="shrink-0">
-        <ChatMessagebox platform={selectedConversation?.platform} />
+        {showRequestIntervention ? (
+          <div className="flex flex-col items-center gap-3 border-t bg-white px-4 py-5 text-center">
+            <p className="text-sm text-muted-foreground">
+              {isPendingRequester
+                ? `Request sent to ${assignee?.name || "the teammate"}. You can chat after they accept.`
+                : `${assignee?.name || "A teammate"} is handling this conversation. Request intervention to chat.`}
+            </p>
+            {!isPendingRequester ? (
+              <Button
+                type="button"
+                className="actions-btn cursor-pointer rounded-xl! px-5!"
+                disabled={claiming}
+                onClick={() => void handleRequestIntervention()}
+              >
+                {claiming ? "Requesting..." : "Request Intervention"}
+              </Button>
+            ) : null}
+          </div>
+        ) : canCompose ? (
+          <ChatMessagebox platform={selectedConversation?.platform} />
+        ) : (
+          <div className="border-t bg-white px-4 py-5 text-center text-sm text-muted-foreground">
+            You cannot reply to this conversation right now.
+          </div>
+        )}
       </div>
     </div>
   );

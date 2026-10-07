@@ -9,8 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
-import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
-import { useFormContext } from "react-hook-form";
+import { useTemplateButtons } from "../buttons-field.context";
 
 interface IWhatsAppFieldsProps {
   button: TTemplateButton;
@@ -32,21 +31,7 @@ const ACTIVE_FOR_OPTIONS = [
 ] as const;
 
 export function WhatsAppFields({ button }: IWhatsAppFieldsProps) {
-  // const { updateButton } = useTemplateStore((state) => state);
-  const { setValue, getValues } = useFormContext<TemplateForm>();
-
-  const updateButton = (id: string, data: any) => {
-    const buttons = getValues("buttons");
-    const newButtons = buttons?.map((button) =>
-      button.id === id
-        ? {
-            ...button,
-            ...data,
-          }
-        : button,
-    );
-    setValue("buttons", newButtons);
-  };
+  const { updateButton } = useTemplateButtons();
 
   return (
     <div className="col-span-5 ">

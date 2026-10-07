@@ -214,7 +214,8 @@ export const BodyEditor = () => {
 
       <VariableAccordion
         title="Manage Variables"
-        variables={bodyVariables}
+        variables={bodyVariables || []}
+        fieldPrefix="bodyVariables"
         onUpdate={handleUpdateVariable}
         onRemove={handleRemoveVariable}
       />

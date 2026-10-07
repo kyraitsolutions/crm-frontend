@@ -21,6 +21,7 @@ export const Whatsapp = () => {
 
   const getWhatsappIntegration = async () => {
     const integration = await getIntegration("whatsapp", String(accountId));
+    console.log("integration", integration);
     if (integration?.connected)
       navigate("/dashboard/settings/whatsapp/overview");
   };

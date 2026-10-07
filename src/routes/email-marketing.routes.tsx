@@ -8,16 +8,29 @@ import TemplatesPage from "@/pages/EmailMarketing/templates.page";
 import AudiencesPage from "@/pages/EmailMarketing/audiences.page";
 import SuppressionPage from "@/pages/EmailMarketing/suppression.page";
 import { EMAIL_MARKETING_PATHS } from "@/constants/routes/email-marketing.path";
+import { PERMISSIONS } from "@/rbac";
 import { type RouteObject } from "react-router-dom";
+import { RequirePermission } from "./route-access/RequirePermission";
 
 export const emailMarketingRoutes: RouteObject[] = [
   {
     path: EMAIL_MARKETING_PATHS.ROOT,
-    element: <EmailMarketingLayout />,
+    element: (
+      <RequirePermission permission={PERMISSIONS.EMAIL_MARKETING.VIEW}>
+        <EmailMarketingLayout />
+      </RequirePermission>
+    ),
     children: [
       { index: true, element: <EmailMarketing /> },
       { path: "campaigns", element: <Campaign /> },
-      { path: "campaigns/create", element: <CreateCampaignPage /> },
+      {
+        path: "campaigns/create",
+        element: (
+          <RequirePermission permission={PERMISSIONS.EMAIL_MARKETING.CREATE}>
+            <CreateCampaignPage />
+          </RequirePermission>
+        ),
+      },
       { path: "campaigns/:campaignId", element: <CampaignDetailPage /> },
       { path: "templates", element: <TemplatesPage /> },
       { path: "audiences", element: <AudiencesPage /> },

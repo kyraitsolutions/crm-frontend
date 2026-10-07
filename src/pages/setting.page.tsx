@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { ROUTES } from "@/constants/routes";
 import { settingSections } from "@/constants/setting.constant";
+import { hasPermission } from "@/rbac";
+import { useAccountAccessStore } from "@/stores/account-access.store";
 import {
   Activity,
   ArrowUpRight,
@@ -37,6 +39,7 @@ const ITEM_META: Record<string, { icon: LucideIcon; hint: string }> = {
     icon: Building2,
     hint: "Business name and company info",
   },
+  "Team alerts": { icon: Bell, hint: "Alerts for new leads and activity" },
   Notifications: { icon: Bell, hint: "Alerts for messages and activity" },
   "Manage Users": { icon: Users, hint: "Invite people and manage access" },
   "Roles and Privileges": {
@@ -77,6 +80,7 @@ const hrefFor = (label: string, link: string) =>
 const SettingPage = () => {
   const [query, setQuery] = useState("");
   const needle = query.trim().toLowerCase();
+  const { permissions } = useAccountAccessStore((state) => state);
 
   const sections = useMemo(
     () =>
@@ -84,6 +88,12 @@ const SettingPage = () => {
         .map((section) => ({
           ...section,
           items: section.items.filter((item) => {
+            if (
+              item.permission &&
+              !hasPermission(permissions, item.permission)
+            ) {
+              return false;
+            }
             if (!needle) return true;
             const hint = ITEM_META[item.label]?.hint.toLowerCase() || "";
             return (
@@ -94,7 +104,7 @@ const SettingPage = () => {
           }),
         }))
         .filter((section) => section.items.length > 0),
-    [needle],
+    [needle, permissions],
   );
 
   return (

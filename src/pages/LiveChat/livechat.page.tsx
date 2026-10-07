@@ -68,6 +68,17 @@ const LiveChat = () => {
     }, []),
   );
 
+  useSocketEvent(
+    LIVE_CHAT_SOCKET_EVENTS?.CONVERSATION?.UPDATED,
+    useCallback((data) => {
+      if (!data?.conversation) return;
+      updateConversationRealtime({
+        conversation: data.conversation,
+        message: data.conversation?.lastMessage,
+      });
+    }, [updateConversationRealtime]),
+  );
+
   // useSocketEvent(
   //   LIVE_CHAT_SOCKET_EVENTS?.MESSAGES?.UPDATE_MESSAGE,
   //   useCallback((data) => {

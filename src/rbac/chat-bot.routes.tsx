@@ -28,9 +28,10 @@ export const chatBotRoutes: RouteObject[] = [
       {
         element: (
           <RequirePermission
-            permission={
-              PERMISSIONS.CHATBOTS.VIEW || PERMISSIONS.CHATBOTS.CREATE
-            }
+            permission={[
+              PERMISSIONS.CHATBOTS.VIEW,
+              PERMISSIONS.CHATBOTS.CREATE,
+            ]}
           >
             <ChatBotNew />
           </RequirePermission>
@@ -40,9 +41,10 @@ export const chatBotRoutes: RouteObject[] = [
       {
         element: (
           <RequirePermission
-            permission={
-              PERMISSIONS.CHATBOTS.VIEW || PERMISSIONS.CHATBOTS.CREATE
-            }
+            permission={[
+              PERMISSIONS.CHATBOTS.VIEW,
+              PERMISSIONS.CHATBOTS.CREATE,
+            ]}
           >
             <ChatbotFlowEditor />
           </RequirePermission>

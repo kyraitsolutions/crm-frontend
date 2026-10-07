@@ -8,7 +8,11 @@ export const TEMPLATE_TYPES = [
   "CUSTOM",
   "CATALOGUE",
   "CALLING_PERMISSIONS_REQUEST",
+  "CAROUSEL",
+  "AUTHENTICATION",
 ] as const;
+
+export const CAROUSEL_MEDIA_FORMATS = ["IMAGE", "VIDEO"] as const;
 
 export const HEADER_TYPES = [
   "Text",
@@ -50,3 +54,4 @@ export type ButtonKind = (typeof BUTTON_KINDS)[number];
 export type UrlType = (typeof URL_TYPES)[number];
 export type WhatsAppActiveFor = (typeof WHATSAPP_ACTIVE_FOR)[number];
 export type TemplateStatus = (typeof TEMPLATE_STATUS)[number];
+export type CarouselMediaFormat = (typeof CAROUSEL_MEDIA_FORMATS)[number];

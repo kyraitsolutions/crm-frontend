@@ -10,7 +10,6 @@ export function mapBody(body: BodyData): TTemplateComponent {
   const component: TTemplateComponent = {
     type: "BODY",
     text: body.bodyText,
-    variableMappings: [],
   };
 
   if (!body.bodyVariables.length) {

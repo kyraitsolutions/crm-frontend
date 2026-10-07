@@ -1,11 +1,12 @@
 export const hasPermission = (
   userPermissions: string[] = [],
-  permission: string,
+  permission: string | string[],
 ): boolean => {
   if (!userPermissions || userPermissions.length === 0) return false;
 
-  // ✅ OWNER / SUPER ADMIN (wildcard)
+  // OWNER / SUPER ADMIN (wildcard)
   if (userPermissions.includes("*")) return true;
 
-  return userPermissions.includes(permission);
+  const required = Array.isArray(permission) ? permission : [permission];
+  return required.some((key) => userPermissions.includes(key));
 };

@@ -1,9 +1,26 @@
-export const ALL_ACTIONS = ["create", "edit", "delete", "view", "export"];
+import type { PermissionSectionConfig } from "./permission-config";
 
-export const modules = ["accounts", "leads", "chatbots", "leadForms", "teams"];
+/** Preferred column order in Create Role UI */
+export const ACTION_COLUMN_ORDER = [
+  "view",
+  "create",
+  "edit",
+  "delete",
+  "export",
+  "import",
+  "send",
+] as const;
 
-export const generateAllPermissions = () => {
-  return modules.flatMap(
-    (module) => ALL_ACTIONS.map((action) => `${module}.${action}`), // ✅ FIXED (dot not :)
+export const ALL_ACTIONS = [...ACTION_COLUMN_ORDER];
+
+export function actionsForSection(section: PermissionSectionConfig): string[] {
+  const set = new Set<string>();
+  for (const mod of section.modules) {
+    for (const action of mod.actions) set.add(action);
+  }
+  const ordered = ACTION_COLUMN_ORDER.filter((a) => set.has(a));
+  const rest = [...set].filter(
+    (a) => !ACTION_COLUMN_ORDER.includes(a as (typeof ACTION_COLUMN_ORDER)[number]),
   );
-};
+  return [...ordered, ...rest];
+}

@@ -146,11 +146,19 @@ export function groupButtons(buttons: TTemplateButton[]) {
 }
 
 export function getTemplateType(components: any) {
-  if (components[0].type === "HEADER" && components[0]?.format) {
-    return components[0]?.format;
-  } else {
+  if (!Array.isArray(components) || components.length === 0) {
     return "text";
   }
+
+  if (components.some((component) => component?.type === "CAROUSEL")) {
+    return "CAROUSEL";
+  }
+
+  if (components[0].type === "HEADER" && components[0]?.format) {
+    return components[0]?.format;
+  }
+
+  return "text";
 }
 
 export const getComponentText = (

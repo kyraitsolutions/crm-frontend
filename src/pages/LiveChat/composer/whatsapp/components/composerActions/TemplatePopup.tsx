@@ -189,6 +189,7 @@ const TemplatePopup = ({ open, onClose, onSelect }: TemplatePopupProps) => {
         open={!!previewTemplate}
         onClose={() => setPreviewTemplate(null)}
         template={previewTemplate}
+        
       />
     </div>
   );

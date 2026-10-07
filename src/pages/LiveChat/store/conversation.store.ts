@@ -63,7 +63,19 @@ type TConversationStore = {
   resetConversationQuery: () => Promise<void>;
   loadMoreConversations: () => Promise<void>;
   removeConversations: (conversationIds: string[]) => void;
-  markLiveChatIntervention: (conversationId: string) => void;
+  markLiveChatIntervention: (
+    conversationId: string,
+    assignee?: {
+      assigneeId?: string | null;
+      assigneeName?: string | null;
+      assigneeEmail?: string | null;
+      pendingRequest?: {
+        userId?: string | null;
+        name?: string | null;
+        email?: string | null;
+      } | null;
+    },
+  ) => void;
   clearLiveChatIntervention: (conversationId: string) => void;
   patchConversation: (
     conversationId: string,
@@ -399,19 +411,35 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
         : state.selectedConversationId,
     }));
   },
-  markLiveChatIntervention: (conversationId) => {
+  markLiveChatIntervention: (conversationId, assignee) => {
     set((state) => ({
       conversations: state.conversations.map((item) => {
         if (item.id !== conversationId) return item;
+        const liveChat = {
+          ...((item.metadata as any)?.liveChat || {}),
+          humanIntervened: true,
+          autoResolveActive: false,
+          escalationReason: undefined,
+          ...(assignee?.assigneeId
+            ? {
+                assigneeId: assignee.assigneeId,
+                assigneeName: assignee.assigneeName || "",
+                assigneeEmail: assignee.assigneeEmail || "",
+              }
+            : {}),
+        };
+        if (assignee && "pendingRequest" in assignee) {
+          if (assignee.pendingRequest) {
+            liveChat.pendingRequest = assignee.pendingRequest;
+          } else {
+            delete liveChat.pendingRequest;
+          }
+        }
         return {
           ...item,
           metadata: {
             ...(item.metadata || {}),
-            liveChat: {
-              ...((item.metadata as any)?.liveChat || {}),
-              humanIntervened: true,
-              autoResolveActive: false,
-            },
+            liveChat,
           },
         };
       }),
@@ -421,16 +449,21 @@ export const useConversationStore = create<TConversationStore>((set, get) => ({
     set((state) => ({
       conversations: state.conversations.map((item) => {
         if (item.id !== conversationId) return item;
+        const liveChat = {
+          ...((item.metadata as any)?.liveChat || {}),
+          humanIntervened: false,
+          escalationReason: undefined,
+          autoResolveActive: true,
+        };
+        delete liveChat.assigneeId;
+        delete liveChat.assigneeName;
+        delete liveChat.assigneeEmail;
+        delete liveChat.pendingRequest;
         return {
           ...item,
           metadata: {
             ...(item.metadata || {}),
-            liveChat: {
-              ...((item.metadata as any)?.liveChat || {}),
-              humanIntervened: false,
-              escalationReason: undefined,
-              autoResolveActive: true,
-            },
+            liveChat,
           },
         };
       }),

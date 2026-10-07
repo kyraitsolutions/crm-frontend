@@ -199,9 +199,9 @@ const ListNodeSetting = ({ id, data, onClose }: TListNodeSettingProps) => {
   console.log(sections);
 
   return (
-    <div className="h-full flex flex-col bg-ternary text-white">
+    <div className="flex h-full min-h-0 flex-col bg-slate-900 text-white">
       {/* HEADER */}
-      <div className="px-5 py-4 border-b border-white/10 flex justify-between items-center">
+      <div className="z-10 flex shrink-0 items-center justify-between border-b border-white/10 bg-slate-900 px-5 py-4">
         <div>
           <h2 className="text-lg font-semibold">List Message</h2>
           <p className="text-xs text-gray-400">Configure interactive list</p>
@@ -210,7 +210,7 @@ const ListNodeSetting = ({ id, data, onClose }: TListNodeSettingProps) => {
       </div>
 
       {/* BODY */}
-      <div ref={listRef} className="flex-1 overflow-y-auto p-5 space-y-4">
+      <div ref={listRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto p-5">
         {/* HEADER */}
         <div>
           <label className="text-xs text-gray-400">Header</label>
@@ -393,14 +393,16 @@ const ListNodeSetting = ({ id, data, onClose }: TListNodeSettingProps) => {
       </div>
 
       {/* FOOTER */}
-      <div className="p-4 border-t border-white/10 flex justify-end gap-2 bg-[#0f172a]">
-        <Button
-          className="border border-white/60 bg-transparent hover:bg-red-500 hover:text-white"
-          onClick={onClose}
-        >
+      <div className="flex shrink-0 justify-end gap-2 border-t border-white/10 bg-[#0f172a] p-3">
+        <Button className="node-setting-footer-btns" onClick={onClose}>
           Cancel
         </Button>
-        <Button onClick={handleSave}>Save</Button>
+        <Button
+          className="node-setting-footer-btns node-setting-footer-btns-save"
+          onClick={handleSave}
+        >
+          Save
+        </Button>
       </div>
     </div>
   );

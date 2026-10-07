@@ -11,7 +11,10 @@ import TemplatesPage from "@/pages/Channels/whatsapp/pages/TemplatesPage";
 import { Whatsapp } from "@/pages/Channels/whatsapp/pages/WhatsAppPage";
 import { WhatsappRouteGuard } from "@/pages/Channels/whatsapp/routes/WhatsappRouteGuard";
 import WhatsAppWorkspace from "@/pages/Channels/whatsapp/sections/WhatsAppWorkspace";
+import { PERMISSIONS } from "@/rbac";
 import type { RouteObject } from "react-router-dom";
+import { RequirePermission } from "./route-access/RequirePermission";
+
 export const whatsappRoutes: RouteObject[] = [
   {
     // path: WHATSAPP_PATHS.ROOT,
@@ -23,7 +26,11 @@ export const whatsappRoutes: RouteObject[] = [
         children: [
           {
             path: "settings/whatsapp",
-            element: <WhatsappRouteGuard />,
+            element: (
+              <RequirePermission permission={PERMISSIONS.WHATSAPP.VIEW}>
+                <WhatsappRouteGuard />
+              </RequirePermission>
+            ),
             children: [
               {
                 index: true,

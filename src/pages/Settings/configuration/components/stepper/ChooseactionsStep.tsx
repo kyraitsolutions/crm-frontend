@@ -7,18 +7,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTeamsStore } from "@/stores/team.store";
-import React, { useEffect, useState } from "react";
-import { ACTION_OPTIONS } from "../../constants/automation.constants";
+import React, { useEffect, useMemo, useState } from "react";
+import { actionsForTrigger } from "../../constants/automation.constants";
 import type {
   ActionType,
   AutomationAction,
+  TriggerType,
 } from "../../store/automation.store";
 import { Plus } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useConfigurationStore } from "../../store/configuration.store";
 
 interface ChooseActionsStepProps {
+  trigger: TriggerType | null;
   actions: AutomationAction[];
   onChange: (actions: AutomationAction[]) => void;
   onBack: () => void;
@@ -33,10 +36,20 @@ const ACTION_CONFIG_FIELDS: Record<
     placeholder?: string;
     options?: string[] | { label: string; value: string }[];
     type?: string;
-    types?: string;
   }[]
 > = {
   assign_lead_to_user: [{ label: "Assign To", key: "user", type: "users" }],
+  update_lead_stage: [
+    { label: "Move To Stage", key: "stage", type: "lead_stages" },
+  ],
+  add_lead_tag: [
+    {
+      label: "Tag",
+      key: "tag",
+      type: "text",
+      placeholder: "e.g. hot-lead",
+    },
+  ],
   create_task: [
     {
       label: "Task Title",
@@ -79,30 +92,35 @@ const ACTION_CONFIG_FIELDS: Record<
     },
   ],
   send_notification: [
-    // { label: "Automation Name", key: "name" },
     {
       label: "Notify",
       key: "target",
-      options: ["Sales Manager", "Lead Owner", "All Team"],
+      type: "select",
+      options: [
+        { label: "Account inbox", value: "account" },
+        { label: "Lead owner", value: "lead_owner" },
+      ],
     },
   ],
 };
 
-const emptyAction = (): AutomationAction => ({
-  type: "assign_lead_to_user",
-  config: {},
-});
-
 const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
+  trigger,
   actions,
   onChange,
   onBack,
   onNext,
 }) => {
   const { getTeams } = useTeamsStore();
-  const addAction = () => onChange([...actions, emptyAction()]);
+  const { getConfigurationByType } = useConfigurationStore();
+  const availableActions = useMemo(() => actionsForTrigger(trigger), [trigger]);
+  const defaultType = availableActions[0]?.value || "create_task";
+
+  const addAction = () =>
+    onChange([...actions, { type: defaultType, config: {} }]);
 
   const [users, setUsers] = useState<{ label: string; key: string }[]>([]);
+  const [stages, setStages] = useState<{ label: string; key: string }[]>([]);
 
   const handleDueDateChange = (index: number, value: string) => {
     if (value === "custom") {
@@ -111,7 +129,6 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
     }
 
     const days = Number(value);
-
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + days);
 
@@ -140,27 +157,63 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
   const removeAction = (index: number) =>
     onChange(actions.filter((_, i) => i !== index));
 
+  const loadUsers = async () => {
+    if (users.length) return;
+    const team = await getTeams();
+    setUsers(
+      (team || []).map((u: any) => ({
+        label:
+          `${u.userProfile?.firstName || ""} ${u.userProfile?.lastName || ""}`.trim() ||
+          u.email ||
+          "User",
+        key: String(u.userId || u.id),
+      })),
+    );
+  };
+
+  const loadStages = async () => {
+    if (stages.length) return;
+    const values = await getConfigurationByType("lead-status");
+    const list = Array.isArray(values) ? values : [];
+    setStages(
+      list.map((item: any) => ({
+        key: String(item.key || item),
+        label: String(item.label || item.key || item),
+      })),
+    );
+  };
+
   const handleActionTypeChange = async (index: number, type: ActionType) => {
     updateAction(index, {
       type,
       config: {},
     });
-
-    if (type === "assign_lead_to_user") {
-      const users = await getTeams();
-      setUsers(
-        users.map((u) => ({ label: u.userProfile.firstName, key: u.id })),
-      );
+    if (
+      type === "assign_lead_to_user" ||
+      type === "create_task" ||
+      type === "send_notification"
+    ) {
+      await loadUsers();
+    }
+    if (type === "update_lead_stage") {
+      await loadStages();
     }
   };
 
-  const initializeActionTypeValue = () => {
-    handleActionTypeChange(0, "assign_lead_to_user");
-  };
-
   useEffect(() => {
-    initializeActionTypeValue();
-  }, []);
+    void (async () => {
+      await loadUsers();
+      await loadStages();
+      const allowed = new Set(availableActions.map((a) => a.value));
+      const cleaned = actions.filter((a) => allowed.has(a.type));
+      if (!cleaned.length) {
+        onChange([{ type: defaultType, config: {} }]);
+      } else if (cleaned.length !== actions.length) {
+        onChange(cleaned);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger]);
 
   const renderField = (field: any, action: AutomationAction, index: number) => {
     switch (field.type) {
@@ -204,6 +257,27 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
               {users.map((user) => (
                 <SelectItem key={user.key} value={user.key}>
                   {user.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+
+      case "lead_stages":
+        return (
+          <Select
+            value={action.config[field.key] || ""}
+            onValueChange={(value) =>
+              updateActionConfig(index, field.key, value)
+            }
+          >
+            <SelectTrigger className="w-full input-field">
+              <SelectValue placeholder="Select stage" />
+            </SelectTrigger>
+            <SelectContent>
+              {stages.map((stage) => (
+                <SelectItem key={stage.key} value={stage.key}>
+                  {stage.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -297,7 +371,7 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
                   </SelectTrigger>
 
                   <SelectContent>
-                    {ACTION_OPTIONS.map((opt) => (
+                    {availableActions.map((opt) => (
                       <SelectItem key={opt.value} value={opt.value}>
                         {opt.label}
                       </SelectItem>
@@ -360,7 +434,17 @@ const ChooseActionsStep: React.FC<ChooseActionsStepProps> = ({
         </Button>
         <Button
           onClick={onNext}
-          disabled={!actions.length}
+          disabled={
+            !actions.length ||
+            actions.some((a) => {
+              if (a.type === "assign_lead_to_user") return !a.config.user;
+              if (a.type === "update_lead_stage") return !a.config.stage;
+              if (a.type === "add_lead_tag") return !a.config.tag?.trim();
+              if (a.type === "create_task") return !a.config.title?.trim();
+              if (a.type === "send_notification") return !a.config.target;
+              return false;
+            })
+          }
           className="px-5 py-2 bg-primary/90 text-white text-sm font-medium rounded-2xl hover:bg-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           Next

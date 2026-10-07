@@ -6,7 +6,7 @@ export const WhatsappLayout = () => {
     <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden">
       <Sidebar />
 
-      <main className="w-full h-[calc(100vh-64px)] hide-scrollbar overflow-y-scroll bg-gray-50">
+      <main className="min-w-0 flex-1 h-[calc(100vh-64px)] hide-scrollbar overflow-y-auto bg-gray-50 p-4">
         <Outlet />
       </main>
     </div>

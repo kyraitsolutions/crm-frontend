@@ -10,7 +10,7 @@ const Setting = () => {
   if (!whatsappAccountData) return <div>Whatsapp account not found</div>;
 
   return (
-    <div className="space-y-4 px-4 py-2">
+    <div className="space-y-4 w-full">
       <WorkspaceHeader
         businessName={whatsappAccountData?.businessInfo.name}
         phoneNumber={whatsappAccountData?.phoneNumberInfo.displayPhoneNumber}

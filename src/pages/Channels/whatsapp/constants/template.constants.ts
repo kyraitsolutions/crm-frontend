@@ -35,17 +35,17 @@ export const TYPE_OPTIONS_BY_CATEGORY: Record<
       description:
         "Send messages with media and customised buttons to engage your customers.",
     },
-    // {
-    //   value: "CATALOGUE",
-    //   title: "Catalogue",
-    //   description:
-    //     "Send messages that drive sales by connecting your product catalogue.",
-    // },
     {
-      value: "CALLING_PERMISSIONS_REQUEST",
-      title: "Calling permissions request",
-      description: "Ask customers if you can call them on WhatsApp.",
+      value: "CAROUSEL",
+      title: "Media card carousel",
+      description:
+        "Send a marketing message with 2–10 scrollable image or video cards. Each card can include optional body text and up to 2 buttons.",
     },
+    // {
+    //   value: "CALLING_PERMISSIONS_REQUEST",
+    //   title: "Calling permissions request",
+    //   description: "Ask customers if you can call them on WhatsApp.",
+    // },
   ],
   Utility: [
     {
@@ -54,21 +54,50 @@ export const TYPE_OPTIONS_BY_CATEGORY: Record<
       description:
         "Send account updates, order confirmations, or alerts your customers expect.",
     },
-    {
-      value: "CALLING_PERMISSIONS_REQUEST",
-      title: "Calling permissions request",
-      description: "Ask customers if you can call them on WhatsApp.",
-    },
+    // {
+    //   value: "CALLING_PERMISSIONS_REQUEST",
+    //   title: "Calling permissions request",
+    //   description: "Ask customers if you can call them on WhatsApp.",
+    // },
   ],
   Authentication: [
     {
-      value: "CUSTOM",
+      value: "AUTHENTICATION",
       title: "One-time passcode",
       description:
         "Send a code so customers can verify an account or complete a login.",
     },
   ],
 };
+
+/** Auth copy-code only for now (one-tap / zero-tap need Android package + hash). */
+export const AUTH_OTP_TYPES = [
+  {
+    value: "COPY_CODE",
+    title: "Copy code",
+    description:
+      "Basic authentication with quick setup. Customers copy and paste the code into your app.",
+    enabled: true,
+  },
+  {
+    value: "ONE_TAP",
+    title: "One-tap auto-fill",
+    description:
+      "Requires Android package name and signature hash. Not configured in Kyra yet.",
+    enabled: false,
+  },
+  {
+    value: "ZERO_TAP",
+    title: "Zero-tap auto-fill",
+    description:
+      "Requires Android package name and signature hash. Not configured in Kyra yet.",
+    enabled: false,
+  },
+] as const;
+
+export const AUTH_CODE_EXPIRATION_MIN = 1;
+export const AUTH_CODE_EXPIRATION_MAX = 90;
+export const AUTH_VALIDITY_OPTIONS_MINUTES = [1, 3, 5, 10, 15, 30, 60] as const;
 
 export const VARIABLE_LIBRARY = [
   "customer_name",
@@ -179,3 +208,14 @@ export const VARIABLE_TYPES: {
     description: "Use numbered placeholders like {{1}}, {{2}}.",
   },
 ];
+
+/** Meta carousel cards: only these button kinds, max 2, same structure on every card. */
+export const CAROUSEL_ALLOWED_BUTTON_KINDS: Extract<
+  ButtonKind,
+  "QUICK_REPLY" | "URL" | "PHONE_NUMBER"
+>[] = ["QUICK_REPLY", "URL", "PHONE_NUMBER"];
+
+export const CAROUSEL_MAX_BUTTONS = 2;
+export const CAROUSEL_MIN_CARDS = 2;
+export const CAROUSEL_MAX_CARDS = 10;
+export const CAROUSEL_CARD_BODY_MAX = 160;

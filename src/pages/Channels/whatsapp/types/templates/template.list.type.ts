@@ -9,9 +9,27 @@ import {
   MetaTemplateButtonSchema,
 } from "./template-button.schema";
 
+/** Preview helper shape (legacy). */
 export const TemplateVariableMappingSchema = z.object({
+  variable: z.string().optional(),
+  value: z.string().optional(),
+  position: z.number().optional(),
+});
+
+/** Kyra CRM field mapping stored on the template document. */
+export const KyraVariableMappingSchema = z.object({
   variable: z.string(),
-  value: z.string(),
+  component: z.enum(["HEADER", "BODY", "BUTTONS"]),
+  sourceType: z.enum([
+    "CONTACT",
+    "LEAD",
+    "BOOKING",
+    "CUSTOM",
+    "STATIC",
+    "API",
+  ]),
+  sourceKey: z.string().nullable(),
+  fallbackValue: z.string().default(""),
 });
 
 const TemplateExampleSchema = z.object({
@@ -49,10 +67,8 @@ const HeaderComponentSchema = z.object({
       size: z.number().optional(),
     })
     .optional(),
-  variableMappings: z
-    .array(TemplateVariableMappingSchema)
-    .default([])
-    .optional(),
+  // Legacy / ignored — mappings live on the template document, not Meta components
+  variableMappings: z.array(TemplateVariableMappingSchema).optional(),
 });
 
 const BodyComponentSchema = z.object({
@@ -62,7 +78,7 @@ const BodyComponentSchema = z.object({
 
   example: TemplateExampleSchema.optional(),
 
-  variableMappings: z.array(TemplateVariableMappingSchema).default([]),
+  variableMappings: z.array(TemplateVariableMappingSchema).optional(),
 });
 
 const FooterComponentSchema = z.object({
@@ -73,7 +89,24 @@ const FooterComponentSchema = z.object({
 const ButtonsComponentSchema = z.object({
   type: z.literal("BUTTONS"),
   buttons: z.array(MetaTemplateButtonSchema).default([]),
-  variableMappings: z.array(TemplateVariableMappingSchema).default([]),
+  variableMappings: z.array(TemplateVariableMappingSchema).optional(),
+});
+
+const CarouselComponentSchema = z.object({
+  type: z.literal("CAROUSEL"),
+  cards: z
+    .array(
+      z.object({
+        components: z.array(
+          z.union([
+            HeaderComponentSchema,
+            BodyComponentSchema,
+            ButtonsComponentSchema,
+          ]),
+        ),
+      }),
+    )
+    .default([]),
 });
 
 export const TemplateComponentSchema = z.discriminatedUnion("type", [
@@ -81,6 +114,7 @@ export const TemplateComponentSchema = z.discriminatedUnion("type", [
   BodyComponentSchema,
   FooterComponentSchema,
   ButtonsComponentSchema,
+  CarouselComponentSchema,
 ]);
 
 export const TemplateListItemSchema = z.object({
@@ -106,6 +140,7 @@ export const TemplateListItemSchema = z.object({
   parameterFormat: z.enum(VARIABLE_TYPES),
   status: z.enum(TEMPLATE_STATUS),
   components: z.array(TemplateComponentSchema),
+  variableMappings: z.array(KyraVariableMappingSchema).optional().default([]),
 });
 
 export type TTemplate = z.infer<typeof TemplateListItemSchema>;

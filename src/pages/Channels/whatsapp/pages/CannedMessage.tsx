@@ -2,7 +2,7 @@ import MessageTable from "../components/canned/MessageTable"
 
 const CannedMessage = () => {
     return (
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full">
             <MessageTable type="all" />
         </div>
     )

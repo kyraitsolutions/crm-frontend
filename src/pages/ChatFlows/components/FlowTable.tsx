@@ -44,6 +44,7 @@ import type { TChatFlow, TChatFlowStatus } from "../types/chatflow.type";
 import { useChatFlowStore } from "../store/chatflow.store";
 import { formatDate } from "@/utils/date.utils";
 import { ToastMessageService } from "@/services";
+import { alertManager } from "@/stores/alert.store";
 
 type TFlowTableProps = {
   flows: TChatFlow[];
@@ -82,7 +83,19 @@ const FlowTable = ({ flows, loading }: TFlowTableProps) => {
         response?.message || "Your request was processed successfully",
       );
     }
-    console.log(response);
+  };
+
+  const askDeleteFlow = (flow: TChatFlow) => {
+    alertManager.show({
+      type: "warning",
+      title: "Delete flow",
+      message: `Delete "${flow.name}"? This cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      onConfirm: () => {
+        handleDeleteFlow(flow.id);
+      },
+    });
   };
 
   const handleStatusChange = async (
@@ -274,10 +287,13 @@ const FlowTable = ({ flows, loading }: TFlowTableProps) => {
 
                       <DropdownMenuItem
                         className="cursor-pointer text-red-500 focus:text-red-500"
-                        onClick={() => handleDeleteFlow(flow.id)}
+                        onClick={() => {
+                          const selected = flow;
+                          window.setTimeout(() => askDeleteFlow(selected), 0);
+                        }}
                       >
                         <Trash2 className="mr-2 size-4" />
-                        Delet
+                        Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

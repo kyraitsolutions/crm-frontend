@@ -1,6 +1,7 @@
 import { whatsappService } from "@/pages/Channels/whatsapp/services/whatsapp.service";
 import { useConversationStore } from "@/pages/LiveChat/store/conversation.store";
 import { useMessageStore } from "@/pages/LiveChat/store/message.store";
+import { useAuthStore } from "@/stores";
 import { buildOptimisticMessage } from "../utils/buildOptimisticMessage";
 import type { TOutgoingMessage } from "../utils/buildOutgoingMessage";
 
@@ -16,6 +17,7 @@ export const useChatSender = () => {
   const markLiveChatIntervention = useConversationStore(
     (state) => state.markLiveChatIntervention,
   );
+  const user = useAuthStore((state) => state.user);
 
   const sendMessage = async ({
     accountId,
@@ -40,7 +42,20 @@ export const useChatSender = () => {
       if (realMessageId) {
         replaceMessageId(clientMessageId, String(realMessageId));
       }
-      if (conversationId) markLiveChatIntervention(conversationId);
+      if (conversationId && user?.id) {
+        const assigneeName =
+          [user.firstName, user.lastName].filter(Boolean).join(" ").trim() ||
+          user.userProfile?.firstName ||
+          user.email ||
+          "You";
+        markLiveChatIntervention(conversationId, {
+          assigneeId: String(user.id),
+          assigneeName,
+          assigneeEmail: user.email || "",
+        });
+      } else if (conversationId) {
+        markLiveChatIntervention(conversationId);
+      }
     } catch (err) {
       console.log(err);
       throw err;

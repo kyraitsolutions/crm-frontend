@@ -76,7 +76,7 @@ const MessageWrapper = ({
               Failed to send <X size={14} />
             </p>
 
-            <p className="text-[10px] text-red-600 mt-1">
+            <p className="text-[10px] text-red-600 mt-1 wrap-break-word">
               {error.details || error.message}
             </p>
 

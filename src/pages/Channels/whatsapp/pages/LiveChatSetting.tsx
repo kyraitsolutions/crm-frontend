@@ -16,8 +16,8 @@ import type {
   WhatsAppLiveChatSettings,
 } from "../types/live-chat.type";
 import DataLoader from "@/components/Loader/data-loader";
-import { Link } from "react-router-dom";
-import { Bot } from "lucide-react";
+// import { Link } from "react-router-dom";
+// import { Bot } from "lucide-react";
 import {
   autoResolveCoversOffHours,
   autoResolveCoversWelcome,
@@ -25,6 +25,7 @@ import {
   offHoursLockReason,
   welcomeLockReason,
 } from "../utils/autoResolveWindows";
+import { Button } from "@/components/ui/button";
 
 const defaultAutoResolve: AutoResolveConfig = {
   enabled: false,
@@ -55,14 +56,31 @@ const previewText = (reply: AutoReplyConfig) => {
   return reply.text || "No message configured";
 };
 
+const SectionCard = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <section
+    className={`rounded-2xl border border-gray-200 bg-white shadow-sm ${className}`}
+  >
+    {children}
+  </section>
+);
+
 const LiveChatSetting = () => {
   const { accountId } = useAuthStore();
   const toast = new ToastMessageService();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [autoResolve, setAutoResolve] = useState<AutoResolveConfig>(defaultAutoResolve);
-  const [welcomeMessage, setWelcomeMessage] = useState<AutoReplyConfig>(defaultWelcome);
-  const [offHoursMessage, setOffHoursMessage] = useState<AutoReplyConfig>(defaultOffHours);
+  const [autoResolve, setAutoResolve] =
+    useState<AutoResolveConfig>(defaultAutoResolve);
+  const [welcomeMessage, setWelcomeMessage] =
+    useState<AutoReplyConfig>(defaultWelcome);
+  const [offHoursMessage, setOffHoursMessage] =
+    useState<AutoReplyConfig>(defaultOffHours);
   const [timezone, setTimezone] = useState("Asia/Kolkata");
   const [schedule, setSchedule] = useState(defaultSchedule);
   const [flows, setFlows] = useState<LiveChatFlowOption[]>([]);
@@ -95,7 +113,9 @@ const LiveChatSetting = () => {
         );
         setFlows(doc.flows || []);
         setTemplates(doc.templates || []);
-        setAiAgent(doc.aiAgent || { configured: false, id: null, available: false });
+        setAiAgent(
+          doc.aiAgent || { configured: false, id: null, available: false },
+        );
       })
       .catch(() => toast.error("Could not load live chat settings"))
       .finally(() => setLoading(false));
@@ -110,7 +130,8 @@ const LiveChatSetting = () => {
         payload,
       );
       const doc = response.data?.doc;
-      if (doc?.autoResolve) setAutoResolve({ ...defaultAutoResolve, ...doc.autoResolve });
+      if (doc?.autoResolve)
+        setAutoResolve({ ...defaultAutoResolve, ...doc.autoResolve });
       if (doc?.welcomeMessage) {
         setWelcomeMessage({ ...defaultWelcome, ...doc.welcomeMessage });
       }
@@ -151,7 +172,9 @@ const LiveChatSetting = () => {
     void persist(buildAutoResolvePayload(next));
   };
 
-  const buildAutoResolvePayload = (next: AutoResolveConfig): Partial<WhatsAppLiveChatSettings> => {
+  const buildAutoResolvePayload = (
+    next: AutoResolveConfig,
+  ): Partial<WhatsAppLiveChatSettings> => {
     const payload: Partial<WhatsAppLiveChatSettings> = { autoResolve: next };
     if (autoResolveCoversWelcome(next)) {
       payload.welcomeMessage = { ...welcomeMessage, enabled: false };
@@ -172,124 +195,179 @@ const LiveChatSetting = () => {
 
   if (loading) return <DataLoader className="h-[calc(100vh-180px)]" />;
 
-  return (
-    <div className="max-w-7xl space-y-8 mx-auto py-10">
-      <CampaignOptout
-        title="Auto Resolve Chats"
-        description="Let a published chatflow or AI agent handle WhatsApp chats. Intervened chats stay with your team."
-        enabled={autoResolve.enabled}
-        onChange={handleAutoResolveToggle}
-      />
+  const resolverLabel =
+    autoResolve.mode === "flow"
+      ? "Chatflow"
+      : autoResolve.mode === "ai_agent"
+        ? "AI agent"
+        : "Not configured";
 
-      <div className="rounded-2xl bg-white px-10 py-4 -mt-4 space-y-1">
-        <div className="flex items-center justify-between gap-4">
-          <p className="text-sm text-gray-500">
-            {autoResolve.mode === "flow"
-              ? "Resolver: Chatflow"
-              : autoResolve.mode === "ai_agent"
-                ? "Resolver: AI agent"
-                : "No resolver configured yet"}
-            {autoResolve.scheduleMode === "working_hours"
-              ? " · Runs during working hours"
-              : autoResolve.scheduleMode === "off_hours"
-                ? " · Runs outside working hours"
-                : autoResolve.scheduleMode === "always"
-                  ? " · Runs always"
-                  : ""}
-          </p>
-          <button
+  const scheduleLabel =
+    autoResolve.scheduleMode === "working_hours"
+      ? "During working hours"
+      : autoResolve.scheduleMode === "off_hours"
+        ? "Outside working hours"
+        : autoResolve.scheduleMode === "always"
+          ? "Always"
+          : "—";
+
+  return (
+    <div className="w-full space-y-4">
+      <header className="space-y-1 px-1">
+        <h1 className="text-lg font-semibold text-gray-900">
+          Live Chat Settings
+        </h1>
+        <p className="text-sm text-gray-500">
+          Control how WhatsApp chats are auto-resolved and how customers get
+          replies during and outside working hours.
+        </p>
+      </header>
+
+      {/* Auto Resolve */}
+      <SectionCard>
+        <div className="border-b border-gray-100 px-5 py-4">
+          <CampaignOptout
+            bare
+            title="Auto Resolve Chats"
+            description="Let a published chatflow or AI agent handle WhatsApp chats. Intervened chats stay with your team."
+            enabled={autoResolve.enabled}
+            onChange={handleAutoResolveToggle}
+          />
+        </div>
+
+        <div className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+                Resolver: {resolverLabel}
+              </span>
+              <span className="rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-800">
+                {scheduleLabel}
+              </span>
+            </div>
+            {autoResolve.enabled ? (
+              <p className="text-xs text-gray-500">
+                {autoResolveScheduleCopy(autoResolve.scheduleMode)}
+              </p>
+            ) : (
+              <p className="text-xs text-gray-400">
+                Turn on auto resolve, then configure a chatflow or AI agent.
+              </p>
+            )}
+          </div>
+          <Button
+            type="button"
             onClick={() => setResolveOpen(true)}
-            className="text-sm text-teal-800 underline shrink-0"
+            className="actions-btn rounded-xl!"
           >
             Configure
-          </button>
+          </Button>
         </div>
-        {autoResolve.enabled ? (
-          <p className="text-xs text-gray-400">{autoResolveScheduleCopy(autoResolve.scheduleMode)}</p>
-        ) : null}
-      </div>
+      </SectionCard>
 
-      <Link
-        to="/dashboard/settings/whatsapp/ai-agent"
-        className="flex items-center justify-between rounded-2xl bg-white p-10"
-      >
-        <div className="flex items-start gap-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <Bot size={18} />
+      {/* AI Sales Agent — commented out with sidebar
+      <SectionCard className="px-5 py-4">
+        <Link
+          to="/dashboard/settings/whatsapp/ai-agent"
+          className="flex items-center justify-between gap-4"
+        >
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Bot size={18} />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-gray-900">
+                AI Sales Agent
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                Configure instructions, knowledge base, qualification fields,
+                scoring and escalation for WhatsApp conversations.
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-md font-medium text-gray-900">AI Sales Agent</h2>
-            <p className="mt-2 text-sm text-gray-500">
-              Configure instructions, knowledge base, qualification fields, scoring
-              and escalation for WhatsApp conversations.
-            </p>
+          <span className="rounded-xl border border-teal-800 px-3 py-1.5 text-xs text-teal-800">
+            Open
+          </span>
+        </Link>
+      </SectionCard>
+      */}
+
+      {/* Auto replies */}
+      <SectionCard>
+        <div className="border-b border-gray-100 px-5 py-4">
+          <h2 className="text-sm font-semibold text-gray-900">Auto replies</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            First-message replies when auto resolve is not covering that window.
+          </p>
+        </div>
+
+        <div className="grid gap-4 p-4 md:grid-cols-2 md:gap-0 md:divide-x md:divide-gray-100">
+          <div className="md:pr-4">
+            <MessageConfig
+              responseTitle="Welcome Message"
+              responseDescription="Sent on the first query during working hours when auto resolve is not covering that window."
+              message={previewText(welcomeMessage)}
+              autoResponseEnabled={welcomeMessage.enabled && !welcomeLocked}
+              locked={welcomeLocked}
+              lockReason={welcomeLockReason(autoResolve)}
+              onToggle={(enabled) => {
+                if (welcomeLocked) return;
+                const next = { ...welcomeMessage, enabled };
+                setWelcomeMessage(next);
+                if (enabled && next.type === "text" && !next.text) {
+                  setWelcomeOpen(true);
+                  return;
+                }
+                void persist({ welcomeMessage: next });
+              }}
+              onConfigure={() => {
+                if (welcomeLocked) return;
+                setWelcomeOpen(true);
+              }}
+            />
+          </div>
+          <div className="md:pl-4">
+            <MessageConfig
+              responseTitle="Off Hours Message"
+              responseDescription="Sent on the first query outside working hours when auto resolve is not covering that window."
+              message={previewText(offHoursMessage)}
+              autoResponseEnabled={offHoursMessage.enabled && !offHoursLocked}
+              locked={offHoursLocked}
+              lockReason={offHoursLockReason(autoResolve)}
+              onToggle={(enabled) => {
+                if (offHoursLocked) return;
+                const next = { ...offHoursMessage, enabled };
+                setOffHoursMessage(next);
+                if (enabled && next.type === "text" && !next.text) {
+                  setOffHoursOpen(true);
+                  return;
+                }
+                void persist({ offHoursMessage: next });
+              }}
+              onConfigure={() => {
+                if (offHoursLocked) return;
+                setOffHoursOpen(true);
+              }}
+            />
           </div>
         </div>
-        <span className="rounded-xl border border-teal-800 px-3 py-1.5 text-xs text-teal-800">
-          Open
-        </span>
-      </Link>
+      </SectionCard>
 
-      <div className="flex gap-10 bg-white p-10 rounded-2xl">
-        <MessageConfig
-          responseTitle="Welcome Message"
-          responseDescription="Sent on the first query during working hours when the AI agent or chatflow is not covering that window"
-          message={previewText(welcomeMessage)}
-          autoResponseEnabled={welcomeMessage.enabled && !welcomeLocked}
-          locked={welcomeLocked}
-          lockReason={welcomeLockReason(autoResolve)}
-          onToggle={(enabled) => {
-            if (welcomeLocked) return;
-            const next = { ...welcomeMessage, enabled };
-            setWelcomeMessage(next);
-            if (enabled && next.type === "text" && !next.text) {
-              setWelcomeOpen(true);
-              return;
-            }
-            void persist({ welcomeMessage: next });
-          }}
-          onConfigure={() => {
-            if (welcomeLocked) return;
-            setWelcomeOpen(true);
-          }}
+      {/* Working hours */}
+      <SectionCard className="p-5">
+        <WorkingHours
+          timezone={timezone}
+          schedule={schedule}
+          saving={saving}
+          onTimezoneChange={setTimezone}
+          onScheduleChange={setSchedule}
+          onSave={() =>
+            void persist({
+              workingHours: { timezone, days: schedule },
+            })
+          }
         />
-        <div className="h-auto w-px bg-gray-200" />
-        <MessageConfig
-          responseTitle="Off Hours Message"
-          responseDescription="Sent on the first query outside working hours when the AI agent or chatflow is not covering that window"
-          message={previewText(offHoursMessage)}
-          autoResponseEnabled={offHoursMessage.enabled && !offHoursLocked}
-          locked={offHoursLocked}
-          lockReason={offHoursLockReason(autoResolve)}
-          onToggle={(enabled) => {
-            if (offHoursLocked) return;
-            const next = { ...offHoursMessage, enabled };
-            setOffHoursMessage(next);
-            if (enabled && next.type === "text" && !next.text) {
-              setOffHoursOpen(true);
-              return;
-            }
-            void persist({ offHoursMessage: next });
-          }}
-          onConfigure={() => {
-            if (offHoursLocked) return;
-            setOffHoursOpen(true);
-          }}
-        />
-      </div>
-
-      <WorkingHours
-        timezone={timezone}
-        schedule={schedule}
-        saving={saving}
-        onTimezoneChange={setTimezone}
-        onScheduleChange={setSchedule}
-        onSave={() =>
-          void persist({
-            workingHours: { timezone, days: schedule },
-          })
-        }
-      />
+      </SectionCard>
 
       <AutoResolveConfigureDialog
         open={resolveOpen}

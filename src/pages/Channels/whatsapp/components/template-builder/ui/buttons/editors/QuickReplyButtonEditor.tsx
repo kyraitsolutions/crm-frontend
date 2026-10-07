@@ -6,43 +6,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
-import { useFormContext } from "react-hook-form";
-import { ButtonCard } from "../ButtonCard";
 import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
+import { ButtonCard } from "../ButtonCard";
+import { useTemplateButtons } from "../buttons-field.context";
 
 interface IQuickReplyButtonProps {
   button: TTemplateButton;
 }
 
 export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
-  // const { updateButton, removeButton } = useTemplateStore((state) => state);
-  const { getValues, setValue } = useFormContext<TemplateForm>();
-  const removeButton = (id: string) => {
-    const buttons = getValues("buttons");
-    const newButtons = buttons?.filter((button) => button.id !== id);
-
-    setValue("buttons", newButtons);
-  };
-
-  const updateButton = (id: string, data: any) => {
-    const buttons = getValues("buttons");
-    const newButtons = buttons?.map((button) =>
-      button.id === id
-        ? {
-            ...button,
-            ...data,
-          }
-        : button,
-    );
-    setValue("buttons", newButtons);
-  };
+  const { removeButton, updateButton } = useTemplateButtons();
 
   return (
     <ButtonCard onDelete={() => removeButton(button.id)}>
       <div className="grid grid-cols-2 gap-4">
-        {/* Type */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Type</label>
 
@@ -53,7 +30,6 @@ export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
 
             <SelectContent className="rounded-xl!">
               <SelectItem value="CUSTOM">Custom</SelectItem>
-
               <SelectItem value="PRE_CONFIGURED">
                 Pre-configured response
               </SelectItem>
@@ -61,7 +37,6 @@ export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
           </Select>
         </div>
 
-        {/* Button Text */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">
             Button text
@@ -70,7 +45,7 @@ export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
           <div className="relative">
             <Input
               value={button.label}
-              maxLength={40}
+              maxLength={25}
               placeholder="Quick Reply"
               className="input-field rounded-xl! pr-14"
               onChange={(e) =>
@@ -81,7 +56,7 @@ export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
             />
 
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-              {button.label.length}/40
+              {button.label.length}/25
             </span>
           </div>
 
@@ -93,54 +68,3 @@ export function QuickReplyButtonEditor({ button }: IQuickReplyButtonProps) {
     </ButtonCard>
   );
 }
-// import { Input } from "@/components/ui/input";
-// import { ButtonCard } from "../ButtonCard";
-// import type { TemplateButton } from "@/pages/Channels/whatsapp/types/template.type";
-// import { useTemplateStore } from "@/pages/Channels/whatsapp/store/template-builder.store";
-
-// interface Props {
-//   button: TemplateButton;
-// }
-
-// export function QuickReplyButtonEditor({ button }: Props) {
-//   const { updateButton, removeButton } = useTemplateStore((state) => state);
-
-//   return (
-//     <ButtonCard onDelete={() => removeButton(button.id)}>
-//       <div className="space-y-4">
-//         {/* Action */}
-//         <div className="space-y-1">
-//           <label className="text-sm font-medium">Type of action</label>
-
-//           <Input value="Quick Reply" disabled />
-//         </div>
-
-//         {/* Button Text */}
-//         <div className="space-y-1">
-//           <label className="text-sm font-medium">Button text</label>
-
-//           <Input
-//             maxLength={25}
-//             value={button.label}
-//             placeholder="Enter button text"
-//             onChange={(e) =>
-//               updateButton(button.id, {
-//                 label: e.target.value,
-//               })
-//             }
-//           />
-
-//           <div className="flex justify-end">
-//             <span className="text-xs text-muted-foreground">
-//               {button.label.length}/25
-//             </span>
-//           </div>
-
-//           {button.errors?.label && (
-//             <p className="text-xs text-destructive">{button.errors.label}</p>
-//           )}
-//         </div>
-//       </div>
-//     </ButtonCard>
-//   );
-// }

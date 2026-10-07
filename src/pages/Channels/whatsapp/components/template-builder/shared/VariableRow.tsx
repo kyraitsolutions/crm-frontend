@@ -7,11 +7,14 @@ import { useTemplateStore } from "../../../store/template-builder.store";
 import { Controller, useFormContext } from "react-hook-form";
 import type { TemplateForm } from "../../../validations/template.schema";
 
+type VariableFieldPrefix = "headerVariables" | "bodyVariables";
+
 interface VariableRowProps {
   index: number;
   id: string;
   name: string;
   exampleValue: string;
+  fieldPrefix: VariableFieldPrefix;
   onUpdate: (id: string, field: "name" | "exampleValue", value: string) => void;
   onRemove: (id: string) => void;
 }
@@ -20,7 +23,7 @@ export const VariableRow = ({
   index,
   id,
   name,
-  // exampleValue,
+  fieldPrefix,
   onUpdate,
   onRemove,
 }: VariableRowProps) => {
@@ -43,13 +46,12 @@ export const VariableRow = ({
   const rafRef = useRef<number | null>(null);
 
   const isNumberVariable = getValues("variableType") === "Number";
+  const fieldErrors = errors[fieldPrefix]?.[index];
 
-  // Sync external name into local search
   useEffect(() => {
     setSearch(name);
   }, [name]);
 
-  // Recalculate position — uses getBoundingClientRect so it's always viewport-relative
   const updatePosition = () => {
     if (!inputWrapRef.current) return;
     const rect = inputWrapRef.current.getBoundingClientRect();
@@ -60,17 +62,14 @@ export const VariableRow = ({
     });
   };
 
-  // While open: recompute on every scroll and resize across the entire page
   useEffect(() => {
     if (!open) return;
 
     const handleReposition = () => {
-      // rAF prevents jank on fast scroll
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(updatePosition);
     };
 
-    // Capture: true catches scroll on any ancestor, not just window
     window.addEventListener("scroll", handleReposition, { capture: true });
     window.addEventListener("resize", handleReposition);
 
@@ -81,7 +80,6 @@ export const VariableRow = ({
     };
   }, [open]);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
@@ -119,10 +117,8 @@ export const VariableRow = ({
 
   return (
     <div className="grid grid-cols-[32px_1fr_1fr_20px] items-center gap-2 border-b border-gray-100 py-1.5 last:border-0">
-      {/* Index */}
       <span className="text-center text-sm text-gray-500">{index + 1}</span>
 
-      {/* Variable name input */}
       <div className="relative" ref={inputWrapRef}>
         <Input
           value={isNumberVariable ? `{{${index + 1}}}` : search}
@@ -133,9 +129,9 @@ export const VariableRow = ({
           onFocus={handleOpen}
         />
 
-        {errors.bodyVariables?.[index]?.name && (
+        {fieldErrors?.name && (
           <p className="text-[10px] font-medium text-red-500 absolute bottom-0 right-2">
-            {errors.bodyVariables[index]?.name?.message}
+            {fieldErrors.name.message}
           </p>
         )}
 
@@ -152,7 +148,6 @@ export const VariableRow = ({
           </button>
         )}
 
-        {/* Portal dropdown — anchored to body, position tracked live */}
         {open &&
           createPortal(
             <div
@@ -179,10 +174,11 @@ export const VariableRow = ({
                           e.preventDefault();
                           handleSelect(v);
                         }}
-                        className={`cursor-pointer px-3 py-1.5 text-xs transition-colors hover:bg-green-50 hover:text-green-700 ${name === v
+                        className={`cursor-pointer px-3 py-1.5 text-xs transition-colors hover:bg-green-50 hover:text-green-700 ${
+                          name === v
                             ? "bg-green-50 font-medium text-green-700"
                             : "text-gray-700"
-                          }`}
+                        }`}
                       >
                         {v}
                       </li>
@@ -212,33 +208,30 @@ export const VariableRow = ({
           )}
       </div>
 
-      {/* Example value */}
       <div className="relative">
         <Controller
           control={control}
-          name={`bodyVariables.${index}.exampleValue`}
+          name={`${fieldPrefix}.${index}.exampleValue`}
           render={({ field }) => (
             <Input
               {...field}
+              value={field.value ?? ""}
               placeholder="Example value"
-              className="input-field h-8 text-xs"
+              className="input-field h-8 text-xs rounded-xl!"
+              onChange={(e) => {
+                field.onChange(e.target.value);
+                onUpdate(id, "exampleValue", e.target.value);
+              }}
             />
           )}
         />
-        {errors.bodyVariables?.[index]?.exampleValue && (
+        {fieldErrors?.exampleValue && (
           <p className="text-[10px] font-medium text-red-500 absolute bottom-0.5 right-2">
-            {errors.bodyVariables[index]?.exampleValue?.message}
+            {fieldErrors.exampleValue.message}
           </p>
         )}
       </div>
-      {/* <Input
-        value={exampleValue}
-        placeholder="Example value"
-        className="input-field h-8 text-xs rounded-xl!"
-        onChange={(e) => onUpdate(id, "exampleValue", e.target.value)}
-      /> */}
 
-      {/* Remove */}
       <div className="flex justify-center">
         <Button
           type="button"

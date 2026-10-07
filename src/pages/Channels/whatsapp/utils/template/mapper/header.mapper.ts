@@ -19,7 +19,6 @@ export function mapHeader(header: HeaderData): TTemplateComponent | null {
       type: "HEADER",
       format: "TEXT",
       text: header.headerText,
-      variableMappings: [],
     };
 
     if (!header.headerVariables.length) {

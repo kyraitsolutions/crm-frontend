@@ -9,6 +9,10 @@ import { useTemplateStore } from "../../store/template-builder.store";
 
 import { FooterActions } from "./shared/FooterActions";
 import type { TemplateCategory, TemplateType } from "../../types/templates";
+import { useFormContext } from "react-hook-form";
+import type { TemplateForm } from "../../validations/template.schema";
+import { createDefaultAuthentication } from "../../utils/template/auth.utils";
+import { createDefaultCarousel } from "../../utils/template/carousel.utils";
 
 const CATEGORY_ICONS: Record<TemplateCategory, React.ElementType> = {
   Marketing: Megaphone,
@@ -24,7 +28,10 @@ export const TemplateSetupStep: React.FC<TemplateSetupStepProps> = ({
   onNext,
 }) => {
   const { category, setCategory } = useTemplateStore((state) => state);
-  const [type, setType] = useState<TemplateType>("CUSTOM");
+  const { setValue, getValues } = useFormContext<TemplateForm>();
+  const [type, setType] = useState<TemplateType>(
+    () => (getValues("templateType") as TemplateType) || "CUSTOM",
+  );
 
   const activeCategory = (category ??
     TEMPLATE_CATEGORIES[0].value) as TemplateCategory;
@@ -36,10 +43,44 @@ export const TemplateSetupStep: React.FC<TemplateSetupStepProps> = ({
 
   const handleCategoryChange = (next: TemplateCategory) => {
     setCategory(next);
-    setType(
+    const nextType =
       TYPE_OPTIONS_BY_CATEGORY[next as keyof typeof TYPE_OPTIONS_BY_CATEGORY][0]
-        .value,
-    );
+        .value;
+    setType(nextType);
+  };
+
+  const handleNext = () => {
+    const nextType =
+      activeCategory === "Authentication" ? "AUTHENTICATION" : type;
+
+    setValue("category", activeCategory, { shouldDirty: true });
+    setValue("templateType", nextType, { shouldDirty: true });
+
+    if (nextType === "CAROUSEL") {
+      setValue("carousel", getValues("carousel") ?? createDefaultCarousel(), {
+        shouldDirty: true,
+      });
+      setValue("headerType", "Image");
+      setValue("headerText", "");
+      setValue("footerText", "");
+      setValue("buttons", []);
+    }
+
+    if (nextType === "AUTHENTICATION") {
+      setValue(
+        "authentication",
+        getValues("authentication") ?? createDefaultAuthentication(),
+        { shouldDirty: true },
+      );
+      setValue("bodyText", "", { shouldDirty: true });
+      setValue("bodyVariables", [], { shouldDirty: true });
+      setValue("headerText", "", { shouldDirty: true });
+      setValue("headerVariables", [], { shouldDirty: true });
+      setValue("footerText", "", { shouldDirty: true });
+      setValue("buttons", [], { shouldDirty: true });
+    }
+
+    onNext();
   };
 
   return (
@@ -115,8 +156,7 @@ export const TemplateSetupStep: React.FC<TemplateSetupStepProps> = ({
           })}
         </div>
 
-        {/* Footer actions */}
-        <FooterActions onNext={onNext} />
+        <FooterActions onNext={handleNext} />
       </div>
     </section>
   );

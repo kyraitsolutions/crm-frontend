@@ -59,6 +59,9 @@ const Teams = () => {
 
   const handleUpdate = async (data: any) => {
     setEditLoading(true);
+    const roleMeta = data.roleId
+      ? roles.find((r) => r.id === data.roleId)
+      : null;
     const optimisticDataPayload = {
       ...data,
       userProfile: {
@@ -68,9 +71,28 @@ const Teams = () => {
       },
       email: data.email,
       userId: data.userId,
+      ...(roleMeta && {
+        role: { id: roleMeta.id, name: roleMeta.name },
+      }),
+      ...(Array.isArray(data.accounts) && {
+        accounts: data.accounts.map(
+          (a: { accountId: string; roleId: string }) => ({
+            accountId: a.accountId,
+            roleId: a.roleId,
+            name:
+              accounts?.find((acc) => acc.id === a.accountId)?.accountName ||
+              a.accountId,
+          }),
+        ),
+      }),
     };
     const rollback = teamStoreManager.updateTeamOptimistic(
       optimisticDataPayload,
+    );
+    setSelectedUser((prev) =>
+      prev && prev.userId === data.userId
+        ? { ...prev, ...optimisticDataPayload }
+        : prev,
     );
     try {
       const response = await teamService.updateTeamMember(data);

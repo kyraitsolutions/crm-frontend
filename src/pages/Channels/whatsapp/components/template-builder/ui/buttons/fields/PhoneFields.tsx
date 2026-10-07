@@ -1,34 +1,19 @@
 import { CountryCodeSelect } from "@/components/common/CountryCodeSelect";
 import { Input } from "@/components/ui/input";
 import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
-import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import type { CountryCode } from "libphonenumber-js/core";
-import { useFormContext } from "react-hook-form";
 import { getCountryCallingCode } from "react-phone-number-input";
+import { useTemplateButtons } from "../buttons-field.context";
 
 interface IPhoneFieldsProps {
   button: TTemplateButton;
 }
 
 export function PhoneFields({ button }: IPhoneFieldsProps) {
-  const { setValue, getValues } = useFormContext<TemplateForm>();
-
-  const updateButton = (id: string, data: any) => {
-    const buttons = getValues("buttons");
-    const newButtons = buttons?.map((button) =>
-      button.id === id
-        ? {
-            ...button,
-            ...data,
-          }
-        : button,
-    );
-    setValue("buttons", newButtons);
-  };
+  const { updateButton } = useTemplateButtons();
 
   return (
     <>
-      {/* Country Code */}
       <div className="col-span-2 space-y-1.5">
         <label className="text-sm font-medium">Country Code</label>
 
@@ -49,16 +34,15 @@ export function PhoneFields({ button }: IPhoneFieldsProps) {
         )}
       </div>
 
-      {/* Phone Number */}
       <div className="col-span-3 space-y-1.5">
         <label className="text-sm font-medium">Phone Number</label>
 
         <div className="relative">
           <Input
-            className="input-field pr-14"
+            className="input-field rounded-xl! pr-14"
             placeholder="91XXXXXXXXX"
             maxLength={20}
-            value={button.phoneNumber}
+            value={button.phoneNumber || ""}
             onChange={(e) =>
               updateButton(button.id, {
                 phoneNumber: e.target.value,
@@ -67,7 +51,7 @@ export function PhoneFields({ button }: IPhoneFieldsProps) {
           />
 
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-            {button?.phoneNumber?.length}/20
+            {(button.phoneNumber || "").length}/20
           </span>
         </div>
 

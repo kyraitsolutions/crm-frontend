@@ -3,8 +3,11 @@ import type {
   TCarouselNodeDataPayload,
   TListNodeDataPayload,
   TNodeType,
+  TFlowActionPayload,
+  TFlowActionType,
   TQuestionNodeDataPayload,
   TSendMessageNodeDataPayload,
+  TTemplateNodeDataPayload,
 } from "../types/types";
 
 export type TPayloadMap = {
@@ -13,6 +16,21 @@ export type TPayloadMap = {
   list: TListNodeDataPayload;
   carousel: TCarouselNodeDataPayload;
   question: TQuestionNodeDataPayload;
+  template: TTemplateNodeDataPayload;
+  keyword: TFlowActionPayload;
+  condition: TFlowActionPayload;
+  set_attribute: TFlowActionPayload;
+  add_tag: TFlowActionPayload;
+  remove_tag: TFlowActionPayload;
+  delay: TFlowActionPayload;
+  goto: TFlowActionPayload;
+  end: TFlowActionPayload;
+  api_request: TFlowActionPayload;
+  handoff: TFlowActionPayload;
+  ask_address: TFlowActionPayload;
+  ask_location: TFlowActionPayload;
+  ask_media: TFlowActionPayload;
+  connect_flow: TFlowActionPayload;
 };
 
 export const createInitialElementsData = <T extends TNodeType>(
@@ -131,8 +149,35 @@ export const createInitialElementsData = <T extends TNodeType>(
         question: {
           text: "",
           inputType: "text",
+          required: true,
+          attribute: "",
+          retryMessage: "",
+          maxAttempts: 2,
+          options: [] as string[],
         },
       } as TPayloadMap[T];
+
+    case "template":
+      return {
+        type: "template",
+        template: null,
+      } as TPayloadMap[T];
+
+    case "keyword":
+    case "condition":
+    case "set_attribute":
+    case "add_tag":
+    case "remove_tag":
+    case "delay":
+    case "goto":
+    case "end":
+    case "api_request":
+    case "handoff":
+    case "ask_address":
+    case "ask_location":
+    case "ask_media":
+    case "connect_flow":
+      return createActionPayload(type) as TPayloadMap[T];
 
     default:
       throw new Error(`Unsupported node type: ${type}`);
@@ -281,6 +326,103 @@ export const createInitialElementsData = <T extends TNodeType>(
 //       return [];
 //   }
 // };
+
+const createActionPayload = (type: TFlowActionType): TFlowActionPayload => {
+  switch (type) {
+    case "keyword":
+      return { type, keyword: { words: "", match: "contains", caseSensitive: false } };
+    case "condition":
+      return {
+        type,
+        condition: {
+          match: "all",
+          rules: [{ left: "{{reply}}", operator: "contains", right: "" }],
+        },
+      };
+    case "set_attribute":
+      return {
+        type,
+        attribute: { key: "", value: "{{reply}}", scope: "flow", dataType: "text" },
+      };
+    case "add_tag":
+    case "remove_tag":
+      return { type, tag: { name: "" } };
+    case "delay":
+      return { type, delay: { seconds: 5, unit: "seconds", amount: 5 } };
+    case "goto":
+      return { type, goto: { targetNodeId: "" } };
+    case "end":
+      return { type };
+    case "api_request":
+      return {
+        type,
+        request: {
+          method: "GET",
+          url: "",
+          headers: [],
+          query: [],
+          body: "",
+          timeoutMs: 8000,
+          saveAs: "api",
+        },
+      };
+    case "handoff":
+      return {
+        type,
+        handoff: { note: "", reason: "", priority: "normal", customerMessage: "" },
+      };
+    case "ask_address":
+      return { type, ask: { text: "Please share your full address." } };
+    case "ask_location":
+      return { type, ask: { text: "Please share your location." } };
+    case "ask_media":
+      return { type, ask: { text: "Please send a photo, video, or document." } };
+    case "connect_flow":
+      return { type, connect: { chatFlowId: "" } };
+  }
+};
+
+export function migrateLegacyAskNodes<T extends { type?: string; data?: any }>(nodes: T[]) {
+  return nodes.map((node) => {
+    const type = node?.type || node?.data?.type;
+    if (type !== "ask_address" && type !== "ask_location" && type !== "ask_media") {
+      return node;
+    }
+    const inputType =
+      type === "ask_address" ? "address" : type === "ask_location" ? "location" : "media";
+    const ask = node?.data?.payload?.ask || {};
+    const previous = node?.data?.payload?.question || {};
+    return {
+      ...node,
+      type: "question",
+      data: {
+        ...node.data,
+        type: "question",
+        label: node.data?.label || "Ask Question",
+        payload: {
+          ...node.data?.payload,
+          type: "question",
+          legacyAsk: { type, ask },
+          question: {
+            ...previous,
+            text: previous.text || ask.text || "",
+            inputType,
+            required: previous.required ?? true,
+            attribute:
+              previous.attribute ||
+              (inputType === "address"
+                ? "address"
+                : inputType === "location"
+                  ? "location"
+                  : "media"),
+            maxAttempts: previous.maxAttempts || 2,
+            options: previous.options || [],
+          },
+        },
+      },
+    };
+  });
+}
 
 export const createId = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto

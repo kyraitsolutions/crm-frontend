@@ -6,15 +6,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TRIGGER_OPTIONS } from "../../constants/automation.constants";
+import { triggerLabel } from "../../constants/automation.constants";
 import type { Automation } from "../../store/automation.store";
-import { Trash2, Workflow } from "lucide-react";
+import { Pencil, Trash2, Workflow } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AutomationCardProps {
   automation: Automation;
   onToggle: (id: string, active: boolean) => void;
   onDelete: (id: string) => void;
+  onEdit: (automation: Automation) => void;
   onStatusChange: (id: string, status: "draft" | "published") => void;
 }
 
@@ -22,12 +23,9 @@ const AutomationCard: React.FC<AutomationCardProps> = ({
   automation,
   onToggle,
   onDelete,
+  onEdit,
   onStatusChange,
 }) => {
-  const triggerLabel =
-    TRIGGER_OPTIONS.find((t) => t.value === automation.trigger)?.label ??
-    automation.trigger;
-
   const statusClasses =
     automation.status === "published"
       ? "border-green-200 bg-green-50 text-green-700"
@@ -44,13 +42,13 @@ const AutomationCard: React.FC<AutomationCardProps> = ({
           <p className="truncate text-sm font-medium text-gray-900">
             {automation.name}
           </p>
-
-          <p className="truncate text-xs text-gray-500">{triggerLabel}</p>
+          <p className="truncate text-xs text-gray-500 uppercase tracking-wide">
+            {triggerLabel(automation.trigger)}
+          </p>
         </div>
       </div>
 
       <div className="ml-4 flex items-center gap-3">
-        {/* Status */}
         <Select
           value={automation.status}
           onValueChange={(value) =>
@@ -62,41 +60,49 @@ const AutomationCard: React.FC<AutomationCardProps> = ({
           >
             <SelectValue />
           </SelectTrigger>
-
           <SelectContent>
             <SelectItem value="draft">Draft</SelectItem>
             <SelectItem value="published">Published</SelectItem>
           </SelectContent>
         </Select>
 
-        {/* Active */}
         <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${automation.isActive
+          className={`rounded-full px-2 py-1 text-xs font-medium ${
+            automation.isActive
               ? "bg-emerald-50 text-emerald-600"
               : "bg-gray-100 text-gray-500"
-            }`}
+          }`}
         >
           {automation.isActive ? "Active" : "Inactive"}
         </span>
 
-        {/* Toggle */}
         <Button
           onClick={() => onToggle(automation.id, !automation.isActive)}
-          className={`relative h-5! w-9 py-1! rounded-full transition-colors ${automation.isActive ? "bg-primary" : "bg-gray-300"
-            }`}
+          className={`relative h-5! w-9 py-1! rounded-full transition-colors ${
+            automation.isActive ? "bg-primary" : "bg-gray-300"
+          }`}
         >
           <span
-            className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${automation.isActive ? "translate-x-4" : "translate-x-0"
-              }`}
+            className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+              automation.isActive ? "translate-x-4" : "translate-x-0"
+            }`}
           />
         </Button>
 
-        {/* Delete */}
+        <Button
+          onClick={() => onEdit(automation)}
+          className="bg-transparent! text-gray-500 hover:text-primary"
+          title="Edit"
+        >
+          <Pencil className="size-4" />
+        </Button>
+
         <Button
           onClick={() => onDelete(automation.id)}
-          className="bg-transparent! transition-colors group-hover:opacity-100 hover:text-red-500"
+          className="bg-transparent! transition-colors hover:text-red-500"
+          title="Delete"
         >
-          <Trash2 />
+          <Trash2 className="size-4" />
         </Button>
       </div>
     </div>

@@ -40,6 +40,9 @@ export const WhatsAppPhoneNumberInfoSchema = z.object({
   newNameStatus: z.string().nullable(),
 
   isOfficialBusinessAccount: z.boolean(),
+
+  /** true = coexistence (WhatsApp Business App) signup — show Sync Contacts */
+  isOnBizApp: z.boolean().optional().default(false),
 });
 
 export const WhatsAppBusinessProfileSchema = z.object({
@@ -72,6 +75,23 @@ export const WhatsAppAccountSchema = z.object({
   onboardingCompleted: z.boolean(),
   webhookSubscribed: z.boolean(),
   lastProfileSyncAt: z.string().nullable(),
+  /** ISO date — start of 24h SMB contact-sync window; null when disconnected */
+  contactSyncWindowStartedAt: z.string().nullable().optional(),
+  contactSync: z
+    .object({
+      status: z.enum([
+        "NOT_REQUESTED",
+        "REQUESTED",
+        "NOT_SUPPORTED",
+        "COMPLETED",
+        "FAILED",
+      ]),
+      requestId: z.string().nullable().optional(),
+      lastAttemptAt: z.string().nullable().optional(),
+      lastErrorCode: z.number().nullable().optional(),
+      lastErrorMessage: z.string().nullable().optional(),
+    })
+    .optional(),
 });
 
 export type TWhatsAppAccount = z.infer<typeof WhatsAppAccountSchema>;

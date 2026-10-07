@@ -21,7 +21,11 @@ export const contactRoutes: RouteObject[] = [
     path: CONTACT_PATHS.ROOT,
     children: [
       {
-        element: <Contacts />,
+        element: (
+          <RequirePermission permission={PERMISSIONS.CONTACTS.VIEW}>
+            <Contacts />
+          </RequirePermission>
+        ),
         index: true,
       },
       {

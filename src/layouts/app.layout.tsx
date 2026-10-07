@@ -66,12 +66,12 @@ export function AppLayout() {
       <div className="flex h-screen w-full">
         <AppSidebar />
 
-        <main className="w-full flex flex-col">
+        <main className="min-w-0 flex-1 flex flex-col overflow-hidden">
           <TrialBanner />
           <ExpirationPrompt />
           <SiteHeader />
 
-          <div className="flex-1 max-h-[calc(100vh-64px)] w-full overflow-y-scroll hide-scrollbar">
+          <div className="min-w-0 flex-1 max-h-[calc(100vh-64px)] w-full overflow-y-auto overflow-x-hidden hide-scrollbar">
             <Outlet />
           </div>
         </main>

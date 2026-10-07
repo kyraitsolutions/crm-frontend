@@ -1,30 +1,14 @@
 import { Input } from "@/components/ui/input";
 import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
-import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { useTemplateButtons } from "../buttons-field.context";
 
 interface ICopyCodeFieldsProps {
   button: TTemplateButton;
 }
 
 export function CopyCodeFields({ button }: ICopyCodeFieldsProps) {
-  // const { updateButton } = useTemplateStore((state) => state);
-
-  const { setValue, getValues } = useFormContext<TemplateForm>();
-
-  const updateButton = (id: string, data: any) => {
-    const buttons = getValues("buttons");
-    const newButtons = buttons?.map((button) =>
-      button.id === id
-        ? {
-            ...button,
-            ...data,
-          }
-        : button,
-    );
-    setValue("buttons", newButtons);
-  };
+  const { updateButton } = useTemplateButtons();
 
   return (
     <React.Fragment>

@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ALL_ACTIONS, PERMISSION_CONFIG } from "@/rbac";
+import {
+  PERMISSION_CONFIG,
+  actionsForSection,
+  type PermissionSectionConfig,
+} from "@/rbac";
+import { RBACService } from "@/services/rbac.service";
 import { ArrowLeft, Check, Save } from "lucide-react";
 
 type PermissionManagerProps = {
@@ -17,6 +22,8 @@ type PermissionManagerProps = {
   onSave?: () => void;
 };
 
+const rbacService = new RBACService();
+
 const PermissionManager: React.FC<PermissionManagerProps> = ({
   roleName,
   setRoleName,
@@ -25,12 +32,14 @@ const PermissionManager: React.FC<PermissionManagerProps> = ({
   setPermissions,
   isEditable = false,
   isLoading = false,
-  onBack = () => { },
-  onSave = () => { },
+  onBack = () => {},
+  onSave = () => {},
 }) => {
   const safePermissions = Array.isArray(permissions) ? permissions : [];
+  const [catalog, setCatalog] =
+    useState<PermissionSectionConfig[]>(PERMISSION_CONFIG);
+  const [catalogLoading, setCatalogLoading] = useState(true);
 
-  // ✅ Track initial state
   const [initialState, setInitialState] = useState({
     roleName: "",
     permissions: [] as string[],
@@ -41,9 +50,31 @@ const PermissionManager: React.FC<PermissionManagerProps> = ({
       roleName,
       permissions,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- capture once on mount
   }, []);
 
-  // Detect changes
+  useEffect(() => {
+    let cancelled = false;
+    setCatalogLoading(true);
+    rbacService
+      .getPermissionCatalog()
+      .then((res) => {
+        const sections = res?.data?.sections;
+        if (!cancelled && Array.isArray(sections) && sections.length > 0) {
+          setCatalog(sections);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setCatalog(PERMISSION_CONFIG);
+      })
+      .finally(() => {
+        if (!cancelled) setCatalogLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const isChanged =
     roleName !== initialState.roleName ||
     JSON.stringify(permissions) !== JSON.stringify(initialState.permissions);
@@ -51,36 +82,31 @@ const PermissionManager: React.FC<PermissionManagerProps> = ({
   const isCreate = active?.toLowerCase() === "create role";
   const isEdit = active?.toLowerCase() === "edit role";
 
-  //  Toggle permission
   const togglePermission = (moduleKey: string, action: string) => {
     if (!isEditable) return;
-
     const key = `${moduleKey}.${action}`;
-
-    if (permissions.includes(key)) {
-      setPermissions(permissions.filter((p) => p !== key));
+    if (safePermissions.includes(key)) {
+      setPermissions(safePermissions.filter((p) => p !== key));
     } else {
-      setPermissions([...permissions, key]);
+      setPermissions([...safePermissions, key]);
     }
   };
 
-  // Toggle all module permissions
   const toggleAllModulePermissions = (moduleKey: string, actions: string[]) => {
     if (!isEditable) return;
-
     const keys = actions.map((a) => `${moduleKey}.${a}`);
-    const allSelected = keys.every((k) => permissions.includes(k));
-
+    const allSelected = keys.every((k) => safePermissions.includes(k));
     if (allSelected) {
-      setPermissions(permissions.filter((p) => !keys.includes(p)));
+      setPermissions(safePermissions.filter((p) => !keys.includes(p)));
     } else {
-      setPermissions([...new Set([...permissions, ...keys])]);
+      setPermissions([...new Set([...safePermissions, ...keys])]);
     }
   };
+
+  const sections = useMemo(() => catalog, [catalog]);
 
   return (
     <div className="h-[calc(100vh-114px)] overflow-y-scroll hide-scrollbar bg-gray-50 text-slate-700">
-      {/* HEADER */}
       <header className="flex items-center justify-between bg-white px-6 py-4 border-b">
         <div className="flex items-center gap-3">
           <ArrowLeft onClick={onBack} className="cursor-pointer" />
@@ -98,7 +124,6 @@ const PermissionManager: React.FC<PermissionManagerProps> = ({
             />
           )}
 
-          {/* ✅ Show button only in create/edit */}
           {isEditable && (
             <Button
               disabled={!roleName || isLoading || !isChanged}
@@ -113,99 +138,119 @@ const PermissionManager: React.FC<PermissionManagerProps> = ({
         </div>
       </header>
 
-      {/* BODY */}
       <main className="p-6 space-y-6">
-        {PERMISSION_CONFIG.map((section) => (
-          <div
-            key={section.title}
-            className="bg-white border rounded-lg overflow-hidden"
-          >
-            <div className="px-4 py-3 border-b bg-gray-50 font-semibold text-sm uppercase">
-              {section.title}
-            </div>
+        <p className="text-sm text-gray-500">
+          Modules are independent. Granting WhatsApp channel access does not
+          grant WhatsApp Marketing (broadcasts), and vice versa.
+        </p>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="px-4 py-3 text-left w-50">Module</th>
+        {catalogLoading ? (
+          <div className="flex justify-center py-16">
+            <Loader />
+          </div>
+        ) : (
+          sections.map((section) => {
+            const columns = actionsForSection(section);
+            return (
+              <div
+                key={section.title}
+                className="bg-white border rounded-lg overflow-hidden"
+              >
+                <div className="px-4 py-3 border-b bg-gray-50 font-semibold text-sm uppercase">
+                  {section.title}
+                </div>
 
-                    {ALL_ACTIONS.map((action) => (
-                      <th key={action} className="text-center px-4 py-3 capitalize">
-                        {action}
-                      </th>
-                    ))}
-
-                    {isEditable && (
-                      <th className="text-center px-4 py-3">All</th>
-                    )}
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {section.modules.map((module) => {
-                    const moduleKeys = module.actions.map(
-                      (a: string) => `${module.key}.${a}`,
-                    );
-
-                    const allSelected = moduleKeys.every((k) =>
-                      safePermissions.includes(k),
-                    );
-
-                    return (
-                      <tr key={module.key} className="border-t">
-                        <td className="px-4 py-4 font-medium">
-                          {module.label}
-                        </td>
-
-                        {ALL_ACTIONS.map((action) => {
-                          const key = `${module.key}.${action}`;
-                          const hasAccess = safePermissions.includes(key);
-                          const allowed = module.actions.includes(action);
-
-                          return (
-                            <td key={action} className="text-center py-4">
-                              {!allowed ? (
-                                <span className="text-gray-300">—</span>
-                              ) : isEditable ? (
-                                <input
-                                  type="checkbox"
-                                  checked={hasAccess}
-                                  onChange={() =>
-                                    togglePermission(module.key, action)
-                                  }
-                                />
-                              ) : hasAccess ? (
-                                <Check className="mx-auto text-green-500" />
-                              ) : (
-                                "—"
-                              )}
-                            </td>
-                          );
-                        })}
-
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-100">
+                      <tr>
+                        <th className="px-4 py-3 text-left w-50">Module</th>
+                        {columns.map((action) => (
+                          <th
+                            key={action}
+                            className="text-center px-4 py-3 capitalize"
+                          >
+                            {action}
+                          </th>
+                        ))}
                         {isEditable && (
-                          <td className="text-center">
-                            <input
-                              type="checkbox"
-                              checked={allSelected}
-                              onChange={() =>
-                                toggleAllModulePermissions(
-                                  module.key,
-                                  module.actions,
-                                )
-                              }
-                            />
-                          </td>
+                          <th className="text-center px-4 py-3">All</th>
                         )}
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ))}
+                    </thead>
+
+                    <tbody>
+                      {section.modules.map((module) => {
+                        const moduleKeys = module.actions.map(
+                          (a) => `${module.key}.${a}`,
+                        );
+                        const allSelected = moduleKeys.every((k) =>
+                          safePermissions.includes(k),
+                        );
+
+                        return (
+                          <tr key={module.key} className="border-t">
+                            <td className="px-4 py-4">
+                              <p className="font-medium">{module.label}</p>
+                              {module.description && (
+                                <p className="text-xs text-gray-500 mt-0.5 max-w-xs">
+                                  {module.description}
+                                </p>
+                              )}
+                            </td>
+
+                            {columns.map((action) => {
+                              const key = `${module.key}.${action}`;
+                              const hasAccess = safePermissions.includes(key);
+                              const allowed = module.actions.includes(
+                                action as (typeof module.actions)[number],
+                              );
+
+                              return (
+                                <td key={action} className="text-center py-4">
+                                  {!allowed ? (
+                                    <span className="text-gray-300">—</span>
+                                  ) : isEditable ? (
+                                    <input
+                                      type="checkbox"
+                                      checked={hasAccess}
+                                      onChange={() =>
+                                        togglePermission(module.key, action)
+                                      }
+                                    />
+                                  ) : hasAccess ? (
+                                    <Check className="mx-auto text-green-500" />
+                                  ) : (
+                                    "—"
+                                  )}
+                                </td>
+                              );
+                            })}
+
+                            {isEditable && (
+                              <td className="text-center">
+                                <input
+                                  type="checkbox"
+                                  checked={allSelected}
+                                  onChange={() =>
+                                    toggleAllModulePermissions(
+                                      module.key,
+                                      module.actions,
+                                    )
+                                  }
+                                />
+                              </td>
+                            )}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })
+        )}
       </main>
     </div>
   );

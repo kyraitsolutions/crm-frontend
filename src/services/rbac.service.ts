@@ -1,5 +1,15 @@
 import { API_ENDPOINT_PATH } from "@/constants/api's-path";
+import type { PermissionSectionConfig } from "@/rbac";
 import { ApiService } from "./api.service";
+
+export type PermissionCatalogResponse = {
+  data: {
+    sections: PermissionSectionConfig[];
+    keys?: string[];
+  };
+  status: number;
+  message?: string;
+};
 
 export class RBACService extends ApiService {
   async createRole(data: { roleName: string; permissions: string[] }) {
@@ -26,4 +36,22 @@ export class RBACService extends ApiService {
       `${API_ENDPOINT_PATH.ROLES.getPermissionsByRolePath(roleId)}`,
     );
   }
+
+  async getPermissionCatalog(): Promise<PermissionCatalogResponse> {
+    const res = await this.get(API_ENDPOINT_PATH.ROLES.PERMISSION_CATALOG);
+    const payload = res?.data as unknown as {
+      sections?: PermissionSectionConfig[];
+      keys?: string[];
+    };
+
+    return {
+      data: {
+        sections: Array.isArray(payload?.sections) ? payload.sections : [],
+        keys: payload?.keys,
+      },
+      status: res.status,
+      message: res.message,
+    };
+  }
 }
+ 

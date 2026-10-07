@@ -1,16 +1,10 @@
 import { groupButtons } from "@/pages/Channels/whatsapp/utils/template/template.utils";
-import type { TemplateForm } from "@/pages/Channels/whatsapp/validations/template.schema";
-import { useFormContext, useWatch } from "react-hook-form";
 import { ButtonRow } from "./ButtonRow";
 import type { TTemplateButton } from "@/pages/Channels/whatsapp/types/templates";
+import { useTemplateButtons } from "./buttons-field.context";
 
 export const ButtonsList = () => {
-  // const { buttons } = useTemplateStore();
-
-  const { control } = useFormContext<TemplateForm>();
-
-  const buttons = useWatch({ control, name: "buttons" });
-
+  const { buttons } = useTemplateButtons();
   const { callToAction, quickReply } = groupButtons(buttons || []);
 
   return (
@@ -36,7 +30,6 @@ export function ButtonSection({ title, buttons }: IButtonSectionProps) {
     <section className="space-y-3">
       <div className="flex items-center gap-2">
         <h3 className="text-sm font-semibold">{title}</h3>
-
         <span className="text-muted-foreground text-xs">Optional</span>
       </div>
 

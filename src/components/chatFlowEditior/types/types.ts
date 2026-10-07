@@ -1,11 +1,29 @@
 import type { Node } from "reactflow";
 
+export type TFlowActionType =
+  | "keyword"
+  | "condition"
+  | "set_attribute"
+  | "add_tag"
+  | "remove_tag"
+  | "delay"
+  | "goto"
+  | "end"
+  | "api_request"
+  | "handoff"
+  | "ask_address"
+  | "ask_location"
+  | "ask_media"
+  | "connect_flow";
+
 export type TNodeType =
   | "send_message"
   | "button"
   | "list"
   | "carousel"
-  | "question";
+  | "question"
+  | "template"
+  | TFlowActionType;
 
 export type TMessageType = "text" | "image" | "video" | "document";
 export type TMode = "url" | "quick_reply";
@@ -190,14 +208,110 @@ export type TCarouselNodeDataPayload = {
 // ========================= Carousel types end ==========================
 
 //========================= Question types start ==========================
+export type TQuestionInputType =
+  | "text"
+  | "email"
+  | "phone"
+  | "number"
+  | "date"
+  | "date-range"
+  | "datetime"
+  | "buttons"
+  | "location"
+  | "address"
+  | "media";
+
 export type TQuestionNodeDataPayload = {
   type: "question";
   question: {
     text?: string | null;
-    inputType?: "text" | "number" | "email" | "phone" | "date";
+    inputType?: TQuestionInputType;
+    required?: boolean;
+    attribute?: string;
+    retryMessage?: string;
+    maxAttempts?: number;
+    options?: string[];
+  };
+  legacyAsk?: {
+    type?: string;
+    ask?: { text?: string };
   };
 };
 // ========================= Question types end ==========================
+
+//========================= Template types start ==========================
+export type TSavedTemplate = {
+  id: string;
+  name: string;
+  language: string;
+  category?: string;
+  preview?: string;
+};
+
+export type TTemplateNodeDataPayload = {
+  type: "template";
+  template: TSavedTemplate | null;
+};
+// ========================= Template types end ==========================
+
+export type TConditionRule = {
+  left: string;
+  operator:
+    | "equals"
+    | "not_equals"
+    | "contains"
+    | "not_contains"
+    | "gt"
+    | "gte"
+    | "lt"
+    | "lte"
+    | "empty"
+    | "not_empty";
+  right: string;
+};
+
+export type TFlowActionPayload = {
+  type: TFlowActionType;
+  condition?: {
+    match: "all" | "any";
+    rules: TConditionRule[];
+  };
+  attribute?: {
+    key: string;
+    value: string;
+    scope?: "flow" | "contact" | "conversation";
+    dataType?: "text" | "number";
+  };
+  tag?: { name: string };
+  delay?: {
+    seconds: number;
+    unit?: "seconds" | "minutes" | "hours" | "days";
+    amount?: number;
+  };
+  goto?: { targetNodeId: string };
+  keyword?: {
+    words: string;
+    match?: "exact" | "contains" | "phrase";
+    caseSensitive?: boolean;
+  };
+  request?: {
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    url: string;
+    headers: Array<{ key: string; value: string }>;
+    query?: Array<{ key: string; value: string }>;
+    body: string;
+    timeoutMs: number;
+    saveAs: string;
+  };
+  handoff?: {
+    note: string;
+    reason?: string;
+    priority?: "low" | "normal" | "high";
+    customerMessage?: string;
+  };
+  ask?: { text: string };
+  connect?: { chatFlowId: string; name?: string };
+};
 
 type TSendMessageNodeData = TBaseNodeData<
   "send_message",
@@ -213,13 +327,23 @@ export type TQuestionNodeData = TBaseNodeData<
   "question",
   TQuestionNodeDataPayload
 >;
+export type TTemplateNodeData = TBaseNodeData<
+  "template",
+  TTemplateNodeDataPayload
+>;
+export type TFlowActionNodeData = TBaseNodeData<
+  TFlowActionType,
+  TFlowActionPayload
+>;
 
 export type TAppNodeData =
   | TSendMessageNodeData
   | TButtonNodeData
   | TListNodeData
   | TCarouselNodeData
-  | TQuestionNodeData;
+  | TQuestionNodeData
+  | TTemplateNodeData
+  | TFlowActionNodeData;
 
 export type TAppNode = Node<TAppNodeData>;
 

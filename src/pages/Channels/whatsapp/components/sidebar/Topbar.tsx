@@ -1,5 +1,5 @@
 import {
-  Compass,
+  // Compass,
   Clock3,
   Package,
   LoaderCircle,
@@ -8,11 +8,11 @@ import {
 } from "lucide-react";
 
 const tabs = [
-  {
-    id: "explore",
-    label: "Explore",
-    icon: Compass,
-  },
+  // {
+  //   id: "explore",
+  //   label: "Explore",
+  //   icon: Compass,
+  // },
   {
     id: "all",
     label: "All",
@@ -40,7 +40,7 @@ const tabs = [
   },
 ] as const;
 
-type TabId = typeof tabs[number]["id"];
+type TabId = (typeof tabs)[number]["id"];
 
 const Topbar = ({
   active,
@@ -50,26 +50,26 @@ const Topbar = ({
   onChange?: (id: TabId) => void;
 }) => {
   return (
-    <div className="w-full border-b bg-white  ">
-      <div className="flex items-center">
+    <div className="w-full border-b border-gray-200 bg-white rounded-xl overflow-hidden">
+      <div className="flex items-center gap-1 px-1 overflow-x-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
 
           return (
             <button
               key={tab.id}
-              onClick={() => onChange?.(tab.id as any)}
-              className={`relative flex items-center gap-2 px-10 py-4 text-sm font-medium transition-colors ${tab.id === active
+              type="button"
+              onClick={() => onChange?.(tab.id)}
+              className={`relative flex items-center gap-1.5 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+                tab.id === active
                   ? "text-teal-700"
-                  : "text-gray-600 hover:text-gray-900"
-                }`}
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
             >
-              <Icon size={18} strokeWidth={2} />
-
+              <Icon size={16} strokeWidth={2} />
               <span>{tab.label}</span>
-
               {tab.id === active && (
-                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-teal-700" />
+                <span className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full bg-teal-700" />
               )}
             </button>
           );

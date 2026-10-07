@@ -29,16 +29,16 @@ const WorkingHours = ({
   };
 
   return (
-    <div className="rounded-2xl bg-white p-10">
-      <div className="flex items-start justify-between gap-4">
+    <div>
+      <div className="flex flex-col gap-3 border-b border-gray-100 pb-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="text-md">Working Hours</h2>
+          <h2 className="text-sm font-semibold text-gray-900">Working Hours</h2>
           <p className="mt-1 text-sm text-gray-500">
-            Configure day-wise working hours for automated replies and auto resolve
+            Configure day-wise hours for automated replies and auto resolve.
           </p>
         </div>
         <Button
-          className="rounded-xl bg-teal-900 hover:bg-teal-900/80"
+          className="rounded-xl! bg-teal-900 hover:bg-teal-900/80 shrink-0"
           disabled={saving}
           onClick={onSave}
         >
@@ -46,11 +46,11 @@ const WorkingHours = ({
         </Button>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-4">
         <TimezoneSelect value={timezone} onChange={onTimezoneChange} />
       </div>
 
-      <div className="mt-8 space-y-5">
+      <div className="mt-5 space-y-3">
         {days.map((day, index) => (
           <WeekCard
             key={day.day}
