@@ -4,7 +4,7 @@ import CreateMessage from "@/pages/Channels/whatsapp/components/canned/CreateMes
 import { TemplateBuilder } from "@/pages/Channels/whatsapp/components/template-builder/TemplateBuilder";
 import CannedMessage from "@/pages/Channels/whatsapp/pages/CannedMessage";
 import LiveChatSetting from "@/pages/Channels/whatsapp/pages/LiveChatSetting";
-import AiSalesAgentSetting from "@/pages/Channels/whatsapp/pages/AiSalesAgentSetting";
+// import AiSalesAgentSetting from "@/pages/Channels/whatsapp/pages/AiSalesAgentSetting";
 import OptinPage from "@/pages/Channels/whatsapp/pages/OptinPage";
 import Setting from "@/pages/Channels/whatsapp/pages/Setting";
 import TemplatesPage from "@/pages/Channels/whatsapp/pages/TemplatesPage";
@@ -60,10 +60,10 @@ export const whatsappRoutes: RouteObject[] = [
                     path: "chat-setting",
                     element: <LiveChatSetting />,
                   },
-                  {
-                    path: "ai-agent",
-                    element: <AiSalesAgentSetting />,
-                  },
+                  // {
+                  //   path: "ai-agent",
+                  //   element: <AiSalesAgentSetting />,
+                  // },
                   {
                     path: "canned-messages",
                     element: <CannedMessage />,
