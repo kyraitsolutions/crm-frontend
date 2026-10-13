@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { Button } from "./ui/button";
 
 type ConfirmModalProps = {
   isOpen: boolean;
@@ -168,15 +169,15 @@ export default function ConfirmModal({
           </button>
         </header>
 
-        <div className="mt-4 flex gap-3">
-          <button
+        <div className="mt-4 flex justify-between gap-3">
+          <Button
             onClick={onCancel}
-            className="inline-flex items-center justify-center rounded-md border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+            className="actions-btn rounded-xl! px-4!"
           >
             {cancelText}
-          </button>
+          </Button>
 
-          <button
+          <Button
             onClick={async () => {
               try {
                 await onConfirm();
@@ -187,7 +188,7 @@ export default function ConfirmModal({
               }
             }}
             disabled={loading}
-            className="ml-auto inline-flex items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300"
+            className="rounded-xl"
           >
             {loading ? (
               <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
@@ -208,7 +209,7 @@ export default function ConfirmModal({
               </svg>
             ) : null}
             {confirmText}
-          </button>
+          </Button>
         </div>
 
         {/* Optional footnote / small helper */}

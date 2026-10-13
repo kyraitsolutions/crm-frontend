@@ -3,6 +3,7 @@ import AudioMessage from "./AudioMessage";
 import DocumentMessage from "./DocumentMessage";
 import ImageMessage from "./ImageMessage";
 import InteractiveMessage from "./InteractiveMessage";
+import MessageReactions from "./MessageReactions";
 import MessageWrapper from "./MessageWraper";
 import QuestionMessage from "./QuestionMessage";
 import TemplateMessage from "./TemplateMessage";
@@ -38,6 +39,8 @@ const Message = ({ message }: { message: TMessage }) => {
       case "document":
         return <DocumentMessage message={message} />;
 
+     
+
       default:
         return null;
     }
@@ -58,6 +61,7 @@ const Message = ({ message }: { message: TMessage }) => {
       onRetry={() => retryMessage(message)}
     >
       {renderMessage()}
+      <MessageReactions reactions={message?.reactions || []} />
     </MessageWrapper>
   );
 };

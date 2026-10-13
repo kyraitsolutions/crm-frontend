@@ -6,13 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Trash2, User2 } from "lucide-react";
 import { alertManager } from "@/stores/alert.store";
 import { hasPermission, ROLES } from "@/rbac";
+import ConfirmModal from "@/components/confirm";
 
 type TeamListProps = {
   teams: ITeam[];
   selectedUser: ITeam | null;
   setSelectedUser: (user: ITeam) => void;
   onDeleteSelected?: (ids: string[]) => void;
+  onStatusChange?: (member: ITeam, active: boolean) => void | Promise<void>;
   permissions?: string[];
+  currentUserId?: string;
 };
 
 const TeamList = ({
@@ -21,9 +24,13 @@ const TeamList = ({
   permissions = [],
   setSelectedUser,
   onDeleteSelected,
+  onStatusChange,
+  currentUserId,
 }: TeamListProps) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [search, setSearch] = useState("");
+  const [pendingDeactivate, setPendingDeactivate] = useState<ITeam | null>(null);
+  const [statusLoading, setStatusLoading] = useState(false);
 
   // ✅ filter logic
   const filteredTeams = useMemo(() => {
@@ -98,8 +105,9 @@ const TeamList = ({
           <div className="flex items-center gap-4">
             {filteredTeams?.length > 1 && (
               <label className="flex items-center gap-1 text-sm cursor-pointer font-medium">
-                <input
+                <Input
                   type="checkbox"
+                  className="size-3"
                   checked={
                     filteredTeams.length > 0 &&
                     selectedIds.length === filteredTeams.length
@@ -113,7 +121,7 @@ const TeamList = ({
             {selectedIds?.length > 0 && (
               <Button
                 variant="destructive"
-                className="rounded-md"
+                className="rounded-xl px-4 py-2"
                 size="sm"
                 onClick={handleDelete}
               >
@@ -160,19 +168,75 @@ const TeamList = ({
               </div>
 
               {/* RIGHT */}
-              {hasPermission(permissions, "teams.delete") && !isOwner && (
-                <input
-                  disabled={isOwner}
-                  type="checkbox"
-                  checked={isChecked}
-                  onChange={() => toggleSelect(item?.userId)}
-                  className="cursor-pointer"
-                />
-              )}
+              <div className="flex items-center gap-3">
+                {hasPermission(permissions, "teams.edit") &&
+                  !isOwner &&
+                  item.userId !== currentUserId && (
+                    <Button
+                      type="button"
+                      role="switch"
+                      aria-checked={item.status !== false}
+                      title={item.status !== false ? "Active" : "Inactive"}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        if (item.status !== false) {
+                          setPendingDeactivate(item);
+                          return;
+                        }
+                        void onStatusChange?.(item, true);
+                      }}
+                      className={`relative h-5 w-9 shrink-0 rounded-full transition ${item.status !== false ? "bg-primary" : "bg-gray-300"}`}
+                    >
+                      <span
+                        className={`absolute top-0.5 size-4 rounded-full bg-white shadow transition ${
+                          item.status !== false ? "left-4.5" : "left-0.5"
+                        }`}
+                      />
+                    </Button>
+                  )}
+
+                {hasPermission(permissions, "teams.delete") && !isOwner && (
+                  <input
+                    disabled={isOwner}
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => toggleSelect(item?.userId)}
+                    className="cursor-pointer"
+                  />
+                )}
+              </div>
             </div>
           );
         })
       )}
+
+      <ConfirmModal
+        isOpen={!!pendingDeactivate}
+        title="Deactivate user"
+        description={
+          pendingDeactivate
+            ? `${pendingDeactivate.userProfile?.firstName || "This user"} will still be able to sign in, but they will see a notice that their account is deactivated until an admin turns it back on.`
+            : ""
+        }
+        confirmText="Deactivate"
+        cancelText="Cancel"
+        loading={statusLoading}
+        className=" mx-auto mt-2"
+        onCancel={() => {
+          if (statusLoading) return;
+          setPendingDeactivate(null);
+        }}
+        onConfirm={async () => {
+          if (!pendingDeactivate) return;
+          setStatusLoading(true);
+          try {
+            await onStatusChange?.(pendingDeactivate, false);
+            setPendingDeactivate(null);
+          } finally {
+            setStatusLoading(false);
+          }
+        }}
+      />
     </div>
   );
 };

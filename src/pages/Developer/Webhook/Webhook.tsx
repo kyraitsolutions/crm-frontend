@@ -1,6 +1,11 @@
 import { COOKIES_STORAGE } from "@/constants";
+import { Pagination } from "@/components/pagination";
+import { usePagination } from "@/hooks/usePagination";
 import { CookieUtils } from "@/utils/cookie-storage.utils";
-import { Code, Copy, Send } from "lucide-react";
+import { Code, Copy, RefreshCw, Send, Trash2 } from "lucide-react";
+import { ToastMessageService } from "@/services";
+import { alertManager } from "@/stores/alert.store";
+import type { ApiError } from "@/types";
 import { useEffect, useState } from "react";
 import { webhookService } from "./services/webhook.service";
 import { timeAgo } from "@/utils/date.utils";
@@ -10,6 +15,8 @@ import DataLoader from "@/components/Loader/data-loader";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/Loader";
 
+const PAGE_SIZE = 20;
+
 export default function Webhook() {
   const accountId = CookieUtils.getItem(COOKIES_STORAGE.accountId);
 
@@ -17,9 +24,18 @@ export default function Webhook() {
   // const copyWebhookUrl = `${import.meta.env.VITE_API_URL}/api/webhook/<app_secret>/lead`;
 
   const [loading, setLoading] = useState(false);
-  const [tokenData, setTokenData] = useState<TokenData | {}>({});
+  const [tokens, setTokens] = useState<TokenData[]>([]);
+  const [totalDocs, setTotalDocs] = useState(0);
+  const [selectedId, setSelectedId] = useState("");
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupType, setPopupType] = useState<string>("warning");
+  const toast = new ToastMessageService();
+  const { currentPage, totalPages, goToPage } = usePagination({
+    totalItems: totalDocs,
+    itemsPerPage: PAGE_SIZE,
+  });
+
+  console.log(currentPage);
 
   const [formData] = useState({
     name: "Abhijeet",
@@ -52,7 +68,7 @@ export default function Webhook() {
     };
   };
 
-  const webhookToken = "Copied token from the table above";
+  const sampleToken = token || "<YOUR_WEBHOOK_TOKEN>";
 
   const sendTestLead = async () => {
     try {
@@ -76,13 +92,20 @@ export default function Webhook() {
     }
   };
 
-  const getToken = async () => {
+  const getToken = async (page = currentPage) => {
     try {
       setLoading(true);
-      const response = await webhookService.getToken(String(accountId));
-
-      // console.log(response?.data?.doc)
-      setTokenData(response?.data?.doc);
+      const response = await webhookService.getToken(String(accountId), {
+        page,
+        limit: PAGE_SIZE,
+        
+      });
+      const docs = (response?.data?.docs || []) as TokenData[];
+      setTokens(docs);
+      setTotalDocs(response?.data?.pagination?.totalDocs || 0);
+      setSelectedId((current) =>
+        docs.some((item) => item.id === current) ? current : docs[0]?.id || "",
+      );
     } catch (error) {
       console.error("Error", error);
     } finally {
@@ -90,28 +113,41 @@ export default function Webhook() {
     }
   };
 
-  const generateToken = async () => {
+  useEffect(() => {
+    getToken(currentPage);
+  }, [currentPage]);
+
+  const deleteToken = async (tokenId: string) => {
     try {
-      const response = await webhookService.generateToken(String(accountId));
-      // console.log(response)
-      // console.log(response?.data?.doc)
-      setPopupOpen(true);
-      setPopupType("success");
-      setToken(response?.data?.doc.token);
-      setTokenData(response?.data?.doc.savedToken);
+      const response = await webhookService.deleteToken(String(accountId), tokenId);
+      if (response.status === 200) {
+        toast.apiSuccess(response.message || "Webhook token deleted");
+      }
+      if (tokens.length === 1 && currentPage > 1) {
+        goToPage(currentPage - 1);
+      } else {
+        await getToken(currentPage);
+      }
     } catch (error) {
-      console.error("Error", error);
+      const err = error as ApiError;
+      toast.apiError(err.message || "Failed to delete webhook token");
     }
   };
 
-  useEffect(() => {
-    getToken();
-  }, []);
+  const handleDelete = (item: TokenData) => {
+    alertManager.show({
+      type: "warning",
+      title: "Delete token",
+      message: `Are you sure you want to delete "${item.name}"? It will stop working immediately.`,
+      onConfirm: () => {
+        deleteToken(item.id);
+      },
+    });
+  };
 
-  // console.log(tokenData)
   const payloadString = JSON.stringify(generatePayload(), null, 2);
 
-  if (loading) {
+  if (loading && tokens.length === 0) {
     return <DataLoader />;
   }
 
@@ -133,21 +169,16 @@ export default function Webhook() {
             </p>
           </div>
           <div className="flex flex-col w-fit gap-2">
-            {tokenData ? (
-              <Button
-                onClick={() => setPopupOpen(true)}
-                className="text-md font-medium text-primary bg-primary/20 px-5 rounded-xl cursor-pointer py-1.75"
-              >
-                Regenerate Token
-              </Button>
-            ) : (
-              <Button
-                onClick={() => generateToken()}
-                className="actions-btn px-4! py-2! rounded-xl!"
-              >
-                Generate Token
-              </Button>
-            )}
+            <Button
+              onClick={() => {
+                setPopupType("warning");
+                setPopupOpen(true);
+              }}
+              className="actions-btn px-4! py-2! rounded-xl!"
+            >
+              <RefreshCw size={16} />
+              Generate token
+            </Button>
           </div>
         </div>
 
@@ -161,40 +192,65 @@ export default function Webhook() {
                 <th className="p-3 text-left font-medium">Token Prefix</th>
                 <th className="p-3 text-left font-medium">Last Used</th>
                 <th className="p-3 text-left font-medium">Age</th>
+                <th className="p-3 text-right font-medium">Actions</th>
               </tr>
             </thead>
 
             <tbody>
-              {tokenData && (
-                <tr className="even:bg-muted capitalize">
-                  <td className="p-3 font-medium capitalize">
-                    {(tokenData as TokenData)?.name}
-                  </td>
-                  <td className="p-3 font-medium capitalize whitespace-nowrap">
-                    {(tokenData as TokenData)?.description ||
-                      "No description provided"}
-                  </td>
-                  <td className="p-3 ">
-                    {(tokenData as TokenData)?.isActive === true ? (
-                      <span>Active</span>
-                    ) : (
-                      <span>Inactive</span>
-                    )}
-                  </td>
-
-                  <td className="p-3 lowercase">
-                    {(tokenData as TokenData)?.tokenPrefix}
-                  </td>
-                  <td className="p-3 text-muted-foreground whitespace-nowrap">
-                    {timeAgo(String((tokenData as TokenData)?.lastUsedAt))}
-                  </td>
-                  <td className="p-3 text-muted-foreground whitespace-nowrap">
-                    {timeAgo(String((tokenData as TokenData)?.createdAt))}
+              {tokens.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="p-6 text-center text-sm text-gray-400">
+                    No webhook tokens yet. Generate one to start receiving leads.
                   </td>
                 </tr>
+              ) : (
+                tokens.map((item) => (
+                  <tr
+                    key={item.id}
+                    onClick={() => setSelectedId(item.id)}
+                    className={`cursor-pointer capitalize ${
+                      selectedId === item.id ? "bg-primary/5" : "even:bg-muted"
+                    }`}
+                  >
+                    <td className="p-3 font-medium capitalize">{item.name}</td>
+                    <td className="p-3 font-medium capitalize whitespace-nowrap">
+                      {item.description || "No description provided"}
+                    </td>
+                    <td className="p-3">
+                      {item.isActive ? "Active" : "Inactive"}
+                    </td>
+                    <td className="p-3 lowercase">{item.tokenPrefix}</td>
+                    <td className="p-3 text-muted-foreground whitespace-nowrap">
+                      {item.lastUsedAt ? timeAgo(String(item.lastUsedAt)) : "Never"}
+                    </td>
+                    <td className="p-3 text-muted-foreground whitespace-nowrap">
+                      {timeAgo(String(item.createdAt))}
+                    </td>
+                    <td className="p-3 text-right">
+                      <Button
+                        type="button"
+                        title="Delete token"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleDelete(item);
+                        }}
+                        className="bg-transparent! text-red-500! hover:text-red-600!"
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
+          <div className="px-3 pb-3">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              goToPage={goToPage}
+            />
+          </div>
         </div>
         {/* Webhook URL */}
         {/* <div className="bg-white p-6">
@@ -246,14 +302,14 @@ export default function Webhook() {
           </div>
 
           {/* Code Blocks */}
-          <pre className="bg-black text-green-400 p-4 rounded-xl text-sm overflow-auto">
+          <pre className="overflow-auto rounded-xl border border-slate-800 bg-slate-950 p-4 font-mono text-[13px] leading-6 text-slate-200">
             {devTab === "fetch" &&
               `// Example: Send lead using fetch
 fetch("${webhookUrl}", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer ${(tokenData as TokenData)?.tokenPrefix || webhookToken}"
+    "Authorization": "Bearer ${sampleToken}"
   },
   body: JSON.stringify(${payloadString})
 });`}
@@ -267,7 +323,7 @@ fetch("${webhookUrl}", {
 </form>
 
 <script>
-const WEBHOOK_TOKEN = "${(tokenData as TokenData)?.tokenPrefix || webhookToken}";
+const WEBHOOK_TOKEN = "${sampleToken}";
 
 function sendLead(e) {
   e.preventDefault();
@@ -295,7 +351,7 @@ await axios.post(
   ${payloadString},
   {
     headers: {
-      Authorization: "Bearer ${(tokenData as TokenData)?.tokenPrefix || webhookToken}"
+      Authorization: "Bearer ${sampleToken}"
     }
   }
 );`}
@@ -303,7 +359,7 @@ await axios.post(
             {devTab === "curl" &&
               `curl -X POST "${webhookUrl}" \\
 -H "Content-Type: application/json" \\
--H "Authorization: Bearer ${(tokenData as TokenData)?.tokenPrefix || webhookToken}" \\
+-H "Authorization: Bearer ${sampleToken}" \\
 -d '${payloadString}'`}
           </pre>
         </div>
@@ -324,7 +380,7 @@ await axios.post(
             <Button
               disabled={!token}
               onClick={sendTestLead}
-              className="py-3.5! disabled:cursor-not-allowed!"
+              className="py-3.5! rounded-xl! disabled:cursor-not-allowed!"
             >
               <Send size={18} /> Send Test Lead {loading && <Loader />}
             </Button>
@@ -333,7 +389,7 @@ await axios.post(
 
         <section className="bg-white p-6">
           <h2 className="text-xl font-semibold mb-3">Response</h2>
-          <pre className="bg-black text-green-400 p-4 rounded-xl text-sm">
+          <pre className="overflow-auto rounded-xl border border-slate-800 bg-slate-950 p-4 font-mono text-[13px] leading-6 text-slate-200">
             {`{
   "success": true,
   "message": "Lead created successfully"
@@ -349,6 +405,10 @@ await axios.post(
         accountId={String(accountId)}
         open={popupOpen}
         onClose={() => setPopupOpen(false)}
+        onCreated={() => {
+          if (currentPage === 1) getToken(1);
+          else goToPage(1);
+        }}
       />
     </div>
   );

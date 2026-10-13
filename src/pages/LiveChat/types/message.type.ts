@@ -33,6 +33,15 @@ const TMessageStatus = z.enum([
 
 const MessageFromSchema = z.enum(["me", "user", "bot", "agent"]);
 
+const MessageReactionSchema = z.object({
+  emoji: z.string(),
+  from: z.enum(["user", "agent", "bot"]),
+  reactedAt: z.date().optional(),
+});
+
+export type TMessageReaction = z.infer<typeof MessageReactionSchema>;
+
+
 export const BaseMessageSchema = z.object({
   messageId: z.string(),
   clientMessageId: z.string().optional(),
@@ -51,6 +60,8 @@ export const BaseMessageSchema = z.object({
       message: z.string().optional(),
     })
     .optional(),
+
+    reactions: z.array(MessageReactionSchema).optional(), // 👈 add this  
   error: z
     .object({
       code: z.number(),

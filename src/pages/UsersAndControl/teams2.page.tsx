@@ -110,6 +110,39 @@ const Teams = () => {
     }
   };
 
+  const handleStatusChange = async (member: ITeam, active: boolean) => {
+    const rollback = teamStoreManager.updateTeamOptimistic({
+      userId: member.userId,
+      status: active,
+    });
+    setSelectedUser((prev) =>
+      prev && prev.userId === member.userId
+        ? { ...prev, status: active }
+        : prev,
+    );
+    try {
+      const response = await teamService.updateTeamMember({
+        userId: member.userId,
+        status: active,
+      } as ITeam);
+      if (response.status === 200) {
+        toast.apiSuccess(
+          response.message ||
+            (active ? "User activated" : "User deactivated"),
+        );
+      }
+    } catch (error) {
+      const err = error as ApiError;
+      toast.apiError(err.message || "Failed to update user status");
+      rollback();
+      setSelectedUser((prev) =>
+        prev && prev.userId === member.userId
+          ? { ...prev, status: member.status }
+          : prev,
+      );
+    }
+  };
+
   const handleDeleteTeamMemberByMemberId = async (membersIds: string[]) => {
     const rollback = teamStoreManager.deleteTeamOptimistic(membersIds);
     try {
@@ -180,13 +213,15 @@ const Teams = () => {
                 </Button>
               )}
             </div>
-
+ 
             <TeamList
               teams={teams}
               selectedUser={selectedUser}
               setSelectedUser={setSelectedUser}
               permissions={user?.permissions}
+              currentUserId={user?.id != null ? String(user.id) : ""}
               onDeleteSelected={(ids) => handleDeleteTeamMemberByMemberId(ids)}
+              onStatusChange={handleStatusChange}
             />
           </div>
 

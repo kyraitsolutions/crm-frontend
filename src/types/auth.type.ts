@@ -29,6 +29,8 @@ export interface IUser {
     expiresAt:Date
   };
   permissions?: string[];
+  /** False when an admin has deactivated this organization membership. */
+  membershipActive?: boolean;
 }
 
 export interface ILoginResponse {

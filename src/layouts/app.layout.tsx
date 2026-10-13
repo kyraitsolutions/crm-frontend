@@ -1,7 +1,9 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import DeactivatePopup from "@/components/popup/DeactivatePopup";
+import { SiteHeader } from "@/components/site-header";
 import { ExpirationPrompt } from "@/components/subscription/ExpirationPrompt";
 import { TrialBanner } from "@/components/subscription/TrialBanner";
-import { SiteHeader } from "@/components/site-header";
+import ContactPopup from "@/pages/Contact/components/ContactPopup";
 import { ToastMessageService } from "@/services";
 import { AccountService } from "@/services/account.service";
 import { useAuthStore } from "@/stores";
@@ -11,7 +13,6 @@ import type { ApiError } from "@/types";
 import { SocketProvider } from "@/websocket/socket.provider";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import ContactPopup from "@/pages/Contact/components/ContactPopup";
 
 export function AppLayout() {
   const accountStoreManager = new AccountsStoreManager();
@@ -20,7 +21,10 @@ export function AppLayout() {
   const accountService = new AccountService();
   const toastService = new ToastMessageService();
 
-  const { accountId } = useAuthStore((state) => state);
+  const { accountId, user } = useAuthStore((state) => state);
+  console.log(user);
+ 
+  const deactivated = user?.membershipActive === false;
 
   // fetch accounts list
   const fetchAccounts = async () => {
@@ -77,6 +81,10 @@ export function AppLayout() {
         </main>
       </div>
       <ContactPopup />
+
+      {deactivated && (
+       <DeactivatePopup />
+      )}
     </SocketProvider>
   );
 }
